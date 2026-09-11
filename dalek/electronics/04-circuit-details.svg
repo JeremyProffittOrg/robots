@@ -1,0 +1,159 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1250" viewBox="0 0 1600 1250">
+<style>text{font-family:Arial,sans-serif;fill:#10263a} .title{font-size:30px;font-weight:bold} .head{font-size:20px;font-weight:bold} .body{font-size:17px} .small{font-size:15px} .net{font-family:monospace;font-size:16px;fill:#004879} .wire{stroke:#155a85;stroke-width:2;fill:none}</style>
+<rect width="1600" height="1250" fill="white"/>
+<text x="35" y="45" font-family="Arial, sans-serif" font-size="30" font-weight="bold" fill="#10263a">04 / Circuit details: power, sensing and bridge outputs</text>
+<text x="35" y="77" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">Conventional connection symbols. Dots are junctions. Matching net labels join all four sheets.</text>
+<text x="40" y="140" font-family="Arial, sans-serif" font-size="20" font-weight="bold" fill="#10263a">A. Battery fuse and independent motion disconnect</text>
+<rect x="40" y="185" width="200" height="115" rx="6" fill="#f1f7fb" stroke="#46677d" stroke-width="1.5"/>
+<text x="55" y="213" font-family="Arial, sans-serif" font-size="20" font-weight="bold" fill="#10263a">B1</text>
+<text x="55" y="241" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">BLF-1206A</text>
+<text x="55" y="265" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">PP30 + / -</text>
+<path d="M240,215 L285,215" stroke="#155a85" stroke-width="2" fill="none"/>
+<path d="M285,215 L297,215" stroke="#155a85" stroke-width="2" fill="none"/>
+<rect x="297" y="208" width="56" height="14" fill="white" stroke="#155a85" stroke-width="2"/>
+<path d="M353,215 L365,215" stroke="#155a85" stroke-width="2" fill="none"/>
+<text x="285" y="197" font-family="Arial, sans-serif" font-size="15" font-weight="normal" fill="#10263a">F1 7.5A</text>
+<path d="M365,215 L450,215" stroke="#155a85" stroke-width="2" fill="none"/>
+<circle cx="450" cy="215" r="4" fill="#155a85"/>
+<path d="M450,215 L490,190" stroke="#155a85" stroke-width="2" fill="none"/>
+<path d="M505,215 L620,215" stroke="#155a85" stroke-width="2" fill="none"/>
+<circle cx="505" cy="215" r="4" fill="#155a85"/>
+<text x="450" y="175" font-family="Arial, sans-serif" font-size="15" font-weight="normal" fill="#10263a">S1 MAIN</text>
+<circle cx="620" cy="215" r="4" fill="#155a85"/>
+<text x="640" y="255" font-family="monospace" font-size="16" font-weight="normal" fill="#004879">PACK_SW</text>
+<path d="M620,215 L735,215" stroke="#155a85" stroke-width="2" fill="none"/>
+<circle cx="735" cy="215" r="4" fill="#155a85"/>
+<path d="M735,215 L775,190" stroke="#155a85" stroke-width="2" fill="none"/>
+<circle cx="790" cy="215" r="4" fill="#155a85"/>
+<path d="M790,215 L890,215" stroke="#155a85" stroke-width="2" fill="none"/>
+<text x="715" y="175" font-family="Arial, sans-serif" font-size="15" font-weight="normal" fill="#10263a">S2 ACTUATORS</text>
+<circle cx="890" cy="215" r="4" fill="#155a85"/>
+<text x="905" y="220" font-family="monospace" font-size="16" font-weight="normal" fill="#004879">ACT_IN -&gt; F2 -&gt; U2.VIN</text>
+<path d="M890,215 L890,270" stroke="#155a85" stroke-width="2" fill="none"/>
+<text x="905" y="277" font-family="monospace" font-size="16" font-weight="normal" fill="#004879">ACT_IN -&gt; F3 -&gt; U3.VIN</text>
+<path d="M620,215 L620,340" stroke="#155a85" stroke-width="2" fill="none"/>
+<text x="635" y="347" font-family="monospace" font-size="16" font-weight="normal" fill="#004879">PACK_SW -&gt; F4 -&gt; U4.IN (logic remains on)</text>
+<path d="M240,270 L310,270" stroke="#155a85" stroke-width="2" fill="none"/>
+<path d="M310,270 L310,282" stroke="#155a85" stroke-width="2" fill="none"/>
+<path d="M294,282 L326,282" stroke="#155a85" stroke-width="2" fill="none"/>
+<path d="M300,289 L320,289" stroke="#155a85" stroke-width="2" fill="none"/>
+<path d="M306,296 L314,296" stroke="#155a85" stroke-width="2" fill="none"/>
+<text x="40" y="385" font-family="Arial, sans-serif" font-size="15" font-weight="normal" fill="#10263a">S1/S2 are shown OFF. NKK S1A ON joins terminals1 and3. Ground is never switched.</text>
+<text x="40" y="450" font-family="Arial, sans-serif" font-size="20" font-weight="bold" fill="#10263a">B. Battery measurement / GPIO39</text>
+<text x="40" y="500" font-family="monospace" font-size="16" font-weight="normal" fill="#004879">PACK_SW</text>
+<path d="M140,495 L190,495" stroke="#155a85" stroke-width="2" fill="none"/>
+<path d="M190,495 L202,495" stroke="#155a85" stroke-width="2" fill="none"/>
+<rect x="202" y="488" width="56" height="14" fill="white" stroke="#155a85" stroke-width="2"/>
+<path d="M258,495 L270,495" stroke="#155a85" stroke-width="2" fill="none"/>
+<text x="190" y="477" font-family="Arial, sans-serif" font-size="15" font-weight="normal" fill="#10263a">R10 100k 1%</text>
+<path d="M270,495 L360,495" stroke="#155a85" stroke-width="2" fill="none"/>
+<circle cx="360" cy="495" r="4" fill="#155a85"/>
+<path d="M360,495 L630,495" stroke="#155a85" stroke-width="2" fill="none"/>
+<text x="645" y="500" font-family="monospace" font-size="16" font-weight="normal" fill="#004879">U1.GPIO39</text>
+<path d="M360,495 L360,507" stroke="#155a85" stroke-width="2" fill="none"/>
+<rect x="353" y="507" width="14" height="35" fill="white" stroke="#155a85" stroke-width="2"/>
+<path d="M360,542 L360,555" stroke="#155a85" stroke-width="2" fill="none"/>
+<text x="374" y="520" font-family="Arial, sans-serif" font-size="15" font-weight="normal" fill="#10263a">R11 22k 1%</text>
+<path d="M360,555 L360,567" stroke="#155a85" stroke-width="2" fill="none"/>
+<path d="M344,567 L376,567" stroke="#155a85" stroke-width="2" fill="none"/>
+<path d="M350,574 L370,574" stroke="#155a85" stroke-width="2" fill="none"/>
+<path d="M356,581 L364,581" stroke="#155a85" stroke-width="2" fill="none"/>
+<circle cx="550" cy="495" r="4" fill="#155a85"/>
+<path d="M550,495 L550,519" stroke="#155a85" stroke-width="2" fill="none"/>
+<path d="M536,519 L564,519" stroke="#155a85" stroke-width="2" fill="none"/>
+<path d="M536,527 L564,527" stroke="#155a85" stroke-width="2" fill="none"/>
+<path d="M550,527 L550,555" stroke="#155a85" stroke-width="2" fill="none"/>
+<text x="568" y="527" font-family="Arial, sans-serif" font-size="15" font-weight="normal" fill="#10263a">C10 100nF</text>
+<path d="M550,555 L550,567" stroke="#155a85" stroke-width="2" fill="none"/>
+<path d="M534,567 L566,567" stroke="#155a85" stroke-width="2" fill="none"/>
+<path d="M540,574 L560,574" stroke="#155a85" stroke-width="2" fill="none"/>
+<path d="M546,581 L554,581" stroke="#155a85" stroke-width="2" fill="none"/>
+<text x="40" y="620" font-family="Arial, sans-serif" font-size="15" font-weight="normal" fill="#10263a">14.6V x22/(100+22) =2.633V; firmware multiplier5.54545</text>
+<text x="825" y="450" font-family="Arial, sans-serif" font-size="20" font-weight="bold" fill="#10263a">C. Motion power sense / GPIO36</text>
+<text x="825" y="500" font-family="monospace" font-size="16" font-weight="normal" fill="#004879">5V_MOTOR</text>
+<path d="M935,495 L970,495" stroke="#155a85" stroke-width="2" fill="none"/>
+<path d="M970,495 L982,495" stroke="#155a85" stroke-width="2" fill="none"/>
+<rect x="982" y="488" width="56" height="14" fill="white" stroke="#155a85" stroke-width="2"/>
+<path d="M1038,495 L1050,495" stroke="#155a85" stroke-width="2" fill="none"/>
+<text x="970" y="477" font-family="Arial, sans-serif" font-size="15" font-weight="normal" fill="#10263a">R12 10k 1%</text>
+<path d="M1050,495 L1130,495" stroke="#155a85" stroke-width="2" fill="none"/>
+<circle cx="1130" cy="495" r="4" fill="#155a85"/>
+<path d="M1130,495 L1410,495" stroke="#155a85" stroke-width="2" fill="none"/>
+<text x="1420" y="500" font-family="monospace" font-size="16" font-weight="normal" fill="#004879">GPIO36</text>
+<path d="M1130,495 L1130,507" stroke="#155a85" stroke-width="2" fill="none"/>
+<rect x="1123" y="507" width="14" height="35" fill="white" stroke="#155a85" stroke-width="2"/>
+<path d="M1130,542 L1130,555" stroke="#155a85" stroke-width="2" fill="none"/>
+<text x="1144" y="520" font-family="Arial, sans-serif" font-size="15" font-weight="normal" fill="#10263a">R13 15k 1%</text>
+<path d="M1130,555 L1130,567" stroke="#155a85" stroke-width="2" fill="none"/>
+<path d="M1114,567 L1146,567" stroke="#155a85" stroke-width="2" fill="none"/>
+<path d="M1120,574 L1140,574" stroke="#155a85" stroke-width="2" fill="none"/>
+<path d="M1126,581 L1134,581" stroke="#155a85" stroke-width="2" fill="none"/>
+<circle cx="1320" cy="495" r="4" fill="#155a85"/>
+<path d="M1320,495 L1320,519" stroke="#155a85" stroke-width="2" fill="none"/>
+<path d="M1306,519 L1334,519" stroke="#155a85" stroke-width="2" fill="none"/>
+<path d="M1306,527 L1334,527" stroke="#155a85" stroke-width="2" fill="none"/>
+<path d="M1320,527 L1320,555" stroke="#155a85" stroke-width="2" fill="none"/>
+<text x="1338" y="527" font-family="Arial, sans-serif" font-size="15" font-weight="normal" fill="#10263a">C11 100nF</text>
+<path d="M1320,555 L1320,567" stroke="#155a85" stroke-width="2" fill="none"/>
+<path d="M1304,567 L1336,567" stroke="#155a85" stroke-width="2" fill="none"/>
+<path d="M1310,574 L1330,574" stroke="#155a85" stroke-width="2" fill="none"/>
+<path d="M1316,581 L1324,581" stroke="#155a85" stroke-width="2" fill="none"/>
+<text x="825" y="620" font-family="Arial, sans-serif" font-size="15" font-weight="normal" fill="#10263a">5V x15/(10+15) =3.0V; low means physical power OFF</text>
+<text x="40" y="690" font-family="Arial, sans-serif" font-size="20" font-weight="bold" fill="#10263a">D. Motor output circuit (repeat for all4 motors)</text>
+<rect x="40" y="755" width="320" height="180" rx="6" fill="#f1f7fb" stroke="#46677d" stroke-width="1.5"/>
+<text x="55" y="783" font-family="Arial, sans-serif" font-size="20" font-weight="bold" fill="#10263a">U5 DRV8833 / bridge A</text>
+<text x="55" y="811" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">VMotor =5V_MOTOR</text>
+<text x="55" y="835" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">GND =GROUND_STAR</text>
+<text x="55" y="859" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">AIN1 =LEFT_IN1</text>
+<text x="55" y="883" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">AIN2 =LEFT_IN2</text>
+<text x="55" y="907" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">SLP =MOTOR_ENABLE</text>
+<path d="M360,780 L660,780" stroke="#155a85" stroke-width="2" fill="none"/>
+<path d="M360,890 L660,890" stroke="#155a85" stroke-width="2" fill="none"/>
+<text x="373" y="767" font-family="monospace" font-size="16" font-weight="normal" fill="#004879">AOUT1</text>
+<text x="373" y="918" font-family="monospace" font-size="16" font-weight="normal" fill="#004879">AOUT2</text>
+<circle cx="510" cy="780" r="4" fill="#155a85"/>
+<path d="M510,780 L510,800" stroke="#155a85" stroke-width="2" fill="none"/>
+<path d="M510,800 L510,824" stroke="#155a85" stroke-width="2" fill="none"/>
+<path d="M496,824 L524,824" stroke="#155a85" stroke-width="2" fill="none"/>
+<path d="M496,832 L524,832" stroke="#155a85" stroke-width="2" fill="none"/>
+<path d="M510,832 L510,860" stroke="#155a85" stroke-width="2" fill="none"/>
+<text x="528" y="832" font-family="Arial, sans-serif" font-size="15" font-weight="normal" fill="#10263a">C_LF 100nF</text>
+<path d="M510,860 L510,890" stroke="#155a85" stroke-width="2" fill="none"/>
+<circle cx="510" cy="890" r="4" fill="#155a85"/>
+<path d="M660,780 L660,810" stroke="#155a85" stroke-width="2" fill="none"/>
+<path d="M660,860 L660,890" stroke="#155a85" stroke-width="2" fill="none"/>
+<circle cx="660" cy="835" r="25" fill="white" stroke="#155a85" stroke-width="2"/>
+<text x="650" y="841" font-family="Arial, sans-serif" font-size="20" font-weight="bold" fill="#10263a">M</text>
+<text x="585" y="960" font-family="monospace" font-size="16" font-weight="normal" fill="#004879">LEFT FRONT TT3777</text>
+<text x="40" y="1010" font-family="Arial, sans-serif" font-size="15" font-weight="normal" fill="#10263a">U5 bridgeB -&gt;LEFT REAR; U6 bridgeA -&gt;RIGHT FRONT; U6 bridgeB -&gt;RIGHT REAR.</text>
+<text x="40" y="1040" font-family="Arial, sans-serif" font-size="15" font-weight="normal" fill="#10263a">Bridge outputs never join one another. The only shared connections are INPUTS and supplies.</text>
+<text x="870" y="690" font-family="Arial, sans-serif" font-size="20" font-weight="bold" fill="#10263a">E. Reset default states</text>
+<text x="870" y="760" font-family="monospace" font-size="16" font-weight="normal" fill="#004879">GPIO12</text>
+<path d="M965,755 L1130,755" stroke="#155a85" stroke-width="2" fill="none"/>
+<circle cx="1130" cy="755" r="4" fill="#155a85"/>
+<path d="M1130,755 L1300,755" stroke="#155a85" stroke-width="2" fill="none"/>
+<text x="1310" y="760" font-family="monospace" font-size="16" font-weight="normal" fill="#004879">U5/U6.SLP</text>
+<path d="M1130,755 L1130,767" stroke="#155a85" stroke-width="2" fill="none"/>
+<rect x="1123" y="767" width="14" height="35" fill="white" stroke="#155a85" stroke-width="2"/>
+<path d="M1130,802 L1130,815" stroke="#155a85" stroke-width="2" fill="none"/>
+<text x="1144" y="780" font-family="Arial, sans-serif" font-size="15" font-weight="normal" fill="#10263a">R5 10k</text>
+<path d="M1130,815 L1130,827" stroke="#155a85" stroke-width="2" fill="none"/>
+<path d="M1114,827 L1146,827" stroke="#155a85" stroke-width="2" fill="none"/>
+<path d="M1120,834 L1140,834" stroke="#155a85" stroke-width="2" fill="none"/>
+<path d="M1126,841 L1134,841" stroke="#155a85" stroke-width="2" fill="none"/>
+<text x="870" y="900" font-family="monospace" font-size="16" font-weight="normal" fill="#004879">3V3</text>
+<path d="M930,895 L980,895" stroke="#155a85" stroke-width="2" fill="none"/>
+<path d="M980,895 L992,895" stroke="#155a85" stroke-width="2" fill="none"/>
+<rect x="992" y="888" width="56" height="14" fill="white" stroke="#155a85" stroke-width="2"/>
+<path d="M1048,895 L1060,895" stroke="#155a85" stroke-width="2" fill="none"/>
+<text x="980" y="877" font-family="Arial, sans-serif" font-size="15" font-weight="normal" fill="#10263a">R6 10k</text>
+<path d="M1060,895 L1130,895" stroke="#155a85" stroke-width="2" fill="none"/>
+<circle cx="1130" cy="895" r="4" fill="#155a85"/>
+<text x="1170" y="900" font-family="monospace" font-size="16" font-weight="normal" fill="#004879">SERVO_DISABLE</text>
+<path d="M1130,895 L1130,955" stroke="#155a85" stroke-width="2" fill="none"/>
+<text x="920" y="980" font-family="monospace" font-size="16" font-weight="normal" fill="#004879">GPIO27 / U10.OE / buffer /OE</text>
+<text x="870" y="1040" font-family="Arial, sans-serif" font-size="15" font-weight="normal" fill="#10263a">Remove originalPCAOE pull-down.</text>
+<text x="870" y="1070" font-family="Arial, sans-serif" font-size="15" font-weight="normal" fill="#10263a">Repeat10k pull-down on each drive input.</text>
+<text x="40" y="1140" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">POWER NOTES: F2/F3=3A; F4=1A. Correct capacitor polarity. All connection values also appear in sheets01-03.</text>
+<text x="35" y="1226" font-family="Arial, sans-serif" font-size="15" font-weight="normal" fill="#10263a">DALEK R1 | 2026-09-11 | Circuit + wiring.csv form one drawing set | Build validation is required</text>
+</svg>

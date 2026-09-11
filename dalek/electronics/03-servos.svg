@@ -1,0 +1,99 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1190" viewBox="0 0 1600 1190">
+<style>text{font-family:Arial,sans-serif;fill:#10263a} .title{font-size:30px;font-weight:bold} .head{font-size:20px;font-weight:bold} .body{font-size:17px} .small{font-size:15px} .net{font-family:monospace;font-size:16px;fill:#004879} .wire{stroke:#155a85;stroke-width:2;fill:none}</style>
+<rect width="1600" height="1190" fill="white"/>
+<text x="35" y="45" font-family="Arial, sans-serif" font-size="30" font-weight="bold" fill="#10263a">03 / Five servo channels with true 5V signals</text>
+<text x="35" y="77" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">All chip numbers below are DIP-14 PHYSICAL pin numbers. U8/U9 are 74AHCT125, not 74HC125.</text>
+<rect x="35" y="115" width="740" height="185" rx="6" fill="#f1f7fb" stroke="#46677d" stroke-width="1.5"/>
+<text x="50" y="143" font-family="Arial, sans-serif" font-size="20" font-weight="bold" fill="#10263a">U10 / Adafruit PCA9685 #815</text>
+<text x="50" y="171" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">VCC &lt;-3V3; GND &lt;- common ground; SDA21; SCL22</text>
+<text x="50" y="195" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">I2C address0x40, address links open; frequency50Hz</text>
+<text x="50" y="219" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">V+ pin, V+ terminals and V+ header row: UNCONNECTED</text>
+<text x="50" y="243" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">Remove onboard OE pull-down; add R6 10k OE to3V3.</text>
+<text x="50" y="267" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">OE -&gt; SERVO_DISABLE -&gt; GPIO27. High disables outputs.</text>
+<text x="50" y="291" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">Only PWM pins0..4 feed the buffer inputs below.</text>
+<rect x="825" y="115" width="725" height="185" rx="6" fill="#f1f7fb" stroke="#46677d" stroke-width="1.5"/>
+<text x="840" y="143" font-family="Arial, sans-serif" font-size="20" font-weight="bold" fill="#10263a">U8 and U9 power / enable</text>
+<text x="840" y="171" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">Each IC: pin14 -&gt;5V_SERVO; pin7 -&gt;GND</text>
+<text x="840" y="195" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">C8/C9:100nF directly across14 and7, one per IC.</text>
+<text x="840" y="219" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">U8 pins1,4,10,13 -&gt;SERVO_DISABLE; U9 pin1 same.</text>
+<text x="840" y="243" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">U9 unused: pins5,9,12 -&gt;GND; pins4,10,13 -&gt;5V_SERVO</text>
+<text x="840" y="267" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">U9 unused outputs6,8,11: no connection.</text>
+<text x="840" y="291" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">Buffer power turns OFF with servo power; no phantom supply.</text>
+<rect x="35" y="355" width="335" height="102" rx="6" fill="#f1f7fb" stroke="#46677d" stroke-width="1.5"/>
+<text x="50" y="383" font-family="Arial, sans-serif" font-size="20" font-weight="bold" fill="#10263a">PWM0 / LEFT_YAW</text>
+<text x="50" y="411" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">U10.PWM0 -&gt; U8 pin2</text>
+<text x="50" y="435" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">R20 10k: input toGND</text>
+<path d="M370,409 L455,409" stroke="#155a85" stroke-width="2" fill="none"/>
+<rect x="455" y="355" width="465" height="102" rx="6" fill="#f1f7fb" stroke="#46677d" stroke-width="1.5"/>
+<text x="470" y="383" font-family="Arial, sans-serif" font-size="20" font-weight="bold" fill="#10263a">U8 74AHCT125</text>
+<text x="470" y="411" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">Input pin2 -&gt; internal buffer -&gt; output pin3</text>
+<text x="470" y="435" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">pin3 -&gt; R30 220ohm -&gt; signal</text>
+<path d="M920,409 L1005,409" stroke="#155a85" stroke-width="2" fill="none"/>
+<rect x="1005" y="355" width="545" height="102" rx="6" fill="#f1f7fb" stroke="#46677d" stroke-width="1.5"/>
+<text x="1020" y="383" font-family="Arial, sans-serif" font-size="20" font-weight="bold" fill="#10263a">SV0 / MG92B #2307</text>
+<text x="1020" y="411" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">SIGNAL &lt;- R30; R40 10k SIGNAL toGND</text>
+<text x="1020" y="435" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">RED &lt;-5V_SERVO; BLACK/BROWN &lt;-GND</text>
+<rect x="35" y="482" width="335" height="102" rx="6" fill="#f1f7fb" stroke="#46677d" stroke-width="1.5"/>
+<text x="50" y="510" font-family="Arial, sans-serif" font-size="20" font-weight="bold" fill="#10263a">PWM1 / LEFT_PITCH</text>
+<text x="50" y="538" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">U10.PWM1 -&gt; U8 pin5</text>
+<text x="50" y="562" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">R21 10k: input toGND</text>
+<path d="M370,536 L455,536" stroke="#155a85" stroke-width="2" fill="none"/>
+<rect x="455" y="482" width="465" height="102" rx="6" fill="#f1f7fb" stroke="#46677d" stroke-width="1.5"/>
+<text x="470" y="510" font-family="Arial, sans-serif" font-size="20" font-weight="bold" fill="#10263a">U8 74AHCT125</text>
+<text x="470" y="538" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">Input pin5 -&gt; internal buffer -&gt; output pin6</text>
+<text x="470" y="562" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">pin6 -&gt; R31 220ohm -&gt; signal</text>
+<path d="M920,536 L1005,536" stroke="#155a85" stroke-width="2" fill="none"/>
+<rect x="1005" y="482" width="545" height="102" rx="6" fill="#f1f7fb" stroke="#46677d" stroke-width="1.5"/>
+<text x="1020" y="510" font-family="Arial, sans-serif" font-size="20" font-weight="bold" fill="#10263a">SV1 / MG92B #2307</text>
+<text x="1020" y="538" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">SIGNAL &lt;- R31; R41 10k SIGNAL toGND</text>
+<text x="1020" y="562" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">RED &lt;-5V_SERVO; BLACK/BROWN &lt;-GND</text>
+<rect x="35" y="609" width="335" height="102" rx="6" fill="#f1f7fb" stroke="#46677d" stroke-width="1.5"/>
+<text x="50" y="637" font-family="Arial, sans-serif" font-size="20" font-weight="bold" fill="#10263a">PWM2 / RIGHT_YAW</text>
+<text x="50" y="665" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">U10.PWM2 -&gt; U8 pin9</text>
+<text x="50" y="689" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">R22 10k: input toGND</text>
+<path d="M370,663 L455,663" stroke="#155a85" stroke-width="2" fill="none"/>
+<rect x="455" y="609" width="465" height="102" rx="6" fill="#f1f7fb" stroke="#46677d" stroke-width="1.5"/>
+<text x="470" y="637" font-family="Arial, sans-serif" font-size="20" font-weight="bold" fill="#10263a">U8 74AHCT125</text>
+<text x="470" y="665" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">Input pin9 -&gt; internal buffer -&gt; output pin8</text>
+<text x="470" y="689" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">pin8 -&gt; R32 220ohm -&gt; signal</text>
+<path d="M920,663 L1005,663" stroke="#155a85" stroke-width="2" fill="none"/>
+<rect x="1005" y="609" width="545" height="102" rx="6" fill="#f1f7fb" stroke="#46677d" stroke-width="1.5"/>
+<text x="1020" y="637" font-family="Arial, sans-serif" font-size="20" font-weight="bold" fill="#10263a">SV2 / MG92B #2307</text>
+<text x="1020" y="665" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">SIGNAL &lt;- R32; R42 10k SIGNAL toGND</text>
+<text x="1020" y="689" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">RED &lt;-5V_SERVO; BLACK/BROWN &lt;-GND</text>
+<rect x="35" y="736" width="335" height="102" rx="6" fill="#f1f7fb" stroke="#46677d" stroke-width="1.5"/>
+<text x="50" y="764" font-family="Arial, sans-serif" font-size="20" font-weight="bold" fill="#10263a">PWM3 / RIGHT_PITCH</text>
+<text x="50" y="792" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">U10.PWM3 -&gt; U8 pin12</text>
+<text x="50" y="816" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">R23 10k: input toGND</text>
+<path d="M370,790 L455,790" stroke="#155a85" stroke-width="2" fill="none"/>
+<rect x="455" y="736" width="465" height="102" rx="6" fill="#f1f7fb" stroke="#46677d" stroke-width="1.5"/>
+<text x="470" y="764" font-family="Arial, sans-serif" font-size="20" font-weight="bold" fill="#10263a">U8 74AHCT125</text>
+<text x="470" y="792" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">Input pin12 -&gt; internal buffer -&gt; output pin11</text>
+<text x="470" y="816" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">pin11 -&gt; R33 220ohm -&gt; signal</text>
+<path d="M920,790 L1005,790" stroke="#155a85" stroke-width="2" fill="none"/>
+<rect x="1005" y="736" width="545" height="102" rx="6" fill="#f1f7fb" stroke="#46677d" stroke-width="1.5"/>
+<text x="1020" y="764" font-family="Arial, sans-serif" font-size="20" font-weight="bold" fill="#10263a">SV3 / MG92B #2307</text>
+<text x="1020" y="792" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">SIGNAL &lt;- R33; R43 10k SIGNAL toGND</text>
+<text x="1020" y="816" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">RED &lt;-5V_SERVO; BLACK/BROWN &lt;-GND</text>
+<rect x="35" y="863" width="335" height="102" rx="6" fill="#f1f7fb" stroke="#46677d" stroke-width="1.5"/>
+<text x="50" y="891" font-family="Arial, sans-serif" font-size="20" font-weight="bold" fill="#10263a">PWM4 / HEAD</text>
+<text x="50" y="919" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">U10.PWM4 -&gt; U9 pin2</text>
+<text x="50" y="943" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">R24 10k: input toGND</text>
+<path d="M370,917 L455,917" stroke="#155a85" stroke-width="2" fill="none"/>
+<rect x="455" y="863" width="465" height="102" rx="6" fill="#f1f7fb" stroke="#46677d" stroke-width="1.5"/>
+<text x="470" y="891" font-family="Arial, sans-serif" font-size="20" font-weight="bold" fill="#10263a">U9 74AHCT125</text>
+<text x="470" y="919" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">Input pin2 -&gt; internal buffer -&gt; output pin3</text>
+<text x="470" y="943" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">pin3 -&gt; R34 220ohm -&gt; signal</text>
+<path d="M920,917 L1005,917" stroke="#155a85" stroke-width="2" fill="none"/>
+<rect x="1005" y="863" width="545" height="102" rx="6" fill="#f1f7fb" stroke="#46677d" stroke-width="1.5"/>
+<text x="1020" y="891" font-family="Arial, sans-serif" font-size="20" font-weight="bold" fill="#10263a">SV4 / FS5103R #154</text>
+<text x="1020" y="919" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">SIGNAL &lt;- R34; R44 10k SIGNAL toGND</text>
+<text x="1020" y="943" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">RED &lt;-5V_SERVO; BLACK/BROWN &lt;-GND</text>
+<rect x="35" y="1000" width="1515" height="140" rx="6" fill="#f1f7fb" stroke="#46677d" stroke-width="1.5"/>
+<text x="50" y="1028" font-family="Arial, sans-serif" font-size="20" font-weight="bold" fill="#10263a">Assembly and calibration</text>
+<text x="50" y="1056" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">Use a soldered board and sockets; locate notch / pin 1 before inserting ICs. Separate 5V servo distribution from PCA V+.</text>
+<text x="50" y="1080" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">Test 1500us with horns removed; fit horns at center. Begin at +/-2 degrees and 0.10Hz; check every linkage.</text>
+<text x="50" y="1104" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">After clearance checks, normal default is +/-8 degrees at 0.40Hz. Calibrate head neutral in firmware.</text>
+<text x="50" y="1128" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">Continuous head servo controls SPEED, not angle. All electronics stay in body; head has no electrical wires.</text>
+<text x="35" y="1166" font-family="Arial, sans-serif" font-size="15" font-weight="normal" fill="#10263a">DALEK R1 | 2026-09-11 | Circuit + wiring.csv form one drawing set | Build validation is required</text>
+</svg>

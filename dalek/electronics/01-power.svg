@@ -1,0 +1,83 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1100" viewBox="0 0 1600 1100">
+<style>text{font-family:Arial,sans-serif;fill:#10263a} .title{font-size:30px;font-weight:bold} .head{font-size:20px;font-weight:bold} .body{font-size:17px} .small{font-size:15px} .net{font-family:monospace;font-size:16px;fill:#004879} .wire{stroke:#155a85;stroke-width:2;fill:none}</style>
+<rect width="1600" height="1100" fill="white"/>
+<text x="35" y="45" font-family="Arial, sans-serif" font-size="30" font-weight="bold" fill="#10263a">01 / Power distribution and isolation</text>
+<text x="35" y="77" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">B1 = Bioenno BLF-1206A + matched BPC-1502DC charger. All grounds join at GROUND_STAR.</text>
+<rect x="35" y="115" width="370" height="150" rx="6" fill="#f1f7fb" stroke="#46677d" stroke-width="1.5"/>
+<text x="50" y="143" font-family="Arial, sans-serif" font-size="20" font-weight="bold" fill="#10263a">B1 / 12V 6Ah LiFePO4</text>
+<text x="50" y="171" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">72Wh nominal; 12A continuous maximum</text>
+<text x="50" y="195" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">PP30 discharge + / -; protected pack</text>
+<text x="50" y="219" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">Separate factory DC charge connector</text>
+<text x="50" y="243" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">REMOVE pack from robot to charge</text>
+<rect x="470" y="115" width="400" height="150" rx="6" fill="#f1f7fb" stroke="#46677d" stroke-width="1.5"/>
+<text x="485" y="143" font-family="Arial, sans-serif" font-size="20" font-weight="bold" fill="#10263a">F1 + S1 / MAIN</text>
+<text x="485" y="171" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">B1.PP30+ -&gt; F1 7.5A -&gt; S1.1</text>
+<text x="485" y="195" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">S1.3 -&gt; PACK_SW</text>
+<text x="485" y="219" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">NKK S1A, ON joins 1 and 3</text>
+<text x="485" y="243" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">F1 within 100mm of battery lead</text>
+<path d="M405,185 L470,185" stroke="#155a85" stroke-width="2" fill="none"/>
+<rect x="930" y="115" width="620" height="150" rx="6" fill="#f1f7fb" stroke="#46677d" stroke-width="1.5"/>
+<text x="945" y="143" font-family="Arial, sans-serif" font-size="20" font-weight="bold" fill="#10263a">S2 / ACTUATORS OFF</text>
+<text x="945" y="171" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">PACK_SW -&gt; S2.1; S2.3 -&gt; ACT_IN</text>
+<text x="945" y="195" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">NKK S1A, 20A at 30VDC; label OFF position</text>
+<text x="945" y="219" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">Cuts input power to BOTH motion converters</text>
+<text x="945" y="243" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">Logic/audio supply bypasses S2; power stays on</text>
+<path d="M870,185 L930,185" stroke="#155a85" stroke-width="2" fill="none"/>
+<rect x="35" y="330" width="475" height="255" rx="6" fill="#f1f7fb" stroke="#46677d" stroke-width="1.5"/>
+<text x="50" y="358" font-family="Arial, sans-serif" font-size="20" font-weight="bold" fill="#10263a">U2 / MOTOR 5V</text>
+<text x="50" y="386" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">ACT_IN -&gt; F2 3A -&gt; MOTOR_IN -&gt; VIN</text>
+<text x="50" y="410" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">Pololu D36V50F5 #4091</text>
+<text x="50" y="434" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">VOUT -&gt; 5V_MOTOR -&gt; U5/U6.VMotor</text>
+<text x="50" y="458" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">C1 220uF/25V: VIN(+) to GND(-)</text>
+<text x="50" y="482" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">C4/C5 470uF/10V: one at each driver</text>
+<text x="50" y="506" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">R15 100ohm/1W: output to GND</text>
+<text x="50" y="530" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">EN, PG and VRP: no connection</text>
+<text x="50" y="554" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">Ground return: 18AWG to star</text>
+<rect x="555" y="330" width="475" height="255" rx="6" fill="#f1f7fb" stroke="#46677d" stroke-width="1.5"/>
+<text x="570" y="358" font-family="Arial, sans-serif" font-size="20" font-weight="bold" fill="#10263a">U3 / SERVO 5V</text>
+<text x="570" y="386" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">ACT_IN -&gt; F3 3A -&gt; SERVO_IN -&gt; VIN</text>
+<text x="570" y="410" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">Pololu D36V50F5 #4091</text>
+<text x="570" y="434" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">VOUT -&gt; 5V_SERVO -&gt; distribution block</text>
+<text x="570" y="458" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">C2 220uF/25V: VIN(+) to GND(-)</text>
+<text x="570" y="482" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">C6 1000uF/10V at distribution block</text>
+<text x="570" y="506" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">R16 100ohm/1W: output to GND</text>
+<text x="570" y="530" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">EN, PG and VRP: no connection</text>
+<text x="570" y="554" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">5 separate 22AWG servo branches</text>
+<rect x="1075" y="330" width="475" height="255" rx="6" fill="#f1f7fb" stroke="#46677d" stroke-width="1.5"/>
+<text x="1090" y="358" font-family="Arial, sans-serif" font-size="20" font-weight="bold" fill="#10263a">U4 / LOGIC 5V</text>
+<text x="1090" y="386" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">PACK_SW -&gt; F4 1A -&gt; LOGIC_IN -&gt; IN</text>
+<text x="1090" y="410" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">Adafruit MPM3610 #4739</text>
+<text x="1090" y="434" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">OUT -&gt; 5V_LOGIC -&gt; amp + run link</text>
+<text x="1090" y="458" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">C3 100uF/25V: IN(+) to GND(-)</text>
+<text x="1090" y="482" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">C7 470uF/10V: OUT(+) to GND(-)</text>
+<text x="1090" y="506" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">EN: no connection (enabled)</text>
+<text x="1090" y="530" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">Budget 0.9A; maximum rated 1.2A</text>
+<text x="1090" y="554" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">Do not connect the three 5V rails</text>
+<rect x="35" y="630" width="715" height="150" rx="6" fill="#f1f7fb" stroke="#46677d" stroke-width="1.5"/>
+<text x="50" y="658" font-family="Arial, sans-serif" font-size="20" font-weight="bold" fill="#10263a">ADC39 / battery voltage divider</text>
+<text x="50" y="686" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">PACK_SW -&gt; R10 100k -&gt; BAT_ADC -&gt; R11 22k -&gt; GND</text>
+<text x="50" y="710" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">BAT_ADC -&gt; GPIO39; C10 100nF BAT_ADC to GND</text>
+<text x="50" y="734" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">At 14.6V: ADC = 2.633V. Scale = 122 / 22 = 5.54545</text>
+<text x="50" y="758" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">Cutoff 11.2V; re-arm above 12.0V; calibrate with meter</text>
+<rect x="800" y="630" width="750" height="150" rx="6" fill="#f1f7fb" stroke="#46677d" stroke-width="1.5"/>
+<text x="815" y="658" font-family="Arial, sans-serif" font-size="20" font-weight="bold" fill="#10263a">GPIO36 / actuator power sense</text>
+<text x="815" y="686" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">5V_MOTOR -&gt; R12 10k -&gt; ACT_OK -&gt; R13 15k -&gt; GND</text>
+<text x="815" y="710" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">ACT_OK -&gt; GPIO36; C11 100nF ACT_OK to GND</text>
+<text x="815" y="734" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">At 5V: GPIO36 = 3.0V. High permits arming; low stops.</text>
+<text x="815" y="758" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">Discharge resistors drain stored output energy after OFF</text>
+<rect x="35" y="825" width="715" height="175" rx="6" fill="#f1f7fb" stroke="#46677d" stroke-width="1.5"/>
+<text x="50" y="853" font-family="Arial, sans-serif" font-size="20" font-weight="bold" fill="#10263a">USB service: prevent two power sources</text>
+<text x="50" y="881" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">J_USB_ISO connects 5V_LOGIC to U1.5V only during RUN.</text>
+<text x="50" y="905" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">Before USB: S1 OFF; unplug B1.PP30; open J_USB_ISO.</text>
+<text x="50" y="929" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">Connect USB only after external run power is disconnected.</text>
+<text x="50" y="953" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">Remove USB before reconnecting run power and the battery.</text>
+<text x="50" y="977" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">Never use U1 BAT/JST connector for the 12V pack.</text>
+<rect x="800" y="825" width="750" height="175" rx="6" fill="#f1f7fb" stroke="#46677d" stroke-width="1.5"/>
+<text x="815" y="853" font-family="Arial, sans-serif" font-size="20" font-weight="bold" fill="#10263a">Physical wiring</text>
+<text x="815" y="881" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">18AWG stranded: battery, switches, regulators, motor bus.</text>
+<text x="815" y="905" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">22AWG: individual servo branches and logic power.</text>
+<text x="815" y="929" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">26AWG: signals. Twisted pairs: each motor; speaker output.</text>
+<text x="815" y="953" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">No solderless breadboard for power. Insulate every joint.</text>
+<text x="815" y="977" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">Two DC switches are disconnects; this is not a certified E-stop.</text>
+<text x="35" y="1076" font-family="Arial, sans-serif" font-size="15" font-weight="normal" fill="#10263a">DALEK R1 | 2026-09-11 | Circuit + wiring.csv form one drawing set | Build validation is required</text>
+</svg>

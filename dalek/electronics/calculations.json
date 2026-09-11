@@ -1,0 +1,31 @@
+{
+  "status": "engineering estimates; not measurements of a built robot",
+  "battery_nominal_Wh": 72,
+  "battery_design_usable_fraction": 0.75,
+  "battery_max_charge_V": 14.6,
+  "battery_adc_V_at_max": 2.6327868852459018,
+  "battery_adc_scale": 5.545454545454546,
+  "battery_stop_V": 11.2,
+  "battery_rearm_V": 12.0,
+  "actuator_sense_V": 3.0,
+  "motor_current_limit_each_A": 1,
+  "motor_rail_design_A": 4,
+  "servo_rail_design_peak_A": 5,
+  "logic_rail_design_peak_A": 0.9,
+  "peak_output_W": 49.5,
+  "estimated_peak_pack_A_at_11p2V_85pct": 5.199579831932773,
+  "estimated_runtime_h_15W": 3.6,
+  "estimated_runtime_h_25W": 2.16,
+  "max_mass_kg": 3.0,
+  "wheel_radius_m": 0.0315,
+  "catalog_6V_stall_torque_each_Nm": 0.0784532,
+  "estimated_1A_limit_torque_each_Nm": 0.04917961791044776,
+  "estimated_4motor_limited_force_N": 6.2450308457711445,
+  "ideal_6V_no_load_speed_m_s_at_250rpm": 0.8246680715673207,
+  "notes": [
+    "Stall torque is not continuous torque. Current-to-torque interpolation is an approximation.",
+    "Skid steering scrub can dominate rolling resistance; confirm turns on actual flooring.",
+    "No encoder exists; PWM duty does not prove ground speed.",
+    "Servo current budget is an allowance because authoritative stall-current data is missing."
+  ]
+}

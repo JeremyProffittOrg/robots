@@ -42,7 +42,7 @@ This is the main deliberate exception to an Adafruit-only shopping list. Adafrui
 
 Separate regulated 5 V supplies feed the wheel motors, servos, and logic/audio. This prevents a servo pulse or motor start from drawing through the ESP32 board's small power path. All returns meet at the common ground distribution point. The physical actuator switch removes energy from both movement supplies while leaving the controller display available. The main fuse is close to the battery. Wire size, connector ratings, branch fuses and the actual switch DC rating appear in the electrical package.
 
-Runtime is an estimate until measured. With 72 Wh nominal and an assumed 80% usable energy allowance, 57.6 Wh remain. At an estimated average load of 12 W, that is 4.8 hours; at 20 W, 2.9 hours; at 30 W, 1.9 hours. These values cover energy only. Temperature, battery condition, low-voltage shutdown, repeated starts and actual servo load change the result. Do not call any of these a guaranteed runtime. Record the first full discharge test with voltage, duration, activity and temperature. [6]
+Runtime is an estimate until measured. With 72 Wh nominal and an assumed 75% usable energy allowance, 54 Wh remain. At an estimated average load of 15 W, that is 3.6 hours; at 25 W, 2.16 hours. These values cover energy only. Temperature, battery condition, low-voltage shutdown, repeated starts and actual servo load change the result. Do not call any of these a guaranteed runtime. Record the first full discharge test with voltage, duration, activity and temperature. [6]
 
 ## Arms and head
 

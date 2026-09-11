@@ -1,0 +1,105 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1250" viewBox="0 0 1600 1250">
+<style>text{font-family:Arial,sans-serif;fill:#10263a} .title{font-size:30px;font-weight:bold} .head{font-size:20px;font-weight:bold} .body{font-size:17px} .small{font-size:15px} .net{font-family:monospace;font-size:16px;fill:#004879} .wire{stroke:#155a85;stroke-width:2;fill:none}</style>
+<rect width="1600" height="1250" fill="white"/>
+<text x="35" y="45" font-family="Arial, sans-serif" font-size="30" font-weight="bold" fill="#10263a">02 / Controller, drive motors and sound</text>
+<text x="35" y="77" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">U1 = original LILYGO TTGO T-Display ESP32, 1.14 inch ST7789. GPIO numbers, not header positions.</text>
+<rect x="35" y="115" width="740" height="420" rx="6" fill="#f1f7fb" stroke="#46677d" stroke-width="1.5"/>
+<text x="50" y="143" font-family="Arial, sans-serif" font-size="20" font-weight="bold" fill="#10263a">U1 / exact external pin assignment</text>
+<text x="55" y="173" font-family="monospace" font-size="16" font-weight="normal" fill="#004879">GPIO21</text>
+<path d="M315,167 L545,167" stroke="#155a85" stroke-width="2" fill="none"/>
+<text x="555" y="173" font-family="monospace" font-size="16" font-weight="normal" fill="#004879">SDA -&gt; U10.SDA</text>
+<text x="55" y="197" font-family="monospace" font-size="16" font-weight="normal" fill="#004879">GPIO22</text>
+<path d="M315,191 L545,191" stroke="#155a85" stroke-width="2" fill="none"/>
+<text x="555" y="197" font-family="monospace" font-size="16" font-weight="normal" fill="#004879">SCL -&gt; U10.SCL</text>
+<text x="55" y="221" font-family="monospace" font-size="16" font-weight="normal" fill="#004879">GPIO27</text>
+<path d="M315,215 L545,215" stroke="#155a85" stroke-width="2" fill="none"/>
+<text x="555" y="221" font-family="monospace" font-size="16" font-weight="normal" fill="#004879">SERVO_DISABLE / OE</text>
+<text x="55" y="245" font-family="monospace" font-size="16" font-weight="normal" fill="#004879">GPIO12</text>
+<path d="M315,239 L545,239" stroke="#155a85" stroke-width="2" fill="none"/>
+<text x="555" y="245" font-family="monospace" font-size="16" font-weight="normal" fill="#004879">MOTOR_ENABLE / SLP</text>
+<text x="55" y="269" font-family="monospace" font-size="16" font-weight="normal" fill="#004879">GPIO25</text>
+<path d="M315,263 L545,263" stroke="#155a85" stroke-width="2" fill="none"/>
+<text x="555" y="269" font-family="monospace" font-size="16" font-weight="normal" fill="#004879">LEFT_IN1</text>
+<text x="55" y="293" font-family="monospace" font-size="16" font-weight="normal" fill="#004879">GPIO26</text>
+<path d="M315,287 L545,287" stroke="#155a85" stroke-width="2" fill="none"/>
+<text x="555" y="293" font-family="monospace" font-size="16" font-weight="normal" fill="#004879">LEFT_IN2</text>
+<text x="55" y="317" font-family="monospace" font-size="16" font-weight="normal" fill="#004879">GPIO32</text>
+<path d="M315,311 L545,311" stroke="#155a85" stroke-width="2" fill="none"/>
+<text x="555" y="317" font-family="monospace" font-size="16" font-weight="normal" fill="#004879">RIGHT_IN1</text>
+<text x="55" y="341" font-family="monospace" font-size="16" font-weight="normal" fill="#004879">GPIO33</text>
+<path d="M315,335 L545,335" stroke="#155a85" stroke-width="2" fill="none"/>
+<text x="555" y="341" font-family="monospace" font-size="16" font-weight="normal" fill="#004879">RIGHT_IN2</text>
+<text x="55" y="365" font-family="monospace" font-size="16" font-weight="normal" fill="#004879">GPIO17</text>
+<path d="M315,359 L545,359" stroke="#155a85" stroke-width="2" fill="none"/>
+<text x="555" y="365" font-family="monospace" font-size="16" font-weight="normal" fill="#004879">I2S_BCLK</text>
+<text x="55" y="389" font-family="monospace" font-size="16" font-weight="normal" fill="#004879">GPIO13</text>
+<path d="M315,383 L545,383" stroke="#155a85" stroke-width="2" fill="none"/>
+<text x="555" y="389" font-family="monospace" font-size="16" font-weight="normal" fill="#004879">I2S_LRC</text>
+<text x="55" y="413" font-family="monospace" font-size="16" font-weight="normal" fill="#004879">GPIO15</text>
+<path d="M315,407 L545,407" stroke="#155a85" stroke-width="2" fill="none"/>
+<text x="555" y="413" font-family="monospace" font-size="16" font-weight="normal" fill="#004879">I2S_DATA</text>
+<text x="55" y="437" font-family="monospace" font-size="16" font-weight="normal" fill="#004879">GPIO39 (SVN)</text>
+<path d="M315,431 L545,431" stroke="#155a85" stroke-width="2" fill="none"/>
+<text x="555" y="437" font-family="monospace" font-size="16" font-weight="normal" fill="#004879">BAT_ADC</text>
+<text x="55" y="461" font-family="monospace" font-size="16" font-weight="normal" fill="#004879">GPIO36 (SVP)</text>
+<path d="M315,455 L545,455" stroke="#155a85" stroke-width="2" fill="none"/>
+<text x="555" y="461" font-family="monospace" font-size="16" font-weight="normal" fill="#004879">ACT_OK</text>
+<text x="55" y="485" font-family="monospace" font-size="16" font-weight="normal" fill="#004879">3V3 / GND</text>
+<path d="M315,479 L545,479" stroke="#155a85" stroke-width="2" fill="none"/>
+<text x="555" y="485" font-family="monospace" font-size="16" font-weight="normal" fill="#004879">U10.VCC / common GND</text>
+<rect x="825" y="115" width="725" height="195" rx="6" fill="#f1f7fb" stroke="#46677d" stroke-width="1.5"/>
+<text x="840" y="143" font-family="Arial, sans-serif" font-size="20" font-weight="bold" fill="#10263a">Reserved board connections</text>
+<text x="840" y="171" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">TFT: MOSI19, SCLK18, CS5, DC16, RST23, BL4</text>
+<text x="840" y="195" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">Buttons: GPIO0 and GPIO35; reserve both.</text>
+<text x="840" y="219" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">Onboard battery ADC34 and power14 are NOT pack sense.</text>
+<text x="840" y="243" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">GPIO12 has 10k pull-down: required low boot strap state.</text>
+<text x="840" y="267" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">GPIO15 connects only to amplifier DIN; no external bias.</text>
+<text x="840" y="291" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">GPIO2, 37, 38 and UART pins: no external connection.</text>
+<rect x="825" y="340" width="725" height="195" rx="6" fill="#f1f7fb" stroke="#46677d" stroke-width="1.5"/>
+<text x="840" y="368" font-family="Arial, sans-serif" font-size="20" font-weight="bold" fill="#10263a">Hardware stopped on reset</text>
+<text x="840" y="396" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">R1..R4: 10k from each motor input net to GND.</text>
+<text x="840" y="420" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">R5: 10k MOTOR_ENABLE to GND; both SLP pins join it.</text>
+<text x="840" y="444" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">R6: 10k SERVO_DISABLE to3V3 (see sheet03).</text>
+<text x="840" y="468" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">Firmware: SLP low, inputs low, OE high before devices init.</text>
+<text x="840" y="492" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">Arm only after voltage, link and physical switch checks.</text>
+<text x="840" y="516" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">Physical power OFF works even if firmware stops responding.</text>
+<rect x="35" y="585" width="725" height="255" rx="6" fill="#f1f7fb" stroke="#46677d" stroke-width="1.5"/>
+<text x="50" y="613" font-family="Arial, sans-serif" font-size="20" font-weight="bold" fill="#10263a">U5 / Adafruit DRV8833 #3297</text>
+<text x="50" y="641" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">LEFT_IN1 -&gt; AIN1 AND BIN1 (INPUTS ONLY)</text>
+<text x="50" y="665" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">LEFT_IN2 -&gt; AIN2 AND BIN2 (INPUTS ONLY)</text>
+<text x="50" y="689" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">SLP &lt;- MOTOR_ENABLE; VMotor &lt;- 5V_MOTOR; GND &lt;- star</text>
+<text x="50" y="713" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">AOUT1/AOUT2 -&gt; M_LEFT_FRONT +/-</text>
+<text x="50" y="737" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">BOUT1/BOUT2 -&gt; M_LEFT_REAR +/-</text>
+<text x="50" y="761" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">Keep BOTH default0.2ohm sense resistors:1A per bridge.</text>
+<text x="50" y="785" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">DO NOT parallel the output bridges or two motors on one.</text>
+<text x="50" y="809" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">FLT, VM, ASEN, BSEN: no external connection.</text>
+<rect x="825" y="585" width="725" height="255" rx="6" fill="#f1f7fb" stroke="#46677d" stroke-width="1.5"/>
+<text x="840" y="613" font-family="Arial, sans-serif" font-size="20" font-weight="bold" fill="#10263a">U6 / Adafruit DRV8833 #3297</text>
+<text x="840" y="641" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">RIGHT_IN1 -&gt; AIN1 AND BIN1 (INPUTS ONLY)</text>
+<text x="840" y="665" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">RIGHT_IN2 -&gt; AIN2 AND BIN2 (INPUTS ONLY)</text>
+<text x="840" y="689" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">SLP &lt;- MOTOR_ENABLE; VMotor &lt;- 5V_MOTOR; GND &lt;- star</text>
+<text x="840" y="713" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">AOUT1/AOUT2 -&gt; M_RIGHT_FRONT +/-</text>
+<text x="840" y="737" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">BOUT1/BOUT2 -&gt; M_RIGHT_REAR +/-</text>
+<text x="840" y="761" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">Keep BOTH default0.2ohm sense resistors:1A per bridge.</text>
+<text x="840" y="785" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">DO NOT parallel the output bridges or two motors on one.</text>
+<text x="840" y="809" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">FLT, VM, ASEN, BSEN: no external connection.</text>
+<rect x="35" y="890" width="725" height="225" rx="6" fill="#f1f7fb" stroke="#46677d" stroke-width="1.5"/>
+<text x="50" y="918" font-family="Arial, sans-serif" font-size="20" font-weight="bold" fill="#10263a">U7 / MAX98357A + SPK1</text>
+<text x="50" y="946" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">VIN &lt;- 5V_LOGIC; GND &lt;- common ground</text>
+<text x="50" y="970" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">BCLK &lt;- GPIO17; LRC &lt;- GPIO13; DIN &lt;- GPIO15</text>
+<text x="50" y="994" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">GAIN -&gt; R14 100k -&gt; 5V_LOGIC (3dB)</text>
+<text x="50" y="1018" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">SD: leave factory 1Mohm resistor configuration (mono mix)</text>
+<text x="50" y="1042" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">OUT+ -&gt; SPK1+; OUT- -&gt; SPK1-; NEITHER lead to GND</text>
+<text x="50" y="1066" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">SPK1: Adafruit 1313, 8ohm 1W; fixed digital gain 0.28</text>
+<text x="50" y="1090" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">No external DAC, SD card or MP3 trigger module required.</text>
+<rect x="825" y="890" width="725" height="225" rx="6" fill="#f1f7fb" stroke="#46677d" stroke-width="1.5"/>
+<text x="840" y="918" font-family="Arial, sans-serif" font-size="20" font-weight="bold" fill="#10263a">Drive commissioning</text>
+<text x="840" y="946" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">100nF ceramic across each motor&#x27;s metal tabs.</text>
+<text x="840" y="970" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">Use fast-decay PWM: one input PWM, other input low.</text>
+<text x="840" y="994" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">Stop both inputs low and SLP low; this is coast, not a brake.</text>
+<text x="840" y="1018" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">Check each motor forward direction with wheels in air.</text>
+<text x="840" y="1042" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">Swap that motor&#x27;s two leads if its direction is wrong.</text>
+<text x="840" y="1066" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">1A limit protects the driver, not indefinite motor stalls.</text>
+<text x="840" y="1090" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">Indoor flat surface; no carpet, stairs or sustained wheel jams.</text>
+<text x="35" y="1226" font-family="Arial, sans-serif" font-size="15" font-weight="normal" fill="#10263a">DALEK R1 | 2026-09-11 | Circuit + wiring.csv form one drawing set | Build validation is required</text>
+</svg>

@@ -1,0 +1,169 @@
+net,origin,destination,wire_awg,color,note
+BAT_POS,B1.PP30+,F1.IN,18,red,7.5A fuse within 100mm of pack
+BAT_FUSED,F1.OUT,S1.1,18,red,
+PACK_SW,S1.3,S2.1,18,red,NKK S1A ON connects terminals1 and3
+PACK_SW,S1.3,F4.IN,18,red,NKK S1A ON connects terminals1 and3
+PACK_SW,S1.3,R10.1,18,red,NKK S1A ON connects terminals1 and3
+ACT_IN,S2.3,F2.IN,18,orange,Physical actuator power disconnect; logic stays powered
+ACT_IN,S2.3,F3.IN,18,orange,Physical actuator power disconnect; logic stays powered
+MOTOR_IN,F2.OUT,U2.VIN,18,orange,F2 3A
+SERVO_IN,F3.OUT,U3.VIN,18,orange,F3 3A
+LOGIC_IN,F4.OUT,U4.IN,22,red,F4 1A
+5V_MOTOR,U2.VOUT,U5.VMotor,18,orange,
+5V_MOTOR,U2.VOUT,U6.VMotor,18,orange,
+5V_MOTOR,U2.VOUT,R12.1,18,orange,
+5V_SERVO,U3.VOUT,J_SERVO.2,18,red,Five separate servo branches; never feed through PCA9685 V+ traces
+5V_SERVO,U3.VOUT,U8.14,18,red,Five separate servo branches; never feed through PCA9685 V+ traces
+5V_SERVO,U3.VOUT,U9.14,18,red,Five separate servo branches; never feed through PCA9685 V+ traces
+5V_LOGIC,U4.OUT,J_USB_ISO.1,22,red,
+5V_LOGIC,U4.OUT,U7.VIN,22,red,
+5V_LOGIC,U4.OUT,R14.1,22,red,
+ESP_5V,J_USB_ISO.2,U1.5V,22,red,Removable run-power link; OPEN and unplug battery before USB
+3V3,U1.3V3,U10.VCC,26,red,
+3V3,U1.3V3,R6.1,26,red,
+GND,B1.PP30-,U2.GND,18,black,Star ground; power returns do not pass through ESP32 or PCA board
+GND,B1.PP30-,U3.GND,18,black,Star ground; power returns do not pass through ESP32 or PCA board
+GND,B1.PP30-,U4.GND,18,black,Star ground; power returns do not pass through ESP32 or PCA board
+GND,B1.PP30-,U5.GND,18,black,Star ground; power returns do not pass through ESP32 or PCA board
+GND,B1.PP30-,U6.GND,18,black,Star ground; power returns do not pass through ESP32 or PCA board
+GND,B1.PP30-,J_SERVO.1,18,black,Star ground; power returns do not pass through ESP32 or PCA board
+GND,GROUND_STAR,U1.GND,22,black,
+GND,GROUND_STAR,U7.GND,22,black,
+GND,GROUND_STAR,U8.7,22,black,
+GND,GROUND_STAR,U9.7,22,black,
+GND,GROUND_STAR,U10.GND,22,black,
+GND,B1.PP30-,GROUND_STAR,18,black,
+LEFT_IN1,U1.GPIO25,U5.AIN1,26,signal,
+LEFT_IN1,U1.GPIO25,U5.BIN1,26,signal,
+LEFT_IN2,U1.GPIO26,U5.AIN2,26,signal,
+LEFT_IN2,U1.GPIO26,U5.BIN2,26,signal,
+RIGHT_IN1,U1.GPIO32,U6.AIN1,26,signal,
+RIGHT_IN1,U1.GPIO32,U6.BIN1,26,signal,
+RIGHT_IN2,U1.GPIO33,U6.AIN2,26,signal,
+RIGHT_IN2,U1.GPIO33,U6.BIN2,26,signal,
+LEFT_IN1,LEFT_IN1,R1.1,component,,10k 1% 0.25W pull-down
+GND,GND,R1.2,component,,10k 1% 0.25W pull-down
+LEFT_IN2,LEFT_IN2,R2.1,component,,10k 1% 0.25W pull-down
+GND,GND,R2.2,component,,10k 1% 0.25W pull-down
+RIGHT_IN1,RIGHT_IN1,R3.1,component,,10k 1% 0.25W pull-down
+GND,GND,R3.2,component,,10k 1% 0.25W pull-down
+RIGHT_IN2,RIGHT_IN2,R4.1,component,,10k 1% 0.25W pull-down
+GND,GND,R4.2,component,,10k 1% 0.25W pull-down
+MOTOR_ENABLE,MOTOR_ENABLE,R5.1,component,,10k 1% 0.25W pull-down
+GND,GND,R5.2,component,,10k 1% 0.25W pull-down
+MOTOR_ENABLE,U1.GPIO12,U5.SLP,26,signal,
+MOTOR_ENABLE,U1.GPIO12,U6.SLP,26,signal,
+SDA,U1.GPIO21,U10.SDA,26,signal,
+SCL,U1.GPIO22,U10.SCL,26,signal,
+SERVO_DISABLE,U1.GPIO27,U10.OE,26,signal,R6 10k to3V3; REMOVE PCA board OE pull-down
+SERVO_DISABLE,U1.GPIO27,R6.2,26,signal,R6 10k to3V3; REMOVE PCA board OE pull-down
+SERVO_DISABLE,U1.GPIO27,U8.1,26,signal,R6 10k to3V3; REMOVE PCA board OE pull-down
+SERVO_DISABLE,U1.GPIO27,U8.4,26,signal,R6 10k to3V3; REMOVE PCA board OE pull-down
+SERVO_DISABLE,U1.GPIO27,U8.10,26,signal,R6 10k to3V3; REMOVE PCA board OE pull-down
+SERVO_DISABLE,U1.GPIO27,U8.13,26,signal,R6 10k to3V3; REMOVE PCA board OE pull-down
+SERVO_DISABLE,U1.GPIO27,U9.1,26,signal,R6 10k to3V3; REMOVE PCA board OE pull-down
+I2S_BCLK,U1.GPIO17,U7.BCLK,26,signal,
+I2S_LRC,U1.GPIO13,U7.LRC,26,signal,
+I2S_DATA,U1.GPIO15,U7.DIN,26,signal,GPIO15 strap: amplifier INPUT only; no pull-up/down added
+BAT_ADC,R10.2,R11.1,26,signal,
+BAT_ADC,R10.2,U1.GPIO39,26,signal,
+BAT_ADC,R10.2,C10.1,26,signal,
+GND,GROUND_STAR,R11.2,26,signal,
+GND,GROUND_STAR,C10.2,26,signal,
+ACT_OK,R12.2,R13.1,26,signal,
+ACT_OK,R12.2,U1.GPIO36,26,signal,
+ACT_OK,R12.2,C11.1,26,signal,
+GND,GROUND_STAR,R13.2,26,signal,
+GND,GROUND_STAR,C11.2,26,signal,
+AMP_GAIN,R14.2,U7.GAIN,26,signal,R14 100k to5V_LOGIC sets3dB
+SPK_P,U7.OUT+,SPK1.+,24,yellow,Floating bridge output; NEVER ground speaker leads
+SPK_N,U7.OUT-,SPK1.-,24,blue,
+LEFT_FRONT_+,U5.AOUT1,M_LEFT_FRONT.+,22,yellow,Keep supplied 28AWG motor lead short; reverse both leads if forward test disagrees
+LEFT_FRONT_-,U5.AOUT2,M_LEFT_FRONT.-,22,blue,Keep supplied 28AWG motor lead short; reverse both leads if forward test disagrees
+LEFT_FRONT_+,LEFT_FRONT_+,C_LEFT_FRONT.1,component,,100nF ceramic >=25V across MOTOR tabs
+LEFT_FRONT_-,LEFT_FRONT_-,C_LEFT_FRONT.2,component,,100nF ceramic >=25V across MOTOR tabs
+LEFT_REAR_+,U5.BOUT1,M_LEFT_REAR.+,22,yellow,Keep supplied 28AWG motor lead short; reverse both leads if forward test disagrees
+LEFT_REAR_-,U5.BOUT2,M_LEFT_REAR.-,22,blue,Keep supplied 28AWG motor lead short; reverse both leads if forward test disagrees
+LEFT_REAR_+,LEFT_REAR_+,C_LEFT_REAR.1,component,,100nF ceramic >=25V across MOTOR tabs
+LEFT_REAR_-,LEFT_REAR_-,C_LEFT_REAR.2,component,,100nF ceramic >=25V across MOTOR tabs
+RIGHT_FRONT_+,U6.AOUT1,M_RIGHT_FRONT.+,22,yellow,Keep supplied 28AWG motor lead short; reverse both leads if forward test disagrees
+RIGHT_FRONT_-,U6.AOUT2,M_RIGHT_FRONT.-,22,blue,Keep supplied 28AWG motor lead short; reverse both leads if forward test disagrees
+RIGHT_FRONT_+,RIGHT_FRONT_+,C_RIGHT_FRONT.1,component,,100nF ceramic >=25V across MOTOR tabs
+RIGHT_FRONT_-,RIGHT_FRONT_-,C_RIGHT_FRONT.2,component,,100nF ceramic >=25V across MOTOR tabs
+RIGHT_REAR_+,U6.BOUT1,M_RIGHT_REAR.+,22,yellow,Keep supplied 28AWG motor lead short; reverse both leads if forward test disagrees
+RIGHT_REAR_-,U6.BOUT2,M_RIGHT_REAR.-,22,blue,Keep supplied 28AWG motor lead short; reverse both leads if forward test disagrees
+RIGHT_REAR_+,RIGHT_REAR_+,C_RIGHT_REAR.1,component,,100nF ceramic >=25V across MOTOR tabs
+RIGHT_REAR_-,RIGHT_REAR_-,C_RIGHT_REAR.2,component,,100nF ceramic >=25V across MOTOR tabs
+PWM0,U10.PWM0,U8.2,26,signal,
+PWM0,PWM0,R20.1,component,,10k pull-down at buffer input
+GND,GND,R20.2,component,,10k pull-down at buffer input
+PWM5V_0,U8.3,R30.1,26,signal,
+SERVO_LEFT_YAW,R30.2,SV0.SIGNAL,26,signal,220ohm series resistor
+SERVO_LEFT_YAW,SERVO_LEFT_YAW,R40.1,component,,10k pull-down at servo signal
+GND,GND,R40.2,component,,10k pull-down at servo signal
+5V_SERVO,J_SERVO.2,SV0.RED,22,red,Individual branch; retain servo plug center positive
+GND,J_SERVO.1,SV0.GND,22,black/brown,
+PWM1,U10.PWM1,U8.5,26,signal,
+PWM1,PWM1,R21.1,component,,10k pull-down at buffer input
+GND,GND,R21.2,component,,10k pull-down at buffer input
+PWM5V_1,U8.6,R31.1,26,signal,
+SERVO_LEFT_PITCH,R31.2,SV1.SIGNAL,26,signal,220ohm series resistor
+SERVO_LEFT_PITCH,SERVO_LEFT_PITCH,R41.1,component,,10k pull-down at servo signal
+GND,GND,R41.2,component,,10k pull-down at servo signal
+5V_SERVO,J_SERVO.2,SV1.RED,22,red,Individual branch; retain servo plug center positive
+GND,J_SERVO.1,SV1.GND,22,black/brown,
+PWM2,U10.PWM2,U8.9,26,signal,
+PWM2,PWM2,R22.1,component,,10k pull-down at buffer input
+GND,GND,R22.2,component,,10k pull-down at buffer input
+PWM5V_2,U8.8,R32.1,26,signal,
+SERVO_RIGHT_YAW,R32.2,SV2.SIGNAL,26,signal,220ohm series resistor
+SERVO_RIGHT_YAW,SERVO_RIGHT_YAW,R42.1,component,,10k pull-down at servo signal
+GND,GND,R42.2,component,,10k pull-down at servo signal
+5V_SERVO,J_SERVO.2,SV2.RED,22,red,Individual branch; retain servo plug center positive
+GND,J_SERVO.1,SV2.GND,22,black/brown,
+PWM3,U10.PWM3,U8.12,26,signal,
+PWM3,PWM3,R23.1,component,,10k pull-down at buffer input
+GND,GND,R23.2,component,,10k pull-down at buffer input
+PWM5V_3,U8.11,R33.1,26,signal,
+SERVO_RIGHT_PITCH,R33.2,SV3.SIGNAL,26,signal,220ohm series resistor
+SERVO_RIGHT_PITCH,SERVO_RIGHT_PITCH,R43.1,component,,10k pull-down at servo signal
+GND,GND,R43.2,component,,10k pull-down at servo signal
+5V_SERVO,J_SERVO.2,SV3.RED,22,red,Individual branch; retain servo plug center positive
+GND,J_SERVO.1,SV3.GND,22,black/brown,
+PWM4,U10.PWM4,U9.2,26,signal,
+PWM4,PWM4,R24.1,component,,10k pull-down at buffer input
+GND,GND,R24.2,component,,10k pull-down at buffer input
+PWM5V_4,U9.3,R34.1,26,signal,
+SERVO_HEAD,R34.2,SV4.SIGNAL,26,signal,220ohm series resistor
+SERVO_HEAD,SERVO_HEAD,R44.1,component,,10k pull-down at servo signal
+GND,GND,R44.2,component,,10k pull-down at servo signal
+5V_SERVO,J_SERVO.2,SV4.RED,22,red,Individual branch; retain servo plug center positive
+GND,J_SERVO.1,SV4.GND,22,black/brown,
+GND,GROUND_STAR,U9.5,26,black,Unused buffer INPUT tied low
+GND,GROUND_STAR,U9.9,26,black,Unused buffer INPUT tied low
+GND,GROUND_STAR,U9.12,26,black,Unused buffer INPUT tied low
+5V_SERVO,U3.VOUT,U9.4,26,red,Unused buffer OE high
+5V_SERVO,U3.VOUT,U9.10,26,red,Unused buffer OE high
+5V_SERVO,U3.VOUT,U9.13,26,red,Unused buffer OE high
+MOTOR_IN,MOTOR_IN,C1.1,component,,220uF 25V low-ESR
+GND,GND,C1.2,component,,220uF 25V low-ESR
+SERVO_IN,SERVO_IN,C2.1,component,,220uF 25V low-ESR
+GND,GND,C2.2,component,,220uF 25V low-ESR
+LOGIC_IN,LOGIC_IN,C3.1,component,,100uF 25V
+GND,GND,C3.2,component,,100uF 25V
+5V_MOTOR,5V_MOTOR,C4.1,component,,470uF 10V low-ESR
+GND,GND,C4.2,component,,470uF 10V low-ESR
+5V_MOTOR,5V_MOTOR,C5.1,component,,470uF 10V low-ESR
+GND,GND,C5.2,component,,470uF 10V low-ESR
+5V_SERVO,5V_SERVO,C6.1,component,,1000uF 10V low-ESR
+GND,GND,C6.2,component,,1000uF 10V low-ESR
+5V_LOGIC,5V_LOGIC,C7.1,component,,470uF 10V low-ESR
+GND,GND,C7.2,component,,470uF 10V low-ESR
+5V_SERVO,5V_SERVO,C8.1,component,,100nF ceramic
+GND,GND,C8.2,component,,100nF ceramic
+5V_SERVO,5V_SERVO,C9.1,component,,100nF ceramic
+GND,GND,C9.2,component,,100nF ceramic
+5V_MOTOR,5V_MOTOR,R15.1,component,,100ohm 1W discharge resistor
+GND,GND,R15.2,component,,100ohm 1W discharge resistor
+5V_SERVO,5V_SERVO,R16.1,component,,100ohm 1W discharge resistor
+GND,GND,R16.2,component,,100ohm 1W discharge resistor
