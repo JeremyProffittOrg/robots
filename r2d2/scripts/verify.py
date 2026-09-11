@@ -26,6 +26,9 @@ def main():
   p=ROOT/row['path'];assert hashlib.sha256(p.read_bytes()).hexdigest()==row['sha256']
   run(['ffmpeg','-v','error','-i',str(p),'-f','null','-'])
  results.append('16 MP3 files: hashes and full decode PASS')
+ sliced=json.loads((ROOT/'cad/h2d-slice-check.json').read_text())
+ assert sliced['return_code']==0 and hashlib.sha256((ROOT/sliced['part']).read_bytes()).hexdigest()==sliced['sha256']
+ results.append('Bambu H2D coupon slice: success and current STL hash verified; no physical print')
  wires=list(csv.DictReader((ROOT/'electronics/wiring.csv').open()))
  config=(ROOT/'firmware/include/config.h').read_text()
  expected={'LEFT':(14,32),'RIGHT':(15,33),'REAR':(27,12)}

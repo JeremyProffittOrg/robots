@@ -53,7 +53,8 @@ criteria are in mechanical.md, electrical.md and assembly.md.
 
 Include a design PDF with the completed fabrication package and email the
 PDF as an attachment after verification. Do not send a preliminary research
-note as the completed design. No completion email has been sent.
+note as the completed design. Record the final email receipt in the shared
+repository plan after the send succeeds.
 
 Local Git configuration identifies the operator email as
 `proffitt.jeremy@gmail.com`; use this recipient unless the operator supplies

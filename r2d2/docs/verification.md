@@ -18,6 +18,14 @@ and a 20/40 tooth gear pair at five mesh phases. Each intersection was
 empty. These selected checks do not establish clearance for every purchased
 part revision, every fastener projection or a misrouted harness.
 
+Bambu Studio also sliced `coupon.stl` with the installed H2D 0.4 mm profile,
+0.20 mm Standard process and PLA Basic. It returned code 0, `Success.`,
+and no warnings, and produced real H2D G-code inside a sliced 3MF. Its
+predictions were 12.36 g and 1436 seconds for that coupon. The test used
+isolated temporary settings and never connected to a printer. This one
+stock-PLA coupon slice does not validate every structural PETG profile or
+predict the full robot's mass. Evidence: `cad/h2d-slice-check.json`.
+
 ## Firmware and sounds
 
 `pio run -d firmware` succeeded for the original Adafruit HUZZAH32 board,

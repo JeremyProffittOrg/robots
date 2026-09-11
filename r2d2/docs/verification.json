@@ -10,6 +10,7 @@
     "JavaScript syntax: PASS",
     "PASS: fresh commands, release, cancel, blur, late arm response, disconnect and no automatic re-arm",
     "16 MP3 files: hashes and full decode PASS",
+    "Bambu H2D coupon slice: success and current STL hash verified; no physical print",
     "154 wiring rows: six independent motor channels, firmware pins and divider bounds PASS",
     "Firmware image 965632 bytes; filesystem image 2097152 bytes: fit partitions"
   ],

@@ -1,0 +1,177 @@
+{
+  "pages": 36,
+  "bytes": 1775160,
+  "text_characters": 58455,
+  "all_pages_rendered": true,
+  "budget_usd": 570.93,
+  "outline_entries": [
+    [
+      "Design and assembly manual",
+      1
+    ],
+    [
+      "Package and reading order",
+      2
+    ],
+    [
+      "Contents",
+      2
+    ],
+    [
+      "Mechanical design and print guide",
+      3
+    ],
+    [
+      "Design envelope",
+      3
+    ],
+    [
+      "Load and drive limits",
+      3
+    ],
+    [
+      "Purchased fits and adjustable mounts",
+      3
+    ],
+    [
+      "Height stack and mating surfaces",
+      4
+    ],
+    [
+      "Print order and settings",
+      4
+    ],
+    [
+      "Finish and maintenance",
+      5
+    ],
+    [
+      "Internal frame and bearing stack",
+      6
+    ],
+    [
+      "Assembly groups",
+      7
+    ],
+    [
+      "Rear foot and service access",
+      8
+    ],
+    [
+      "Electrical design and wiring",
+      9
+    ],
+    [
+      "Architecture",
+      9
+    ],
+    [
+      "Power path",
+      9
+    ],
+    [
+      "Pin map",
+      9
+    ],
+    [
+      "Servo and sense circuits",
+      10
+    ],
+    [
+      "Audio and USB",
+      10
+    ],
+    [
+      "Harness and charging",
+      10
+    ],
+    [
+      "Sources",
+      11
+    ],
+    [
+      "Assembly and commissioning",
+      12
+    ],
+    [
+      "Tools and first checks",
+      12
+    ],
+    [
+      "Stage 1 - feet and motors",
+      12
+    ],
+    [
+      "Stage 2 - body frame and side legs",
+      12
+    ],
+    [
+      "Stage 3 - rear steering and bearings",
+      13
+    ],
+    [
+      "Stage 4 - rotating head",
+      13
+    ],
+    [
+      "Stage 5 - boards, wiring and inspection",
+      14
+    ],
+    [
+      "Stage 6 - firmware and first drive",
+      14
+    ],
+    [
+      "Stage 7 - skins and final acceptance",
+      15
+    ],
+    [
+      "Fault finding",
+      15
+    ],
+    [
+      "Original robot voice collection",
+      16
+    ],
+    [
+      "Digital verification and physical limits",
+      17
+    ],
+    [
+      "CAD",
+      17
+    ],
+    [
+      "Firmware and sounds",
+      17
+    ],
+    [
+      "Electrical consistency",
+      17
+    ],
+    [
+      "Physical acceptance still required",
+      17
+    ],
+    [
+      "Electrical bill of materials",
+      18
+    ],
+    [
+      "Mechanical hardware and consumables",
+      20
+    ],
+    [
+      "Print manifest",
+      21
+    ],
+    [
+      "Point-to-point wiring schedule",
+      23
+    ],
+    [
+      "Circuit sheets",
+      28
+    ]
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "part": "stl/coupon.stl",
+  "sha256": "18f4e7055579e6686148ba56bb1e88526f022c292f3ae8517d9c91d6f57e33b6",
+  "status": "pass",
+  "return_code": 0,
+  "error_string": "Success.",
+  "profile": "Bambu Lab H2D 0.4 nozzle; 0.20mm Standard; PLA Basic; Textured PEI",
+  "wall_loops": 2,
+  "infill": 15.0,
+  "predicted_mass_g": 12.360381126403809,
+  "predicted_time_s": 1436.0380859375,
+  "warning": "",
+  "scope": "One software-only coupon slice. No printer connection or physical print. Stock profiles and isolated temporary user state."
+}

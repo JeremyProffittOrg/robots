@@ -151,6 +151,7 @@ Primary references: [DRV8833 pin guide](https://learn.adafruit.com/adafruit-drv8
 [UBEC rating](https://www.adafruit.com/product/1385),
 [logic regulator](https://www.adafruit.com/product/4739),
 [MAX98357A](https://www.adafruit.com/product/3006),
-[Bioenno pack](https://www.bioennopower.com/products/12v-6ah-lifepo4-battery-pvc).
+[Bioenno pack](https://www.bioennopower.com/products/12v-6ah-lifepo4-battery-pvc),
+[TI SN74AHCT125 pin functions and ratings](https://www.ti.com/lit/ds/symlink/sn74ahct125.pdf).
 Exact purchased parts and price allowances are in the BOM. Prices and
 availability were researched on 2026-09-11 and are not a purchase quote.

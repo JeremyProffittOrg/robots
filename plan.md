@@ -19,7 +19,7 @@ Assumptions following instruction to continue: two motors/four wheels per foot; 
 
 - [x] Mechanical and electrical architecture; export actual CAD. `python C:/dev/robots/r2d2/scripts/export_cad.py` passed: 39 meshes, 148 printed pieces, all closed/connected/positive and under300mm each axis. Solid plastic bound2924.6g; actual slice mass and4.5kg finished limit require physical commissioning.
 - [x] Firmware and sounds. `pio run -d C:/dev/robots/r2d2/firmware` and `pio run -d C:/dev/robots/r2d2/firmware -t buildfs` succeeded. Native control and phone UI tests passed; sixteen MP3s fully decoded.
-- [~] Integration/manual. `python C:/dev/robots/r2d2/scripts/verify.py` passed: four CAD interference checks,154 wire rows, firmware pins/dividers, audio hashes, partition sizes, native and UI behavior. PDF build and render review remain.
+- [x] Integration/manual. `python C:/dev/robots/r2d2/scripts/verify.py` passed: four CAD interference checks,154 wire rows, firmware pins/dividers, audio hashes, partition sizes, native and UI behavior. Final PDF has36 pages; all pages rendered and visually reviewed. Power overview labels corrected in source after visual review caught unsupported inherited SVG text attributes.
 - [ ] Delivery. Done: focused commit/push to main; any resulting workflow reaches a terminal state; final PDF sent as HTML email attachment with SES MessageId evidence. Email-only subagent permitted by operator-mail instructions.
 
 ## R2-D2 stop conditions (only these)
@@ -34,6 +34,7 @@ Track OpenSCAD, PlatformIO and email tool session/agent IDs. Observe exit codes 
 
 - 2026-09-11: Continued after user instruction; selected explicit assumptions above. Research and existing Dalek implementation read for reuse. No email sent yet.
 - 2026-09-11: CAD exports monitored to terminal result via sessions67510,58783,82401,16771,17496. Firmware session99688 completed successfully. Native test caught misleading indentation; fixed code and reran successfully. Corrected shoulder shell slots, shared flange stacks, rear-attachment elevation, servo mount height adjustment, spindle nuts and gear phase before final exports. Original MP3 generation returned16 files/42.1seconds. Verification session82813 completed with all checks passing. Measured digital results are not physical hardware validation.
+- 2026-09-11: Milestone commit fb9376b pushed to main. No GitHub Actions runs were triggered; repository has no configured workflow. Final verification session94046 passed after current-source rebuild: RAM44884 bytes; flash959329 bytes; binary965632 bytes; LittleFS2097152 bytes. Actual isolated Bambu Studio H2D coupon slice returned0/Success/no warnings, predicted12.36g and1436s. Evidence is cad/h2d-slice-check.json. PDF builder returned36 pages/1775160 bytes after visual repair. ZIP validates39 STLs,16 MP3s and PDF. Budget estimate570.93USD includes allowances, hardware, consumables and4kg filament; excludes tax/shipping/tools/printer. Physical commissioning remains unverified.
 
 ---
 
