@@ -1,0 +1,136 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="966" viewBox="0 0 1100 966"><rect width="1100" height="966" fill="white"/>
+<text x="30" y="34" font-family="sans-serif" font-size="22" fill="#122439">R2-24 circuit: drive / 2</text>
+<text x="30" y="65" font-family="sans-serif" font-size="14" fill="#374151">Each horizontal line is one connection. Identical named nets join across sheets. See wiring.csv for all grounds.</text>
+<text x="30" y="100" font-family="monospace" font-size="14" fill="#142337">U1 GPIO15</text>
+<path d="M 365 95 H 725" stroke="#163d72" stroke-width="2" fill="none"/>
+<circle cx="365" cy="95" r="3" fill="#163d72"/><circle cx="725" cy="95" r="3" fill="#163d72"/>
+<rect x="420" y="83" width="260" height="22" fill="white"/>
+<text x="550" y="100" text-anchor="middle" font-family="monospace" font-size="13" fill="#163d72">RIGHT_FWD (26 AWG)</text>
+<text x="744" y="100" font-family="monospace" font-size="14" fill="#142337">R_RIGHT_FWD 10k pin1</text>
+<text x="30" y="138" font-family="monospace" font-size="14" fill="#142337">U1 GPIO33</text>
+<path d="M 365 133 H 725" stroke="#163d72" stroke-width="2" fill="none"/>
+<circle cx="365" cy="133" r="3" fill="#163d72"/><circle cx="725" cy="133" r="3" fill="#163d72"/>
+<rect x="420" y="121" width="260" height="22" fill="white"/>
+<text x="550" y="138" text-anchor="middle" font-family="monospace" font-size="13" fill="#163d72">RIGHT_REV (26 AWG)</text>
+<text x="744" y="138" font-family="monospace" font-size="14" fill="#142337">D2 AIN2</text>
+<text x="30" y="176" font-family="monospace" font-size="14" fill="#142337">U1 GPIO33</text>
+<path d="M 365 171 H 725" stroke="#163d72" stroke-width="2" fill="none"/>
+<circle cx="365" cy="171" r="3" fill="#163d72"/><circle cx="725" cy="171" r="3" fill="#163d72"/>
+<rect x="420" y="159" width="260" height="22" fill="white"/>
+<text x="550" y="176" text-anchor="middle" font-family="monospace" font-size="13" fill="#163d72">RIGHT_REV (26 AWG)</text>
+<text x="744" y="176" font-family="monospace" font-size="14" fill="#142337">D2 BIN2</text>
+<text x="30" y="214" font-family="monospace" font-size="14" fill="#142337">U1 GPIO33</text>
+<path d="M 365 209 H 725" stroke="#163d72" stroke-width="2" fill="none"/>
+<circle cx="365" cy="209" r="3" fill="#163d72"/><circle cx="725" cy="209" r="3" fill="#163d72"/>
+<rect x="420" y="197" width="260" height="22" fill="white"/>
+<text x="550" y="214" text-anchor="middle" font-family="monospace" font-size="13" fill="#163d72">RIGHT_REV (26 AWG)</text>
+<text x="744" y="214" font-family="monospace" font-size="14" fill="#142337">R_RIGHT_REV 10k pin1</text>
+<text x="30" y="252" font-family="monospace" font-size="14" fill="#142337">U1 GPIO13</text>
+<path d="M 365 247 H 725" stroke="#163d72" stroke-width="2" fill="none"/>
+<circle cx="365" cy="247" r="3" fill="#163d72"/><circle cx="725" cy="247" r="3" fill="#163d72"/>
+<rect x="420" y="235" width="260" height="22" fill="white"/>
+<text x="550" y="252" text-anchor="middle" font-family="monospace" font-size="13" fill="#163d72">ENABLE (26 AWG)</text>
+<text x="744" y="252" font-family="monospace" font-size="14" fill="#142337">D2 SLP</text>
+<text x="30" y="290" font-family="monospace" font-size="14" fill="#142337">U1 GPIO36 / A4</text>
+<path d="M 365 285 H 725" stroke="#163d72" stroke-width="2" fill="none"/>
+<circle cx="365" cy="285" r="3" fill="#163d72"/><circle cx="725" cy="285" r="3" fill="#163d72"/>
+<rect x="420" y="273" width="260" height="22" fill="white"/>
+<text x="550" y="290" text-anchor="middle" font-family="monospace" font-size="13" fill="#163d72">FAULT (26 AWG)</text>
+<text x="744" y="290" font-family="monospace" font-size="14" fill="#142337">D2 FLT</text>
+<text x="30" y="328" font-family="monospace" font-size="14" fill="#142337">D2 AOUT1</text>
+<path d="M 365 323 H 725" stroke="#163d72" stroke-width="2" fill="none"/>
+<circle cx="365" cy="323" r="3" fill="#163d72"/><circle cx="725" cy="323" r="3" fill="#163d72"/>
+<rect x="420" y="311" width="260" height="22" fill="white"/>
+<text x="550" y="328" text-anchor="middle" font-family="monospace" font-size="13" fill="#163d72">M3+  (22 AWG)</text>
+<text x="744" y="328" font-family="monospace" font-size="14" fill="#142337">M3 red</text>
+<text x="30" y="366" font-family="monospace" font-size="14" fill="#142337">D2 AOUT2</text>
+<path d="M 365 361 H 725" stroke="#163d72" stroke-width="2" fill="none"/>
+<circle cx="365" cy="361" r="3" fill="#163d72"/><circle cx="725" cy="361" r="3" fill="#163d72"/>
+<rect x="420" y="349" width="260" height="22" fill="white"/>
+<text x="550" y="366" text-anchor="middle" font-family="monospace" font-size="13" fill="#163d72">M3-  (22 AWG)</text>
+<text x="744" y="366" font-family="monospace" font-size="14" fill="#142337">M3 black</text>
+<text x="30" y="404" font-family="monospace" font-size="14" fill="#142337">M3 red</text>
+<path d="M 365 399 H 725" stroke="#163d72" stroke-width="2" fill="none"/>
+<circle cx="365" cy="399" r="3" fill="#163d72"/><circle cx="725" cy="399" r="3" fill="#163d72"/>
+<rect x="420" y="387" width="260" height="22" fill="white"/>
+<text x="550" y="404" text-anchor="middle" font-family="monospace" font-size="13" fill="#163d72">M3+  (26 AWG)</text>
+<text x="744" y="404" font-family="monospace" font-size="14" fill="#142337">CM3 100nF pin1</text>
+<text x="30" y="442" font-family="monospace" font-size="14" fill="#142337">M3 black</text>
+<path d="M 365 437 H 725" stroke="#163d72" stroke-width="2" fill="none"/>
+<circle cx="365" cy="437" r="3" fill="#163d72"/><circle cx="725" cy="437" r="3" fill="#163d72"/>
+<rect x="420" y="425" width="260" height="22" fill="white"/>
+<text x="550" y="442" text-anchor="middle" font-family="monospace" font-size="13" fill="#163d72">M3-  (26 AWG)</text>
+<text x="744" y="442" font-family="monospace" font-size="14" fill="#142337">CM3 pin2</text>
+<text x="30" y="480" font-family="monospace" font-size="14" fill="#142337">D2 BOUT1</text>
+<path d="M 365 475 H 725" stroke="#163d72" stroke-width="2" fill="none"/>
+<circle cx="365" cy="475" r="3" fill="#163d72"/><circle cx="725" cy="475" r="3" fill="#163d72"/>
+<rect x="420" y="463" width="260" height="22" fill="white"/>
+<text x="550" y="480" text-anchor="middle" font-family="monospace" font-size="13" fill="#163d72">M4+  (22 AWG)</text>
+<text x="744" y="480" font-family="monospace" font-size="14" fill="#142337">M4 red</text>
+<text x="30" y="518" font-family="monospace" font-size="14" fill="#142337">D2 BOUT2</text>
+<path d="M 365 513 H 725" stroke="#163d72" stroke-width="2" fill="none"/>
+<circle cx="365" cy="513" r="3" fill="#163d72"/><circle cx="725" cy="513" r="3" fill="#163d72"/>
+<rect x="420" y="501" width="260" height="22" fill="white"/>
+<text x="550" y="518" text-anchor="middle" font-family="monospace" font-size="13" fill="#163d72">M4-  (22 AWG)</text>
+<text x="744" y="518" font-family="monospace" font-size="14" fill="#142337">M4 black</text>
+<text x="30" y="556" font-family="monospace" font-size="14" fill="#142337">M4 red</text>
+<path d="M 365 551 H 725" stroke="#163d72" stroke-width="2" fill="none"/>
+<circle cx="365" cy="551" r="3" fill="#163d72"/><circle cx="725" cy="551" r="3" fill="#163d72"/>
+<rect x="420" y="539" width="260" height="22" fill="white"/>
+<text x="550" y="556" text-anchor="middle" font-family="monospace" font-size="13" fill="#163d72">M4+  (26 AWG)</text>
+<text x="744" y="556" font-family="monospace" font-size="14" fill="#142337">CM4 100nF pin1</text>
+<text x="30" y="594" font-family="monospace" font-size="14" fill="#142337">M4 black</text>
+<path d="M 365 589 H 725" stroke="#163d72" stroke-width="2" fill="none"/>
+<circle cx="365" cy="589" r="3" fill="#163d72"/><circle cx="725" cy="589" r="3" fill="#163d72"/>
+<rect x="420" y="577" width="260" height="22" fill="white"/>
+<text x="550" y="594" text-anchor="middle" font-family="monospace" font-size="13" fill="#163d72">M4-  (26 AWG)</text>
+<text x="744" y="594" font-family="monospace" font-size="14" fill="#142337">CM4 pin2</text>
+<text x="30" y="632" font-family="monospace" font-size="14" fill="#142337">P3 UBEC OUT red</text>
+<path d="M 365 627 H 725" stroke="#163d72" stroke-width="2" fill="none"/>
+<circle cx="365" cy="627" r="3" fill="#163d72"/><circle cx="725" cy="627" r="3" fill="#163d72"/>
+<rect x="420" y="615" width="260" height="22" fill="white"/>
+<text x="550" y="632" text-anchor="middle" font-family="monospace" font-size="13" fill="#163d72">5V_REAR (22 AWG)</text>
+<text x="744" y="632" font-family="monospace" font-size="14" fill="#142337">D3 DRV8833 VMotor +</text>
+<text x="30" y="670" font-family="monospace" font-size="14" fill="#142337">P3 UBEC OUT red</text>
+<path d="M 365 665 H 725" stroke="#163d72" stroke-width="2" fill="none"/>
+<circle cx="365" cy="665" r="3" fill="#163d72"/><circle cx="725" cy="665" r="3" fill="#163d72"/>
+<rect x="420" y="653" width="260" height="22" fill="white"/>
+<text x="550" y="670" text-anchor="middle" font-family="monospace" font-size="13" fill="#163d72">5V_REAR (22 AWG)</text>
+<text x="744" y="670" font-family="monospace" font-size="14" fill="#142337">CO3 470uF10V +</text>
+<text x="30" y="708" font-family="monospace" font-size="14" fill="#142337">U1 GPIO27</text>
+<path d="M 365 703 H 725" stroke="#163d72" stroke-width="2" fill="none"/>
+<circle cx="365" cy="703" r="3" fill="#163d72"/><circle cx="725" cy="703" r="3" fill="#163d72"/>
+<rect x="420" y="691" width="260" height="22" fill="white"/>
+<text x="550" y="708" text-anchor="middle" font-family="monospace" font-size="13" fill="#163d72">REAR_FWD (26 AWG)</text>
+<text x="744" y="708" font-family="monospace" font-size="14" fill="#142337">D3 AIN1</text>
+<text x="30" y="746" font-family="monospace" font-size="14" fill="#142337">U1 GPIO27</text>
+<path d="M 365 741 H 725" stroke="#163d72" stroke-width="2" fill="none"/>
+<circle cx="365" cy="741" r="3" fill="#163d72"/><circle cx="725" cy="741" r="3" fill="#163d72"/>
+<rect x="420" y="729" width="260" height="22" fill="white"/>
+<text x="550" y="746" text-anchor="middle" font-family="monospace" font-size="13" fill="#163d72">REAR_FWD (26 AWG)</text>
+<text x="744" y="746" font-family="monospace" font-size="14" fill="#142337">D3 BIN1</text>
+<text x="30" y="784" font-family="monospace" font-size="14" fill="#142337">U1 GPIO27</text>
+<path d="M 365 779 H 725" stroke="#163d72" stroke-width="2" fill="none"/>
+<circle cx="365" cy="779" r="3" fill="#163d72"/><circle cx="725" cy="779" r="3" fill="#163d72"/>
+<rect x="420" y="767" width="260" height="22" fill="white"/>
+<text x="550" y="784" text-anchor="middle" font-family="monospace" font-size="13" fill="#163d72">REAR_FWD (26 AWG)</text>
+<text x="744" y="784" font-family="monospace" font-size="14" fill="#142337">R_REAR_FWD 10k pin1</text>
+<text x="30" y="822" font-family="monospace" font-size="14" fill="#142337">U1 GPIO12</text>
+<path d="M 365 817 H 725" stroke="#163d72" stroke-width="2" fill="none"/>
+<circle cx="365" cy="817" r="3" fill="#163d72"/><circle cx="725" cy="817" r="3" fill="#163d72"/>
+<rect x="420" y="805" width="260" height="22" fill="white"/>
+<text x="550" y="822" text-anchor="middle" font-family="monospace" font-size="13" fill="#163d72">REAR_REV (26 AWG)</text>
+<text x="744" y="822" font-family="monospace" font-size="14" fill="#142337">D3 AIN2</text>
+<text x="30" y="860" font-family="monospace" font-size="14" fill="#142337">U1 GPIO12</text>
+<path d="M 365 855 H 725" stroke="#163d72" stroke-width="2" fill="none"/>
+<circle cx="365" cy="855" r="3" fill="#163d72"/><circle cx="725" cy="855" r="3" fill="#163d72"/>
+<rect x="420" y="843" width="260" height="22" fill="white"/>
+<text x="550" y="860" text-anchor="middle" font-family="monospace" font-size="13" fill="#163d72">REAR_REV (26 AWG)</text>
+<text x="744" y="860" font-family="monospace" font-size="14" fill="#142337">D3 BIN2</text>
+<text x="30" y="898" font-family="monospace" font-size="14" fill="#142337">U1 GPIO12</text>
+<path d="M 365 893 H 725" stroke="#163d72" stroke-width="2" fill="none"/>
+<circle cx="365" cy="893" r="3" fill="#163d72"/><circle cx="725" cy="893" r="3" fill="#163d72"/>
+<rect x="420" y="881" width="260" height="22" fill="white"/>
+<text x="550" y="898" text-anchor="middle" font-family="monospace" font-size="13" fill="#163d72">REAR_REV (26 AWG)</text>
+<text x="744" y="898" font-family="monospace" font-size="14" fill="#142337">R_REAR_REV 10k pin1</text>
+</svg>

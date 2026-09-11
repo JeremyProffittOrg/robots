@@ -1,0 +1,31 @@
+item,quantity,specification,use,unit_usd
+M3x12 bolt,90,Steel machine screw,Shell seams and single-flange joints; count includes spares,0.08
+M3x60 bolt,18,Steel machine screw,Three per motor cradle through deck,0.25
+M3x35 bolt,8,Steel machine screw,Side foot covers,0.15
+M3x16 bolt,90,Steel machine screw,Splices; double shell flanges; neck; bearings and speaker,0.10
+M3x20 bolt,16,Steel machine screw,Servo cradle slots and switch faceplate,0.12
+M3x18 bolt,4,Steel machine screw,Head plate through gear hub; clear stationary cap,0.10
+M3x16 bolt,4,Steel machine screw,Dome spacers to captured dome nuts,0.10
+M3x8 thread forming screw,6,For 2.6mm plastic pilot holes,Bearing caps; only these thread into plastic,0.08
+M3 hex nut,210,DIN934 steel,Through joints; count includes spares,0.04
+M3 flat washer,360,Steel 3.2mm ID,Each bolt head and nut on plastic,0.02
+M4 threaded rod,4,4mm diameter x315mm steel,Body spine; cut and deburr,1.50
+M4 threaded rod,4,4mm diameter x280mm steel,Two through each side leg,1.25
+M4x20 bolt,8,Steel machine screw,Shoulder inner holes and rear attachment,0.14
+M4 hex nut,40,Steel regular plus jam nuts,Body and leg rods; attachment,0.05
+M4 washer,64,Steel 4.3mm ID,Spread load on plastic,0.03
+M8x120 fully threaded bolt,1,Steel with 13mm hex head,Rear steering spindle; verify useful thread length,1.75
+M8x65 fully threaded bolt,1,Steel with 13mm hex head,Head spindle,1.25
+M8 thin jam nut,8,Steel 13mm AF,Spindle lock pairs; no adhesive on bearings,0.15
+M8 bearing shim,8,8mm ID x12mm OD x1mm,Contact inner races only; not ordinary wide washers,0.15
+608-2RS bearing,4,8x22x7mm,Two rear and two head,1.50
+M2x8 bolt and nut set,8,Steel,Servo supplied horns to printed pinions; adjust to horn thickness,0.12
+M2.5x16 bolt and nut set,20,Steel,Boards on printed insulating spacers,0.12
+M3x20 bolt and nut set,4,Steel,Utility deck on6mm spacers,0.15
+Hook and loop strap,2,20x300mm,Battery retention through tray slots,1.50
+Cable tie,40,3.0mm width x200mm,Motor servo and PCB retention; plus wiring restraint,0.10
+Foam tape,1,1mm closed-cell x1m,Motor and board padding; never cover regulator surfaces,4.00
+Epoxy,1,Small two-part plastic-compatible adhesive,Non-load-bearing decorative eye and panels,6.00
+Paint and masking tape,1,Blue silver white black water-based,Decorative finish; keep mass low,20.00
+PLA filament,2,1kg white or silver,Thin cosmetic shell; estimate includes support waste,20.00
+PETG filament,2,1kg white or gray,Structural prints; validate sliced quantity,22.00

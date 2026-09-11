@@ -17,9 +17,9 @@ Assumptions following instruction to continue: two motors/four wheels per foot; 
 
 ## R2-D2 milestones
 
-- [~] Mechanical and electrical architecture; export actual CAD. Done: `python C:/dev/robots/r2d2/scripts/export_cad.py` exits 0 with closed, connected positive meshes fitting 300 mm on each axis.
-- [ ] Firmware and sounds, depends on fixed pin map. Done: `pio run -d C:/dev/robots/r2d2/firmware` and `pio run -d C:/dev/robots/r2d2/firmware -t buildfs` succeed; native control checks pass; FFmpeg decodes every MP3.
-- [ ] Integration/manual, depends on both above. Done: `python C:/dev/robots/r2d2/scripts/verify.py` and `python C:/dev/robots/r2d2/scripts/build_manual.py` pass; every PDF page rendered and reviewed.
+- [x] Mechanical and electrical architecture; export actual CAD. `python C:/dev/robots/r2d2/scripts/export_cad.py` passed: 39 meshes, 148 printed pieces, all closed/connected/positive and under300mm each axis. Solid plastic bound2924.6g; actual slice mass and4.5kg finished limit require physical commissioning.
+- [x] Firmware and sounds. `pio run -d C:/dev/robots/r2d2/firmware` and `pio run -d C:/dev/robots/r2d2/firmware -t buildfs` succeeded. Native control and phone UI tests passed; sixteen MP3s fully decoded.
+- [~] Integration/manual. `python C:/dev/robots/r2d2/scripts/verify.py` passed: four CAD interference checks,154 wire rows, firmware pins/dividers, audio hashes, partition sizes, native and UI behavior. PDF build and render review remain.
 - [ ] Delivery. Done: focused commit/push to main; any resulting workflow reaches a terminal state; final PDF sent as HTML email attachment with SES MessageId evidence. Email-only subagent permitted by operator-mail instructions.
 
 ## R2-D2 stop conditions (only these)
@@ -33,6 +33,7 @@ Track OpenSCAD, PlatformIO and email tool session/agent IDs. Observe exit codes 
 ## R2-D2 execution log
 
 - 2026-09-11: Continued after user instruction; selected explicit assumptions above. Research and existing Dalek implementation read for reuse. No email sent yet.
+- 2026-09-11: CAD exports monitored to terminal result via sessions67510,58783,82401,16771,17496. Firmware session99688 completed successfully. Native test caught misleading indentation; fixed code and reran successfully. Corrected shoulder shell slots, shared flange stacks, rear-attachment elevation, servo mount height adjustment, spindle nuts and gear phase before final exports. Original MP3 generation returned16 files/42.1seconds. Verification session82813 completed with all checks passing. Measured digital results are not physical hardware validation.
 
 ---
 

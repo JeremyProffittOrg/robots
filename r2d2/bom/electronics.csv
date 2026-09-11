@@ -1,0 +1,37 @@
+reference,quantity,item,part,unit_usd,basis,url,notes
+M1-M6,6,TT motor,Adafruit 3777,2.95,listed,https://www.adafruit.com/product/3777,3-6V; six separate current-limited channels
+W1-W12,12,63mm TT wheel,Adafruit 3766,1.50,listed,https://www.adafruit.com/product/3766,Listed out of stock; two wheels per motor
+U1,1,HUZZAH32 original Feather,Adafruit 3405,19.95,listed,https://www.adafruit.com/product/3405,Original ESP32; not ESP32-S3 or V2
+D1-D3,3,Dual DRV8833 driver,Adafruit 3297,5.95,listed,https://www.adafruit.com/product/3297,Leave factory 1A current limits intact
+P1-P4,4,5V3A UBEC,Adafruit 1385,9.95,listed,https://www.adafruit.com/product/1385,Separate left right rear and servo rails; do not parallel
+U6,1,5V1.2A logic converter,Adafruit 4739,6.95,listed,https://www.adafruit.com/product/4739,Logic and audio only
+SV1,1,SG-5010 standard positional servo,Adafruit 155,11.95,allowance,https://www.adafruit.com/product/155,Rear steering; use supplied horn and center screw
+SV2,1,FS5103R continuous rotation servo,Adafruit 154,11.95,listed,https://www.adafruit.com/product/154,Head speed control; check stock and neutral trim
+U7,1,74AHCT125 DIP14,Adafruit 1787,1.50,allowance,https://www.adafruit.com/product/1787,5V servo signal buffer; use exact AHCT type
+U8,1,MAX98357A I2S amplifier,Adafruit 3006,5.95,listed,https://www.adafruit.com/product/3006,Bridge output; neither speaker terminal is ground
+SP1,1,3inch8ohm1W speaker,Adafruit 1313,1.95,listed,https://www.adafruit.com/product/1313,77.8mm square envelope; foam and cable tie mounting
+B1,1,Protected12V6AhLiFePO4 battery,Bioenno BLF-1206A,79.99,listed,https://www.bioennopower.com/products/12v-6ah-lifepo4-battery-pvc,72Wh;12A continuous;0.7kg;112x66x71mm
+CH1,1,Matched14.6V2A charger,Bioenno BPC-1502DC,21.99,allowance,https://www.bioennopower.com/products/lithium-12v-2a-amp-lifepo4-battery-charger,Remove battery for charging; use factory charge jack
+S1-S2,2,20A30VDC SPST panel switch,NKK S1A,12.00,allowance,https://www.nkkswitches.com/wp-content/themes/impress-blank/search/inc/part.php?part_no=S1A,MAIN and RUN;12.5mm panel holes; label OFF clearly
+FH1-FH6,6,ATO inline fuse holder16AWG,Littelfuse 0FHA0001ZXJ,4.00,allowance,https://info.littelfuse.com/ato-fha-series-landing-page,Insulated holder; no exposed blades
+F1,1,7.5A32V ATO fuse,ATO7.5A,1.00,allowance,,Main pack fuse
+F2-F5,4,2A32V ATO fuse,ATO2A,1.00,allowance,,Each UBEC input separately fused
+F6,1,1A32V ATO fuse,ATO1A,1.00,allowance,,Logic input fuse
+PP30,1,Anderson mating plug set,PP30,6.00,allowance,https://www.andersonpower.com/us/en/resources/PowerpoleResourcesPage.html,Match factory discharge plug; do not cut pack lead
+PROTO,2,Half-size solderable board,Adafruit 1609,4.50,allowance,https://www.adafruit.com/product/1609,Buffer and low-current distribution; motors use heavy wire
+SOCKET,1,DIP14 socket,14pin0.3inch,0.75,allowance,,For U7
+R10K,11,10kohm1percent0.25W resistor,Metal film,0.10,allowance,,Six PWM;enable;fault;two servo inputs;power sense top
+R15K,1,15kohm1percent0.25W resistor,Metal film,0.10,allowance,,Power sense bottom
+R100K,2,100kohm1percent0.25W resistor,Metal film,0.10,allowance,,Pack sense top and amplifier gain
+R22K,1,22kohm1percent0.25W resistor,Metal film,0.10,allowance,,Pack sense bottom
+R220,2,220ohm0.25W resistor,Metal film,0.10,allowance,,Servo output series resistors
+C100N,9,100nF25V ceramic capacitor,X7R,0.15,allowance,,Six motor suppression;buffer bypass;two sense filters
+CI1-CI4,4,220uF25V electrolytic,105C low ESR,0.75,allowance,,UBEC inputs; observe polarity
+CI5,1,100uF25V electrolytic,105C low ESR,0.50,allowance,,Logic converter input
+CO1-CO4,4,470uF10V electrolytic,105C low ESR,0.75,allowance,,Three driver rails and logic rail
+CS,1,1000uF10V electrolytic,105C low ESR,1.00,allowance,,Servo rail
+WIRE18,4,18AWG silicone wire metre,Red black,1.50,allowance,,Main power distribution
+WIRE22,6,22AWG silicone wire metre,Assorted,1.00,allowance,,Motor and servo branches
+WIRE26,5,26AWG stranded wire metre,Assorted,0.60,allowance,,Signal wiring
+CONNECTORS,1,Connectors ferrules headers heatshrink and labels,Allowance,22.00,allowance,,Six removable motor plugs;two servo extensions;USB power link;10A terminal blocks
+USB,1,Micro USB data cable,USB-A to micro-B,5.00,allowance,,For original HUZZAH32 flashing

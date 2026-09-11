@@ -1,0 +1,9 @@
+<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>R2-24 control</title><style>body{font:18px system-ui;margin:auto;padding:20px;max-width:560px;background:#f3f6fa;color:#142337}button{font:inherit;padding:16px;margin:5px;border:1px solid #9baabc;border-radius:10px;background:white;color:#142337;touch-action:none}#stop{background:#b81825;color:white;width:95%}label{display:block;margin:20px 0}input{width:100%}.pad{display:grid;grid-template-columns:1fr 1fr}small{display:block}</style>
+<h1>R2-24</h1><p id="status">Connecting...</p><button id="arm">Arm</button><button id="stop">STOP</button>
+<label>Speed limit <span id="speedLabel">35%</span><input id="speed" type="range" min="15" max="100" value="35"></label>
+<label>Rear steering <span id="turnLabel">0°</span><input id="turn" type="range" min="-100" max="100" value="0"></label><button id="center">Center steering</button>
+<div class="pad"><button data-speed="1">Hold: forward</button><button data-speed="-1">Hold: reverse</button><button data-head="-1">Hold: head left</button><button data-head="1">Hold: head right</button></div>
+<p>Release to stop motion. Re-arm after connection loss. Use gentle turns on a level hard floor.</p>
+<label>Robot sound<select id="sound"></select></label><button id="play">Play sound</button>
+<small>The physical RUN switch removes motor and servo power.</small><script src="/app.js"></script></html>
