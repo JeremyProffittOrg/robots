@@ -1,0 +1,176 @@
+{
+  "source": "Original text, local System.Speech synthesis; no sampled programme audio.",
+  "voice": "Microsoft David Desktop",
+  "effects": "0.86x playback; tanh drive; 30Hz ring modulation; 45ms echo; 170-3400Hz band limit",
+  "format": "MP3 mono 22050Hz 32kbps",
+  "clips": [
+    {
+      "file": "systems_online.mp3",
+      "text": "Systems online. Mobile unit ready.",
+      "duration_seconds": 4.918,
+      "bytes": 20231,
+      "sha256": "7b1857a295f45c28b5c320aaffeed72c162c873ed394a0e19d1905b5e4639f65"
+    },
+    {
+      "file": "exterminate.mp3",
+      "text": "Exterminate. Exterminate.",
+      "duration_seconds": 4.336,
+      "bytes": 17818,
+      "sha256": "1564fe5ddf0b7d183c77e057e7b14616a753e4b274c4cc854a10c507fd65ae91"
+    },
+    {
+      "file": "patrol.mp3",
+      "text": "Patrol sequence initiated.",
+      "duration_seconds": 3.313,
+      "bytes": 13744,
+      "sha256": "f3b841c513d5de54fb4d363fd5df0a826d6c93cafb286b0b327f11d48b14beca"
+    },
+    {
+      "file": "halt.mp3",
+      "text": "Halt. Identify yourself.",
+      "duration_seconds": 4.447,
+      "bytes": 18340,
+      "sha256": "a9a5300d2bfe1bbd6dd9a0ea5401df29c87f661cdac6794d82c39da97f4553ff"
+    },
+    {
+      "file": "obey.mp3",
+      "text": "You will obey the robot.",
+      "duration_seconds": 2.726,
+      "bytes": 11443,
+      "sha256": "f27994cfa1b2180c78787b3967f7f72e2ea8b1d6ea0bc9c4ae8743d0831ddd87"
+    },
+    {
+      "file": "scan.mp3",
+      "text": "Scanning the surrounding area.",
+      "duration_seconds": 3.011,
+      "bytes": 12599,
+      "sha256": "fc6fde871bfea08f5dbb1578996c047d4edc88b8f1418d514640aabb81b0adb8"
+    },
+    {
+      "file": "intruder.mp3",
+      "text": "Unidentified visitor detected.",
+      "duration_seconds": 3.424,
+      "bytes": 14271,
+      "sha256": "b0cf6d383f754f5ada535a1d8358c1c8cbb2ad15fa51ecccfec6accf3ab599c7"
+    },
+    {
+      "file": "advance.mp3",
+      "text": "Advance. Maintain formation.",
+      "duration_seconds": 4.516,
+      "bytes": 18553,
+      "sha256": "736e7e2c1f56f86de7b431525f1cc66d4392c67a2070c3067d44ce55e2e08e7a"
+    },
+    {
+      "file": "retreat.mp3",
+      "text": "Withdraw. Reposition the unit.",
+      "duration_seconds": 4.202,
+      "bytes": 17301,
+      "sha256": "b56773af649ed4d337ffe44c0b13d8a1a3b42a058f0bb2fd8975463557a5023a"
+    },
+    {
+      "file": "turning.mp3",
+      "text": "Rotating. Keep the path clear.",
+      "duration_seconds": 4.359,
+      "bytes": 17928,
+      "sha256": "d8e5261b033db23bb668268107dacf76350812eef38ad073b22f4d67d06b9f04"
+    },
+    {
+      "file": "head_scan.mp3",
+      "text": "Optical scanner searching.",
+      "duration_seconds": 2.964,
+      "bytes": 12386,
+      "sha256": "67f42ef19da9d90f5f11024da29280a2d8d38e5435e060cf75e162fba2bfc0c6"
+    },
+    {
+      "file": "arms_ready.mp3",
+      "text": "Manipulator systems ready.",
+      "duration_seconds": 3.163,
+      "bytes": 13222,
+      "sha256": "430be14cec20cefac4dd735ad28a9c9484e7f48b78acccd186ec595195608ad8"
+    },
+    {
+      "file": "wifi_connected.mp3",
+      "text": "Network connection established.",
+      "duration_seconds": 3.243,
+      "bytes": 13540,
+      "sha256": "549ae90815e6010cf3d86fe0eb74859e4ce8aa240a1d2569d4add4db4382a42c"
+    },
+    {
+      "file": "access_point.mp3",
+      "text": "Local control network active.",
+      "duration_seconds": 3.354,
+      "bytes": 13956,
+      "sha256": "72f6956ea46b0ef1849fa5b1b0ee236d9cd9069137f3fd04782d9333d8113b17"
+    },
+    {
+      "file": "link_lost.mp3",
+      "text": "Control signal lost. Movement stopped.",
+      "duration_seconds": 5.179,
+      "bytes": 21279,
+      "sha256": "2e6faf455930a4b47d7250f4f54605d6f6a1e789f7a5a46fef5b8243bca1c996"
+    },
+    {
+      "file": "stopped.mp3",
+      "text": "All movement stopped.",
+      "duration_seconds": 2.487,
+      "bytes": 10500,
+      "sha256": "c09b8bce621614df5047c8ebc34b8fc1abb9d1846fefcb0b8c6e450192f32ce4"
+    },
+    {
+      "file": "battery_low.mp3",
+      "text": "Energy reserves low. Return to the charging station.",
+      "duration_seconds": 5.877,
+      "bytes": 24010,
+      "sha256": "686eb97eb801c979a5d897f5a61bb77876f6fdc3fbffde0279b11d2e1758adc0"
+    },
+    {
+      "file": "charging.mp3",
+      "text": "Power isolated. Charging sequence ready.",
+      "duration_seconds": 5.353,
+      "bytes": 21908,
+      "sha256": "bdcaad8d19fa45c4088c6072c26ee506d358045114f5fb13693f0dec14407c20"
+    },
+    {
+      "file": "recharge.mp3",
+      "text": "Recharge required. Mission suspended.",
+      "duration_seconds": 4.923,
+      "bytes": 20234,
+      "sha256": "2a22de72fb96f4084884d8c7ab620181deaef1d4a42cfdfe1f1a44b19695618f"
+    },
+    {
+      "file": "hello.mp3",
+      "text": "Greetings. I am your mobile robot.",
+      "duration_seconds": 4.58,
+      "bytes": 18872,
+      "sha256": "c4604a20efa9eb2b213ea3232b1b71a38c2f304a85cd354b52209a39924a27f5"
+    },
+    {
+      "file": "affirmative.mp3",
+      "text": "Affirmative. Command received.",
+      "duration_seconds": 4.319,
+      "bytes": 17823,
+      "sha256": "52bb73797536885fb1350c2e2e7707bc1ba36f944b45f40fe8efd6b933253b94"
+    },
+    {
+      "file": "negative.mp3",
+      "text": "Negative. Command rejected.",
+      "duration_seconds": 4.168,
+      "bytes": 17193,
+      "sha256": "84d75305fe1b515b93612fd77ed3dfeaf9c6952bf6df04e38a103e9f9826ad3d"
+    },
+    {
+      "file": "victory.mp3",
+      "text": "Mission complete. The robot prevails.",
+      "duration_seconds": 4.888,
+      "bytes": 20129,
+      "sha256": "ef5e2ba129869ae621727e56381ac19ac92f0799bc2fe5ab38a12f1029f8eb83"
+    },
+    {
+      "file": "goodbye.mp3",
+      "text": "Powering down. Until the next mission.",
+      "duration_seconds": 4.965,
+      "bytes": 20444,
+      "sha256": "75eee91775253b6227f4c92058a17cecfebd4ba531bda7725e66445fb64335c9"
+    }
+  ]
+}

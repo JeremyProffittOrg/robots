@@ -1,0 +1,25 @@
+file,text
+systems_online.mp3,Systems online. Mobile unit ready.
+exterminate.mp3,Exterminate. Exterminate.
+patrol.mp3,Patrol sequence initiated.
+halt.mp3,Halt. Identify yourself.
+obey.mp3,You will obey the robot.
+scan.mp3,Scanning the surrounding area.
+intruder.mp3,Unidentified visitor detected.
+advance.mp3,Advance. Maintain formation.
+retreat.mp3,Withdraw. Reposition the unit.
+turning.mp3,Rotating. Keep the path clear.
+head_scan.mp3,Optical scanner searching.
+arms_ready.mp3,Manipulator systems ready.
+wifi_connected.mp3,Network connection established.
+access_point.mp3,Local control network active.
+link_lost.mp3,Control signal lost. Movement stopped.
+stopped.mp3,All movement stopped.
+battery_low.mp3,Energy reserves low. Return to the charging station.
+charging.mp3,Power isolated. Charging sequence ready.
+recharge.mp3,Recharge required. Mission suspended.
+hello.mp3,Greetings. I am your mobile robot.
+affirmative.mp3,Affirmative. Command received.
+negative.mp3,Negative. Command rejected.
+victory.mp3,Mission complete. The robot prevails.
+goodbye.mp3,Powering down. Until the next mission.

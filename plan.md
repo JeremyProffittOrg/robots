@@ -14,6 +14,8 @@ C:/dev/robots/plan.md; C:/dev/robots/dalek/{README.md,docs,cad,stl,electronics,b
 
 ## Locked decisions (user-confirmed; do not revisit)
 
+2026-09-11: "email me the design pdf when done"
+
 2026-09-11: "extensively research and create a Dalek robot that is 3d printed, controllable via a wifi interface which can be attached to a wifi network or work as an ap, using the ttgo tdisplay esp32, which should have the dxisplay showing on the back.  The arms should wiggle in round circltes, the head should spin and it should have 4 wheels under it, using these motors"
 
 2026-09-11: "https://www.adafruit.com/product/3777?srsltid=AfmBOooH-7GfPZ5PPugKDVZ7slZF2AqeJHMMPGVKG1JcvcBawIunWM2U, these wheels https://www.adafruit.com/product/3766 and any other adafruit product you need, along with a large battery pack.  Should be less than 3 ft tall and print in pieces on a bambulabs h2d 3d printer.  create not only the stl's, but circuit diagrams, voice collection as mp3's, and all mounting hardware, bill of material and extensive assembly instrucionts."
@@ -32,7 +34,7 @@ C:/dev/robots/plan.md; C:/dev/robots/dalek/{README.md,docs,cad,stl,electronics,b
 
 - Original TTGO T-Display 1.14-inch classic ESP32, indoor level hard floors, classic bronze appearance; original synthesized robotic voice clips. Optional clarification was requested at start.
 - About 600 mm overall height, lightweight shell, no electronics in rotating head. Final dimensions come from CAD. Physical fit, load, heat and runtime must be checked on the first build.
-- Use Adafruit parts where suitable; a rated prebuilt battery and power converter can come from another vendor if Adafruit ratings do not meet motor/servo demand. Do not buy anything.
+- Use Adafruit parts where suitable; selected Bioenno BLF-1206A 12 V 6 Ah protected LiFePO4 battery and matching BPC-1502DC charger, with rated separate power converters. Do not buy anything.
 
 ## Workstreams
 
@@ -54,3 +56,7 @@ Agents: /root/mechanical, /root/electronics, /root/firmware. Parent monitors age
 ## Execution log
 
 - 2026-09-11: Read parent repository rules; checked clean main, remote and tool availability. Corrected initial assumption: dalek is an empty subdirectory of robots, not a separate repository. Read deep-research and research skills. Opened exact motor and wheel product pages. Spawned the three agents listed above.
+- 2026-09-11: Committed initial plan as dbe4996. Other work appeared under C:/dev/robots/r2d2; it is unrelated and must not be staged or changed.
+- 2026-09-11: `powershell -NoProfile -ExecutionPolicy Bypass -File C:/dev/robots/dalek/scripts/generate_voices.ps1` returned `PASS: 24 MP3s decoded; 407724 bytes; 98.7 seconds`. Audio goes directly in firmware/data/audio. Source transcripts and generation scripts included.
+- 2026-09-11: Locked servos Adafruit 2307 x4 and 154 x1. Rejected DRV8871 because its minimum voltage exceeds TT motor rating; selected DRV8833 x2. Selected protected 72 Wh Bioenno battery to avoid low-voltage regulator dropout. Firmware uses external pack divider 100k/22k, 11.2 V cutoff and 12.0 V re-arm.
+- 2026-09-11: User requested PDF email. Read PDF skill. Local git email is proffitt.jeremy@gmail.com and SES us-east-1 lists that email identity plus jeremy.ninja. Gmail connector requires reauthentication; SES local identity is available, so no Gmail dependency. Use an @jeremy.ninja sender, reply-to operator address, HTML template C:/Users/Jeremy/.claude/templates/email-status.html, final PDF attachment. Delegate final send after checks; require SES MessageId. Never commit email MIME or machine identity state.
