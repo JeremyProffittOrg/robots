@@ -17,7 +17,7 @@ Assumptions following instruction to continue: two motors/four wheels per foot; 
 
 ## R2-D2 milestones
 
-- [~] Revision B: user2026-09-11 "That's too many pieces, adjust the size so the body prints as single stackable pieces, same for the arms". Keep609.6mm overall height and260mm body diameter. Replace quarter shells, split frames, splices, body posts and adapters with two complete stackable body sections; combine each arm/shoulder into one295mm print. Remove retired STLs and their fasteners. Existing drive/electronics/audio remain. Files limited to r2d2 mechanical CAD/exports/BOM/manual/checks/PDF/ZIP and this plan. Proof: closed connected meshes under300mm, empty stack/shoulder intersections, actual H2D slices of both body sections and arms; rebuilt PDF visually checked; push and revised email with SES receipt. No purchases or physical operation. Existing retry and stop conditions apply.
+- [x] Revision B: user2026-09-11 "That's too many pieces, adjust the size so the body prints as single stackable pieces, same for the arms". Delivered two complete stackable body prints and one295mm print per arm, at609.6mm overall height.29 meshes/83 printed pieces. Removed14 superseded STLs. All geometry, mating-plane and four whole-part H2D PETG slice checks passed. Updated hardware list,35-page PDF and ZIP pushed in20126db6f74ef44463c791edad89d30b1aa6840e and emailed. No physical build or purchases.
 
 Revision B job note: first tree-support H2D slice passed body_lower, then body_upper exceeded180s. Deterministic bounded timeout: replace tree generation with automatic normal supports and raise per-part ceiling to300s for one retry. Save each successful part result immediately. Session81754 terminated; next run uses updated supports. Contact checks accept only the exact zero-height mating planes Z315/Z320; a coplanar contact is not a collision volume.
 
@@ -29,6 +29,8 @@ Revision B verified2026-09-11: export session75543 passed29 distinct meshes/83 p
 - [x] Delivery. Design commits fb9376b and76e0dc4 pushed to main; remote76e0dc4c00c0bcd65731c2d13075aac58a39e938 verified; no configured workflow/runs. Email-only agent /root/email_delivery sent final PDF and complete ZIP to proffitt.jeremy@gmail.com; SES accepted MessageId010001a0928280c7-74876f6c-f95a-4ed4-8044-53a79b34853b-000000. This proves send acceptance, not that the recipient opened the message.
 
 ## R2-D2 stop conditions (only these)
+
+Revision B delivery2026-09-11: /root/email_revision_b sent once to proffitt.jeremy@gmail.com; SES accepted010001a092ab0217-4b5d2792-fd79-474c-9de0-9814e77d516f-000000. MIME5850639bytes. PDF1765970bytes SHA256bac2768d34df4ab3eece1d57e4c53438a718a6cbdb41f46a1c6f1082c4bbfd56. ZIP2506034bytes SHA2563dbc0343d757b4270addef6a7fd48cb12f8d39cf5abbee884d2ae6b7c5938ca2. Committed PDF and ZIP-embedded PDF match byte-for-byte. No obsolete split-body meshes in ZIP. No configured GitHub workflow. Generated review PNGs removed after inspection; unrelated Dalek work preserved.
 
 Missing credentials for push/send; a material scope change; an unapproved irreversible action. Complete independent work and report exact input needed. No physical robot is available: mark physical tests unverified and complete the digital deliverables.
 
