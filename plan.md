@@ -17,6 +17,8 @@ Assumptions following instruction to continue: two motors/four wheels per foot; 
 
 ## R2-D2 milestones
 
+- [~] Revision B: user2026-09-11 "That's too many pieces, adjust the size so the body prints as single stackable pieces, same for the arms". Keep609.6mm overall height and260mm body diameter. Replace quarter shells, split frames, splices, body posts and adapters with two complete stackable body sections; combine each arm/shoulder into one295mm print. Remove retired STLs and their fasteners. Existing drive/electronics/audio remain. Files limited to r2d2 mechanical CAD/exports/BOM/manual/checks/PDF/ZIP and this plan. Proof: closed connected meshes under300mm, empty stack/shoulder intersections, actual H2D slices of both body sections and arms; rebuilt PDF visually checked; push and revised email with SES receipt. No purchases or physical operation. Existing retry and stop conditions apply.
+
 - [x] Mechanical and electrical architecture; export actual CAD. `python C:/dev/robots/r2d2/scripts/export_cad.py` passed: 39 meshes, 148 printed pieces, all closed/connected/positive and under300mm each axis. Solid plastic bound2924.6g; actual slice mass and4.5kg finished limit require physical commissioning.
 - [x] Firmware and sounds. `pio run -d C:/dev/robots/r2d2/firmware` and `pio run -d C:/dev/robots/r2d2/firmware -t buildfs` succeeded. Native control and phone UI tests passed; sixteen MP3s fully decoded.
 - [x] Integration/manual. `python C:/dev/robots/r2d2/scripts/verify.py` passed: four CAD interference checks,154 wire rows, firmware pins/dividers, audio hashes, partition sizes, native and UI behavior. Final PDF has36 pages; all pages rendered and visually reviewed. Power overview labels corrected in source after visual review caught unsupported inherited SVG text attributes.
@@ -40,6 +42,46 @@ Track OpenSCAD, PlatformIO and email tool session/agent IDs. Observe exit codes 
 ---
 
 # Dalek fabrication package
+
+## Current revision: strong base and ten STL files
+
+### Locked decisions (user-confirmed; do not revisit)
+
+2026-09-11: "I want this to have a very strong base the motors go into that prints inside the length and width of the printer, and has no more than 10 stl files, each part of the body printing as separate vertically stackable pieces"
+
+The requested limit is ten STL files. One shared arm carrier may be printed twice. Each STL must contain one connected physical part; combining many loose parts into a file does not meet the intended simplification. Body sections must be full-width upright stackable prints, with no split quadrants. Original motors, wheels, rear T-Display, Wi-Fi controls, arm motion, head rotation, battery, circuit diagrams and MP3 collection remain required. The earlier request to email the finished design PDF continues to apply to the revised design.
+
+### Outcome, non-goals, files and proof
+
+Replace the current 35-file mechanical set with ten connected STL designs: one strong base with integrated motor pockets, two full skirt sections, one shoulder, one integrated neck, one integrated head, a shared pitch carrier, two decorative arms, and one head-servo pulley. Use a 300 x 280 mm rounded rectangular base that fits the H2D single-nozzle 325 x 320 mm bed region, including an 8 mm brim. Use positive stacking registers and accessible fasteners.
+
+No changes to circuit functionality, Wi-Fi firmware, audio assets, cloud infrastructure or unrelated R2-D2 files. No purchases or physical printing. Scope is C:/dev/robots/dalek/{cad,stl,bom/hardware.csv,bom/printed-parts.csv,docs,README.md,scripts/export_cad.py,scripts/build_manual.py,output/pdf}; minimal related electrical-document mounting text if required. Keep the original design in Git history only.
+
+Proof: exact STL file count <=10; one positive connected watertight solid per STL; complete body sections fit upright in H2D; real base and body slices using an isolated H2D profile; explicit motor/wheel and stack-joint clearance review; revised BOM and PDF contain no retired part instructions. Strong geometry and slicing are digital checks. The manual must include an unperformed physical base proof-load test; do not claim a tested strength rating.
+
+### Workstreams and tracked jobs
+
+- [~] Mechanical replacement, /root/stacked_cad: CAD, exact ten-file set, manifest, hardware BOM, mechanical assembly and four CAD views. Pass command: `python C:/dev/robots/dalek/scripts/export_cad.py --check-only` with ten files, all_pass true and intended bed envelope.
+- [~] Independent audit, /root/stack_audit: review motor pocket load path, wheel clearance, stack joints, integrated head/neck retention and arm/screen mounting. Pass: all concrete geometric findings resolved and recorded; physical assumptions separated.
+- [~] H2D slicing, /root/h2d_preflight: reuse installed slicer with isolated temporary settings. Pass: final base and full body sections slice successfully, correct part hashes, no outside-bed warnings; capture predicted mass/time separately from physical measurements.
+- [~] Integration, /root: revise assembly/research/verification/README, render updated PDF, commit/push main, watch any workflow, email revised PDF and verify SES MessageId.
+
+### Verified facts and assumptions
+
+- Working tree clean at start; repository main includes completed R2-D2 work through 1fdc488. Preserve the R2-D2 plan section and all R2-D2 files.
+- Current Dalek is 35 STL files and 151 listed pieces, with a 360 mm split chassis. This is the design being replaced, not retained as an alternative.
+- Existing tools, source drawings, electronics and firmware are available. H2D single-nozzle bed 325 x 320 mm. A 300 x 280 mm base with 8 mm brim occupies 316 x 296 mm.
+- Initial engineering choices: 6 mm base floor, continuous 4 mm walls/ribs, top-open motor pockets; six printed body sections stacked vertically. Final dimensions and weight come from generated CAD/slices.
+
+### Stop conditions (only these)
+
+Missing credentials prevent push/email; a separate irreversible action or material scope expansion becomes necessary; physical hardware tests require the actual printed robot. Continue independent work and state the exact blocker. No request for further approval is needed for this authorized design replacement or deployment.
+
+### Retry policy and execution log
+
+Track all long process/session IDs and exit codes. Fix deterministic errors before retrying; two changed-input retries per failure class. H2D tests have no printer connection and never change the user's printer profiles. No scheduled tasks or services. Email only after the final PDF is checked, and never retry after an accepted SES MessageId.
+
+- 2026-09-11: Read parent deploy.md, shared plan, actual CAD/exporter/BOMs and current manual sources. Spawned the three agents named above. Locked ten unique STL designs / eleven physical prints, with a repeated carrier. Selected a rounded rectangle to keep the four wheel envelopes inside a continuous base perimeter.
 
 ## Outcome
 
