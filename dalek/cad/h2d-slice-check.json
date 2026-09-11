@@ -1,0 +1,76 @@
+{
+  "checked_at_utc": "2026-09-11T21:14:43Z",
+  "test_type": "Actual local Bambu Studio CLI slicing; no printer connection or physical print",
+  "status": "pass",
+  "software": {
+    "name": "Bambu Studio",
+    "windows_file_version": "02.08.02.61",
+    "executable": "C:/Program Files/Bambu Studio/bambu-studio.exe",
+    "documentation": "https://github.com/bambulab/BambuStudio/wiki/Command-Line-Usage"
+  },
+  "profiles": {
+    "machine": "Bambu Lab H2D 0.4 nozzle",
+    "process": "0.20mm Standard @BBL H2D",
+    "filament": "Bambu PLA Basic @BBL H2D",
+    "bed": "Textured PEI Plate",
+    "source_directory": "C:/Program Files/Bambu Studio/resources/profiles/BBL",
+    "expansion": "Recursively merged installed inherits and include files into full temporary JSON profiles; no process overrides",
+    "layer_height_mm": 0.2,
+    "wall_loops": 2,
+    "sparse_infill_percent": 15
+  },
+  "part": {
+    "path": "stl/fit_coupon.stl",
+    "sha256": "62926fd7a431cd7d3f527d7d032c66cb0212bfd98bafa85f222cc819bf78b1e0",
+    "triangle_count_loaded": 712,
+    "loaded_bbox_mm": [90.00000762939453, 50.0, 5.0]
+  },
+  "argv": [
+    "C:/Program Files/Bambu Studio/bambu-studio.exe",
+    "--datadir",
+    "C:/Users/Jeremy/AppData/Local/Temp/dalek-h2d-slice/state",
+    "--arrange",
+    "1",
+    "--load-settings",
+    "C:/Users/Jeremy/AppData/Local/Temp/dalek-h2d-slice/machine.json;C:/Users/Jeremy/AppData/Local/Temp/dalek-h2d-slice/process.json",
+    "--load-filaments",
+    "C:/Users/Jeremy/AppData/Local/Temp/dalek-h2d-slice/filament.json",
+    "--curr-bed-type",
+    "Textured PEI Plate",
+    "--slice",
+    "0",
+    "--debug",
+    "2",
+    "--export-3mf",
+    "C:/Users/Jeremy/AppData/Local/Temp/dalek-h2d-slice/attempt1/coupon.3mf",
+    "C:/dev/robots/dalek/stl/fit_coupon.stl"
+  ],
+  "execution": {
+    "hidden_process_id": 198584,
+    "process_exited": true,
+    "process_exit_code": 0,
+    "slicer_return_code": 0,
+    "slicer_error_string": "Success.",
+    "warning_message": "",
+    "actual_slice_attempts": 1,
+    "timeout_seconds": 55,
+    "isolated_user_state": "--datadir and process-local APPDATA/LOCALAPPDATA pointed into task temporary directory",
+    "result_file": "C:/Users/Jeremy/AppData/Local/Temp/dalek-h2d-slice/attempt1/result.json",
+    "gcode_member_verified": "Metadata/plate_1.gcode",
+    "gcode_printer_model": "Bambu Lab H2D"
+  },
+  "slicer_predictions_not_physical_measurements": {
+    "filament_mass_g": 12.126616477966309,
+    "filament_length_mm": 4001.32,
+    "main_print_time_seconds": 1113.1187744140625,
+    "total_time_seconds": 1456.824951171875
+  },
+  "limitations": [
+    "This confirms software accepted the specified fit-coupon mesh and generated real H2D G-code.",
+    "The coupon has not been physically printed or measured. Hole clearance and layer adhesion still require a test print.",
+    "The stock PLA process was used for this coupon check. It does not validate every planned part, material, orientation or assembly.",
+    "Do not extrapolate this coupon's mass ratio to the full robot.",
+    "No printer connection, upload, print, or installed profile change was made.",
+    "Generated G-code, temporary full profiles and sliced 3MF remain outside the repository."
+  ]
+}

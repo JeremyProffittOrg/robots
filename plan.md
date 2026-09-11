@@ -1,3 +1,41 @@
+# R2-D2 fabrication package (independent task)
+
+## R2-D2 outcome, files and proof
+
+Create a 609.6 mm tall robot fabrication package in C:/dev/robots/r2d2: six Adafruit 3777 motors, twelve 3766 wheels, powered steering rear foot, continuously rotating head, local phone Wi-Fi control, original MP3 sounds, real STL mounting parts, wiring diagrams, BOM, assembly manual and emailed PDF. No purchasing, physical fabrication, cloud deployment, scheduled tasks or claims of hardware testing. Files: C:/dev/robots/r2d2/{cad,stl,firmware,audio,electronics,bom,docs,scripts,output}; this section of C:/dev/robots/plan.md. Preserve the concurrent Dalek task and its files.
+
+## Locked decisions (user-confirmed; do not revisit)
+
+2026-09-11: "email me the design pdf when doee"
+2026-09-11: "continue"
+
+## R2-D2 verified facts and assumptions
+
+Verified: repository main at https://github.com/JeremyProffittOrg/robots.git. Parent deploy.md, agents.md, CLAUDE.md read. OpenSCAD, PlatformIO, FFmpeg, Python/ReportLab/trimesh available. Adafruit 3777 motor 3-6 V, 1.5 A stall at 6 V, 0.8 kg.cm stall torque. Wheel 3766 is 63 x 29 mm; listed out of stock. H2D dual-nozzle envelope 300 x 320 x 325 mm. Sources: C:/dev/robots/r2d2/docs/component-research.md. Local Git operator address proffitt.jeremy@gmail.com; existing SES delivery route confirmed by concurrent task.
+
+Assumptions following instruction to continue: two motors/four wheels per foot; phone Wi-Fi access point; original beeps and whistles. These are assumptions, not verbatim user confirmations. Indoor level hard floor, gentle arcs, no pivot turns. Digital prototype; physical load/fit/runtime validation remains mandatory.
+
+## R2-D2 milestones
+
+- [~] Mechanical and electrical architecture; export actual CAD. Done: `python C:/dev/robots/r2d2/scripts/export_cad.py` exits 0 with closed, connected positive meshes fitting 300 mm on each axis.
+- [ ] Firmware and sounds, depends on fixed pin map. Done: `pio run -d C:/dev/robots/r2d2/firmware` and `pio run -d C:/dev/robots/r2d2/firmware -t buildfs` succeed; native control checks pass; FFmpeg decodes every MP3.
+- [ ] Integration/manual, depends on both above. Done: `python C:/dev/robots/r2d2/scripts/verify.py` and `python C:/dev/robots/r2d2/scripts/build_manual.py` pass; every PDF page rendered and reviewed.
+- [ ] Delivery. Done: focused commit/push to main; any resulting workflow reaches a terminal state; final PDF sent as HTML email attachment with SES MessageId evidence. Email-only subagent permitted by operator-mail instructions.
+
+## R2-D2 stop conditions (only these)
+
+Missing credentials for push/send; a material scope change; an unapproved irreversible action. Complete independent work and report exact input needed. No physical robot is available: mark physical tests unverified and complete the digital deliverables.
+
+## R2-D2 jobs and retry policy
+
+Track OpenSCAD, PlatformIO and email tool session/agent IDs. Observe exit codes and failures, not only success strings. Per CAD part timeout 180 seconds; two retries after a deterministic fix. Network commands get at most two transient retries. No recurring automation. Existing tools and sibling patterns reused; no new cloud infrastructure.
+
+## R2-D2 execution log
+
+- 2026-09-11: Continued after user instruction; selected explicit assumptions above. Research and existing Dalek implementation read for reuse. No email sent yet.
+
+---
+
 # Dalek fabrication package
 
 ## Outcome
@@ -38,7 +76,7 @@ C:/dev/robots/plan.md; C:/dev/robots/dalek/{README.md,docs,cad,stl,electronics,b
 
 ## Workstreams
 
-- [~] Mechanical, agent /root/mechanical: complete parametric CAD, real mounts/joins, STLs, print manifest, hardware list and mechanical instructions. Depends on electrical component dimensions. Done: export script succeeds; all meshes closed, positive volume, each orientation inside conservative H2D bounds; illustrated assembly review.
+- [x] Mechanical, agent /root/mechanical: parametric CAD, real mounts/joins, 35 STLs, 151-piece print manifest, hardware list and mechanical instructions. Export and mesh validation pass; four CAD views reviewed. Final height 541 mm; solid print-set bound 1988.1 g. Physical fit and operating tests remain explicit prototype commissioning gates.
 - [x] Electrical, agent /root/electronics: primary-source research, rated battery/power plan, BOM, 168 pin/net wiring rows, four circuit SVGs, calculations. Exact net/pin comparison against firmware and power rating review passed; SVGs rendered and inspected.
 - [x] Firmware, agent /root/firmware: station/AP Wi-Fi, rear display, drive, circular arms, rotating head, MP3 playback, stop on lost command. Root verified program build, filesystem build, C++ control tests and browser behavior tests. Physical upload and operation require the robot hardware.
 - [~] Integration, root: research synthesis, original audio generation, extensive assembly instructions, cross-check, packaging and delivery. Depends on all above. Done: audio decode and package validation commands pass; focused commit pushed to main; any triggered workflow reaches a terminal result.
@@ -66,3 +104,6 @@ Agents: /root/mechanical, /root/electronics, /root/firmware. Parent monitors age
 - 2026-09-11: Electrical BOM completed: USD 313.13 checked-price subtotal; USD 443.48 including allowances, before mechanical hardware/filament/shipping/tax. Independent firmware-to-circuit review passed. No hardware was bought.
 - 2026-09-11: Email preparation agent /root/electronics confirmed SES production sending enabled and both intended identities verified. Private one-time sender is C:/Users/Jeremy/AppData/Local/Temp/dalek-design-delivery/send_design.py. No email sent yet. Requires final PDF SHA256, final commit and verbatim check output. MIME size capped below SES v1 10 MB.
 - 2026-09-11: Agent /root/electronics ran an isolated Bambu H2D CLI slice of fit_coupon.stl. Hidden process 198584 exited with return_code 0, error_string Success, no warnings. Predicted mass 12.1266 g and time 1456.8 s with 0.20 mm, 2 walls, 15% infill. This is slicer output, not physical print measurement. No printer connection or user profile modification. Evidence being saved under cad/h2d-slice-check.json.
+- 2026-09-11: Final mesh check `python scripts/export_cad.py --check-only` returned mesh_count 35, all_pass true, printed_piece_count 151, solid_material_upper_bound_g 1988.3. Final overall CAD height 541 mm; base diameter 360 mm. Original ~600 mm target was reduced to meet the requested motor load limits. The listed plastic mass includes coupon and spare spacers; assembled mass still requires measurement.
+- 2026-09-11: Root identified the last chassis nonmanifold edges at (79,17,z) and (121,17,z): two radius-7 mm retained bosses were exactly tangent. Mechanical agent enlarged the boss radius to 7.2 mm to make a positive-volume join; all meshes then passed. Root inspected all final CAD views and rendered the section from the open side using camera 700,-200,430,0,0,260. Audio catalog hashes and the H2D coupon STL hash also passed.
+- 2026-09-11: Final rear-cassette curved contact surfaces reduced print-set solid bound to 1988.1 g. Mechanical BOM and complete exact assembly instructions finished. `python scripts/build_manual.py` returned `PASS: 55 pages; 2436278 bytes; text and chapter checks passed`. All 55 final PDF pages rendered with Poppler and inspected in five contact sheets; detailed circuit pages inspected separately. Text-boundary check returned no overflow. Local document-link checks, final mesh records and audio hashes passed. Final digital package ready for commit/push and explicitly requested email.

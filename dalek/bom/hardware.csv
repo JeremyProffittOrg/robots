@@ -1,0 +1,44 @@
+category,item,quantity,unit,location,specification
+fastener,M3x8 socket screw,48,piece,Hemispheres,Metric coarse thread; install from inside shell
+fastener,M3x10 socket screw,4,piece,Dome to head plate,Metric coarse thread; captive nuts in dome lugs
+fastener,M3x12 socket screw,8,piece,Bumper seams,Two per seam
+fastener,M3x12 socket screw,16,piece,Skirt vertical seams,Two per seam per tier
+fastener,M3x12 socket screw,24,piece,Skirt horizontal joins,12 lower-to-upper plus12 upper-to-shoulder
+fastener,M3x12 socket screw,4,piece,Shoulder side seams,Two per side
+fastener,M3x12 socket screw,6,piece,Speaker,Two foot bolts plus four speaker-tab bolts
+fastener,M3x12 socket screw,3,piece,Neck adapter to shoulder,Radius110 at30/150/270degrees
+fastener,M3x12 socket screw,4,piece,Bearing tower to neck deck,Radius24 at45/135/225/315degrees
+fastener,M3x12 socket screw,4,piece,Head servo cradle to neck deck,Slotted belt-tension mount
+fastener,M3x16 socket screw,24,piece,Chassis splice plates,Two per plate
+fastener,M3x16 socket screw,12,piece,Bumper/chassis/lower-skirt sandwich,Three per quadrant
+fastener,M3x16 socket screw,4,piece,Battery tray,Heads above tray; nuts below chassis
+fastener,M3x16 socket screw,8,piece,Arm bases,Four per arm
+fastener,M3x16 socket screw,4,piece,Head hub to head plate,Four at17mm radius
+fastener,M3x16 socket screw,2,piece,Eye stalk,Two at9mm offset
+fastener,M3x16 socket screw,2,piece,Decorative lamps,One per lamp; nut captive in lamp base
+fastener,M3x25 socket screw,4,piece,Rear display cassette,Through frame feet shell and rear-cover posts
+fastener,M3x45 socket screw,3,piece,Neck ring stack,Through adapter rings six posts and neck deck
+fastener,M3x65 socket screw,16,piece,Motor cradles,Through55mm pillars plus5mm chassis
+fastener,M3x110 socket screw,4,piece,Electronics deck,Through chassis95mm post and3mm deck
+fastener,M3x8 plastic thread-forming screw,3,piece,Bearing cap,2.6mm pilot holes; do not confuse with machine screws
+fastener,M3 hex nut,220,piece,All M3 joints,Includes approximately16 spares; standard5.5mm across flats
+fastener,M3 plain washer,400,piece,Thin shell and structural joints,Small outside diameter6-7mm; use under head and nut on thin shell
+fastener,M2x10 machine screw,10,piece,Supplied servo horns,Two per horn for five servos; do not print splines
+fastener,M2 nut and washer set,10,set,Supplied servo horns,Metric coarse thread
+fastener,M2.5x16 machine screw,32,piece,Electronics boards,Through PCB6mm spacer and deck; check each actual board hole
+fastener,M2.5 nut and washer set,32,set,Electronics boards,Nylon preferred where board clearances are small
+fastener,M8x70 hex-head bolt,1,piece,Rotating head spindle,Fully threaded or threaded end long enough for upper nut
+fastener,M8 nyloc nut,1,piece,Head spindle,Set gently against inner-race stack; do not clamp bearing outer races
+fastener,M8 standard washer,1,piece,Top of head plate,Only above printed head plate; never against bearing inner race
+fastener,8x12x1mm precision shim washer,2,piece,Bearing inner races,8mmID12mmOD1mmthick; narrow OD must clear16mm cap bore
+bearing,608-2RS bearing,2,piece,Head bearing tower,22mmOD8mmID7mmwidth; ordinary skateboard bearing size
+belt,NBR round O-ring,1,piece,Head belt,83mmID3mmcord; adjustable72.5mm nominal shaft centre spacing
+retainer,20mm hook-and-loop strap300mm long,2,piece,Battery,Pass through tray slots; independent straps
+retainer,2.5mm nylon cable tie150-200mm long,50,piece,Motors servos and cable routing,At least8 motor ties8 arm-servo ties2 head-servo ties plus routing and spares
+padding,Closed-cell EPDM foam sheet,1,sheet,Battery servo and screen padding,Approximately200x150mm;1mm2mm3mm thickness assortment; electrically nonconductive
+consumable,Thread-locking compound removable,1,small bottle,Metal-to-metal joints only,Keep away from printed plastic and bearings
+consumable,PLA filament,1,kg,Cosmetic parts,Lightweight bronze or painted; two0.4mm shell walls
+consumable,PETG filament,1.5,kg,Structural parts,Includes support and fit-test allowance; actual usage comes from slicer
+tool,Metric hex keys and nut drivers,1,set,Assembly,M2/M2.5/M3/M8 compatible
+tool,Digital caliper,1,piece,Fit checks,Measure actual motors servo bodies board and bearing pockets before bulk printing
+tool,Drill bits2.1mm2.5mm3.4mm,1,set,Horn and clearance preparation,Hand turn printed-hole clearing where possible; secure parts before drilling

@@ -10,7 +10,7 @@ Quoted electrical ratings describe a specific part and operating condition. Desi
 
 ## Size and shape
 
-The design target is about 600 mm tall, comfortably below 914.4 mm, or three feet. It uses a broad skirt, rows of raised hemispheres, a narrower shoulder section, neck rings, a dome, an eye stalk, a plunger-shaped arm and a blunt decorative emitter arm. These parts form an original interpretation of the character rather than a dimensionally exact replica of a television prop. No downloaded prop mesh or prop plan is redistributed.
+The final CAD is 541 mm tall, or about 21.3 inches, comfortably below 914.4 mm, or three feet. Its base is 360 mm in diameter. It uses a broad skirt, rows of raised hemispheres, a narrower shoulder section, neck rings, a dome, an eye stalk, a plunger-shaped arm and a blunt decorative emitter arm. These parts form an original interpretation of the character rather than a dimensionally exact replica of a television prop. No downloaded prop mesh or prop plan is redistributed.
 
 The shell is split into parts because the assembled footprint is wider than the H2D's single-nozzle travel. Bambu specifies 325 x 320 x 325 mm for single-nozzle printing and 300 x 320 x 325 mm for dual-nozzle printing. The often-advertised 350 mm width is the combined reach of two nozzles; it is not a 350 mm wide region available to either individual nozzle. The generated print orientations are checked against a conservative 300 mm cube. Use the supplied print manifest rather than scaling an STL to make it fit. Scaling would also change bearing seats, motor pockets, holes and screw spacing. [1]
 
