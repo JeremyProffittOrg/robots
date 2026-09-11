@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<meta name="color-scheme" content="dark">
+<title>Dalek control</title>
+<style>
+:root{font:17px system-ui,sans-serif;color:#f3f4f6;background:#111827}*{box-sizing:border-box}body{max-width:760px;margin:auto;padding:18px}h1{font-size:1.7rem;margin:0 0 6px}h2{font-size:1.15rem;margin:0 0 12px}.note{color:#cbd5e1;font-size:.9rem;line-height:1.5}section{background:#1f2937;border:1px solid #475569;border-radius:12px;padding:18px;margin:16px 0}button,input,select{font:inherit;border-radius:8px;padding:12px;border:1px solid #94a3b8;color:#fff;background:#334155}button{cursor:pointer;min-height:52px}button:disabled{opacity:.45;cursor:default}button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid #fbbf24;outline-offset:3px}input:not([type=checkbox]):not([type=range]),select{display:block;width:100%;margin:7px 0 14px}input[type=range]{width:100%;padding:8px 0}label{display:block;margin:12px 0}#status{padding:12px 0;min-height:52px;color:#fcd34d}.row{display:flex;gap:12px;flex-wrap:wrap}.row>*{flex:1}.stop{background:#b91c1c;color:white;border:2px solid #fecaca;font-weight:750;min-height:70px}.arm{background:#166534}.drive{display:grid;grid-template-columns:1fr 1fr;gap:12px}.drive button{min-height:75px;touch-action:none;user-select:none;-webkit-user-select:none}.drive .wide{grid-column:span 2}.held{background:#1d4ed8!important;border-color:#bfdbfe}#animate{width:100%;touch-action:none;user-select:none;-webkit-user-select:none}#message{min-height:30px;color:#fcd34d;overflow-wrap:anywhere}.hidden{display:none!important}small{color:#cbd5e1}summary{cursor:pointer}.metric{font-variant-numeric:tabular-nums}
+</style>
+</head>
+<body>
+<h1>Dalek control</h1>
+<div class="note">Use a clear, level floor. Keep the physical stop switch within reach.</div>
+<div id="message" role="alert" aria-live="assertive"></div>
+<section id="loginSection">
+<h2>Connect to your robot</h2>
+<form id="loginForm"><label for="key">Access key on the rear display</label><input id="key" type="password" autocomplete="off" required minlength="12" maxlength="12"><button type="submit">Connect</button></form>
+<p class="note">The same key joins the DALEK Wi-Fi access point. Your robot can also join a 2.4 GHz WPA2 network.</p>
+</section>
+<main id="controls" class="hidden">
+<section>
+<div id="status" role="status" class="metric">Reading robot status…</div>
+<div class="row"><button id="arm" class="arm">Arm controls</button><button id="stop" class="stop">STOP / DISARM</button></div>
+<p class="note">Arm, then hold a movement button. Release to stop and disarm. A lost connection stops motion. A screen lock or another tab also disarms.</p>
+<div class="drive">
+<button id="forward" class="wide" disabled>Hold: forward</button>
+<button id="left" disabled>Hold: forward left</button><button id="right" disabled>Hold: forward right</button>
+<button id="reverse" class="wide" disabled>Hold: reverse</button>
+</div>
+<p class="note">Turns use forward arcs to reduce tire drag. Start with the wheels lifted. Speed is limited for commissioning.</p>
+</section>
+<section>
+<h2>Arms and head</h2>
+<label><input id="arms" type="checkbox"> Circle both arms while held</label>
+<label for="radius">Circle radius: <output id="radiusValue">8</output> degrees</label><input id="radius" type="range" min="0" max="12" value="8" step="1">
+<label for="frequency">Circles per second: <output id="frequencyValue">0.40</output></label><input id="frequency" type="range" min="10" max="80" value="40" step="5">
+<label for="head">Head speed: <output id="headValue">0</output>% (negative reverses)</label><input id="head" type="range" min="-100" max="100" value="0" step="10">
+<button id="animate" disabled>Hold: arms / head only</button>
+<p class="note">Head speed and arm circles apply only while a movement or animation button is held. Keep fingers away from arm joints and the neck.</p>
+</section>
+<section>
+<h2>Voice</h2>
+<label for="sound">Phrase</label><select id="sound"></select>
+<div class="row"><button id="play">Speak</button><button id="silence">Silence</button></div>
+<p class="note">Original synthesized robot phrases. Sound works while motion is disarmed.</p>
+</section>
+<section>
+<details><summary>Wi-Fi network settings</summary>
+<form id="wifiForm"><label for="ssid">2.4 GHz network name</label><input id="ssid" maxlength="32" required autocomplete="off"><label for="password">WPA2 password</label><input id="password" type="password" minlength="8" maxlength="63" required autocomplete="new-password"><button type="submit">Save and connect</button></form>
+<p class="note">This disarms motion. The setup access point stays available. Read the network IP on the rear display. Use only a private network you trust.</p>
+<button id="forget">Forget saved network</button>
+</details>
+</section>
+</main>
+<script src="/app.js"></script>
+</body>
+</html>
