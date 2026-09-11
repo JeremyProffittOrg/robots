@@ -1,0 +1,86 @@
+{
+  "profile": "H2D 0.4mm / 0.20mm / Generic PETG / Textured PEI",
+  "overrides": {
+    "wall_loops": "4",
+    "top_shell_layers": "5",
+    "bottom_shell_layers": "5",
+    "sparse_infill_density": "20%",
+    "sparse_infill_pattern": "gyroid",
+    "enable_support": "1",
+    "support_type": "normal(auto)",
+    "support_on_build_plate_only": "0",
+    "brim_type": "outer_only",
+    "brim_width": "5"
+  },
+  "rows": [
+    {
+      "part": "stl/body_lower.stl",
+      "sha256": "44e85a2358049ceb9e710709299958e800efc75531b08673c69c11e774fef78a",
+      "return_code": 0,
+      "error_string": "Success.",
+      "warning": "",
+      "predicted_mass_with_support_g": 607.980712890625,
+      "predicted_time_s": 66636.546875,
+      "bbox": {
+        "depth": 356.6761779785156,
+        "height": 148.0,
+        "width": 356.6761779785156,
+        "x": -3.3380959033966064,
+        "y": -18.338085174560547,
+        "z": 0.0
+      }
+    },
+    {
+      "part": "stl/body_upper.stl",
+      "sha256": "a4c8d50338d38485735532cf4b7c37f1f965ce36e707f201cfee50bf2ae2b7ec",
+      "return_code": 0,
+      "error_string": "Success.",
+      "warning": "",
+      "predicted_mass_with_support_g": 1309.90087890625,
+      "predicted_time_s": 136126.90625,
+      "bbox": {
+        "depth": 356.6761779785156,
+        "height": 162.0,
+        "width": 356.6761779785156,
+        "x": -3.3380959033966064,
+        "y": -18.338085174560547,
+        "z": 0.0
+      }
+    },
+    {
+      "part": "stl/arm_left.stl",
+      "sha256": "bda5e9fe7e224de6f19e3ee8022bcbc774e0c898a7f5dcc1526e4ae5564ced07",
+      "return_code": 0,
+      "error_string": "Success.",
+      "warning": "",
+      "predicted_mass_with_support_g": 480.75775146484375,
+      "predicted_time_s": 48311.12109375,
+      "bbox": {
+        "depth": 68.0,
+        "height": 295.0,
+        "width": 124.0,
+        "x": 113.0,
+        "y": 126.0,
+        "z": 0.0
+      }
+    },
+    {
+      "part": "stl/arm_right.stl",
+      "sha256": "0b3883371880457fd89e75de1ce73050fe3eeed58503b4aeb77248ba88098627",
+      "return_code": 0,
+      "error_string": "Success.",
+      "warning": "",
+      "predicted_mass_with_support_g": 481.004638671875,
+      "predicted_time_s": 48546.98828125,
+      "bbox": {
+        "depth": 68.0,
+        "height": 295.0,
+        "width": 124.0,
+        "x": 112.9999771118164,
+        "y": 126.0,
+        "z": 0.0
+      }
+    }
+  ],
+  "physical_print": false
+}

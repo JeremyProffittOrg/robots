@@ -1,9 +1,9 @@
 {
-  "pages": 36,
-  "bytes": 1775160,
-  "text_characters": 58455,
+  "pages": 35,
+  "bytes": 1765970,
+  "text_characters": 60015,
   "all_pages_rendered": true,
-  "budget_usd": 570.93,
+  "budget_usd": 594.49,
   "outline_entries": [
     [
       "Design and assembly manual",
@@ -46,11 +46,11 @@
       5
     ],
     [
-      "Internal frame and bearing stack",
+      "Integrated body structure",
       6
     ],
     [
-      "Assembly groups",
+      "Stackable body sections",
       7
     ],
     [
@@ -102,7 +102,7 @@
       12
     ],
     [
-      "Stage 2 - body frame and side legs",
+      "Stage 2 - stackable body and one-piece arms",
       12
     ],
     [
@@ -167,11 +167,11 @@
     ],
     [
       "Point-to-point wiring schedule",
-      23
+      22
     ],
     [
       "Circuit sheets",
-      28
+      27
     ]
   ]
 }

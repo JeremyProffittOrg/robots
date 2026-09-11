@@ -6,16 +6,19 @@ this run. The staged commissioning tests remain necessary before operation.
 
 ## CAD
 
-`python scripts/export_cad.py` produced 39 different STL meshes and a
-manifest for 148 pieces, including first-fit parts and shim options. All
+Revision B: `python scripts/export_cad.py` produced 29 different STL meshes
+and a manifest for 83 pieces, down from 148. The body is two whole stackable
+prints and each arm is one whole print. First-fit parts and shims remain. All
 meshes passed closed surface, consistent winding, positive volume, one
 connected solid and 300 mm per-axis checks. The geometry-only solid plastic
-bound is 2924.6 g. This is not a measured print mass or the total robot mass.
+bound is 2721.2 g, down from 2924.6 g. This is not a measured print mass or
+the total robot mass.
 
 `python scripts/verify.py` also evaluated OpenSCAD intersections for the
-shoulder bridge/upper shell, head plate/neck, rear spindle sleeve/bracket,
-and a 20/40 tooth gear pair at five mesh phases. Each intersection was
-empty. These selected checks do not establish clearance for every purchased
+body lip/socket, integral arm bridge/upper body, head plate/neck, rear spindle
+sleeve/bracket, and a 20/40 tooth gear pair at five mesh phases. The body
+stack and shoulder allow only their exact zero-height mating planes;
+all other intersections must be empty. These checks do not establish clearance for every purchased
 part revision, every fastener projection or a misrouted harness.
 
 Bambu Studio also sliced `coupon.stl` with the installed H2D 0.4 mm profile,
@@ -25,6 +28,12 @@ predictions were 12.36 g and 1436 seconds for that coupon. The test used
 isolated temporary settings and never connected to a printer. This one
 stock-PLA coupon slice does not validate every structural PETG profile or
 predict the full robot's mass. Evidence: `cad/h2d-slice-check.json`.
+
+Revision B also has a dedicated actual-slice check for both body sections
+and both complete arms using the H2D 0.4 mm profile, Generic PETG, 0.20 mm
+layers, four walls, 20 percent gyroid and automatic normal supports. Exact
+results, mesh hashes, predicted support-inclusive mass and time are in
+`cad/h2d-structure-check.json`. These are software slices, not physical prints.
 
 ## Firmware and sounds
 
@@ -63,5 +72,3 @@ voltage/current, temperatures, stopping distance and runtime. Require the
 rolling chassis to pass with the intended final load before printing and
 fitting all skins. Stop if the motor load or thermal tests fail. Do not
 describe this package as a tested functioning robot until those tests pass.
-
-Machine-readable digital check output is in `docs/verification.json`.

@@ -32,7 +32,8 @@ on the same shaft share this force; they do not double the motor torque.
 Stall is not a permitted continuous operating point. The driver current
 limit, lower operating voltage, gearbox losses, floor grip, and scrub while
 turning all reduce usable performance. A rolling chassis test with ballast
-must precede the full shell print.
+must precede decoration and final operation. Revision B integrates the
+shell with the structural body, so it is part of the chassis test itself.
 
 Twelve fixed wheels on three feet would resist turning. The rear support
 needs a deliberate steering or swivel mechanism if that layout is selected.

@@ -5,16 +5,15 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 import trimesh
 ROOT = Path(__file__).resolve().parents[1]
 PARTS = {
- 'coupon':(1,'PETG'), 'body_quarter':(4,'PLA'), 'body_upper_quarter':(4,'PLA'), 'frame_quarter':(12,'PETG'),
- 'splice':(24,'PETG'), 'body_post':(4,'PETG'), 'head_support':(4,'PETG'), 'top_post':(4,'PETG'),
+ 'coupon':(1,'PETG'), 'body_lower':(1,'PETG'), 'body_upper':(1,'PETG'),
+ 'arm_left':(1,'PETG'), 'arm_right':(1,'PETG'),
  'foot_deck':(3,'PETG'), 'foot_cover':(2,'PLA'), 'motor_cradle':(6,'PETG'),
- 'leg_segment':(4,'PETG'), 'shoulder_bridge':(2,'PETG'), 'shoulder_cap':(2,'PLA'),
  'rear_bracket':(1,'PETG'), 'rear_attach':(1,'PETG'), 'bearing_tower':(2,'PETG'),
  'bearing_cap':(2,'PETG'), 'race_spacer':(2,'PETG'), 'spindle_sleeve':(1,'PETG'),
  'gear_hub':(2,'PETG'), 'servo_pinion':(2,'PETG'), 'servo_mount':(2,'PETG'), 'servo_shim_1':(2,'PETG'),'servo_shim_2':(2,'PETG'),'servo_shim_4':(2,'PETG'),
- 'head_deck':(1,'PETG'), 'neck':(1,'PLA'), 'head_plate':(1,'PETG'),
+ 'head_plate':(1,'PETG'),
  'dome_spacer':(4,'PETG'), 'dome':(1,'PLA'), 'eye':(1,'PLA'), 'detail_panel':(4,'PLA'),
- 'battery_tray':(1,'PETG'), 'utility_deck':(1,'PETG'), 'deck_adapter':(2,'PETG'),
+ 'utility_deck':(1,'PETG'),
  'pcb_spacer':(32,'PETG'), 'speaker_mount':(1,'PETG'), 'switch_plate':(1,'PETG')}
 EXE=os.environ.get('OPENSCAD') or shutil.which('openscad') or r'C:\Program Files\OpenSCAD\openscad.com'
 def export(name):

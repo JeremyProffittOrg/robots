@@ -8,7 +8,12 @@ span 490 mm across X; covers increase this to 492 mm. The straight rear
 foot extends to Y=-290 mm and the body front reaches Y=+132 mm with trim.
 Allow about 500 x 430 mm floor space, plus turning clearance. Each exported
 part is smaller than 300 mm on every axis. The dome prints as one 260 mm
-diameter hemisphere; body and leg structures print in smaller sections.
+diameter hemisphere. Revision B uses two complete stackable body prints,
+`body_lower` (260 x 260 x 148 mm including the locating lip) and `body_upper`
+(260 x 260 x 162 mm including the fixed neck). Each complete side arm is
+124 x 68 x 295 mm. The arms include the shoulder bridge and cap. Main body
+and arm construction therefore requires four prints, plus the dome.
+Total printed quantity is 83 instead of 148; 32 are small PCB spacers.
 
 Coordinates in CAD: X right, Y forward, Z up. Floor is Z=0. Main foot
 centers are X=-190/+190, Y=0. Rear steering center is X=0, Y=-180. Wheel
@@ -41,7 +46,8 @@ frame with securely attached temporary ballast up to the intended final
 mass. Require steady motion without stalls and no continuous current above
 0.5 A per motor during gentle level travel. Stop a stuck motor promptly.
 If the frame cannot pass, reduce mass or revise the transmission before
-printing the full shell. Digital geometry cannot certify this test.
+painting or fitting the decorative parts. The integrated body and arms
+are required for the chassis test. Digital geometry cannot certify it.
 
 The rear foot is steered up to 25 degrees each way. The side drive ratio
 and rear speed follow the same circular path. Firmware does not request a
@@ -82,26 +88,30 @@ cradle. Use 1 mm side foam to prevent movement, then tighten two ties.
 
 ## Height stack and mating surfaces
 
-The side foot deck is Z=65..70. Two 125 mm leg segments stack from Z=70 to
-320. The shoulder bridge is Z=320..325, with stiffening ribs up to 338.
-Each pair of leg rods passes through the foot, both segments and the outer
-bridge holes. Inner bridge holes at X=+/-105, Y=+/-20 attach to the middle
-body frame. Decorative shoulder caps sit above the bridge and do not carry
-body weight. Foot covers clear the legs through their central openings.
+The side foot deck is Z=65..70. Each one-piece arm starts at Z=70, with a
+250 mm stem, integral bridge at Z=320..325, ribs to338 and a40 mm shoulder
+cap ending at365. The shoulder cap was shortened15 mm so the entire arm
+fits below300 mm print height. Two M4 rods still carry each arm's load.
+The front/back shoulder windows admit a wrench to the upper rod nuts.
+Inner bridge holes at X=+/-105,Y=+/-20 attach to the upper body's base frame.
+The complete left/right arm STLs are supplied; do not mirror them again.
 
 Body frame lower faces are Z=170,315,460; each frame is 5 mm thick.
 Battery adapter is Z=175..178. Its 137 mm posts reach the middle frame at
 315. The second adapter is Z=320..323. Four 97 mm posts reach the head deck
 at 420. Head deck is Z=420..424. Four 36 mm posts reach the upper frame at
 460. The body rods at X=+/-75,Y=+/-75 pass through this complete stack.
-The utility deck sits on four 6 mm spacers at Z=329..332.
+The utility deck sits on four 6 mm spacers at Z=329..332. All listed body
+frames, rod sleeves, adapters, the head deck, neck and battery tray are
+integral features of the two body prints. They are not separate print jobs.
 
-Lower cosmetic quarters span Z=175..315, and upper quarters Z=320..460.
-The upper quarters have shoulder slots on the X sides. Mirror X/Y to make
-all four upper pieces; do not rotate all four around Z. Two upper-bottom
-mount holes near the shoulder slots per side are intentionally absent.
-Use the eight surviving holes around that lower rim. Other shell rims
-have twelve holes. Shell flanges sit on frame faces, not inside them.
+The lower body sits at Z=170 and carries a full-circumference locating lip
+up to Z=318. The upper body sits at Z=315; its socket clears that lip by
+0.3 mm radially and vertically. The load-bearing faces meet at Z=315.
+Four M4 body rods clamp the stack. No vertical seams, splice plates or
+perimeter shell screws are needed. The upper body retains its side slots
+for the integral arm bridges. Align the rear switch location before
+lowering the upper body onto the lip; do not force a tight printed fit.
 
 Rear attachment plate is Z=165..170, under the bottom frame. It picks up
 the two rear body rods. The bracket is centered at (0,-180,110); its upper
@@ -128,22 +138,29 @@ dome. Keep loose wiring below Z=420 and away from both gear pairs.
 2. Check M3 clearance, M4 rod clearance, M8 shaft clearance, the 22.2 mm
    bearing pocket and the actual dual-wheel fit. Never scale an entire part
    to correct a hole; edit the relevant dimension and re-export that part.
-3. Print structural PETG at 0.20 mm layers, four wall lines, five top/bottom
+3. Print both body sections, both arms and other structural PETG at 0.20 mm layers, four wall lines, five top/bottom
    layers and 20 percent gyroid as the starting settings. Load-bearing
    flanges, towers and gear teeth must contain continuous perimeters. Use
    dry filament. Check that the thin leg skins are fully filled by walls.
-4. Print cosmetic PLA at 0.20 mm layers with a 0.4 mm nozzle and two wall
-   lines. Body skins are 0.8 mm. Do not use vase mode. Let the designed
-   flanges and bosses determine local thickness. Keep primer very light.
-5. Use the exported orientation. Flat plates and ring sectors sit flat.
-   Tall posts and leg segments stand upright. The dome opens downward.
-   Support the dome roof, servo cradle flanges, gear-hub overhang and rear
-   bracket upper shelf where Bambu Studio identifies unsupported surfaces.
-   Remove support from bearing pockets and gear teeth before testing fit.
-6. Frame quarters require four orientations by X/Y reflection. On each
-   ring the small seam holes remain 5 mm from the seam. The upper shell
-   needs the same reflected layout to keep shoulder slots on the sides.
-   Mirror one shoulder bridge across X for the left side.
+4. Print the dome and separate cosmetic parts in PLA at0.20 mm layers
+   with a0.4 mm nozzle and two walls. Integrated body skins remain0.8 mm
+   PETG, while arm skins are1.2 mm PETG. The slicer fits the requested wall
+   count to these thin features. Do not use vase mode or scale whole parts.
+5. Print both body sections base-down and arms standing on their lower
+   flanges. Use automatic normal support, including internal support, under
+   the integral decks, tall arm bridge overhangs and shoulder caps. Remove
+   support through the large frame openings and shoulder access windows.
+   Inspect every opening before inserting rods or boards. Fewer assembled
+   pieces mean longer prints and more support removal inside each piece.
+   The verified normal-support H2D slices predict608 g/18.5 h for the
+   lower body,1310 g/37.8 h for the upper body, and481 g/about13.5 h for
+   each arm. These figures include discarded support and are not the
+   installed robot mass. Allow five1 kg PETG spools for these prints,
+   remaining mechanisms, first-fit prints and waste; one PLA spool covers
+   the dome and separate cosmetic parts. Re-slice for your filament.
+6. The left and right arm files already have the correct orientation.
+   No shell quarters, separate frames, body posts, splices or arm segments
+   remain in the package. Test the lip/socket fit before tightening rods.
 7. Print all quantities from `bom/printed-parts.csv`, including small
    spacers and the two side foot covers. Rear foot remains open for gear
    service; keep fingers away from its steering mechanism during operation.
@@ -164,9 +181,14 @@ stencil for the body markings, or glue it with small conforming foam pads;
 its flat back needs about 5 mm edge compensation on the cylindrical shell.
 Paint the leg strips directly. These cosmetic parts are not structural.
 
-For service, isolate both switches and unplug the battery. Remove one rear
-upper shell quarter to reach the electronics. The dome lifts after its
-four retaining screws are removed. Recheck rod nuts, gear mesh, wheel
+For service, isolate both switches and unplug the battery. Support the
+lower body and feet on a work stand. Remove the dome, unplug the labeled
+lower-to-upper harness and remove all eight body/arm rod top nuts. Lift
+the upper body with its attached arms vertically off the rods with a
+second person. Keep the four inner arm bridge bolts assembled; their nuts
+are reached from below only when the upper body is off. This also gives
+battery access. The dome lifts after its four retaining
+screws are removed. Recheck rod nuts, gear mesh, wheel
 press fits, cable ties and bearing play after the first hour, then before
 each session. Replace worn gearbox units rather than forcing a slipping
 wheel onto a cracked shaft. Do not lubricate belts or wheel treads; there

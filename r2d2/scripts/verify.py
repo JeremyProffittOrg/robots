@@ -1,6 +1,7 @@
 """Focused digital checks. Does not upload firmware, print, or drive hardware."""
 from pathlib import Path
 import csv, hashlib, json, os, re, subprocess, sys, tempfile
+import trimesh
 ROOT=Path(__file__).resolve().parents[1]
 sys.path.insert(0,str(ROOT/'scripts'))
 from export_cad import EXE,validate
@@ -11,9 +12,15 @@ def run(args,**kwargs):
 def main():
  results=[];validate();results.append('STL geometry: all meshes closed, connected, positive and inside 300 mm cube')
  with tempfile.TemporaryDirectory(prefix='r2-verify-') as tmp:
-  for name in ['check_shoulder','check_neck','check_rear_sleeve','check_gears']:
+  for name in ['check_stack','check_shoulder','check_neck','check_rear_sleeve','check_gears']:
    r=subprocess.run([EXE,'-o',str(Path(tmp)/(name+'.stl')),'-D',f'part="{name}"',str(ROOT/'cad/r2d2.scad')],capture_output=True,text=True,timeout=180)
-   if 'Current top level object is empty' not in r.stdout+r.stderr:raise AssertionError(name+' has intersecting solids: '+r.stdout+r.stderr)
+   if 'Current top level object is empty' not in r.stdout+r.stderr:
+    # Mating faces intentionally touch. Permit only their exact zero-height plane.
+    contact={'check_stack':315.0,'check_shoulder':320.0}
+    path=Path(tmp)/(name+'.stl')
+    if name not in contact or not path.exists():raise AssertionError(name+' has intersecting solids: '+r.stdout+r.stderr)
+    mesh=trimesh.load_mesh(path)
+    assert all(abs(z-contact[name])<0.0001 for z in mesh.vertices[:,2]),name+' has volume outside its mating plane'
    results.append(name+': no intersecting solid')
   env=os.environ.copy();env['PATH']=r'C:\msys64\mingw64\bin;'+env['PATH'];exe=Path(tmp)/'control.exe'
   run([r'C:\msys64\mingw64\bin\g++.exe','-std=c++11','-Wall','-Wextra','-Werror','-I','firmware/include','firmware/test/control_test.cpp','-o',str(exe)],env=env)
@@ -29,6 +36,12 @@ def main():
  sliced=json.loads((ROOT/'cad/h2d-slice-check.json').read_text())
  assert sliced['return_code']==0 and hashlib.sha256((ROOT/sliced['part']).read_bytes()).hexdigest()==sliced['sha256']
  results.append('Bambu H2D coupon slice: success and current STL hash verified; no physical print')
+ structure=json.loads((ROOT/'cad/h2d-structure-check.json').read_text())
+ assert {Path(r['part']).stem for r in structure['rows']}=={'body_lower','body_upper','arm_left','arm_right'}
+ for row in structure['rows']:
+  assert row['return_code']==0 and not row['warning']
+  assert hashlib.sha256((ROOT/row['part']).read_bytes()).hexdigest()==row['sha256']
+ results.append('Four whole body/arm H2D PETG slices: success, no warnings and current STL hashes verified')
  wires=list(csv.DictReader((ROOT/'electronics/wiring.csv').open()))
  config=(ROOT/'firmware/include/config.h').read_text()
  expected={'LEFT':(14,32),'RIGHT':(15,33),'REAR':(27,12)}

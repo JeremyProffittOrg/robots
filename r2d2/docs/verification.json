@@ -2,6 +2,7 @@
   "all_pass": true,
   "checks": [
     "STL geometry: all meshes closed, connected, positive and inside 300 mm cube",
+    "check_stack: no intersecting solid",
     "check_shoulder: no intersecting solid",
     "check_neck: no intersecting solid",
     "check_rear_sleeve: no intersecting solid",
@@ -12,7 +13,8 @@
     "16 MP3 files: hashes and full decode PASS",
     "Bambu H2D coupon slice: success and current STL hash verified; no physical print",
     "154 wiring rows: six independent motor channels, firmware pins and divider bounds PASS",
-    "Firmware image 965632 bytes; filesystem image 2097152 bytes: fit partitions"
+    "Firmware image 965632 bytes; filesystem image 2097152 bytes: fit partitions",
+    "Four whole body/arm H2D PETG slices: success, no warnings and current STL hashes verified"
   ],
   "physical_validation": false
 }

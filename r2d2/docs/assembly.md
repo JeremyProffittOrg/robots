@@ -42,39 +42,38 @@ actual weight on your floor.
    and nuts. Leave the center leg openings clear. The rear foot has no
    cover so the steering spindle and harness remain accessible.
 
-## Stage 2 - body frame and side legs
+## Stage 2 - stackable body and one-piece arms
 
-8. Build three body rings from four `frame_quarter` pieces each. Mirror
-   pieces across X/Y as shown by the assembly view. The paired seam holes
-   are 10 mm apart across each seam at radii 40 and 95. Fit two splice
-   plates per seam, each with two M3x16 bolts, washers and nuts. Use eight
-   splices per ring, twenty-four total. Assemble on a flat surface.
-9. Put the bottom ring at Z=170. Place `rear_attach` under its rear edge
-   at Z=165..170. Its outer holes join the rear body rods at X=+/-75,Y=-75.
-   Put the lower `deck_adapter` on the ring at Z=175..178.
-10. Cut four M4 body rods to 315 mm and deburr both ends. Fit nuts and
-    washers under the bottom ring, including the rear attachment plate on
-    the rear two rods. Add four 137 mm `body_post` sleeves above the lower
-    adapter. Add the middle ring at Z=315..320 and the second adapter at
-    Z=320..323. Snug the lower nuts; do not preload the frame heavily.
-11. Add four 97 mm `head_support` sleeves, the `head_deck` at Z=420..424,
-    four 36 mm `top_post` sleeves and the upper body ring at Z=460..465.
-    Use the diagonal rod holes in the head deck, not its servo slots.
-    Fit washers and double nuts above the top ring. Check all three rings
-    are parallel, centered and square to the rods before locking the nuts.
-12. Cut four M4 leg rods to 280 mm. Two go through each side foot at
-    X=0,Y=+/-20. Stack two `leg_segment` parts over each pair from Z=70 to
-    320. The 1.2 mm skins are covers around the rod structure; do not clamp
-    or lift the robot by squeezing them.
-13. Put each shoulder bridge on its leg at Z=320. Mirror the left bridge.
-    Fit the outer rod nuts and washers. Its inner two holes at X=+/-105,
-    Y=+/-20 bolt to the matching middle ring holes with M4x20 hardware.
-    Keep both feet parallel. Add the decorative shoulder caps only after
-    the structure passes the rolling test; use small removable adhesive
-    pads rather than glue on the load-bearing joints.
-14. Bolt the battery tray to the lower adapter with four M3x12 bolts at
-    X=+/-45,Y=+/-30. Leave the battery out. Add two straps through the tray
-    slots and verify the discharge and charge leads have a free exit.
+8. Print `body_lower`, `body_upper`, `arm_left` and `arm_right` in PETG,
+   one copy each. Clear internal supports from the decks, rod bores,
+   locating lip/socket and shoulder windows. These four parts replace
+   the separate body quarters, frames, posts, splices and arm segments.
+9. Support `body_lower` with its bottom at Z=170. Put `rear_attach` under
+   its rear edge at Z=165..170. The battery tray and adapter are already
+   part of the lower print. Check the two rear rod holes line up.
+10. Cut four M4 body rods to315 mm and deburr them. Feed them through the
+    lower body's four integral sleeve bores, X=+/-75,Y=+/-75. Fit washers
+    and nuts below the base, including the rear attachment on the rear pair.
+11. Dry-fit the upper body down over the rods and locating lip. Its bottom
+    seats at Z=315, its top frame at465 and neck at477. Fit top washers and
+    jam nuts without crushing the printed sleeves. The lip must enter by
+    hand; correct local fit before tightening. Lift it off again before
+    attaching the arms, so their inner nuts are accessible from below.
+    Mount internal boards and head hardware while this section is off.
+12. Cut four M4 arm rods to280 mm. Two pass through each foot at local
+    X=0,Y=+/-20. Prepare the left/right one-piece arms; do not mirror them.
+    Keep the feet supported at their specified centers. Thread the battery
+    straps before covering the lower body. Leave all eight rod top nuts off.
+13. Bolt each integral arm bridge to the upper body's matching base holes
+    at X=+/-105,Y=+/-20 with M4x20 hardware while the upper body is off the
+    lower body. Hold the inner nuts through the open underside. Then lower
+    the upper-body/arms unit over all eight rods; a second person should
+    guide the feet and rods. Seat the body lip and both arm bases together.
+    Fit the four body top nuts and use the shoulder windows for the four
+    arm top nuts. There are no mid-arm joints or separate shoulder caps.
+14. Thread two battery straps through the integral tray slots. Leave the
+    battery out until the electrical checks. Confirm the connector exit
+    and regulator mounting space remain open after support removal.
 
 ## Stage 3 - rear steering and bearings
 
@@ -136,8 +135,8 @@ actual weight on your floor.
 27. Attach `head_plate` to the hub's four radius-12 holes with M3x18 bolts,
     washers and nuts. Its central opening clears the spindle nuts. Check
     that no screw head contacts the cap during a full rotation.
-28. Fix `neck` above the upper frame at Z=465 with twelve M3x16 joints.
-    Fit the dome's four M3 captured nuts. Put four 6.6 mm spacers between
+28. The fixed neck is already integral to the upper body; no neck screws
+    are needed. Fit the dome's four M3 captured nuts. Put four 6.6 mm spacers between
     head plate and dome, centered at radius 119. Use four M3x16 bolts
     from below into the dome nuts. The dome starts at Z=479.6.
 29. Turn the head manually through 360 degrees with power off. Require
@@ -163,11 +162,11 @@ actual weight on your floor.
     outside the battery tray. Restrain them with ties through the adapter
     openings. Keep exposed cases apart and allow air around their surfaces.
     The logic buck and fuse holders can use the remaining lower deck edge.
-33. Choose the rear upper shell quarter as the removable service panel.
+33. Locate the switches on the rear wall of the full upper body.
     Use `switch_plate` as the drilling template: two 12.5 mm openings
     centered 30 mm apart, and four M3 attachment holes on a 60 x 32 mm
     rectangle. Place the panel center near global Z=365 and away from a
-    seam or rod. Drill the shell only after checking the switch-body and
+    rod. Drill the shell only after checking the switch-body and
     wire clearances inside. Use the switch plate as a flat backing face
     with small foam pads at the curved-shell edges. Label MAIN and RUN.
 34. Wire every connection in wiring.csv, marking rows complete. Work
@@ -232,15 +231,15 @@ actual weight on your floor.
 
 ## Stage 7 - skins and final acceptance
 
-47. Only after the loaded chassis passes, install the lower four shell
-    quarters. Use M3x12 at the bottom rim and vertical seams. Use M3x16
-    where both shell flanges sandwich the middle frame, and through the
-    upper shell/frame/neck stack. Install the four mirrored upper quarters
-    around the shoulder slots. Use its eight remaining lower-rim holes;
-    the other four middle-ring joints hold only the lower shell with
-    M3x12. Use all twelve upper-rim holes. Keep the rear service quarter
-    removable. Require full nut engagement and no screw tip touching a
-    rotating part; shorten only excess tips after dry assembly.
+47. After the loaded chassis passes, inspect the two-body stack and all
+    eight M4 body/arm rods. The structural skins are already integral;
+    there are no seam bolts to add. Check full nut engagement and no rod
+    tip touching a rotating part. Test service access by supporting the
+    lower body and feet on a work stand, unplugging the harness and removing
+    all eight body/arm rod top nuts. Lift the upper body and attached arms
+    together off the rods; use two people. The four inner bridge bolts
+    remain assembled. Reassemble and recheck. Use this same access method
+    when inserting or removing the battery.
 48. Complete the light paint finish and attach the eye with a small epoxy
     fillet after fitting it to the dome curvature. Use the printed panel
     as a paint stencil or apply with compliant pads. Do not add thick

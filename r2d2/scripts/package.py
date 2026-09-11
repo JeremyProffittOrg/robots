@@ -13,9 +13,11 @@ def main():
   for p in sorted(files):z.write(p,Path('r2d2')/p.relative_to(ROOT))
  with zipfile.ZipFile(target) as z:
   assert z.testzip() is None
-  assert len([n for n in z.namelist() if n.endswith('.stl')])==39
+  manifest=json.loads((ROOT/'cad/validation.json').read_text())
+  expected={r['part']+'.stl' for r in manifest['rows']}
+  assert {Path(n).name for n in z.namelist() if n.endswith('.stl')}==expected
   assert len([n for n in z.namelist() if n.endswith('.mp3')])==16
   assert 'r2d2/output/pdf/r2d2-design-and-assembly.pdf' in z.namelist()
- print(f'PASS: ZIP CRCs, 39 STLs, 16 MP3s and design PDF; {target.stat().st_size} bytes')
+ print(f'PASS: ZIP CRCs, {len(expected)} STLs, 16 MP3s and design PDF; {target.stat().st_size} bytes')
  print('SHA256 '+hashlib.sha256(target.read_bytes()).hexdigest())
 if __name__=='__main__':main()

@@ -10,6 +10,13 @@ This is a digital prototype package, not a physically validated robot.
 Complete the fit, rolling-load, electrical and stopping tests in the manual
 before printing every cosmetic part or operating the finished robot.
 
+Revision B reduces the printed count from 148 to 83. The body is two
+complete stackable prints (260 x 260 x 148 mm and 260 x 260 x 162 mm),
+with frames, posts, adapters and battery tray built in. Each side arm and
+its shoulder is one 124 x 68 x 295 mm print. The head remains one dome.
+The 83-piece count includes 32 small PCB spacers and the moving mechanisms.
+Overall height stays 609.6 mm; no scaling of motor, wheel or bearing fits.
+
 ## Start here
 
 - `output/pdf/r2d2-design-and-assembly.pdf`: illustrated design and build manual.
@@ -35,6 +42,7 @@ Run commands from `C:/dev/robots/r2d2`:
 ```powershell
 python scripts/export_cad.py
 python scripts/export_cad.py --views
+python scripts/slice_structure.py
 python scripts/generate_audio.py
 python scripts/electronics.py
 pio run -d firmware
