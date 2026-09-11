@@ -93,4 +93,3 @@ class Ramp {
   void stop() { value = 0; holding = false; }
 };
 }
-
