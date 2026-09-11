@@ -156,7 +156,7 @@ def main():
             raise RuntimeError('No assembly preview found.')
         preview = candidates[0]
     doc = Manual(str(OUT), pagesize=letter, leftMargin=46, rightMargin=46,
-                 topMargin=42, bottomMargin=48, title='Dalek robot design and assembly',
+                 topMargin=42, bottomMargin=48, title='Dalek stacked-body design and assembly',
                  author='')
     doc.addPageTemplates([
         PageTemplate(id='portrait', frames=[Frame(46,48,letter[0]-92,letter[1]-90,id='p')],
@@ -164,11 +164,12 @@ def main():
         PageTemplate(id='landscape', frames=[Frame(40,48,DRAWING_PAGE[0]-80,
                                                  DRAWING_PAGE[1]-88,id='l')],
                      onPage=page_footer, pagesize=DRAWING_PAGE)])
-    story = [para('Dalek robot design and assembly', 'Chapter'),
-             para('A modular printed robot with four TT drive motors, a rear ESP32 display, local Wi-Fi controls, '
-                  'two arms that trace small circles, and a head that can rotate continuously.'),
-             para('The package includes printable STL files, editable OpenSCAD source, circuit diagrams, '
-                  'mounts and purchased hardware lists, firmware, 24 original MP3 clips, and a staged assembly guide.'),
+    story = [para('Dalek stacked-body design and assembly', 'Chapter'),
+             para('Ten STL designs form a reinforced single-piece motor base, complete body sections that stack '
+                  'vertically, and the moving arm parts. The base fits the Bambu Lab H2D in one print.'),
+             para('The robot keeps four TT drive motors, a rear ESP32 display, Wi-Fi access point and network controls, '
+                  'circular arm motion, a continuously rotating head and 24 original MP3 voices. '
+                  'The package includes editable CAD, circuits, mounting hardware lists and assembly instructions.'),
              para('This is a digitally checked design for a first prototype. Physical fit, loaded traction, '
                   'supply temperature and stopping behavior require the tests in this manual. Do not skip those gates.'),
              Spacer(1, 10)]
@@ -191,8 +192,9 @@ def main():
         story.extend(markdown(path))
         if path.name == 'mechanical.md':
             for filename, title, caption in [
-                ('section.png', 'Internal assembly view', 'Section through the native CAD. Check battery, drive, deck and rotating-head clearances against the mechanical chapter.'),
-                ('exploded.png', 'Assembly order view', 'Separated CAD groups show the shell stack and service joints. Use the part-specific fastener sequence; the gaps in this view are intentional.'),
+                ('base.png', 'Single-piece reinforced motor base', 'The floor, perimeter walls, ribs, motor pockets and battery support form one connected print. The base measures 300 x 280 mm before its brim.'),
+                ('section.png', 'Internal assembly view', 'Section through the native CAD. The continuous base supports the motor pockets, battery and vertically stacked body.'),
+                ('exploded.png', 'Vertical stacking order', 'Each body tier is one complete print. Registers align the stack; accessible fasteners retain the joints. The gaps in this view are intentional.'),
                 ('rear.png', 'Rear display and access', 'The TTGO display faces outward. Keep the USB opening, operator switches and service fasteners accessible.')]:
                 path_image = ROOT / 'cad' / filename
                 if not path_image.exists():

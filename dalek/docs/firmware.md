@@ -1,6 +1,6 @@
 # Firmware and Wi-Fi controller
 
-This firmware targets the original 1.14-inch LilyGO TTGO T-Display with a classic ESP32, 135 × 240 ST7789 display and 4 MB flash. It does not target the T-Display S3 or the AMOLED version. The display faces outward through the robot's rear hatch. Landscape rotation is 1; use rotation 3 in `src/main.cpp` if the finished mount is reversed.
+This firmware targets the original 1.14-inch LilyGO TTGO T-Display with a classic ESP32, 135 × 240 ST7789 display and 4 MB flash. It does not target the T-Display S3 or the AMOLED version. The display faces outward through the robot's rear window. Landscape rotation is 1; use rotation 3 in `src/main.cpp` if the finished mount is reversed.
 
 The software builds for the specified hardware. Its physical operation must be commissioned on the assembled robot. A successful compiler check does not establish stopping distance, servo centre, current draw, Wi-Fi range, speaker level or battery measurement accuracy.
 

@@ -1,6 +1,6 @@
 # Printable Wi-Fi Dalek
 
-A complete digital design package for a 541 mm (21.3 inch) tall Dalek robot, with four Adafruit 3777 TT motors and 3766 wheels. An original TTGO T-Display ESP32 shows its screen at the back. A local browser controls driving, circular movement of both arms, continuous head rotation and 24 original robot voice MP3s. The robot can join a 2.4 GHz Wi-Fi network or operate through its own access point.
+A digital design package for a 543.8 mm (21.4 inch) tall Dalek robot, with a single-piece reinforced motor base and complete body sections that stack vertically. The revised print set has ten STL files. It keeps four Adafruit 3777 TT motors and 3766 wheels, a rear-facing original TTGO T-Display ESP32, circular arm motion, continuous head rotation and 24 original MP3 voices. A local browser controls it through a 2.4 GHz Wi-Fi network or the robot's own access point.
 
 Start with [the design and assembly PDF](output/pdf/dalek-design-and-assembly.pdf). This is a design for a first physical prototype. Digital verification is recorded in [verification.md](docs/verification.md); actual fit, traction, current, temperature and stopping tests remain part of commissioning.
 
@@ -9,7 +9,7 @@ Start with [the design and assembly PDF](output/pdf/dalek-design-and-assembly.pd
 - [Assembly sequence and physical tests](docs/assembly.md).
 - [Exact mechanical assembly, dimensions, fasteners and print settings](docs/mechanical.md).
 - [STL files](stl/) and [print quantities/orientations](bom/printed-parts.csv). Print at 100% scale.
-- [Editable OpenSCAD source](cad/dalek.scad), [assembly view](cad/assembly.png), [section](cad/section.png), [exploded view](cad/exploded.png) and [rear view](cad/rear.png).
+- [Editable OpenSCAD source](cad/dalek.scad), [base detail](cad/base.png), [assembly view](cad/assembly.png), [section](cad/section.png), [exploded view](cad/exploded.png) and [rear view](cad/rear.png).
 - [Four circuit diagrams](electronics/), [wire-by-wire schedule](electronics/wiring.csv) and [electrical design notes](docs/electronics-research.md).
 - [Electrical BOM](bom/electronics.csv) and [mounting hardware BOM](bom/hardware.csv). Hardware such as bearings, metal screws and battery straps must be purchased.
 - [Firmware and flashing instructions](docs/firmware.md), with [PlatformIO project](firmware/).
@@ -24,7 +24,9 @@ Four MG92B positional servos give the two arms perpendicular axes. An FS5103R co
 
 The required Adafruit 3766 wheels and selected Adafruit 154 head servo were out of stock when checked on 2026-09-11. The parts lists retain the exact selected parts. Secure those parts before printing their final fit-dependent assemblies.
 
-The 35 STL designs cover 151 listed pieces, including repeat parts, the fit coupon and spare standoffs. Every exported design passes the closed-mesh and 300 mm print-envelope check. The solid-plastic upper mass bound is 1,988.1 g for the entire listed print set. That is not the assembled robot mass. Purchased components and hardware add weight; the actual build must meet the 3 kg commissioning gate before driving. Electrical parts total $443.48 including allowances, before mechanical hardware, filament, shipping and tax.
+The ten STL designs produce eleven pieces because the same pitch carrier is printed twice. The six body pieces are the base, lower skirt, upper skirt, shoulder, neck and head. Each is one connected print. The base has a 300 x 280 mm footprint, a 6 mm floor, a continuous reinforced perimeter and built-in motor pockets. Rotate the base and lower ring 90 degrees about vertical Z for slicing. The base plus its 8 mm brim then occupies 296 x 316 mm; the recorded H2D slice proves the complete footprint fits. The body has integrated decoration and positive stacking registers.
+
+All ten meshes and actual H2D slices passed. The [mesh validation](cad/validation.json) and [H2D slice record](cad/h2d-slice-check.json) give exact dimensions, hashes and settings. Slicer predictions total 2.189 kg of installed plastic, 3.031 kg of filament including support/brim, and about 100.5 hours of sequential printing. Known purchased components bring the planning subtotal above 3.33 kg before all remaining hardware, exceeding the earlier 3 kg target. Base strength and loaded driving still require the physical tests in the manual. Electrical parts total $443.48 including allowances, before mechanical hardware, filament, shipping and tax.
 
 ## Rebuild the deliverables
 

@@ -4,7 +4,7 @@ Build and test one subsystem at a time. The mechanical chapter gives the exact p
 
 ## 1. Inventory before printing
 
-Read the whole manual and open the CAD preview. Inventory `bom/electronics.csv`, `bom/hardware.csv`, and `bom/printed-parts.csv`. The quantities in the printed-parts list are quantities to make, not the number of files. Some decorative and structural pieces are used repeatedly. Keep screws in labelled bags by thread and length.
+Read the whole manual and open the CAD preview. Inventory `bom/electronics.csv`, `bom/hardware.csv`, and `bom/printed-parts.csv`. This revision has ten STL files. Print the shared pitch carrier twice, giving eleven printed pieces. All body sections are complete upright prints. Their decorative bumps and mounts are integrated. Keep purchased screws, bearings, retainers and spacers in labelled bags.
 
 Check the actual board: it must be the original TTGO T-Display ESP32 with the 1.14-inch screen. Check the labels on all five servos, four motors, two driver boards and battery. Do not fit an S3 board or a same-size-looking servo without checking the mechanical drawings and pin assignments. The selected wheel and head servo were listed out of stock during research; obtain those exact parts before declaring the build ready to assemble.
 
@@ -14,7 +14,7 @@ Done when every required purchased item is present or its absence is recorded, t
 
 ## 2. Prove fit with small prints
 
-Print the fit coupon and critical holders first. Use the intended structural material and slicer profile. Check screw-clearance holes, nut pockets, motor fit, servo fit, bearing seat and the T-Display opening using the real hardware. Clean a first-layer edge before concluding that a dimension is wrong. Do not force a bearing or crush a board into a tight print.
+Print `07_pitch_carrier.stl` and `10_servo_pulley.stl` first. These are functional parts of the ten-file set. Use them to check the servo horn and small screw fits with the intended material and slicer profile. Then print `01_base.stl` and check the actual motors and wheels in its integrated pockets before continuing with the body. Check each subsequent part's screw holes, bearing seats and board channels as it comes off the printer. Clean the first-layer edge before concluding that a dimension is wrong. Do not force a bearing or crush a board into a tight print.
 
 If a fit needs adjustment, change the relevant clearance parameter in the OpenSCAD source, export that part again, and test it again. Do not scale the whole model in the slicer. Record the material, nozzle, layer height and clearance that passed. A printer-specific compensation may be needed, but it must preserve the joint centres and part lengths.
 
@@ -22,9 +22,9 @@ Done when fasteners pass without splitting the part, nuts retain their flats, th
 
 ## 3. Print and label the remaining parts
 
-Follow the orientation and quantity fields in `printed-parts.csv`. Start with the chassis, brackets and joining parts. Then print the skirt, shoulders, neck and dome. Use the settings in the mechanical chapter. Keep the supplied model at 100% scale. The delivered orientation is part of the bed-fit check; inspect each part's contact face before slicing.
+Follow the orientation and quantity fields in `printed-parts.csv`. The body order is `01_base`, `02_lower_skirt`, `03_upper_skirt`, `04_shoulder`, `05_neck`, and `06_head`. Print each complete body section upright in its supplied orientation. Use the settings in the mechanical chapter. Keep every model at 100% scale. The base, motor pockets, battery support and structural walls are one continuous print.
 
-Use the H2D profile for the nozzle actually installed. A single material can make the whole robot, with paint for the bronze and black surfaces. Colour changes are cosmetic and should not affect a joint. Add a brim where the print notes call for one. Remove supports fully from nut traps, screw holes, grooves and bearing seats. Keep paint out of moving fits.
+Use the H2D single-nozzle 0.4 mm profile for the base. Rotate the base and lower ring 90 degrees around the vertical Z axis, keeping their floors flat on the bed. The base's 300 x 280 mm outline plus an 8 mm brim then occupies 296 x 316 mm. Centre it at X175,Y160, inside both nozzle-specific areas; do not allow a later automatic rotation to clip the brim. The CLI requires `--ensure-on-bed`. Use the specified PETG profile for the base and structural parts. Enable normal automatic supports below base wheel-well roofs and lower-ring details, and the documented supports for the other parts. Remove supports fully from nut traps, screw holes, grooves and bearing seats. Keep paint out of the stacking registers and moving fits.
 
 Weigh each group after support removal. Record total printed mass and the eventual fully assembled mass. Do not use slicer infill percentage as a direct mass estimate for thin shells: most of a thin shell may already be walls. The validation report's solid mesh volume is a useful conservative bound for fully filled material, not a slicer timing estimate.
 
@@ -32,13 +32,15 @@ Done when every manifest quantity is made, identified, free from cracks and chec
 
 ## 4. Assemble the chassis without power
 
-Follow the chassis and motor-holder steps in `mechanical.md`. Fasten printed joins with the listed bolts, washers and nuts. Tighten until the joint is secure; further tightening can crush printed plastic. Do not put liquid thread-locker on printed plastic. Use the locking hardware in the bill of materials.
+Follow the base and motor-retention steps in `mechanical.md`. Inspect the continuous perimeter, floor, ribs and pocket walls. There are no base-quarter joints or suspended motor pillars. Fit the specified purchased retainers and washers. Tighten until the motor is secure; further tightening can crush its plastic gearbox or the print. Do not put liquid thread-locker on printed plastic.
 
 Seat all four motors in the specified direction. Give their thin motor leads strain relief. Press each wheel onto its TT output shaft while supporting the gearbox body. The wheel's hub fit provides retention; do not drill the motor shaft. Check that tires cannot rub the bumper, a bolt, or a motor cable at any rotation. Check that the assembled chassis does not rock on a flat surface.
 
-Install the empty battery cradle and its straps. The battery remains disconnected. Keep the pack low and centred. It must not rest on screw points or sharp layer edges. Mount the electronics deck and insulating standoffs. Keep the deck removable until commissioning is complete.
+Fit straps through the base's integrated battery supports. The battery remains disconnected. Keep the pack low and centred. It must not rest on screw points or sharp layer edges. Mount the boards with the purchased insulating standoffs and retention hardware listed in the mechanical chapter. Keep the vertical body sections off until commissioning is complete.
 
 Done when all wheels rotate by hand without body contact, motors cannot slide, the chassis rests evenly, and the battery can be removed without cutting wires. The mechanical chapter defines the exact floor and wheel clearances.
+
+Before installing electronics and motors, perform the base proof-load check. Support the four motor-pocket floors on equal-height rigid blocks. Apply a distributed load equal to twice the intended complete robot mass to the actual battery and body-stack load areas for ten minutes. For a 4 kg finished robot, the proof load is 8 kg. Use the actual planned mass including hardware; the earlier 3 kg target is exceeded by this reinforced revision. Keep all motors, wheels and the battery out of this test. Inspect before loading and after unloading. Fail the base if it cracks, a layer separates, a fastener boss loosens, or measurable permanent distortion prevents a flat fit or free motor insertion. This is a required physical builder test, not a strength result measured during design. A static proof test does not establish impact or fatigue life.
 
 ## 5. Build the power harness on the bench
 
@@ -98,7 +100,7 @@ Done when both arms can complete repeated circles quietly, every fastener remain
 
 Follow the bearing, shaft, belt and retention sequence in `mechanical.md`. Check all bearing seats before fitting the dome. Turn the assembly through several full revolutions by hand. Check the eye-stalk sweep against the arms and the surrounding area. Keep the head drive lightly tensioned as specified; excessive belt tension loads both the servo and bearing.
 
-With the drive disconnected, adjust the continuous servo's neutral setting until it stops. Connect the drive and test low speed in each direction. The rotating structure carries no wires. Secure the fixed servo lead below the rotating interface. Fit the final dome fasteners only after checking that no screw touches the moving ring.
+With the drive disconnected, adjust the continuous servo's neutral setting until it stops. Connect the drive and test low speed in each direction. The rotating structure carries no wires. Secure the fixed servo lead below the rotating interface. Install the integrated head and its spindle retention only after checking that no fixed part touches the rotating hub or body.
 
 Done when the head turns repeatedly through full revolutions in both directions, neutral stops creep, and the dome remains retained when gently lifted by its intended service points. Do not use the eye stalk as a lifting handle. The controller sets head speed, not a measured head angle.
 
@@ -122,7 +124,7 @@ Done only when every stop case passes. Record the measured time and test setup. 
 
 ## 14. Close the shell and run a short floor test
 
-Install the remaining panels in the mechanical sequence. Check the rear screen opening, switch access and service access. Tie fixed cables clear of wheels, arms, neck rotation, fastener tips and ventilation. Fit strain relief to removable-panel cables. Tighten the battery straps and perform a gentle push test to confirm the pack cannot shift.
+Lower each complete body section onto the section below it, using the mechanical chapter's assembly sequence. The register locates the joint; the fasteners retain it. Check that each register seats fully before tightening. Install the lower skirt, upper skirt, shoulder, neck and head. Check the rear screen opening, switch access and service access. Route fixed cables clear of wheels, arms, neck rotation and fastener tips. Leave service loops so the stack can be lifted apart after removing its fasteners. Tighten the battery straps and confirm the pack cannot shift.
 
 Weigh the complete robot. Begin on a clear, level hard floor with an operator beside the physical stop switch. Use low speed and broad forward arcs. Do not begin with a stationary pivot, carpet, ramp or threshold. The specified tires can create more steering resistance than these small motors can overcome. Stop immediately if a wheel stops turning while commanded.
 
@@ -136,7 +138,7 @@ Switch off and disconnect the robot from the battery before charging. Use the sp
 
 Before each use, check the straps, wheel fit, arm horns, head retention and exposed wires. Test the physical stop switch and release-to-stop behavior. Stop use if the battery is damaged or swollen, a connector is discoloured, a motor binds, or a printed bracket cracks. Replace a damaged structural part rather than gluing across a loaded fracture.
 
-Do not carry the robot by an arm, the eye, dome decoration or removable panel. Lift from the chassis with battery power isolated. Keep the wheels free of hair and thread. Store the battery disconnected according to its manufacturer's guidance. Keep a copy of the calibrated firmware settings with the robot.
+Do not carry the robot by an arm, the eye, dome decoration or upper body section. Lift from the single-piece base with battery power isolated. Keep the wheels free of hair and thread. Store the battery disconnected according to its manufacturer's guidance. Keep a copy of the calibrated firmware settings with the robot.
 
 ## Fault guide
 

@@ -20,7 +20,7 @@ A nominally stronger DRV8871 was rejected because its minimum motor supply is 6.
 
 The selected two DRV8833 boards each contain two bridges. They support the 5 V motor supply. Each stock 0.2 ohm sense resistor sets approximately 1 A limit through 0.2 V/R. Keep the factory resistors and leave their bypass jumpers open. Tie AIN1 to BIN1 and AIN2 to BIN2 on each side. Do not tie the bridge outputs together. This gives the controller one forward/reverse input pair per side while each motor has its own current limit. SLP is active high, with an internal weak pull-down. Add the specified external 10k pull-down. [DRV8833 product](https://www.adafruit.com/product/3297), [DRV8833 pinouts](https://learn.adafruit.com/adafruit-drv8833-dc-stepper-motor-driver-breakout-board/pinouts)
 
-The four-wheel skid-steer layout has no precise speed or distance measurement. The body must be light. Three kilograms is a design ceiling to test, not a proven payload. Use hard flat indoor flooring. Wide silicone tires can resist turning. A short wheelbase reduces this resistance. Do not use the robot on stairs, ramps, carpet, or outdoors.
+The four-wheel skid-steer layout has no precise speed or distance measurement. The stronger STACK-10 design exceeds the earlier 3 kg planning target: base, two skirts, shoulder, neck and head alone total 2,117.055 g of slicer-estimated installed plastic, and the battery plus a subset of specified parts add about 1,144.88 g. The full assembly will be heavier after arms and remaining hardware are included. Three kilograms was a design target, not a motor manufacturer's payload rating. The weight target is not met; loaded driving is unverified. Use hard flat indoor flooring, broad moving arcs and the physical current/temperature/stop tests before accepting operation. Wide silicone tires can resist turning. Do not increase voltage or remove current protection to force a stalled build to move.
 
 ## Servos and movement
 
@@ -72,7 +72,7 @@ The speaker is Adafruit 1313, 8 ohm 1 W, 77.8 × 77.8 × 25.49 mm. Its four moun
 4. Modify PCA OE as described above. With the board unpowered and isolated, check that OE is not still tied to ground through its original resistor. Add the external 10k to 3.3 V. Record the actual board revision and removed resistor location for later service.
 5. Wire the power branches in 18 AWG. Wire one 22 AWG positive/ground pair from the servo distribution block to each servo plug. Do not route aggregate servo current through the PCA header rail or prototype-board strips.
 6. Wire each motor to its own bridge. Add 100 nF directly at each motor's solder tabs. Retain only short lengths of the supplied 28 AWG leads. Twist the two motor conductors. Add strain relief near the plastic gearbox, not on the motor tabs.
-7. Wire signals from the CSV. Keep I2C and I2S away from motor wiring. Add service loops at the removable rear hatch. Keep wires out of belts, wheels and arm linkages. The head must have no wiring.
+7. Wire signals from the CSV. Keep I2C and I2S away from motor wiring. Add service loops between the vertically stacked body sections and the rear board mount. Keep wires out of belts, wheels and arm linkages. The head must have no wiring.
 8. Fit and label the removable J_USB_ISO run-power connection. To program: switch MAIN off, unplug the battery, open the run-power link, then attach USB. Unplug USB before reconnecting the link and battery. No external battery is connected to the TTGO JST socket.
 
 ## Bench acceptance before the shell is closed

@@ -1,11 +1,11 @@
-part,quantity,material,x_mm,y_mm,z_mm,volume_mm3,solid_mass_g,watertight,connected_components,enclosed_void_surfaces,brim_mm_per_side,h2d_single_nozzle_with_brim,pass_check,orientation,notes
-01_base,1,PETG,300.0,280.0,57.0,913950.95,1160.72,True,1,0,8,True,True,Floor down; single nozzle,300x280 unibody;6mm floor;4mm wall/ribs;6walls6top/bottom40%gyroid;8mmbrim;tree supports below wheel-well roofs;remove through bottom wells
-02_lower_skirt,1,PLA,300.0,280.222,113.0,348206.89,431.78,True,1,0,5,True,True,Large opening down,Complete360degree ring; integrated bumps;3mm registry above110mm body;4walls15%infill
-03_upper_skirt,1,PLA,250.0,250.0,103.0,264225.46,327.64,True,1,0,5,True,True,Large opening down,Complete360degree ring; integral bumps;3mm registry above100mm body;4walls15%infill
-04_shoulder,1,PETG,220.0,262.0,103.0,338701.65,430.15,True,1,0,5,True,True,Bottom flange down,Integral arm shelves and rear display frame; tree supports under shelves;4walls25%infill
-05_neck,1,PETG,220.0,220.0,66.0,170796.26,216.91,True,1,0,5,True,True,Bottom flange down,Integrated rings posts bearing tower servo mount; support deck underside;4walls30%infill
-06_head,1,PLA,220.0,287.0,99.0,175711.7,217.88,True,1,0,5,True,True,Hub foot down,Dome eye lamps hub pulley spokes integrated; tree supports inside dome under eye and pulley;4walls15%infill
-07_pitch_carrier,2,PETG,49.0,48.0,44.0,16896.63,21.46,True,1,0,5,True,True,Floor down,Print this same file twice;4walls30%infill; actual horn and servo fit gate
-08_plunger_arm,1,PLA,134.0,38.0,38.0,18083.92,22.42,True,1,1,5,True,True,As exported,Support cup underside; supplied servo horn; decorative arm only
-09_emitter_arm,1,PLA,130.0,28.0,17.0,17605.05,21.83,True,1,1,5,True,True,As exported,Support rods underside; supplied servo horn; decorative arm only
-10_servo_pulley,1,PETG,25.0,25.0,9.0,2998.48,3.81,True,1,0,5,True,True,Large rim down,Supplied horn;3mm round belt;4walls30%infill
+part,quantity,material,x_mm,y_mm,z_mm,volume_mm3,solid_mass_g,watertight,connected_components,enclosed_void_surfaces,brim_mm_per_side,print_rotation_z_degrees,h2d_single_nozzle_with_brim,pass_check,orientation,notes
+01_base,1,PETG,300.0,280.0,57.0,913950.95,1160.72,True,1,0,8,90,True,True,Floor down; rotate90deg about Z; single nozzle,300x280 unibody;6mm floor;4mm wall/ribs;6walls6top/bottom40%gyroid;8mmbrim;normal auto supports below wheel-well roofs;remove through bottom wells
+02_lower_skirt,1,PLA,300.0,280.222,113.0,348206.89,431.78,True,1,0,5,90,True,True,Large opening down; rotate90deg about Z,Complete360degree ring; integral bumps;3mm registry above110mm body;4walls15%infill;normal auto supports under bumps
+03_upper_skirt,1,PLA,250.0,250.0,103.0,264225.46,327.64,True,1,0,5,0,True,True,Large opening down,Complete360degree ring; integral bumps;3mm registry above100mm body;4walls15%infill;tree supports under bumps
+04_shoulder,1,PETG,220.0,262.0,103.0,338701.65,430.15,True,1,0,5,0,True,True,Bottom flange down,Integral arm shelves and rear display frame; tree supports under shelves;4walls25%infill
+05_neck,1,PETG,220.0,220.0,66.0,170796.26,216.91,True,1,0,5,0,True,True,Bottom flange down,Integrated rings posts bearing tower servo mount; support deck underside;4walls30%infill
+06_head,1,PLA,220.0,287.0,99.0,175711.7,217.88,True,1,0,5,0,True,True,Hub foot down,Dome eye lamps hub pulley spokes integrated; tree supports inside dome under eye and pulley;4walls15%infill
+07_pitch_carrier,2,PETG,49.0,48.0,44.0,16896.63,21.46,True,1,0,5,0,True,True,Floor down,Print this same file twice;4walls30%infill; actual horn and servo fit gate
+08_plunger_arm,1,PLA,134.0,38.0,38.0,18083.92,22.42,True,1,1,5,0,True,True,As exported,Support cup underside; supplied servo horn; decorative arm only
+09_emitter_arm,1,PLA,130.0,28.0,17.0,17605.05,21.83,True,1,1,5,0,True,True,As exported,Support rods underside; supplied servo horn; decorative arm only
+10_servo_pulley,1,PETG,25.0,25.0,9.0,2998.48,3.81,True,1,0,5,0,True,True,Large rim down,Supplied horn;3mm round belt;4walls30%infill

@@ -178,11 +178,13 @@ module assembly(explode=0){union(){
  color("#947042")translate([0,0,base_z+54+explode])print_mesh("02_lower_skirt");
  color("#aa8350")translate([0,0,base_z+164+explode*2])print_mesh("03_upper_skirt");
  color("#957044")translate([0,0,base_z+264+explode*3])print_mesh("04_shoulder");
+ color("#252528")translate([0,-107,base_z+264+50+explode*3])rotate([90,0,0])cylinder(d=68,h=2);
  color("#2c2c30")translate([-25.76,108,base_z+264+52+explode*3])cube([51.52,2,25.04]);
  color("#45badd")translate([-13,114,base_z+264+58+explode*3])cube([26,1,15]);
  for(x=[-48,48]){
   color("#24252a")translate([x-12,-137,base_z+264+58+explode*3])cube([24,12,31]);
   color("#707070")translate([x,-131,base_z+264+90+explode*3])pitch_carrier();
+  color("#24252a")translate([x+4,-137,base_z+264+98+explode*3])cube([27,12,36]);
   color("#afb1b2")translate([x-3,-131,base_z+264+120+explode*3])rotate([90,0,-90])arm(x<0?"plunger":"emitter");
  }
  color("#64615a")translate([0,0,base_z+364+explode*4])print_mesh("05_neck");

@@ -11,9 +11,10 @@
     325
   ],
   "base_brim_envelope_mm": [
-    316,
-    296
+    296,
+    316
   ],
+  "base_print_rotation_z_degrees": 90,
   "nozzle_mode": "single",
   "physical_fit_verified": false,
   "physical_strength_verified": false,
@@ -31,10 +32,11 @@
       "connected_components": 1,
       "enclosed_void_surfaces": 0,
       "brim_mm_per_side": 8,
+      "print_rotation_z_degrees": 90,
       "h2d_single_nozzle_with_brim": true,
       "pass_check": true,
-      "orientation": "Floor down; single nozzle",
-      "notes": "300x280 unibody;6mm floor;4mm wall/ribs;6walls6top/bottom40%gyroid;8mmbrim;tree supports below wheel-well roofs;remove through bottom wells"
+      "orientation": "Floor down; rotate90deg about Z; single nozzle",
+      "notes": "300x280 unibody;6mm floor;4mm wall/ribs;6walls6top/bottom40%gyroid;8mmbrim;normal auto supports below wheel-well roofs;remove through bottom wells"
     },
     {
       "part": "02_lower_skirt",
@@ -49,10 +51,11 @@
       "connected_components": 1,
       "enclosed_void_surfaces": 0,
       "brim_mm_per_side": 5,
+      "print_rotation_z_degrees": 90,
       "h2d_single_nozzle_with_brim": true,
       "pass_check": true,
-      "orientation": "Large opening down",
-      "notes": "Complete360degree ring; integrated bumps;3mm registry above110mm body;4walls15%infill"
+      "orientation": "Large opening down; rotate90deg about Z",
+      "notes": "Complete360degree ring; integral bumps;3mm registry above110mm body;4walls15%infill;normal auto supports under bumps"
     },
     {
       "part": "03_upper_skirt",
@@ -67,10 +70,11 @@
       "connected_components": 1,
       "enclosed_void_surfaces": 0,
       "brim_mm_per_side": 5,
+      "print_rotation_z_degrees": 0,
       "h2d_single_nozzle_with_brim": true,
       "pass_check": true,
       "orientation": "Large opening down",
-      "notes": "Complete360degree ring; integral bumps;3mm registry above100mm body;4walls15%infill"
+      "notes": "Complete360degree ring; integral bumps;3mm registry above100mm body;4walls15%infill;tree supports under bumps"
     },
     {
       "part": "04_shoulder",
@@ -85,6 +89,7 @@
       "connected_components": 1,
       "enclosed_void_surfaces": 0,
       "brim_mm_per_side": 5,
+      "print_rotation_z_degrees": 0,
       "h2d_single_nozzle_with_brim": true,
       "pass_check": true,
       "orientation": "Bottom flange down",
@@ -103,6 +108,7 @@
       "connected_components": 1,
       "enclosed_void_surfaces": 0,
       "brim_mm_per_side": 5,
+      "print_rotation_z_degrees": 0,
       "h2d_single_nozzle_with_brim": true,
       "pass_check": true,
       "orientation": "Bottom flange down",
@@ -121,6 +127,7 @@
       "connected_components": 1,
       "enclosed_void_surfaces": 0,
       "brim_mm_per_side": 5,
+      "print_rotation_z_degrees": 0,
       "h2d_single_nozzle_with_brim": true,
       "pass_check": true,
       "orientation": "Hub foot down",
@@ -139,6 +146,7 @@
       "connected_components": 1,
       "enclosed_void_surfaces": 0,
       "brim_mm_per_side": 5,
+      "print_rotation_z_degrees": 0,
       "h2d_single_nozzle_with_brim": true,
       "pass_check": true,
       "orientation": "Floor down",
@@ -157,6 +165,7 @@
       "connected_components": 1,
       "enclosed_void_surfaces": 1,
       "brim_mm_per_side": 5,
+      "print_rotation_z_degrees": 0,
       "h2d_single_nozzle_with_brim": true,
       "pass_check": true,
       "orientation": "As exported",
@@ -175,6 +184,7 @@
       "connected_components": 1,
       "enclosed_void_surfaces": 1,
       "brim_mm_per_side": 5,
+      "print_rotation_z_degrees": 0,
       "h2d_single_nozzle_with_brim": true,
       "pass_check": true,
       "orientation": "As exported",
@@ -193,6 +203,7 @@
       "connected_components": 1,
       "enclosed_void_surfaces": 0,
       "brim_mm_per_side": 5,
+      "print_rotation_z_degrees": 0,
       "h2d_single_nozzle_with_brim": true,
       "pass_check": true,
       "orientation": "Large rim down",

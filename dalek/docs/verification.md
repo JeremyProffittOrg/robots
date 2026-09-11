@@ -1,6 +1,6 @@
 # Digital verification and physical limits
 
-The software and fabrication files were checked on the design machine. These checks establish digital consistency, not operation of a completed robot. The first physical build must complete every gate in `assembly.md`.
+The STACK-10 mechanical revision was checked on the design machine. These checks establish digital consistency, not operation of a completed robot. The first physical build must complete every gate in `assembly.md`. Firmware, circuits and MP3 files are unchanged; their successful earlier build and behavior checks are retained below. The mesh and full-package H2D checks are new for this revision.
 
 ## Firmware and controls
 
@@ -85,13 +85,21 @@ Use the final machine-readable report at `cad/validation.json` and print list at
 python scripts/export_cad.py --check-only
 ```
 
-The exporter checks closed surfaces, consistent mesh winding, positive volume, connected physical solids and the conservative 300 x 300 x 300 mm print envelope. Closed internal cavities are distinguished from loose external solids. The final report records the actual results and solid-material mass bound for every part. Original CAD and every final STL are included.
+The exporter checks the exact ten-file inventory, closed surfaces, consistent mesh winding, positive volume, one connected physical solid per STL and the 325 x 320 x 325 mm H2D single-nozzle envelope with brim allowance. Closed internal cavities are distinguished from loose external solids. Original CAD and all ten final STLs are included. The retired split-panel STL files were removed.
 
-Final check result: `mesh_count: 35`, `all_pass: true`, `printed_piece_count: 151`, `solid_material_upper_bound_g: 1988.1`. The complete listed print set includes a fit coupon and spare standoffs. Overall CAD height is 541 mm. The base diameter is 360 mm. Each STL is exported in pieces that fit the stated printer envelope. No printed weight or assembled weight is claimed as measured.
+Final mesh result: `mesh_count: 10`, `maximum_stl_files: 10`, `all_pass: true`, `printed_piece_count: 11`, `solid_material_upper_bound_g: 2876.1`. The carrier is printed twice. Overall CAD height is 543.8 mm. The base is 300 x 280 mm and is one continuous print with a 6 mm floor and integral motor pockets. Each complete body section prints upright and stacks onto the next. No physical print weight or strength rating is claimed as measured.
 
-An actual Bambu Studio H2D slice of `fit_coupon.stl` also passed. The isolated one-time command, full profile names, Bambu Studio version 02.08.02.61 and exact STL SHA-256 are in `cad/h2d-slice-check.json`. The slicer returned `return_code: 0`, `error_string: Success`, and no warnings. It generated G-code at 0.20 mm layers, two walls and 15% infill. Predicted material was 12.1266 g and predicted total time was 1456.8 seconds. This was a PLA preflight slice; the functional fit coupon must still be printed in the material used for its matching structural parts. No printer was connected, and no actual print was made. The remaining parts were checked as meshes; they have not all been sliced during this run.
+All ten final designs also passed actual Bambu Studio H2D slicing. `cad/h2d-slice-check.json` contains the exact STL hashes, Bambu Studio version 02.08.02.61, per-part process overrides, full CLI argument lists, result codes, loaded mesh dimensions, full printed heights, and actual model/support/brim extrusion bounds. Each final result has code 0 and an empty plate warning field. All material and process settings were checked in the generated G-code. No printer was connected or commanded to print.
 
-Independent coordinate reviews checked the chassis hole pattern, wheel and motor-mount clearance, plunger connectivity, rear board retention, arm attachment faces, and head bearing/hub stack. Identified geometric errors were corrected before the final export. These checks cannot replace test printing: the exact gearbox moulding, servo horn pattern, screen fit, layer shrinkage, bearing press fit and fastener access require physical checks.
+The base uses PETG, six walls, six top and bottom layers, 40% gyroid infill, normal automatic supports and an 8 mm brim. The base and lower ring are rotated 90 degrees about Z, kept at Z0 with `--ensure-on-bed`, and centred at X175,Y160. This aligns the 300 mm side along printer Y. The base's entire extruded model, support and brim lie at X27.507-322.493 and Y2.507-317.493 mm, within both single-nozzle areas. Its full 57 mm height was preserved. Its predicted installed model mass is 916.956 g; total material including removable supports is 1059.186 g.
+
+For all eleven printed pieces, slicer predictions are 2188.64 g of installed model, 836.50 g of removable support, and 5.67 g of brim. Total filament is 3031.14 g, with approximately 100 hours 30 minutes of sequential printing under the recorded profiles. These are software predictions. Removing support does not remove model mass. Purchased parts are additional.
+
+The installed model estimate plus about 1144.88 g of named catalogue components gives a 3333.52 g subtotal before remaining electronics, bearings, metal clamps, fasteners, wiring and finish. The earlier 3 kg planning target is not met. It was not a manufacturer-rated motor payload. Loaded motion remains unverified and must pass the actual programmed forward, reverse and arc tests with current, temperature and stop measurements. No current limit, voltage limit or stop test was weakened to claim success.
+
+Some failed setup trials were rejected before recording the final successful slices, including a clipped brim and an incorrect below-bed placement. The final checks include complete mesh heights and extrusion bounds. The JSON also records Bambu's parser diagnostics for manufacturer-specific T commands in its stock start/end G-code; these occurred with successful final slice codes and no plate warnings. G-code was not executed on a printer.
+
+Independent checks in `docs/revision-review.md` used the exact delivered mesh hashes. They found zero sampled interference for 72,000 wheel points over three seating positions, 48,000 motor-envelope points, 12,000 PCB/servo points, and all sixteen stack-bolt driver paths. Required ball-end and short L-key tools are specified in the hardware list. These checks do not measure actual tyre deformation, hub engagement, print shrinkage, fastener torque, or strength.
 
 ## What remains unverified
 
