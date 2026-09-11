@@ -1,36 +1,11 @@
-part,quantity,material,x_mm,y_mm,z_mm,volume_mm3,solid_mass_g,watertight,connected_components,enclosed_void_surfaces,pass_check,orientation,notes
-fit_coupon,1,PETG,90.0,50.0,5.0,19541.89,24.82,True,1,0,True,Flat,Print first; gauge M3/M8/bearing/switch fits
-chassis_quarter,4,PETG,180.0,180.0,5.0,71993.63,91.43,True,1,0,True,Flat,5mm deck; flip flat plates to mirror X/Y holes; do not rotate90 degrees
-bumper_quarter,4,PLA,180.0,180.0,57.0,23335.26,28.94,True,1,0,True,Lower edge down,15mm floor clearance
-skirt_lower_quarter,4,PLA,180.0,180.0,90.0,36542.72,45.31,True,1,0,True,Lower flange down,90mm height; M3 seam joints
-skirt_upper_quarter,4,PLA,145.0,145.0,90.0,30596.17,37.94,True,1,0,True,Lower flange down,90mm height; rear quarters removable
-splice,12,PETG,24.0,24.0,3.0,1674.14,2.13,True,1,0,True,Flat,Three plates per chassis radial seam
-motor_cradle,4,PETG,51.0,76.0,55.0,21497.75,27.3,True,1,0,True,Base down,55mm pillars; M3x65 through bolts
-battery_tray,1,PETG,124.0,80.0,15.0,45292.29,57.52,True,1,0,True,Flat,116x72mm pocket; 2x20mm straps
-deck_post,4,PETG,9.0,9.0,95.0,5152.17,6.54,True,1,0,True,Upright,95mm; M3x110 through bolt
-electronics_deck,1,PETG,180.0,120.0,3.0,47230.42,59.98,True,1,0,True,Flat,M2.5 insulated standoffs on slots
-pcb_standoff,32,PETG,7.0,7.0,6.0,191.75,0.24,True,1,0,True,Flat,6mm insulated PCB spacers; quantity includes spares
-shoulder_front,1,PLA,240.0,120.0,110.0,82105.71,101.81,True,1,0,True,Bottom flange down,Flat front retains both arm brackets
-shoulder_rear,1,PLA,240.0,120.0,110.0,56154.98,69.63,True,1,0,True,Bottom flange down,Display and two switches; removable
-screen_frame,1,PETG,88.0,53.0,15.0,23706.26,30.11,True,1,0,True,As exported,52.2x26 board pocket; USB side opening
-screen_clamp,1,PETG,88.0,53.0,8.0,13279.19,16.86,True,1,0,True,Flat,Rear cover; foam pads contact PCB edges
-arm_base,2,PETG,44.0,46.0,48.0,21680.39,27.53,True,1,0,True,Base down,MG92B upright cradle; two cable ties
-pitch_carrier,2,PETG,49.0,48.0,44.0,13977.47,17.75,True,1,0,True,Base down,MG92B axis horizontal; supplied yaw horn
-plunger_arm,1,PLA,142.0,42.0,42.0,18122.12,22.47,True,1,1,True,As exported; supports under cup,Decorative hollow tube; no load
-gun_arm,1,PLA,135.0,28.0,19.0,17608.87,21.84,True,1,1,True,As exported; supports under rods,Solid decorative muzzle; no projectile function
-neck_adapter,1,PLA,240.0,240.0,4.0,14652.34,18.17,True,1,0,True,Flat,Shoulder 110mm PCD-radius to neck104mm radius
-neck_ring,2,PLA,216.0,216.0,4.0,18247.38,22.63,True,1,0,True,Flat,Three supports at30/150/270 degrees
-neck_post,6,PETG,9.0,9.0,11.0,593.09,0.75,True,1,0,True,Upright,11mm spacing
-neck_deck,1,PETG,216.0,216.0,4.0,48922.9,62.13,True,1,0,True,Flat,Bearing and belt motor support
-bearing_tower,1,PETG,58.0,58.0,26.0,21792.14,27.68,True,1,0,True,Flange down,608 bearings22x8x7; lower bearing inserts from bottom
-bearing_cap,1,PETG,34.0,34.0,3.0,2042.29,2.59,True,1,0,True,Flat,3xM3x8 thread-forming screws
-inner_spacer,1,PETG,11.5,11.5,12.0,586.98,0.75,True,1,0,True,Flat,12mm between bearing inner races
-head_hub,1,PETG,64.0,64.0,25.0,30423.06,38.64,True,1,0,True,Foot down; supports under first rim,M8 spindle;3mm round belt groove
-head_servo_mount,1,PETG,36.0,72.0,21.0,15427.38,19.59,True,1,0,True,Flat,FS5103R clamp; belt-tension slots
-servo_pulley,1,PETG,25.0,25.0,9.0,2998.48,3.81,True,1,0,True,Flat,Attach supplied horn; no printed spline
-head_plate,1,PETG,216.0,216.0,3.0,23528.5,29.88,True,1,0,True,Flat,Spokes retain dome with4M3 bolts
-dome,1,PLA,220.0,220.0,64.922,70343.13,87.23,True,1,0,True,Open base down; tree support inside,220mm diameter hollow dome; stationary wiring excluded
-eye,1,PLA,32.0,32.0,92.0,18107.54,22.45,True,1,1,True,Base flange down,Rear two M3 bolts; black pupil paint
-lamp,2,Translucent PLA,25.0,25.0,22.0,5605.06,6.95,True,1,0,True,Flat,Decorative unlit lamps; no head wires
-hemisphere,48,PLA,25.969,25.969,12.881,1703.99,2.11,True,1,0,True,Open circular face down,M3 captive nut; print6first to confirm seam access
-speaker_mount,1,PETG,90.0,34.0,90.0,24854.6,31.57,True,1,0,True,As exported,85mm speaker envelope; bolts to deck front
+part,quantity,material,x_mm,y_mm,z_mm,volume_mm3,solid_mass_g,watertight,connected_components,enclosed_void_surfaces,brim_mm_per_side,h2d_single_nozzle_with_brim,pass_check,orientation,notes
+01_base,1,PETG,300.0,280.0,57.0,913950.95,1160.72,True,1,0,8,True,True,Floor down; single nozzle,300x280 unibody;6mm floor;4mm wall/ribs;6walls6top/bottom40%gyroid;8mmbrim;tree supports below wheel-well roofs;remove through bottom wells
+02_lower_skirt,1,PLA,300.0,280.222,113.0,348206.89,431.78,True,1,0,5,True,True,Large opening down,Complete360degree ring; integrated bumps;3mm registry above110mm body;4walls15%infill
+03_upper_skirt,1,PLA,250.0,250.0,103.0,264225.46,327.64,True,1,0,5,True,True,Large opening down,Complete360degree ring; integral bumps;3mm registry above100mm body;4walls15%infill
+04_shoulder,1,PETG,220.0,262.0,103.0,338701.65,430.15,True,1,0,5,True,True,Bottom flange down,Integral arm shelves and rear display frame; tree supports under shelves;4walls25%infill
+05_neck,1,PETG,220.0,220.0,66.0,170796.26,216.91,True,1,0,5,True,True,Bottom flange down,Integrated rings posts bearing tower servo mount; support deck underside;4walls30%infill
+06_head,1,PLA,220.0,287.0,99.0,175711.7,217.88,True,1,0,5,True,True,Hub foot down,Dome eye lamps hub pulley spokes integrated; tree supports inside dome under eye and pulley;4walls15%infill
+07_pitch_carrier,2,PETG,49.0,48.0,44.0,16896.63,21.46,True,1,0,5,True,True,Floor down,Print this same file twice;4walls30%infill; actual horn and servo fit gate
+08_plunger_arm,1,PLA,134.0,38.0,38.0,18083.92,22.42,True,1,1,5,True,True,As exported,Support cup underside; supplied servo horn; decorative arm only
+09_emitter_arm,1,PLA,130.0,28.0,17.0,17605.05,21.83,True,1,1,5,True,True,As exported,Support rods underside; supplied servo horn; decorative arm only
+10_servo_pulley,1,PETG,25.0,25.0,9.0,2998.48,3.81,True,1,0,5,True,True,Large rim down,Supplied horn;3mm round belt;4walls30%infill
