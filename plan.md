@@ -623,3 +623,15 @@ filter would have altered the committed bytes and broken the hash check in the w
 
 2026-09-12: Authorized delivery email delegated to a subagent with both files attached and both
 links. Awaiting the SES MessageId.
+
+2026-09-12: Delivery email accepted by SES once, MessageId
+`010001a09777f29d-fbd852c5-7d8f-419b-9f81-33b18d1a96ea-000000`, 5,081,543 bytes, with both the
+MP4 and the PDF attached as the user asked plus both CloudFront links. Sent from
+`robots@jeremy.ninja` under the verified `jeremy.ninja` domain identity.
+
+2026-09-12: One gap found in the guide immediately after that send: it had no step telling the
+builder to flash the firmware. Added as step 1 of "First run" with the exact
+`pio run -e tdisplay -t upload` command. The PDF hash therefore changed from
+`199966255c63fd05...` to `62f1a338910c0e7d...`, so the published bytes are being updated and a
+short correction email follows. Publishing a different file behind a link whose hash was
+already quoted would have been worse than one extra email.

@@ -365,19 +365,24 @@ def main():
     g.end()
 
     # ---------------------------------------------------------------- commission
-    g.frame("First run", "Two things need setting on the actual door")
+    g.frame("First run", "Flash it, then two things need setting on the actual door")
     g.image(D / "diagram_sensors.png", 12 * mm, 108 * mm, 272 * mm, 72 * mm)
     y = 98 * mm
-    y = g.step(1, 16 * mm, y, 128 * mm, "Let it find the shut position",
+    y = g.step(1, 16 * mm, y, 128 * mm, "Flash the firmware",
+               "pio run -e tdisplay -t upload from doorbot/firmware, over the T-Display's "
+               "USB-C. It brings both time-of-flight boards up one at a time, moves the wave "
+               "sensor to 0x2A, and refuses to drive the motor at all if either sensor is "
+               "missing - the screen says which one.") - 3 * mm
+    y = g.step(2, 16 * mm, y, 128 * mm, "Let it find the shut position",
                "Press the top button with the door nearly shut. It winds until the leaf stops "
                "against the magnets, and that stall becomes its zero. The screen shows HOMING "
                "until then.") - 3 * mm
-    y = g.step(2, 16 * mm, y, 128 * mm, "Set the kick threshold",
+    y = g.step(3, 16 * mm, y, 128 * mm, "Set the kick threshold",
                "Nobody publishes how much of a kick reaches a door jamb, so this one has to be "
                "measured on your door. Start at the shipped value, kick twice, and if nothing "
                "happens lower CLICK_THS in setup(); if the door closes when someone shuts a "
                "cupboard, raise it.") - 3 * mm
-    y = g.step(3, 16 * mm, y, 128 * mm, "Check the wrong-direction case",
+    y = g.step(4, 16 * mm, y, 128 * mm, "Check the wrong-direction case",
                "If the first close pays cable out instead of taking it in, swap the two motor "
                "leads.") - 3 * mm
     g.wrap("What the sensors cannot see: an object lying in the swing arc on the pull side is "
