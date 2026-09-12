@@ -7,6 +7,7 @@
 namespace dalek {
 constexpr uint32_t DEADMAN_MS = 500;
 constexpr int DRIVE_LIMIT = 150; // 150/255, deliberately reduced commissioning speed.
+constexpr int HEAD_LIMIT = 100; // 100/255 maximum; no speed feedback.
 
 inline bool parseInteger(const char *text, long low, long high, long &value) {
   if (!text || !*text || isspace(static_cast<unsigned char>(*text))) return false;
@@ -91,5 +92,36 @@ class Ramp {
     return value;
   }
   void stop() { value = 0; holding = false; }
+};
+
+class HeadMotor {
+ public:
+  Ramp ramp;
+  int lastDirection = 0;
+  uint32_t zeroSince = 0;
+
+  void stop(uint32_t now) {
+    if (ramp.value != 0) zeroSince = now;
+    ramp.stop();
+  }
+
+  int tick(int percent, uint32_t now, bool permitted) {
+    if (!permitted || percent == 0) { stop(now); return 0; }
+    if (percent > 100) percent = 100;
+    if (percent < -100) percent = -100;
+    const int target = percent * HEAD_LIMIT / 100;
+    const int direction = target > 0 ? 1 : -1;
+    if (ramp.value != 0 && direction != lastDirection) {
+      if (ramp.tick(0, now) == 0) zeroSince = now;
+      return ramp.value;
+    }
+    // A slider passing through zero, or a quick disarm/re-arm, cannot bypass
+    // the same 100ms coast interval required for a direct reversal.
+    if (ramp.value == 0 && lastDirection != 0 && direction != lastDirection &&
+        static_cast<uint32_t>(now - zeroSince) < 100) return 0;
+    const int result = ramp.tick(target, now);
+    if (result != 0) lastDirection = direction;
+    return result;
+  }
 };
 }

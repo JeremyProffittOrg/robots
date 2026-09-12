@@ -55,13 +55,38 @@ bool servoPulse(uint8_t channel, int microseconds) {
   return servos.setPWM(channel, 0, static_cast<uint16_t>(microseconds * 4096UL / 20000UL)) == 0;
 }
 
+bool headWrite(int value) {
+  static int selectedDirection = 2; // Force both gates disabled on first call.
+  const int direction = value > 0 ? 1 : value < 0 ? -1 : 0;
+  if (direction != selectedDirection) {
+    ledcWrite(4, 0); // Remove energy BEFORE any I2C direction change.
+    // U9 /OE pins: PCA full-on = disabled; full-off = enabled.
+    if (servos.setPWM(4, 4096, 0) != 0 || servos.setPWM(5, 4096, 0) != 0) return false;
+    if (direction && servos.setPWM(direction > 0 ? 4 : 5, 0, 4096) != 0) return false;
+    selectedDirection = direction;
+  }
+  ledcWrite(4, abs(value));
+  return true;
+}
+
+void motionFault() {
+  ledcWrite(4, 0);
+  digitalWrite(pins::MOTOR_SLEEP, LOW);
+  digitalWrite(pins::SERVO_OE, HIGH);
+  motorWrite(0, 1, 0); motorWrite(2, 3, 0);
+  portENTER_CRITICAL(&stateMutex);
+  servoReady = false; // Latched I2C fault: fix wiring and reboot.
+  controller.stop();
+  portEXIT_CRITICAL(&stateMutex);
+}
+
 void motionTask(void *) {
   esp_task_wdt_add(nullptr);
   dalek::Ramp left, right;
+  dalek::HeadMotor head;
   TickType_t wake = xTaskGetTickCount();
   uint32_t lastBattery = 0, lowSince = 0, lastServo = 0;
-  bool lowTiming = false, batteryInitialized = false, wasArmed = false, neutralizingHead = false;
-  uint32_t headStopUntil = 0;
+  bool lowTiming = false, batteryInitialized = false;
   float filteredBattery = 0, phase = 0;
   portENTER_CRITICAL(&stateMutex);
   controlTaskReady = true;
@@ -96,25 +121,21 @@ void motionTask(void *) {
     const bool i2cOkay = servoReady;
     portEXIT_CRITICAL(&stateMutex);
 
-    if (wasArmed && !armed && powered && i2cOkay) {
-      // Continuous servos may retain speed after pulse loss. Send a stop pulse first.
-      neutralizingHead = true;
-      headStopUntil = now + 100;
-      lastServo = now - 20; // Write neutral immediately, then retain it for five frames.
-      digitalWrite(pins::SERVO_OE, HIGH);
-    }
-    if (armed || !powered || !i2cOkay ||
-        (neutralizingHead && static_cast<int32_t>(now - headStopUntil) >= 0)) neutralizingHead = false;
-    wasArmed = armed;
-
     if (!armed) {
+      ledcWrite(4, 0);
       digitalWrite(pins::MOTOR_SLEEP, LOW);
-      if (!neutralizingHead) digitalWrite(pins::SERVO_OE, HIGH);
+      digitalWrite(pins::SERVO_OE, HIGH);
       motorWrite(0, 1, 0); motorWrite(2, 3, 0);
-      left.stop(); right.stop(); phase = 0;
+      left.stop(); right.stop(); head.stop(now); phase = 0;
     } else {
       motorWrite(0, 1, left.tick(command.left, now) * calibration::LEFT_DIRECTION);
       motorWrite(2, 3, right.tick(command.right, now) * calibration::RIGHT_DIRECTION);
+      if (!headWrite(head.tick(command.head, now, true) * calibration::HEAD_DIRECTION)) {
+        head.stop(now); motionFault();
+        esp_task_wdt_reset();
+        vTaskDelayUntil(&wake, pdMS_TO_TICKS(10));
+        continue;
+      }
       digitalWrite(pins::MOTOR_SLEEP, HIGH);
     }
 
@@ -134,17 +155,9 @@ void motionTask(void *) {
         pulse = constrain(pulse, calibration::ARM_MIN_US, calibration::ARM_MAX_US);
         if (!servoPulse(channel, pulse)) { okay = false; break; }
       }
-      int head = calibration::HEAD_NEUTRAL_US + (armed ? command.head * calibration::HEAD_MAX_DELTA_US * calibration::HEAD_DIRECTION / 100 : 0);
-      if (okay) okay = servoPulse(4, head);
       if (!okay) {
-        digitalWrite(pins::SERVO_OE, HIGH);
-        digitalWrite(pins::MOTOR_SLEEP, LOW);
-        motorWrite(0, 1, 0); motorWrite(2, 3, 0);
-        portENTER_CRITICAL(&stateMutex);
-        servoReady = false; // Latched fault: fix wiring and reboot.
-        controller.stop();
-        portEXIT_CRITICAL(&stateMutex);
-      } else if (armed || neutralizingHead) digitalWrite(pins::SERVO_OE, LOW);
+        head.stop(now); motionFault();
+      } else if (armed) digitalWrite(pins::SERVO_OE, LOW);
     }
     esp_task_wdt_reset();
     vTaskDelayUntil(&wake, pdMS_TO_TICKS(10));
@@ -328,6 +341,8 @@ void setup() {
     pinMode(motorPins[channel], OUTPUT); digitalWrite(motorPins[channel], LOW);
     ledcSetup(channel, 20000, 8); ledcAttachPin(motorPins[channel], channel); ledcWrite(channel, 0);
   }
+  pinMode(pins::HEAD_PWM, OUTPUT); digitalWrite(pins::HEAD_PWM, LOW);
+  ledcSetup(4, 20000, 8); ledcAttachPin(pins::HEAD_PWM, 4); ledcWrite(4, 0);
   pinMode(pins::ACTUATOR_POWER, INPUT); // External 10k/15k divider; no ESP32 internal pull available.
   pinMode(pins::BUTTON, INPUT_PULLUP);
   analogReadResolution(12); analogSetPinAttenuation(pins::PACK_ADC, ADC_11db);
@@ -339,8 +354,19 @@ void setup() {
     servos.setOscillatorFrequency(25000000);
     servos.setPWMFreq(50);
     servos.setOutputMode(true);
+    // MODE2 OUTDRV=1, OUTNE=10: OE HIGH makes every PCA output high-Z.
+    // R7/R8 then disable BOTH active-low head gates, including before arming.
+    // The library setter does not expose OUTNE or report its I2C result.
+    Wire.beginTransmission(0x40); Wire.write(0x01); Wire.write(0x06);
+    servoReady = Wire.endTransmission() == 0;
+    if (servoReady) {
+      Wire.beginTransmission(0x40); Wire.write(0x01);
+      servoReady = Wire.endTransmission(false) == 0;
+      servoReady = servoReady && Wire.requestFrom(uint8_t(0x40), uint8_t(1)) == 1;
+      servoReady = servoReady && Wire.read() == 0x06;
+    }
     for (int i = 0; i < 4; ++i) servoReady = servoPulse(i, calibration::ARM_CENTER_US[i]) && servoReady;
-    servoReady = servoPulse(4, calibration::HEAD_NEUTRAL_US) && servoReady;
+    servoReady = headWrite(0) && servoReady;
   }
   filesystemReady = LittleFS.begin(false); // Never erase files on a failed mount.
   preferences.begin("dalek", false);
