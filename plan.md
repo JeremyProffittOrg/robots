@@ -139,6 +139,52 @@ Track OpenSCAD, PlatformIO and email tool session/agent IDs. Observe exit codes 
 
 # Dalek fabrication package
 
+## Current revision: printed mounts and alternative batteries
+
+### Locked decisions (user-confirmed; do not revisit)
+
+2026-09-12: "Create a 3e printer clamp with four screws total for the motors, the mountings for the boards inside should be a 3d printed one piece platform with legs that fits over the battery, the battery is okay, make sure we can also use a standard 12v 7ah or 14 ah lead acid battery as well. Battery can be held down by zip ties, and you are free to use zip ties instead of bolts where appropriate, including as a replacement for the motor clamp - give the user both options. The arm holders need to be able to be held in place with screws or Ip ties too. The head motor also can be built into the top of piece where the arms go in as well, reducing stl"
+
+2026-09-12: "Try to reduce the box size for the arms as well."
+
+2026-09-12: "Create new video and email it to me"
+
+Prior constraints persist: maximum ten STL designs, stackable body sections, round strong base within H2D footprint, concealed arm servos, adjustable TT/wheel head friction drive, original rear T-Display, four ground wheels, Wi-Fi AP/network, original audio, unchanged battery as one option. Final PDF and S3 video email remain authorized. No purchasing or physical printing is authorized or needed.
+
+### Outcome, non-goals, files and proof
+
+MOUNT-1 revises the existing fabrication design: one reusable printed hook clamp per motor, four motor screws total, alternative motor zip ties, one printed board platform with integral legs above any one supported battery, screw or tie arm-servo retention, smaller feasible gunboxes and integrated shoulder/neck structure. Keep a separate moving head carriage so friction remains adjustable. Expected inventory: ten STL designs and fourteen prints, including four identical motor clamps and two identical pitch carriers. Exact battery support is defined by measured manufacturer envelopes; capacity labels alone do not define case dimensions.
+
+Files: C:/dev/robots/dalek/cad/{dalek.scad,base_mounts.scad,upper_mounts.scad,validation and clearance/slice reports}; affected STLs; existing export/check/slice/drawing/video/manual scripts; BOM, circuit battery notes, assembly/mechanical/electrical/research/verification documentation; regenerated PNG/PDF/video; C:/dev/robots/.github/workflows/publish-dalek.yml revision guard; only this section of C:/dev/robots/plan.md. Preserve unrelated robots and unchanged firmware behavior unless battery compatibility demonstrates a necessary correction. No new dependency, cloud resource, scheduled job, physical strength claim or purchase.
+
+Proof: `python scripts/export_cad.py --check-only` passes at most ten connected watertight designs within the stock H2D envelope. `python scripts/check_mechanical.py` and affected mounting/assembly checks pass against current mesh hashes. Actual changed-part H2D slices pass through `python scripts/slice_h2d.py --parts 01_base 04_shoulder 07_pitch_carrier 11_motor_clamp 12_electronics_platform`; adjust this list only to match actual changed meshes. Drawings and video use final source hashes; full FFmpeg decode passes; PDF pages render and pass visual review. Exact committed artifacts pass existing GitHub OIDC/S3 publication; delegated HTML email returns an actual SES MessageId after link and attachment verification.
+
+### Verified facts and working assumptions
+
+Verified in C:/dev/robots/deploy.md: only main/GitHub Actions/OIDC publishes artifacts. Current released Dalek sources are clean before this revision; unrelated Fable/Radar/Doorbot work is present and preserved. Python, OpenSCAD, Bambu Studio, FFmpeg, ReportLab and existing render tools worked in the immediately preceding release. GitHub and SES access passed the previous delivery this session. No interactive prompt or new credentials are expected.
+
+Verified from current CAD: base diameter300, floor6, motor case envelopes X59.3..81.7 mirrored, |Y|1..71 and Z6..28.44; skirt top bore184 and height213. Existing battery is Bioenno BLF-1206A LiFePO4, with matched off-robot charger. Battery research agent reports manufacturer maximum PS-12140 SLA case/terminal envelope153Y x100X x103Z including tolerance, subject to final cited research. Working plan puts the platform above terminal boots and lowers the skirt around the completed base, avoiding dependence on the narrow top opening for battery service. Nominal target platform underside baseZ140; exact final geometry and board arrangement require checks.
+
+### Workstreams and milestones
+
+- [~] Battery research, /root/battery_options: primary manufacturer7Ah/14Ah envelopes, mass, charging, regulator/fuse/connector compatibility and mass limits. Done when docs/battery-options-research.md cites actual datasheets and every proposed battery has explicit fit/electrical limits.
+- [~] Base and platform, /root/base_platform_revision: one clamp design/four screws or ties; enlarged battery bay/ties; one-piece raised board deck/legs with retention; accessible base/skirt joints. Done when new mesh exports and actual geometry/hardware/insertion checks pass.
+- [~] Upper structure, /root/upper_mount_revision: merge shoulder/neck; shrink gunboxes where motion allows; screw/tie servo mounts; bottom assembly/service paths while shell is removed. Done when exported upper/carrier meshes, both retainer options, all arm poses and assembly paths pass.
+- [ ] Root integration: replace superseded modules and neck STL, update current inventory, board layout, BOM and assembly/circuit notes; run current checks and changed-part slicing. Done when all reports match released meshes and no stale mounting instructions remain.
+- [ ] Media and delivery: regenerate drawings, PDF and new narrated assembly video, inspect actual outputs, commit/push and watch publication. Done when final download hashes and email SES MessageId are recorded.
+
+### Stop conditions (only these)
+
+Unavailable credentials/resources required for delivery; a materially different requested outcome; an unapproved irreversible action or purchase. Complete independent work and report the exact missing input. No physical robot is available, so physical load/traction/fit tests remain explicit builder gates and do not block digital delivery.
+
+### Jobs and retry policy
+
+Track delegated agents and command session/PIDs. Existing exporter600s for detailed skirt,240s for others; increase only demonstrated insufficient bounds for the merged upper print. Slicer300s per part; video20min ceiling. Watch exit codes, progress and failure output. At most two corrected attempts per deterministic failure class; transient network retries at most two with backoff. Never retry a failing identical geometry/export command without diagnosis. No recurring automation. Email only after final reviewed release; no resend after an accepted SES MessageId. Do not retry previously denied temporary-file cleanup.
+
+### Execution log
+
+- 2026-09-12: Read deploy.md, current base/upper CAD, hardware/electronics BOM, mechanical and electrical docs, exporter and existing clearance tests. Applied research skill for delegated primary-source battery checks. Started /root/battery_options, /root/upper_mount_revision and /root/base_platform_revision. Accepted smaller-arm-box and new-video/email steering into this revision. Root coordinates shared source dispatch, inventory and final media; agents own separate CAD files to prevent concurrent edits.
+
 ## Current revision: one-piece taller skirt
 
 ### Locked decisions (user-confirmed; do not revisit)
