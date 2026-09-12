@@ -1,5 +1,5 @@
 """Export bounded OpenSCAD jobs, then verify actual STL geometry."""
-import argparse, csv, json, os, shutil, subprocess
+import argparse, csv, hashlib, json, os, shutil, subprocess
 from pathlib import Path
 from concurrent.futures import ThreadPoolExecutor, as_completed
 import trimesh
@@ -8,9 +8,13 @@ PARTS = {'body_lower':(1,'PETG'),'body_upper':(1,'PETG'),'dome':(1,'PLA'),
  'leg':(2,'PETG'),'outer_foot':(2,'PETG'),'rear_foot':(1,'PETG'),
  'drive_cassette':(3,'PETG'),'head_motor_mount':(1,'PETG'),
  'bearing_tower':(1,'PETG'),'bearing_cap':(1,'PETG')}
+DEVELOPMENT_PARTS = {'frame_chassis':1,'rail_key':4,'rail_key_pin':4,
+ 'outer_foot_core':2,'center_foot_core':1,'post_adapter':1}
 EXE=os.environ.get('OPENSCAD') or shutil.which('openscad') or r'C:\Program Files\OpenSCAD\openscad.com'
 def export(name):
- result=subprocess.run([EXE,'--export-format','binstl','-o',str(ROOT/'stl'/f'{name}.stl'),'-D',f'part="{name}"',str(ROOT/'cad/r2d2.scad')],capture_output=True,text=True,timeout=600)
+ folder=ROOT/'stl'/'development' if name in DEVELOPMENT_PARTS else ROOT/'stl'
+ folder.mkdir(parents=True,exist_ok=True)
+ result=subprocess.run([EXE,'--export-format','binstl','-o',str(folder/f'{name}.stl'),'-D',f'part="{name}"',str(ROOT/'cad/r2d2.scad')],capture_output=True,text=True,timeout=600)
  if result.returncode or 'ERROR:' in result.stderr: raise RuntimeError(name+': '+result.stderr)
  print('Exported '+name,flush=True)
 def validate():
@@ -31,10 +35,28 @@ def views():
   r=subprocess.run([EXE,'-o',str(ROOT/'cad'/f'{name}.png'),'--imgsize=1400,1400','--colorscheme=Tomorrow','--projection=o','--viewall','--autocenter',f'--camera={camera}','-D',f'part="{name if name != "rear" else "assembly"}"',str(ROOT/'cad/r2d2.scad')],capture_output=True,text=True,timeout=180)
   if r.returncode: raise RuntimeError(r.stderr)
   print('Rendered '+name,flush=True)
+def validate_development():
+ rows=[]
+ for name,quantity in DEVELOPMENT_PARTS.items():
+  p=ROOT/'stl/development'/f'{name}.stl';mesh=trimesh.load_mesh(p,process=True)
+  solids=sum(s.volume>0 for s in mesh.split(only_watertight=False))
+  passed=bool(mesh.is_watertight and mesh.is_winding_consistent and mesh.volume>0 and solids==1
+              and all(mesh.extents<=300.001) and abs(mesh.bounds[0,2])<=.001)
+  rows.append({'part':name,'development_quantity':quantity,'closed':bool(mesh.is_watertight),
+   'positive_solids':int(solids),'dimensions_mm':[round(float(v),3) for v in mesh.extents],
+   'bed_min_z_mm':round(float(mesh.bounds[0,2]),6),'sha256':hashlib.sha256(p.read_bytes()).hexdigest(),'passed':passed})
+ report={'revision':'D-development','geometry_pass':all(r['passed'] for r in rows),'fabrication_release':False,
+  'full_robot_integration_verified':False,'physical_load_tested':False,'purchased_piece_limit':99,
+  'purchased_piece_limit_verified':False,'rows':rows}
+ (ROOT/'cad/development-check.json').write_text(json.dumps(report,indent=2))
+ assert report['geometry_pass'],[r['part'] for r in rows if not r['passed']]
+ print(f'PASS: {len(rows)} development STL designs are closed single solids, on the bed and within300mm per axis')
+ print('Not a fabrication release: assembly, H2D slicing, load and99-piece checks remain incomplete.')
 if __name__=='__main__':
- p=argparse.ArgumentParser();p.add_argument('--check-only',action='store_true');p.add_argument('--views',action='store_true');p.add_argument('--part');a=p.parse_args()
+ p=argparse.ArgumentParser();p.add_argument('--check-only',action='store_true');p.add_argument('--check-development',action='store_true');p.add_argument('--views',action='store_true');p.add_argument('--part');a=p.parse_args()
  for d in ['stl','bom','cad']:(ROOT/d).mkdir(exist_ok=True)
- if a.views:views()
+ if a.check_development:validate_development()
+ elif a.views:views()
  elif a.part:export(a.part)
  else:
   if not a.check_only:

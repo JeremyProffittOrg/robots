@@ -1,7 +1,9 @@
-// R2-24 revision C. mm, X shoulders / Y forward / Z up. Native STL bed orientations below.
+// Revision D development. Full assembly still uses revision C stance pending integration.
+// mm, X shoulders / Y forward / Z up. Native STL bed orientations below.
 include <exterior.scad>
 include <kinematics.scad>
 include <loadframe.scad>
+include <printed-frame.scad>
 part="assembly";
 stroke=POST_MIN;
 head_angle=0;
@@ -101,6 +103,13 @@ module assembly(open=false){
  else {color("#63768a")translate([0,0,415])bearing_tower();translate([49,0,426.32])tt();translate([76.5,0,426.32])wheel();}
  }}
 if(part=="assembly")assembly();
+else if(part=="printed_frame")printed_frame_assembly();
+else if(part=="frame_chassis")translate([0,0,-166])frame_chassis();
+else if(part=="rail_key")rail_key();
+else if(part=="rail_key_pin")translate([2,0,4])rail_key_pin();
+else if(part=="outer_foot_core")translate([0,0,-12])printed_foot_core();
+else if(part=="center_foot_core")translate([0,0,-12])printed_foot_core(true);
+else if(part=="post_adapter")translate([0,0,29])rotate([90,0,0])printed_post_adapter();
 else if(part=="section")assembly(true);
 else if(part=="exploded")assembly();
 else if(part=="body_lower")translate([0,0,35])body_lower();

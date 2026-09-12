@@ -4,7 +4,7 @@ No CAD/firmware changes. Purchased parts are explicitly schematic envelopes.
 from pathlib import Path
 import hashlib,json,zipfile,subprocess,io
 import fitz
-from export_cad import EXE
+from export_cad import EXE,DEVELOPMENT_PARTS
 import numpy as np
 import trimesh
 import matplotlib
@@ -220,4 +220,49 @@ def main():
   for p in ARTIFACTS:z.write(p,p.relative_to(OUT))
   z.write(OUT/'index.json','index.json')
  print(f'PASS: {len(ARTIFACTS)} PNGs; all10 printable components and13 cut profiles; current STL hashes recorded')
-if __name__=='__main__':main()
+def development():
+ global OUT
+ OUT=ROOT/'output/drawings/development';OUT.mkdir(parents=True,exist_ok=True)
+ files=[ROOT/'stl/development'/f'{n}.stl' for n in DEVELOPMENT_PARTS]
+ files += [ROOT/'stl'/f'{n}.stl' for n in ['dome','body_lower','body_upper','leg','outer_foot']]
+ hashes={p.relative_to(ROOT).as_posix():hashlib.sha256(p.read_bytes()).hexdigest() for p in files}
+ for name in DEVELOPMENT_PARTS:
+  mesh=trimesh.load_mesh(ROOT/'stl/development'/f'{name}.stl')
+  fig=plt.figure(figsize=(13,10));ax=fig.add_subplot(111,projection='3d')
+  parts=[(mesh,BLUE,name)];bounds(ax,parts,angles=(24,48));draw(ax,parts)
+  fig.suptitle('REVISION D DEVELOPMENT | '+name.replace('_',' '),x=.035,ha='left',fontsize=21,fontweight='bold')
+  fig.text(.04,.90,'Actual STL: '+' x '.join(f'{v:.1f}' for v in mesh.extents)+' mm',fontsize=12,color=INK)
+  fig.subplots_adjust(top=.88,bottom=.12)
+  footer(fig,'Geometry study only. Full robot integration, load tests and the 99-purchased-piece budget are not complete.')
+  save(fig,name)
+ def relief(mesh,dome=False):
+  c=mesh.triangles_center;r=np.linalg.norm(c[:,:2],axis=1)
+  outward=np.einsum('ij,ij->i',mesh.face_normals[:,:2],c[:,:2])/np.maximum(r,1)
+  base=np.full(len(c),129.625)
+  if dome:
+   z=np.maximum(0,c[:,2]-27.12);base=129.625*np.sqrt(np.maximum(0,1-(z/140.02)**2))
+  raised=(r>base+.2)&(outward>.1)
+  groove=(r<base-.25)&(outward>.1)
+  masks=[(~(raised|groove),GRAY),(raised,BLUE),(groove,INK)]
+  return [(mesh.submesh([np.flatnonzero(mask)],append=True),color,'surface relief') for mask,color in masks if mask.any()]
+ leg=transformed(transformed(transformed(MESH['leg'],(0,0,-20)),rz=-45),ry=90)
+ for name,parts,angle in [
+  ('dome-detail',relief(MESH['dome'],True),(16,76)),
+  ('body-detail',relief(MESH['body_lower'])+relief(transformed(MESH['body_upper'],(0,0,139.7))),(12,78)),
+  ('leg-detail',[(leg,GRAY,'leg')],(15,10)),
+  ('foot-detail',[(MESH['outer_foot'],GRAY,'foot')],(25,110))]:
+  fig=plt.figure(figsize=(13,10));ax=fig.add_subplot(111,projection='3d')
+  bounds(ax,parts,angles=angle);draw(ax,parts)
+  fig.suptitle('REVISION D DEVELOPMENT | '+name.replace('-',' '),x=.035,ha='left',fontsize=21,fontweight='bold')
+  fig.subplots_adjust(top=.9,bottom=.12)
+  footer(fig,'Colors clarify geometry; they are not a paint map. Full stance integration is incomplete.')
+  save(fig,name)
+ assert all(hashlib.sha256((ROOT/n).read_bytes()).hexdigest()==sha for n,sha in hashes.items()),'STL changed during rendering'
+ (OUT/'index.json').write_text(json.dumps({'revision':'D-development','fabrication_release':False,'stl_sha256':hashes,
+  'pngs':[{'file':p.name,'sha256':hashlib.sha256(p.read_bytes()).hexdigest()} for p in ARTIFACTS]},indent=2))
+ print(f'PASS: {len(ARTIFACTS)} development PNGs match the current STL files; not a fabrication release')
+
+if __name__=='__main__':
+ import argparse
+ parser=argparse.ArgumentParser();parser.add_argument('--development',action='store_true');args=parser.parse_args()
+ development() if args.development else main()

@@ -1,0 +1,95 @@
+{
+  "revision": "D-development",
+  "geometry_pass": true,
+  "fabrication_release": false,
+  "full_robot_integration_verified": false,
+  "physical_load_tested": false,
+  "purchased_piece_limit": 99,
+  "purchased_piece_limit_verified": false,
+  "rows": [
+    {
+      "part": "frame_chassis",
+      "development_quantity": 1,
+      "closed": true,
+      "positive_solids": 1,
+      "dimensions_mm": [
+        272.0,
+        157.084,
+        254.0
+      ],
+      "bed_min_z_mm": 0.0,
+      "sha256": "5b2b6cd9ba1a1793b870ee9f1b46d468e683ed03345ad1dcddf9407945fae476",
+      "passed": true
+    },
+    {
+      "part": "rail_key",
+      "development_quantity": 4,
+      "closed": true,
+      "positive_solids": 1,
+      "dimensions_mm": [
+        30.0,
+        41.6,
+        10.0
+      ],
+      "bed_min_z_mm": 0.0,
+      "sha256": "08a9d7d6251e4fa95ed6a77668793992ddc65d9ebd57c66fb7805d9fc5fa837e",
+      "passed": true
+    },
+    {
+      "part": "rail_key_pin",
+      "development_quantity": 4,
+      "closed": true,
+      "positive_solids": 1,
+      "dimensions_mm": [
+        44.0,
+        6.928,
+        8.0
+      ],
+      "bed_min_z_mm": 0.0,
+      "sha256": "9aea8b93e8a5eaaf65583db0a4691f6f4929b0a311d83284c7f367c7bcb1ac12",
+      "passed": true
+    },
+    {
+      "part": "outer_foot_core",
+      "development_quantity": 2,
+      "closed": true,
+      "positive_solids": 1,
+      "dimensions_mm": [
+        64.0,
+        151.0,
+        140.0
+      ],
+      "bed_min_z_mm": 0.0,
+      "sha256": "a445166b1bfccebbac04e670aa04361f2ef01340a533aab9a829e2e9dce04379",
+      "passed": true
+    },
+    {
+      "part": "center_foot_core",
+      "development_quantity": 1,
+      "closed": true,
+      "positive_solids": 1,
+      "dimensions_mm": [
+        79.0,
+        151.0,
+        116.0
+      ],
+      "bed_min_z_mm": 0.0,
+      "sha256": "9b1b0012ea98134140f958c70bc49a8e88ecc40024ca55b15ffcdfdd10819a13",
+      "passed": true
+    },
+    {
+      "part": "post_adapter",
+      "development_quantity": 1,
+      "closed": true,
+      "positive_solids": 1,
+      "dimensions_mm": [
+        76.0,
+        106.5,
+        49.0
+      ],
+      "bed_min_z_mm": 0.0,
+      "sha256": "930958114661ecd5b990bd79f1b6c530d28be7d4cad780fd4e611021d664515d",
+      "passed": true
+    }
+  ]
+}

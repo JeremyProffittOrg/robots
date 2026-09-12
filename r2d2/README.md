@@ -1,9 +1,16 @@
-# R2-24 fabrication package — revision C
+# R2-24 — revision D in development
 
-The confirmed next revision uses front center-foot deployment and full
-retraction for a two-foot stance. The files and links below are revision C;
-they do not yet implement those requirements. See the revision D section
-of [the repository plan](../plan.md) for the mechanism and validation work.
+The confirmed requirements now include front deployment, full retraction
+for a two-foot stance, a printed frame with2020 reinforcement, richer exterior
+detail and no more than99 purchased physical pieces, counting every fastener.
+
+Current CAD and STLs are development work. The new frame studies are in
+[stl/development](stl/development) and [development drawings](output/drawings/development).
+See [development status](docs/revision-d-development.md) and [the repository plan](../plan.md).
+These files are not a complete fabrication release. The PDF/video links below
+remain the previously delivered revision C and do not meet the new requirements.
+
+## Previously released revision C
 
 A detailed, nominally609.6mm/24inch R2-D2 robot design for the Bambu H2D.
 Ten STL designs make14 printed pieces around a metal load frame: two

@@ -1,0 +1,59 @@
+{
+  "revision": "D-development",
+  "fabrication_release": false,
+  "stl_sha256": {
+    "stl/development/frame_chassis.stl": "5b2b6cd9ba1a1793b870ee9f1b46d468e683ed03345ad1dcddf9407945fae476",
+    "stl/development/rail_key.stl": "08a9d7d6251e4fa95ed6a77668793992ddc65d9ebd57c66fb7805d9fc5fa837e",
+    "stl/development/rail_key_pin.stl": "9aea8b93e8a5eaaf65583db0a4691f6f4929b0a311d83284c7f367c7bcb1ac12",
+    "stl/development/outer_foot_core.stl": "a445166b1bfccebbac04e670aa04361f2ef01340a533aab9a829e2e9dce04379",
+    "stl/development/center_foot_core.stl": "9b1b0012ea98134140f958c70bc49a8e88ecc40024ca55b15ffcdfdd10819a13",
+    "stl/development/post_adapter.stl": "930958114661ecd5b990bd79f1b6c530d28be7d4cad780fd4e611021d664515d",
+    "stl/dome.stl": "c3630e71718da0fd2bd328624879b0d51dfc102f10ac07b687ce88233c4a8bbc",
+    "stl/body_lower.stl": "6ff6a6a83c8c9a385f2cd1f5fb791540667f8c1a721193ef467b0df36ca79046",
+    "stl/body_upper.stl": "6acde16dc7ba8867b94e1a9e1da0e7a021e8b689699d0dd4c8c4cecf53205e40",
+    "stl/leg.stl": "a25d9ea2bdb386a9b8e45450beaf9bf2ccebdb979baa5fa77c2c37ee2d795470",
+    "stl/outer_foot.stl": "b68273aaa1b55afba6496fecb661ced9bc9ab4916a485e9a307e91b9b4dd4c75"
+  },
+  "pngs": [
+    {
+      "file": "frame_chassis.png",
+      "sha256": "158b1aee9351481e560e3211359aa9e7d146cb1e37c54889ee8bc491d5ed818e"
+    },
+    {
+      "file": "rail_key.png",
+      "sha256": "77797feb1e3738ccf394f617eed6e04fbfc73eaf6637e7c40cda660c1c17541d"
+    },
+    {
+      "file": "rail_key_pin.png",
+      "sha256": "637ba18e7bf72402db4d83da23f49cfb770ab9d37d5e56c778cf2a3b3c000f5e"
+    },
+    {
+      "file": "outer_foot_core.png",
+      "sha256": "c214bcaabd8ec23e2f0d13b48698b3de153dab4c4eef1c1b0cafd177a7af67d8"
+    },
+    {
+      "file": "center_foot_core.png",
+      "sha256": "5bb069eb2f5d02119606bc9ef4fd2249c5e025bdac82cd4f8f127eb482ffa65b"
+    },
+    {
+      "file": "post_adapter.png",
+      "sha256": "01e8a98d404c9eea932407a778b9295f46399d61ef1d235c5d26b34acdacfaa7"
+    },
+    {
+      "file": "dome-detail.png",
+      "sha256": "76ed70483401419cfb5ca33800630b08a719939cec578de3e72c8faba9f88463"
+    },
+    {
+      "file": "body-detail.png",
+      "sha256": "c1bf6a74bc5621145cee0a54c9410963e286535a3aef22b149f3f4dbf2024fe3"
+    },
+    {
+      "file": "leg-detail.png",
+      "sha256": "ca4d1e3f3814f07a605d7f24911a04aac9a547202881d1b91d8394f66fc60de2"
+    },
+    {
+      "file": "foot-detail.png",
+      "sha256": "fd2692d93d24e351dd092e548ad13a4cd85815b317bee5f2ed67fd5c6525472e"
+    }
+  ]
+}
