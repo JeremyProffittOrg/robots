@@ -143,6 +143,45 @@ Track OpenSCAD, PlatformIO and email tool session/agent IDs. Observe exit codes 
 
 # Dalek fabrication package
 
+## Current revision: flat-panel skirt
+
+### Locked decisions (user-confirmed; do not revisit)
+
+2026-09-12: "can you adjust the body to be flat pannels making a round body, not just a round body please"
+
+Working interpretation: twelve full-height flat skirt faces arranged around the existing circular base, formed in one printed skirt. Keep the earlier ten-STL maximum, stackable body, original rear T-Display, concealed arms, adjustable head drive, printed mount options and supported batteries. Earlier requests for matching drawings, design PDF, video and operator email remain authorized. No physical print or purchase.
+
+### Outcome, non-goals, files and proof
+
+FACET-1 changes only the skirt mesh. Its outer panel envelope is a twelve-sided linear taper from150mm vertex radius atZ0 to110mm atZ210. Face centers remain at15+30k degrees below four bump rows atZ26,76,136,186. Normal wall thickness stays1.8mm. Circular bottom/top collars, existing registers, holes and captive nuts stay at their original datums. A faceted internal rib retains240mm across-flat clearance. The skirt remains213mm high; the overall robot remains563.8mm; nine other STL hashes remain unchanged. The old middle slope break and exterior round band are removed so each main face is one plane.
+
+Files: C:/dev/robots/dalek/cad/dalek.scad and stl/02_skirt.stl; existing exporter/base/mechanical/slice/render metadata and checks; current geometry/slice/derived-mass reports; relevant README/shape/print instructions and verification notes; refreshed PNG/PDF/video; C:/dev/robots/.github/workflows/publish-dalek.yml revision guard; only this section of C:/dev/robots/plan.md. No firmware, MP3, electrical wiring, purchased hardware, base/upper/arm mount changes, dependencies, new cloud resources or scheduling.
+
+Proof: actual exported panel-normal/ray tests establish twelve planes and1.8mm wall thickness; prior round skirt fails this criterion. `python scripts/export_cad.py --check-only`, `python scripts/check_base_mounts.py` and `python scripts/check_mechanical.py` pass on current hashes. `python scripts/slice_h2d.py --parts 02_skirt` passes the whole model, support/brim footprint and height while retaining nine unchanged slice records by hash. All matching media renders pass source hashes, visual checks and full video decode. Existing GitHub OIDC publication succeeds and delegated HTML email returns an SES MessageId after exact download checks.
+
+### Verified facts and assumptions
+
+Read C:/dev/robots/deploy.md and current CAD/check/export/render sources. Dalek worktree was clean; preserve other robot work and shared plan sections. Current skirt is213mm with two curved slopes, round internal rib, two circular joint collars and four captive upper nuts. Bump columns already have30degree spacing. The original round skirt SHA is e1c5b30b59fc58872fa6330aae276f9cdba8bbf3136164a0e63bb2e81075dfc6. Existing tools and GitHub/SES delivery worked in this session. Explicit UTF-8 reads/writes are required on Windows Python; use LF for hashed text.
+
+### Workstreams and milestones
+
+- [~] Root CAD: replace the two curved slopes with one twelve-plane skirt; tilt bump mounts to panel normals; retain interfaces and interior clearances. Done when exported mesh checks and nine unchanged hashes pass.
+- [~] /root/base_platform_revision: extend the existing base checker with actual STL facet/normal/thickness tests; preserve assembly tests. Done when the old round mesh fails the new criterion and final current geometry passes it.
+- [~] /root/upper_mount_revision: independent read-only review of changed CAD, decoration connection, collars and assembly risks. Done when concrete findings are resolved against final geometry.
+- [ ] Root delivery: actual changed-part H2D slice, documentation/media update and review, focused commit/push, successful workflow and final PDF/video email. Done when current hashes and SES MessageId are recorded.
+
+### Stop conditions (only these)
+
+Missing credentials/resources, materially different requested scope, or an unapproved irreversible operation/purchase. Complete independent work and report the exact blocker. Physical strength/traction are unverified builder tests, not blockers to this digital revision.
+
+### Jobs and retry policy
+
+Track each command session/PID and agent. Skirt export600s; slicer300s; video20min; explicit success/failure and timeout checks. Diagnose deterministic failures before at most two corrected retries per failure class. Retain unchanged checks by exact mesh hashes. Publish only through main/GitHub OIDC. Send once after successful verification; no resend after SES acceptance. Do not retry previously denied cleanup of temporary review images.
+
+### Execution log
+
+- 2026-09-12: Read current files and deploy.md. Chose twelve continuous planar skirt faces and retained circular joints/base. Started independent geometry/checker agents alongside root CAD work. Agent confirmed the normal-wall offset and that a120/cos15 inner rib vertex radius preserves240mm across-flat clearance. Negative-control facet checks rejected the current curved skirt while its existing309 access checks passed.
+
 ## Current revision: printed mounts and alternative batteries
 
 ### Locked decisions (user-confirmed; do not revisit)
