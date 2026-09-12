@@ -1,5 +1,41 @@
 # R2-D2 fabrication package (independent task)
 
+## R2-D2 revision D stance requirements
+
+### Locked decisions (user-confirmed; do not revisit)
+
+2026-09-12: "Fully retract for a two-foot stance"
+
+2026-09-12: "Front deployment, like R2-D2"
+
+These answers supersede revision C's rear-deployment/all-three-feet-down assumption. Revision C remains the previously published design; its digital verification does not establish front deployment or two-foot standing.
+
+### Outcome, files and proof
+
+Outcome: deploy the center foot toward the front; retract its post fully and lift its four wheels off the floor for a stable two-side-foot stance. Preserve twelve wheels, specified ground motors, phone Wi-Fi, rotating head, strong metal load paths and minimal whole stackable prints. Non-goals: walking, active two-wheel balancing, physical certification, purchases or unrelated robot edits. Stationary two-foot standing is the initial operating assumption; two-foot driving is not established by the user's request to stand.
+
+Files: C:/dev/robots/r2d2/cad/{kinematics,loadframe,r2d2}.scad and affected metal/STL exports; existing C:/dev/robots/r2d2/firmware posture/control/UI files and tests; corresponding BOM, wiring, mechanical/assembly documentation, drawings, PDF, video and verification scripts. Retain unchanged audio and exterior details unless actual interference requires an edit. C:/dev/robots/plan.md is the plan; C:/dev/robots/r2d2/README.md identifies the delivered package's present limitation.
+
+### Verified facts
+
+2026-09-12 direct reads: cad/kinematics.scad fixes the rear pivot to floor height and restricts post travel to5.03832..72mm. cad/loadframe.scad has bearing-supported shoulder shafts but no positive stance lock. scripts/check_kinematics.py checks a three-foot support polygon and body-relative CG Y=-60..20mm; side wheel contact rows are Y=+/-37mm. That entire CG envelope cannot pass a two-foot support check. firmware/include/posture.h derives pitch only from post position, which is insufficient once the center foot leaves the floor. These are redesign dependencies, not a firmware-limit-only change.
+
+### Workstreams and ordered milestones
+
+- [ ] Mechanical: resolve front retraction travel, foot storage clearance, shoulder restraint and two-foot center of gravity. Extend `python C:/dev/robots/r2d2/scripts/check_kinematics.py` to fail on lifted-foot clearance, support margin, transition load or restraint failure across the complete transition. Existing three-foot PASS is not acceptance.
+- [ ] CAD, after mechanism selection: update existing source and necessary metal interfaces; `python C:/dev/robots/r2d2/scripts/export_cad.py` and `python C:/dev/robots/r2d2/scripts/slice_structure.py` must exit0 with current geometry hashes and the whole body/leg prints fitting H2D.
+- [ ] Controls, after restraint/sensor selection: implement measured and interlocked transfer between stances, matching wiring and BOM. Extend existing host/UI tests through `python C:/dev/robots/r2d2/scripts/verify.py`; `pio run -d C:/dev/robots/r2d2/firmware` and `pio run -d C:/dev/robots/r2d2/firmware -t buildfs` must exit0. Test loss of command, power/feedback faults and interrupted transitions; do not infer a locked shoulder from actuator position.
+- [ ] Integration, after mechanical/controls checks: regenerate current drawings, assembly instructions, PDF and video through existing scripts; all current-source checks in `python C:/dev/robots/r2d2/scripts/verify.py` and `python C:/dev/robots/r2d2/scripts/package.py` must pass. Inspect both endpoint stances and the transition in rendered artifacts.
+- [ ] Delivery, after integration: commit/push on main, monitor the repository publication workflow to success, verify public download hashes and delegate the already authorized PDF/video email. An accepted SES MessageId ends all send retries.
+
+### Stop conditions (only these)
+
+Unavailable required resources/credentials, a necessary unapproved irreversible action or material scope expansion. Physical tests require a built prototype and remain explicitly unperformed. No scheduled automation. Bound CAD export to600s/part, slice to300s/part and network calls to45s; fix deterministic failures before at most two corrected attempts per failure class. Track every running process/session and terminal result. Do not change the published revision C artifact bytes to imply revision D completion.
+
+### Execution log
+
+2026-09-12: Read deploy.md and the actual kinematics, frame, firmware, mass budget and existing checks. Recorded both user decisions verbatim. Identified missing shoulder restraint and insufficient two-foot CG coverage. Requirements/documentation change only; no revision D CAD, firmware or physical verification is claimed.
+
 ## R2-D2 revision C publication amendment
 
 2026-09-12 locked user request: "email me a link to the video on s3 along with the pdf when done."

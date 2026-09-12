@@ -1,5 +1,10 @@
 # R2-24 fabrication package — revision C
 
+The confirmed next revision uses front center-foot deployment and full
+retraction for a two-foot stance. The files and links below are revision C;
+they do not yet implement those requirements. See the revision D section
+of [the repository plan](../plan.md) for the mechanism and validation work.
+
 A detailed, nominally609.6mm/24inch R2-D2 robot design for the Bambu H2D.
 Ten STL designs make14 printed pieces around a metal load frame: two
 whole stackable body sections, one dome, one print per side leg and
