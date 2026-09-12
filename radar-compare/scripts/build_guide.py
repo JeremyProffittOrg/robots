@@ -259,8 +259,22 @@ def render_markdown(path, avail, page_id='portrait', wide_table_threshold=7):
     in_code = False
     table_head = None
     table_rows = []
+    item = [None, []]        # [style, parts] of the list item currently open
+
+    def flush_item():
+        """Emit the open list item. A wrapped bullet is one paragraph, not two.
+
+        GitHub markdown lets a list item run on over following lines - indented
+        or not - until a blank line or a new block. Without this, every wrapped
+        bullet in the document set its tail as a separate body paragraph at the
+        left margin, which reads as a broken hanging indent.
+        """
+        if item[0]:
+            story.append(para(' '.join(item[1]), item[0]))
+        item[0], item[1] = None, []
 
     def flush_text():
+        flush_item()
         if buf:
             story.append(para(' '.join(buf)))
             buf.clear()
@@ -354,14 +368,20 @@ def render_markdown(path, avail, page_id='portrait', wide_table_threshold=7):
         if m:
             flush_text()
             depth = len(m.group(1)) // 2
-            story.append(para('- ' + m.group(2), 'Li2' if depth else 'Li1'))
+            item[0] = 'Li2' if depth else 'Li1'
+            item[1] = ['- ' + m.group(2)]
             continue
         m = re.match(r'^(\s*)(\d+)\.\s+(.*)$', line)
         if m:
             flush_text()
             depth = len(m.group(1)) // 2
-            story.append(para(m.group(2) + '. ' + m.group(3),
-                              'Li2' if depth else 'Li1'))
+            item[0] = 'Li2' if depth else 'Li1'
+            item[1] = [m.group(2) + '. ' + m.group(3)]
+            continue
+        if item[0]:
+            # a run-on line belongs to the list item above it, not to a new
+            # paragraph; a blank line is what ends an item
+            item[1].append(stripped)
             continue
         buf.append(stripped)
 
