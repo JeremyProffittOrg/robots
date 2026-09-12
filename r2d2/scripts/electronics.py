@@ -38,12 +38,12 @@ def main():
    wire(f'M{motor}- ',f'M{motor} black',f'CM{motor} pin2','26')
  wire('ENABLE','U1 GPIO13','R_ENABLE 10k pin1');wire('GND','B1 PP30 -','R_ENABLE pin2')
  wire('FAULT','U1 GPIO36 / A4','R_FAULT 10k pin1');wire('3V3','U1 3V','R_FAULT pin2')
- for item in ['SV1 steering red','SV2 head red','U7 AHCT125 pin14','CS 1000uF10V +','CB 100nF pin1','R_POWER_TOP 10k pin1']:
+ for item in ['SV1 steering red','U7 AHCT125 pin14','CS 1000uF10V +','CB 100nF pin1','R_POWER_TOP 10k pin1']:
   wire('5V_SERVO','P4 UBEC OUT red',item,'22' if 'red' in item or '1000' in item else '26')
- for item in ['SV1 brown/black','SV2 brown/black','U7 pin7','U7 pin1 / 1OE','U7 pin4 / 2OE','U7 pin9 / 3A','U7 pin12 / 4A','CS -','CB pin2','R_POWER_BOTTOM 15k pin2']:
+ for item in ['SV1 brown/black','U7 pin7','U7 pin1 / 1OE','U7 pin4 / 2OE','U7 pin10 / 3OE','U7 pin12 / 4A','CS -','CB pin2','R_POWER_BOTTOM 15k pin2']:
   wire('GND','B1 PP30 -',item,'22' if 'brown' in item else '26')
- for item in ['U7 pin10 / 3OE','U7 pin13 / 4OE']:wire('5V_SERVO','P4 UBEC OUT red',item)
- for name,gpio,apin,ypin,servo in [('STEER',25,2,3,1),('HEAD',26,5,6,2)]:
+ for item in ['U7 pin13 / 4OE']:wire('5V_SERVO','P4 UBEC OUT red',item)
+ for name,gpio,apin,ypin,servo in [('STEER',25,2,3,1)]:
   wire(name,f'U1 GPIO{gpio}',f'U7 pin{apin}');wire(name,f'U1 GPIO{gpio}',f'R_{name} 10k pin1');wire('GND','B1 PP30 -',f'R_{name} pin2')
   wire(name+'_5V',f'U7 pin{ypin}',f'RS{servo} 220ohm pin1');wire(name+'_SIG',f'RS{servo} pin2',f'SV{servo} signal')
  wire('RUN_SENSE','R_POWER_TOP pin2','U1 GPIO39 / A3');wire('RUN_SENSE','R_POWER_TOP pin2','R_POWER_BOTTOM pin1');wire('RUN_SENSE','R_POWER_TOP pin2','CP 100nF pin1');wire('GND','B1 PP30 -','CP pin2')
@@ -54,11 +54,48 @@ def main():
  for item in ['U1 GND','U8 GND','CO4 -']:wire('GND','B1 PP30 -',item,'22')
  for pin,target in [(18,'BCLK'),(19,'LRC'),(23,'DIN')]:wire('I2S_'+target,f'U1 GPIO{pin}',f'U8 {target}')
  wire('GAIN','R_GAIN pin2','U8 GAIN');wire('SPK+','U8 speaker +','SP1 +','22');wire('SPK-','U8 speaker -','SP1 -','22','Neither speaker wire connects to GND')
+ # Head friction motor has its own converter and current-limited bridge.
+ wire('RUN+','S2 output','F7 2A input','18');wire('HEAD_BUCK_IN','F7 output','P5 UBEC IN red','22')
+ wire('HEAD_BUCK_IN','F7 output','CI6 220uF25V +','22')
+ for item in ['P5 IN black','P5 OUT black','CI6 -','CO5 -','D4 GND','D4 BIN1','D4 BIN2']:wire('GND','B1 PP30 -',item,'22')
+ for item in ['D4 VMotor +','CO5 470uF10V +']:wire('5V_HEAD','P5 OUT red',item,'22')
+ wire('ENABLE','U1 GPIO13','D4 SLP');wire('FAULT','U1 GPIO36 / A4','D4 FLT')
+ for name,pin,inp in [('HEAD_FWD',26,'AIN1'),('HEAD_REV',17,'AIN2')]:
+  wire(name,f'U1 GPIO{pin}',f'D4 {inp}');wire(name,f'U1 GPIO{pin}',f'R_{name} 10k pin1');wire('GND','B1 PP30 -',f'R_{name} pin2')
+ for net,out,lead,cap in [('M7+','AOUT1','red','pin1'),('M7-','AOUT2','black','pin2')]:
+  wire(net,f'D4 {out}',f'M7 {lead}','22');wire(net,f'M7 {lead}',f'CM7 100nF {cap}')
+ # Regulated 12V actuator branch, measured on the supply side of D5.
+ wire('RUN+','S2 output','F8 2A input','18');wire('POST_BUCK_IN','F8 output','P6 S13V25F12 VIN','22')
+ wire('POST_BUCK_IN','F8 output','CI7 220uF25V +','22')
+ wire('12V_POST_RAW','P6 VOUT','U10 INA219 VIN+','22');wire('12V_POST','U10 VIN-','D5 DRV8871 VM','22')
+ wire('12V_POST','U10 VIN-','CO6 470uF25V +','22')
+ for item in ['P6 GND','CI7 -','CO6 -','D5 GND','U10 GND','U9 ADS1115 GND','U9 ADDR','U10 A0','U10 A1','U9 AIN1','U9 AIN2','U9 AIN3']:
+  wire('GND','B1 PP30 -',item,'22' if item.startswith(('P6','CI7','CO6','D5')) else '26')
+ for name,pin,inp,apin,ypin,limit in [('POST_EXTEND',4,'IN1',5,6,'LS_EXT'),('POST_RETRACT',16,'IN2',9,8,'LS_RET')]:
+  wire(name,f'U1 GPIO{pin}',f'U7 pin{apin}');wire(name,f'U1 GPIO{pin}',f'R_{name} 10k pin1');wire('GND','B1 PP30 -',f'R_{name} pin2')
+  wire(name+'_5V',f'U7 pin{ypin}',f'{limit} COM');wire(name+'_LIMITED',f'{limit} NC',f'D5 {inp}')
+  wire(name+'_LIMITED',f'D5 {inp}',f'R_{limit} 4.7k pin1');wire('GND','B1 PP30 -',f'R_{limit} pin2')
+ wire('POST_RED','D5 OUT1','ACT red / pin3','22');wire('POST_BLACK','D5 OUT2','ACT black / pin4','22')
+ wire('POST_ILIM','D5 ILIM / IC pin4','D5 replacement R1 71.5k pin2','26','Remove factory30k first; replace through provided resistor pads')
+ wire('GND','B1 PP30 -','D5 replacement R1 pin1')
+ wire('3V3','U1 3V','U9 VDD');wire('3V3','U1 3V','U10 VCC')
+ wire('3V3','U1 3V','ACT yellow / pin5');wire('GND','B1 PP30 -','ACT orange / pin1')
+ wire('POT_WIPER','ACT purple / pin2','R_POT 1k pin1');wire('POST_ADC','R_POT pin2','U9 AIN0')
+ wire('POST_ADC','U9 AIN0','R_POT_FAIL 470k pin1');wire('GND','B1 PP30 -','R_POT_FAIL pin2')
+ wire('POST_ADC','U9 AIN0','C_POT 100nF pin1');wire('GND','B1 PP30 -','C_POT pin2')
+ for name,pin in [('SDA',21),('SCL',22)]:
+  wire('I2C_'+name,f'U1 GPIO{pin}',f'U9 {name}');wire('I2C_'+name,f'U1 GPIO{pin}',f'U10 {name}')
+ # Use the breakout's installed I2C pullups, both boards powered at3.3V.
  write_csv(ROOT/'electronics/wiring.csv',rows)
  # Each circuit sheet shows actual point-to-point connections; labels are net names.
  groups=[('01-power',rows[:27]),('02-drive',[r for r in rows if any(k in r['net'] for k in ['LEFT','RIGHT','REAR','ENABLE','FAULT']) or r['net'].startswith('M') and r['net'][1:2].isdigit()]),
  ('03-servo-and-sense',[r for r in rows if any(k in r['net'] for k in ['SERVO','STEER','HEAD','SENSE','ADC']) or any(k in r['target'] for k in ['U7','SV','R_POWER','R_PACK','CA ','CP '])]),
- ('04-logic-and-audio',[r for r in rows if any(k in r['net'] for k in ['LOGIC','I2S','GAIN','SPK']) or r['target'] in ['U1 GND','U8 GND','CO4 -','U6 GND','CI5 -']])]
+ ('04-logic-and-audio',[r for r in rows if any(k in r['net'] for k in ['LOGIC','I2S','GAIN','SPK']) or r['target'] in ['U1 GND','U8 GND','CO4 -','U6 GND','CI5 -']]),
+ ('05-posture',[r for r in rows if any(k in r['net'] for k in ['POST','POT','I2C']) or any(k in r['target'] for k in ['U9','U10','ACT '])])]
+ assigned=[r for _,rs in groups for r in rs]
+ groups.append(('06-remaining-power-and-grounds',[r for r in rows if r not in assigned]))
+ assert all(r in [item for _,rs in groups for item in rs] for r in rows)
+ for p in (ROOT/'electronics').glob('0[1-6]-*.svg'):p.unlink()
  for name,rs in groups:
   # Split long sheets into readable 22-line circuit pages.
   for start in range(0,len(rs),22):

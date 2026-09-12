@@ -1,5 +1,5 @@
 {
-  "profile": "H2D 0.4mm / 0.20mm / Generic PETG / Textured PEI",
+  "profile": "H2D 0.4mm / 0.20mm / per-part Generic material / Textured PEI",
   "overrides": {
     "wall_loops": "4",
     "top_shell_layers": "5",
@@ -15,69 +15,191 @@
   "rows": [
     {
       "part": "stl/body_lower.stl",
-      "sha256": "44e85a2358049ceb9e710709299958e800efc75531b08673c69c11e774fef78a",
+      "quantity": 1,
+      "material": "PETG",
+      "sha256": "697f8917cdd5ed32658ee0b464a2918b8b53034481246cf2b787cfa0e95491a5",
       "return_code": 0,
       "error_string": "Success.",
       "warning": "",
-      "predicted_mass_with_support_g": 607.980712890625,
-      "predicted_time_s": 66636.546875,
+      "predicted_mass_with_support_g": 519.38916015625,
+      "predicted_time_s": 68296.6171875,
       "bbox": {
-        "depth": 356.6761779785156,
-        "height": 148.0,
-        "width": 356.6761779785156,
-        "x": -3.3380959033966064,
-        "y": -18.338085174560547,
+        "depth": 372.6557312011719,
+        "height": 142.6999969482422,
+        "width": 372.6557312011719,
+        "x": -11.509878158569336,
+        "y": -26.145849227905273,
         "z": 0.0
       }
     },
     {
       "part": "stl/body_upper.stl",
-      "sha256": "a4c8d50338d38485735532cf4b7c37f1f965ce36e707f201cfee50bf2ae2b7ec",
+      "quantity": 1,
+      "material": "PETG",
+      "sha256": "02d89b4637d7bf6182a9dc5d0c68e6f5c91f1cc6cc03f74c8fbd8ae26ba6dcf9",
       "return_code": 0,
       "error_string": "Success.",
       "warning": "",
-      "predicted_mass_with_support_g": 1309.90087890625,
-      "predicted_time_s": 136126.90625,
+      "predicted_mass_with_support_g": 608.1682739257812,
+      "predicted_time_s": 74025.9921875,
       "bbox": {
-        "depth": 356.6761779785156,
-        "height": 162.0,
-        "width": 356.6761779785156,
-        "x": -3.3380959033966064,
-        "y": -18.338085174560547,
+        "depth": 262.25,
+        "height": 184.60000610351562,
+        "width": 259.25,
+        "x": 45.3749885559082,
+        "y": 28.875003814697266,
         "z": 0.0
       }
     },
     {
-      "part": "stl/arm_left.stl",
-      "sha256": "bda5e9fe7e224de6f19e3ee8022bcbc774e0c898a7f5dcc1526e4ae5564ced07",
+      "part": "stl/dome.stl",
+      "quantity": 1,
+      "material": "PLA",
+      "sha256": "18e50733e8d094d0c31d0760d4a557902b0a63613d94ab7d9781f8b284199430",
       "return_code": 0,
       "error_string": "Success.",
       "warning": "",
-      "predicted_mass_with_support_g": 480.75775146484375,
-      "predicted_time_s": 48311.12109375,
+      "predicted_mass_with_support_g": 883.2328491210938,
+      "predicted_time_s": 94803.8203125,
       "bbox": {
-        "depth": 68.0,
-        "height": 295.0,
-        "width": 124.0,
-        "x": 113.0,
-        "y": 126.0,
+        "depth": 365.74090576171875,
+        "height": 167.79762268066406,
+        "width": 374.0901794433594,
+        "x": -8.924874305725098,
+        "y": -20.809293746948242,
         "z": 0.0
       }
     },
     {
-      "part": "stl/arm_right.stl",
-      "sha256": "0b3883371880457fd89e75de1ce73050fe3eeed58503b4aeb77248ba88098627",
+      "part": "stl/leg.stl",
+      "quantity": 2,
+      "material": "PETG",
+      "sha256": "83a22c8be862b07c32a9662a321dd7c297063c838f2e49c2ad7adb87f7a65412",
       "return_code": 0,
       "error_string": "Success.",
       "warning": "",
-      "predicted_mass_with_support_g": 481.004638671875,
-      "predicted_time_s": 48546.98828125,
+      "predicted_mass_with_support_g": 273.89910888671875,
+      "predicted_time_s": 25374.1953125,
       "bbox": {
-        "depth": 68.0,
-        "height": 295.0,
-        "width": 124.0,
-        "x": 112.9999771118164,
-        "y": 126.0,
+        "depth": 267.47515869140625,
+        "height": 51.0,
+        "width": 267.47515869140625,
+        "x": 41.26241683959961,
+        "y": 26.262426376342773,
+        "z": 0.0
+      }
+    },
+    {
+      "part": "stl/outer_foot.stl",
+      "quantity": 2,
+      "material": "PETG",
+      "sha256": "1711236dc0820f4100d2a166e0c5285e0ac1167b47f177f52fd2f19e39389d90",
+      "return_code": 0,
+      "error_string": "Success.",
+      "warning": "",
+      "predicted_mass_with_support_g": 257.8193359375,
+      "predicted_time_s": 28352.171875,
+      "bbox": {
+        "depth": 197.21865844726562,
+        "height": 130.0,
+        "width": 118.0,
+        "x": 115.9999771118164,
+        "y": 61.39067840576172,
+        "z": 0.0
+      }
+    },
+    {
+      "part": "stl/rear_foot.stl",
+      "quantity": 1,
+      "material": "PETG",
+      "sha256": "5fe8a13ef76481907cba7f1205a09b6312f84da42f97e5b325102fd414b753e3",
+      "return_code": 0,
+      "error_string": "Success.",
+      "warning": "",
+      "predicted_mass_with_support_g": 243.74095153808594,
+      "predicted_time_s": 25448.55078125,
+      "bbox": {
+        "depth": 197.21865844726562,
+        "height": 109.0,
+        "width": 108.0,
+        "x": 120.99999237060547,
+        "y": 61.39067840576172,
+        "z": 0.0
+      }
+    },
+    {
+      "part": "stl/drive_cassette.stl",
+      "quantity": 3,
+      "material": "PETG",
+      "sha256": "e6b51cfe846a05457e7644d1f5c7657815e5f2738310e963e7d46173c5298f70",
+      "return_code": 0,
+      "error_string": "Success.",
+      "warning": "",
+      "predicted_mass_with_support_g": 14.53780746459961,
+      "predicted_time_s": 2177.143798828125,
+      "bbox": {
+        "depth": 151.0,
+        "height": 9.699999809265137,
+        "width": 22.599992752075195,
+        "x": 163.6999969482422,
+        "y": 84.49999237060547,
+        "z": 0.0
+      }
+    },
+    {
+      "part": "stl/head_motor_mount.stl",
+      "quantity": 1,
+      "material": "PETG",
+      "sha256": "4ce1a0e7642ec55aafd3ed5318c6dee6041cf5b583302f246a35cda6b32ec90f",
+      "return_code": 0,
+      "error_string": "Success.",
+      "warning": "",
+      "predicted_mass_with_support_g": 16.683652877807617,
+      "predicted_time_s": 2652.78759765625,
+      "bbox": {
+        "depth": 79.0,
+        "height": 12.899999618530273,
+        "width": 58.000003814697266,
+        "x": 145.99998474121094,
+        "y": 120.49999237060547,
+        "z": 0.0
+      }
+    },
+    {
+      "part": "stl/bearing_tower.stl",
+      "quantity": 1,
+      "material": "PETG",
+      "sha256": "0162a2202158262ae6f47cc362701d02c0e0a01cfdaee9a008b8117638f76724",
+      "return_code": 0,
+      "error_string": "Success.",
+      "warning": "",
+      "predicted_mass_with_support_g": 18.541296005249023,
+      "predicted_time_s": 2996.007568359375,
+      "bbox": {
+        "depth": 63.405879974365234,
+        "height": 26.0,
+        "width": 63.4058723449707,
+        "x": 143.29705810546875,
+        "y": 128.29705810546875,
+        "z": 0.0
+      }
+    },
+    {
+      "part": "stl/bearing_cap.stl",
+      "quantity": 1,
+      "material": "PETG",
+      "sha256": "70fc6c29998869afcbc00cee822ba82d0899e13b29d50baeab421d11de72e951",
+      "return_code": 0,
+      "error_string": "Success.",
+      "warning": "",
+      "predicted_mass_with_support_g": 2.3176589012145996,
+      "predicted_time_s": 707.4096069335938,
+      "bbox": {
+        "depth": 47.851741790771484,
+        "height": 3.0,
+        "width": 47.851741790771484,
+        "x": 151.07412719726562,
+        "y": 136.07412719726562,
         "z": 0.0
       }
     }

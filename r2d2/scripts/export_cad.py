@@ -4,20 +4,13 @@ from pathlib import Path
 from concurrent.futures import ThreadPoolExecutor, as_completed
 import trimesh
 ROOT = Path(__file__).resolve().parents[1]
-PARTS = {
- 'coupon':(1,'PETG'), 'body_lower':(1,'PETG'), 'body_upper':(1,'PETG'),
- 'arm_left':(1,'PETG'), 'arm_right':(1,'PETG'),
- 'foot_deck':(3,'PETG'), 'foot_cover':(2,'PLA'), 'motor_cradle':(6,'PETG'),
- 'rear_bracket':(1,'PETG'), 'rear_attach':(1,'PETG'), 'bearing_tower':(2,'PETG'),
- 'bearing_cap':(2,'PETG'), 'race_spacer':(2,'PETG'), 'spindle_sleeve':(1,'PETG'),
- 'gear_hub':(2,'PETG'), 'servo_pinion':(2,'PETG'), 'servo_mount':(2,'PETG'), 'servo_shim_1':(2,'PETG'),'servo_shim_2':(2,'PETG'),'servo_shim_4':(2,'PETG'),
- 'head_plate':(1,'PETG'),
- 'dome_spacer':(4,'PETG'), 'dome':(1,'PLA'), 'eye':(1,'PLA'), 'detail_panel':(4,'PLA'),
- 'utility_deck':(1,'PETG'),
- 'pcb_spacer':(32,'PETG'), 'speaker_mount':(1,'PETG'), 'switch_plate':(1,'PETG')}
+PARTS = {'body_lower':(1,'PETG'),'body_upper':(1,'PETG'),'dome':(1,'PLA'),
+ 'leg':(2,'PETG'),'outer_foot':(2,'PETG'),'rear_foot':(1,'PETG'),
+ 'drive_cassette':(3,'PETG'),'head_motor_mount':(1,'PETG'),
+ 'bearing_tower':(1,'PETG'),'bearing_cap':(1,'PETG')}
 EXE=os.environ.get('OPENSCAD') or shutil.which('openscad') or r'C:\Program Files\OpenSCAD\openscad.com'
 def export(name):
- result=subprocess.run([EXE,'--export-format','binstl','-o',str(ROOT/'stl'/f'{name}.stl'),'-D',f'part="{name}"',str(ROOT/'cad/r2d2.scad')],capture_output=True,text=True,timeout=180)
+ result=subprocess.run([EXE,'--export-format','binstl','-o',str(ROOT/'stl'/f'{name}.stl'),'-D',f'part="{name}"',str(ROOT/'cad/r2d2.scad')],capture_output=True,text=True,timeout=600)
  if result.returncode or 'ERROR:' in result.stderr: raise RuntimeError(name+': '+result.stderr)
  print('Exported '+name,flush=True)
 def validate():
@@ -25,7 +18,7 @@ def validate():
  for name,(quantity,material) in PARTS.items():
   m=trimesh.load_mesh(ROOT/'stl'/f'{name}.stl',process=True)
   components=sum(s.volume>0 for s in m.split(only_watertight=False))
-  okay=bool(m.is_watertight and m.is_winding_consistent and m.volume>0 and components==1 and all(m.extents<=300.001))
+  okay=bool(m.is_watertight and m.is_winding_consistent and m.volume>0 and components==1 and all(m.extents<=300.001) and m.bounds[0,2]>=-.001)
   rows.append(dict(part=name,quantity=quantity,material=material,x_mm=round(float(m.extents[0]),2),y_mm=round(float(m.extents[1]),2),z_mm=round(float(m.extents[2]),2),solid_mass_g=round(float(m.volume)/1000*(1.27 if material=='PETG' else 1.24),2),watertight=bool(m.is_watertight),components=int(components),passed=okay))
  with (ROOT/'bom/printed-parts.csv').open('w',newline='') as f:
   w=csv.DictWriter(f,fieldnames=rows[0]);w.writeheader();w.writerows(rows)

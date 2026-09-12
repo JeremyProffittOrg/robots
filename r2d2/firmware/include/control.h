@@ -6,20 +6,20 @@
 #include <ctype.h>
 #include <math.h>
 namespace r2 {
-constexpr int LIMIT=110; // commissioning duty ceiling: 43 percent
+constexpr int LIMIT=90; // conservative commissioning duty ceiling
 constexpr uint32_t DEADMAN=500;
-struct Command {int speed=0,turn=0,head=0;};
+struct Command {int speed=0,turn=0,head=0,posture=-1;};
 inline bool parse(const char *s,long lo,long hi,long &v){
  if(!s||!*s||isspace((unsigned char)*s))return false;
  errno=0;char *end;v=strtol(s,&end,10);return !errno&&!*end&&v>=lo&&v<=hi;
 }
-inline bool valid(const Command &c){return abs(c.speed)<=100&&abs(c.turn)<=100&&abs(c.head)<=100;}
+inline bool valid(const Command &c){return abs(c.speed)<=100&&abs(c.turn)<=100&&abs(c.head)<=100&&c.posture>=-1&&c.posture<=100;}
 struct Mix {int left,right,rear;float angle;};
-inline Mix mix(const Command &c){
- // Rear axle at Y=-180, main feet X=+/-190. Arcs only; no pivot command.
- float a=c.turn*.25f,rad=a*.01745329252f;
+inline Mix mix(const Command &c,float rear=129.0f){
+ // Rear-foot location changes with posture; side-foot centers X=+/-165.
+ float a=c.turn*.08f,rad=a*.01745329252f;
  float v=c.speed*LIMIT/100.0f;
- float l=v*(1+tanf(rad)*190/180),r=v*(1-tanf(rad)*190/180),b=v/cosf(rad);
+ float l=v*(1+tanf(rad)*165/rear),r=v*(1-tanf(rad)*165/rear),b=v/cosf(rad);
  float peak=fmaxf(fabsf(l),fmaxf(fabsf(r),fabsf(b)));
  float scale=peak>LIMIT?LIMIT/peak:1;
  return {(int)lroundf(l*scale),(int)lroundf(r*scale),(int)lroundf(b*scale),a};

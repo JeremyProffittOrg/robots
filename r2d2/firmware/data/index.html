@@ -3,6 +3,8 @@
 <h1>R2-24</h1><p id="status">Connecting...</p><button id="arm">Arm</button><button id="stop">STOP</button>
 <label>Speed limit <span id="speedLabel">35%</span><input id="speed" type="range" min="15" max="100" value="35"></label>
 <label>Rear steering <span id="turnLabel">0°</span><input id="turn" type="range" min="-100" max="100" value="0"></label><button id="center">Center steering</button>
+<p id="pose">Post position unavailable</p><div class="pad"><button data-posture="0">Hold: upright</button><button data-posture="100">Hold: tilt body</button></div>
+<small>Posture changes center steering and stop the wheels and head. Release to hold position. After a move, release and wait for actuator cooldown before moving again.</small>
 <div class="pad"><button data-speed="1">Hold: forward</button><button data-speed="-1">Hold: reverse</button><button data-head="-1">Hold: head left</button><button data-head="1">Hold: head right</button></div>
 <p>Release to stop motion. Re-arm after connection loss. Use gentle turns on a level hard floor.</p>
 <label>Robot sound<select id="sound"></select></label><button id="play">Play sound</button>

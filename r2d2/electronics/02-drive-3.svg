@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="586" viewBox="0 0 1100 586"><rect width="1100" height="586" fill="white"/>
+<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="814" viewBox="0 0 1100 814"><rect width="1100" height="814" fill="white"/>
 <text x="30" y="34" font-family="sans-serif" font-size="22" fill="#122439">R2-24 circuit: drive / 3</text>
 <text x="30" y="65" font-family="sans-serif" font-size="14" fill="#374151">Each horizontal line is one connection. Identical named nets join across sheets. See wiring.csv for all grounds.</text>
 <text x="30" y="100" font-family="monospace" font-size="14" fill="#142337">U1 GPIO13</text>
@@ -73,4 +73,40 @@
 <rect x="420" y="501" width="260" height="22" fill="white"/>
 <text x="550" y="518" text-anchor="middle" font-family="monospace" font-size="13" fill="#163d72">FAULT (26 AWG)</text>
 <text x="744" y="518" font-family="monospace" font-size="14" fill="#142337">R_FAULT 10k pin1</text>
+<text x="30" y="556" font-family="monospace" font-size="14" fill="#142337">U1 GPIO13</text>
+<path d="M 365 551 H 725" stroke="#163d72" stroke-width="2" fill="none"/>
+<circle cx="365" cy="551" r="3" fill="#163d72"/><circle cx="725" cy="551" r="3" fill="#163d72"/>
+<rect x="420" y="539" width="260" height="22" fill="white"/>
+<text x="550" y="556" text-anchor="middle" font-family="monospace" font-size="13" fill="#163d72">ENABLE (26 AWG)</text>
+<text x="744" y="556" font-family="monospace" font-size="14" fill="#142337">D4 SLP</text>
+<text x="30" y="594" font-family="monospace" font-size="14" fill="#142337">U1 GPIO36 / A4</text>
+<path d="M 365 589 H 725" stroke="#163d72" stroke-width="2" fill="none"/>
+<circle cx="365" cy="589" r="3" fill="#163d72"/><circle cx="725" cy="589" r="3" fill="#163d72"/>
+<rect x="420" y="577" width="260" height="22" fill="white"/>
+<text x="550" y="594" text-anchor="middle" font-family="monospace" font-size="13" fill="#163d72">FAULT (26 AWG)</text>
+<text x="744" y="594" font-family="monospace" font-size="14" fill="#142337">D4 FLT</text>
+<text x="30" y="632" font-family="monospace" font-size="14" fill="#142337">D4 AOUT1</text>
+<path d="M 365 627 H 725" stroke="#163d72" stroke-width="2" fill="none"/>
+<circle cx="365" cy="627" r="3" fill="#163d72"/><circle cx="725" cy="627" r="3" fill="#163d72"/>
+<rect x="420" y="615" width="260" height="22" fill="white"/>
+<text x="550" y="632" text-anchor="middle" font-family="monospace" font-size="13" fill="#163d72">M7+ (22 AWG)</text>
+<text x="744" y="632" font-family="monospace" font-size="14" fill="#142337">M7 red</text>
+<text x="30" y="670" font-family="monospace" font-size="14" fill="#142337">M7 red</text>
+<path d="M 365 665 H 725" stroke="#163d72" stroke-width="2" fill="none"/>
+<circle cx="365" cy="665" r="3" fill="#163d72"/><circle cx="725" cy="665" r="3" fill="#163d72"/>
+<rect x="420" y="653" width="260" height="22" fill="white"/>
+<text x="550" y="670" text-anchor="middle" font-family="monospace" font-size="13" fill="#163d72">M7+ (26 AWG)</text>
+<text x="744" y="670" font-family="monospace" font-size="14" fill="#142337">CM7 100nF pin1</text>
+<text x="30" y="708" font-family="monospace" font-size="14" fill="#142337">D4 AOUT2</text>
+<path d="M 365 703 H 725" stroke="#163d72" stroke-width="2" fill="none"/>
+<circle cx="365" cy="703" r="3" fill="#163d72"/><circle cx="725" cy="703" r="3" fill="#163d72"/>
+<rect x="420" y="691" width="260" height="22" fill="white"/>
+<text x="550" y="708" text-anchor="middle" font-family="monospace" font-size="13" fill="#163d72">M7- (22 AWG)</text>
+<text x="744" y="708" font-family="monospace" font-size="14" fill="#142337">M7 black</text>
+<text x="30" y="746" font-family="monospace" font-size="14" fill="#142337">M7 black</text>
+<path d="M 365 741 H 725" stroke="#163d72" stroke-width="2" fill="none"/>
+<circle cx="365" cy="741" r="3" fill="#163d72"/><circle cx="725" cy="741" r="3" fill="#163d72"/>
+<rect x="420" y="729" width="260" height="22" fill="white"/>
+<text x="550" y="746" text-anchor="middle" font-family="monospace" font-size="13" fill="#163d72">M7- (26 AWG)</text>
+<text x="744" y="746" font-family="monospace" font-size="14" fill="#142337">CM7 100nF pin2</text>
 </svg>
