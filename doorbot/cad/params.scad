@@ -42,10 +42,10 @@ rebate_depth_mm = 51;         // free push-side depth in a 4-9/16 in jamb behind
 // angle between 41 and 131 degrees, so the arm never approaches either dead centre.
 anchor_a = 300;               // anchor along the leaf from the hinge axis
 anchor_standoff = 25;         // anchor cable eye stands this far off the leaf face, push side
-exit_x = 47;                  // cable exit, into the opening from the hinge axis
-exit_y = 48;                  // cable exit, off the closed-door plane, push side
+exit_x = 60;                  // cable exit, into the opening from the hinge axis
+exit_y = 40;                  // cable exit, off the closed-door plane, push side
 build_tol_mm = 2;             // mounting error subtracted from the arm in every check
-cable_guide_deg = 40;         // total cable bend inside the shell, drum to exit chute
+cable_guide_deg = 50;         // total cable bend inside the shell, drum to exit chute
 cable_guide_mu = 0.15;        // Dyneema on printed PLA; capstan loss is exp(mu * angle)
 
 cable_d = 1.2;                // braided Dyneema, 150 lb test
@@ -77,49 +77,66 @@ tt_hole_spacing = 17.5; tt_hole_from_axis = 31.8; tt_hole_d = 3.2;
 
 // ---------- base unit: one unibody shell plus a cover ----------
 base_w = 50;                  // X, across the jamb depth (rebate allows 51)
-base_h = 200;                 // Y, vertical
+base_h = 252;                 // Y, vertical
 base_z = 36;                  // Z, out into the opening
 wall = 2.4;
 floor_t = 3.0;
 cover_t = 2.0;
 cover_lip = 1.6;
-foot_h = 12;                  // integral standoff feet; also the encoder-wheel and cable space
+foot_h = 0;                   // the shell's floor sits flat on the jamb reveal; nothing stands off it
 mount_screws = 3;
 mount_screw_d = 4.5;          // clearance for #8 jamb screws
-mount_y = [18, 100, 182];     // screw heights up the shell
+mount_y = [28, 118, 196];     // screw heights up the shell
 screw_boss_d = 8.4;
 m3_tap_d = 2.6;               // self-tapping pilot in PLA
 m3_free_d = 3.4;
 cover_screws = 4;
 
 // ---------- axis layout inside the shell (unit frame X, Y) ----------
-drum_axis = [25, 25];         // drum and stage-2 wheel
-compound_axis = [25, 53];     // stage-2 pinion and stage-1 wheel, cd 28 from drum_axis
-motor_axis = [25, 77];        // motor shaft, cd 24 from compound_axis
-// Depth planes, measured in Z from the shell's inner floor face:
-plane2_z = 3;                 // stage-2 pair, face2 deep
-plane1_z = 22;                // stage-1 pair, face1 deep
-drum_z = 19;                  // drum, drum_width deep
-motor_z = 3;                  // motor body, tt_body_h deep
+drum_axis = [25, 45];         // drum and stage-2 wheel
+compound_axis = [25, 73];     // stage-2 pinion and stage-1 wheel, cd 28 from drum_axis
+motor_axis = [25, 97];        // motor shaft, cd 24 from compound_axis
+// Depth planes in Z, absolute in the unit frame. The motor sits against the cover and drives
+// its pinion on the shaft that points back towards the jamb, which leaves the whole 14.2 mm
+// under the motor free for stage 1 and puts the encoder wheel on the free front shaft.
+plane1_z = 3;                 // stage-1 pair (motor pinion + 48T wheel), face1 deep
+plane2_z = 14.2;              // stage-2 pair (14T pinion + 42T wheel), face2 deep
+drum_z = 3;                   // drum, drum_width deep, coaxial under the stage-2 wheel
+motor_z = 14.2;               // motor body, tt_body_h deep, up against the cover
 
-// ---------- electronics ----------
-tdisp_l = 51.5; tdisp_w = 25.7; tdisp_t = 8.2;
+// ---------- cable exit nose: an integral fin that carries the exit out past the cover ----------
+nose_l = 24;                  // how far it projects beyond the cover plane in Z
+nose_w = 20;                  // thickness across the jamb depth (X)
+nose_h = 18;                  // height (Y)
+nose_x = 40;                  // its centre in X, level with exit_y
+nose_y = 11;                  // its centre in Y, in the free corner below the drum wheel
+chute_d = 5.0;                // cable channel diameter through the shell and nose
+chute_r = 10;                 // guide radius where the cable turns
+
+// ---------- electronics: [X, Y, Z] of each board's lower corner in the unit frame ----------
+// Boards are placed where the gear planes leave room behind the cover. Every pocket was set
+// so that no board footprint overlaps the motor pocket or a wheel sweep at the same depth -
+// scripts/check_cad.py asserts that, rather than leaving it to the eye.
+tdisp_l = 51.5; tdisp_w = 25.7; tdisp_t = 8.2;    // length runs up Y, width across X
 tdisp_screen_l = 26.8; tdisp_screen_w = 14.3;
-tdisp_pos = [12, 138];        // lower-left of the module in the shell, unit frame
+tdisp_pos = [12, 152, 26];
 drv_l = 20.5; drv_w = 20.5; drv_t = 11.0;
-drv_pos = [38, 60];
-tof_l = 25.4; tof_w = 17.8; tof_t = 5.0;
+drv_pos = [3, 120, 3];
+tof_l = 25.4; tof_w = 17.8; tof_t = 5.0;          // length up Y, width across X
 tof_hole_l = 20.3; tof_hole_w = 12.7;
-tof_wave_pos = [12, 108];     // VL53L4CD, hand-wave target, looks out along +Z
-tof_guard_pos = [12, 176];    // VL53L1X, doorway and closing path, looks out along +Z
+tof_wave_pos = [6, 210, 28];                      // VL53L4CD, hand-wave target
+tof_guard_pos = [27, 210, 28];                    // VL53L1X, doorway and closing path
 accel_l = 25.4; accel_w = 17.8; accel_t = 5.0;
-accel_pos = [34, 100];        // LIS3DH, on the floor beside a mounting screw for a rigid path
-window_d = 9.0;               // clear aperture over a ToF sensor
-wave_target_d = 26;           // engraved ring around the hand-wave window
+accel_pos = [30, 108, 3];                         // LIS3DH, on the floor by the middle jamb screw
+window_d = 9.0;                                   // clear aperture over a ToF sensor
+wave_target_d = 26;                               // engraved ring around the hand-wave window
 buzzer_d = 12.5; buzzer_t = 9.5;
-buzzer_pos = [38, 30];
-encoder_wheel_d = 26;         // Adafruit 3782 snap-on encoder wheel, on the spare shaft
-encoder_slot_l = 24; encoder_slot_w = 12; encoder_slot_t = 6;
+buzzer_pos = [30, 245, 3];
+encoder_wheel_d = 26;                             // Adafruit 3782 snap-on wheel, front shaft
+encoder_slot_l = 24; encoder_slot_w = 12; encoder_slot_t = 6;   // Adafruit 3986 slot sensor
+encoder_dome_d = 32; encoder_dome_h = 11;         // local raised dome on the cover
+shelf_y0 = 206; shelf_y1 = 238; shelf_z = 25; shelf_t = 3;   // sensor shelf and its two ribs
+usb_slot_w = 13; usb_slot_h = 8;                  // USB-C cable exit through the shell wall
 
 // ---------- door anchor ----------
 anchor_base_l = 60;

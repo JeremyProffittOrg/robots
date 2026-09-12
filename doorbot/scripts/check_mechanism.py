@@ -92,7 +92,7 @@ class Mechanism:
          self.build_tol_mm, self.frame_plumb_deg, self.rebate_depth_mm, self.cable_eye_wall,
          self.cable_eye_h, self.pin_d, self.anchor_screws, self.anchor_screw_d,
          self.cable_guide_deg, self.cable_guide_mu, self.base_w, self.base_z,
-         self.foot_h) = require(
+         self.foot_h, self.nose_l, self.nose_w, self.nose_h, self.nose_x) = require(
             p, "anchor_a", "anchor_standoff", "exit_x", "exit_y", "door_open_deg",
             "drum_r", "drum_width", "drum_pitch", "cable_d", "cable_break_n",
             "stage1_pinion_t", "stage1_gear_t", "stage2_pinion_t", "stage2_gear_t",
@@ -100,7 +100,8 @@ class Mechanism:
             "door_width_mm", "magnet_radius_mm", "magnet_gap_closed_mm",
             "build_tol_mm", "frame_plumb_deg", "rebate_depth_mm", "cable_eye_wall",
             "cable_eye_h", "pin_d", "anchor_screws", "anchor_screw_d",
-            "cable_guide_deg", "cable_guide_mu", "base_w", "base_z", "foot_h")
+            "cable_guide_deg", "cable_guide_mu", "base_w", "base_z", "foot_h",
+            "nose_l", "nose_w", "nose_h", "nose_x")
         self.ratio = ((self.stage1_gear_t / self.stage1_pinion_t)
                       * (self.stage2_gear_t / self.stage2_pinion_t))
         self.eff = SPUR_STAGE_EFF ** 2
@@ -380,9 +381,22 @@ class Mechanism:
               f"the shell is {self.base_w:.0f} mm across the jamb depth and stands "
               f"{unit_far_x:.0f} mm out into the opening on {self.foot_h:.0f} mm feet, both "
               f"inside the {self.rebate_depth_mm} mm rebate of a 4-9/16 in jamb")
-        check("exit_reachable_on_shell", self.exit_y <= self.base_w and self.exit_x <= unit_far_x,
-              f"the cable exit at ({self.exit_x}, {self.exit_y}) mm is a point on the shell "
-              f"itself, not a fitting hanging in mid-air")
+        nose_tip_x = self.foot_h + self.base_z + self.nose_l
+        check("exit_reachable_on_nose", self.exit_x <= nose_tip_x + 0.5
+              and abs(self.exit_y - self.nose_x) <= self.nose_w / 2,
+              f"the exit at ({self.exit_x}, {self.exit_y}) mm sits in the integral nose, a "
+              f"{self.nose_w:.0f} x {self.nose_h:.0f} mm fin that carries the chute "
+              f"{self.nose_l:.0f} mm past the cover to x = {nose_tip_x:.0f} mm. The exit has to "
+              f"reach out along the door to keep the moment arm up; the nose is the cheapest way "
+              f"to do that without making the whole shell that deep")
+        # The nose is a printed cantilever loaded by the full wound tension at its tip.
+        nose_i = self.nose_h * self.nose_w ** 3 / 12.0
+        nose_mpa = (max_t * self.nose_l) * (self.nose_w / 2) / nose_i
+        check("nose_bending", nose_mpa <= ALLOW["z"],
+              f"the nose root sees {max_t * self.nose_l / 1000:.2f} N.m of bending from "
+              f"{max_t:.0f} N at its tip: {nose_mpa:.2f} MPa against the {ALLOW['z']} MPa "
+              f"across-layer allowable, which is the right allowable because the shell prints "
+              f"with its open face up and the nose therefore grows along the layer axis")
 
         # -- the chute costs tension, and the parts are checked at the higher drum-side figure
         check("guide_loss_accounted", self.guide_loss < 1.2,

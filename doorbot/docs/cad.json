@@ -1,0 +1,185 @@
+{
+  "all_pass": true,
+  "analysis_only": true,
+  "printed_designs": 7,
+  "printed_pieces": 8,
+  "solid_mass_total_g": 244.8,
+  "checks": [
+    {
+      "check": "mesh_base_shell",
+      "pass": true,
+      "detail": "base_shell: watertight=True bodies=1 sealed_voids=0/0 50.0 x 252.0 x 60.0 mm, 147 g solid, sits on z=0"
+    },
+    {
+      "check": "mesh_base_cover",
+      "pass": true,
+      "detail": "base_cover: watertight=True bodies=1 sealed_voids=0/0 48.8 x 250.4 x 13.0 mm, 32 g solid, sits on z=0"
+    },
+    {
+      "check": "mesh_motor_pinion",
+      "pass": true,
+      "detail": "motor_pinion: watertight=True bodies=1 sealed_voids=0/0 11.2 x 11.2 x 10.0 mm, 1 g solid, sits on z=0"
+    },
+    {
+      "check": "mesh_compound_gear",
+      "pass": true,
+      "detail": "compound_gear: watertight=True bodies=1 sealed_voids=0/0 40.0 x 40.0 x 27.2 mm, 12 g solid, sits on z=0"
+    },
+    {
+      "check": "mesh_drum_gear",
+      "pass": true,
+      "detail": "drum_gear: watertight=True bodies=1 sealed_voids=0/0 44.0 x 43.9 x 27.2 mm, 20 g solid, sits on z=0"
+    },
+    {
+      "check": "mesh_door_anchor",
+      "pass": true,
+      "detail": "door_anchor: watertight=True bodies=1 sealed_voids=0/0 60.0 x 22.0 x 25.0 mm, 12 g solid, sits on z=0"
+    },
+    {
+      "check": "mesh_magnet_pod",
+      "pass": true,
+      "detail": "magnet_pod: watertight=True bodies=1 sealed_voids=2/2 58.0 x 20.0 x 9.0 mm, 10 g solid, sits on z=0"
+    },
+    {
+      "check": "part_count",
+      "pass": true,
+      "detail": "7 distinct printed designs, 8 printed pieces in total. The cap was fewer than 10 designs"
+    },
+    {
+      "check": "fits_bambu_bed",
+      "pass": true,
+      "detail": "the shell is the largest part at 50 x 252 x 60 mm, inside a 256 mm cube, so it prints on a P1S, an X1C, an A1 or an H2D without splitting"
+    },
+    {
+      "check": "shell_within_rebate",
+      "pass": true,
+      "detail": "the shell measures 50.0 mm across the jamb depth against the 51 mm rebate of a 4-9/16 in jamb"
+    },
+    {
+      "check": "nose_reaches_exit",
+      "pass": true,
+      "detail": "the nose tip stands 60.0 mm out into the opening, which is where check_mechanism.py puts the cable exit (60 mm from the hinge axis)"
+    },
+    {
+      "check": "stage1_centre_distance",
+      "pass": true,
+      "detail": "stage1: 12T on 48T at module 0.8 needs a 24.00 mm centre distance; the axes in params.scad are 24.00 mm apart"
+    },
+    {
+      "check": "stage1_tip_clearance",
+      "pass": true,
+      "detail": "stage1: 0.20 mm between the wheel's tip circle and the pinion's root circle, so the teeth engage without bottoming"
+    },
+    {
+      "check": "stage2_centre_distance",
+      "pass": true,
+      "detail": "stage2: 14T on 42T at module 1.0 needs a 28.00 mm centre distance; the axes in params.scad are 28.00 mm apart"
+    },
+    {
+      "check": "stage2_tip_clearance",
+      "pass": true,
+      "detail": "stage2: 0.25 mm between the wheel's tip circle and the pinion's root circle, so the teeth engage without bottoming"
+    },
+    {
+      "check": "no_internal_collisions",
+      "pass": true,
+      "detail": "every board, the motor, both gear planes, the drum, the encoder wheel, the sensor shelf and the nose root occupy disjoint space"
+    },
+    {
+      "check": "wheels_clear_cavity",
+      "pass": true,
+      "detail": "both wheels turn inside the plain cavity with clearance, so the shell needs no local sweep pockets - cutting those was what removed the floor under the dowel bosses"
+    },
+    {
+      "check": "sensor_separation",
+      "pass": true,
+      "detail": "the hand-wave and doorway windows are 21 mm apart with 9 mm apertures, so neither cone clips the other's bezel"
+    }
+  ],
+  "parts": [
+    {
+      "part": "base_shell",
+      "quantity": 1,
+      "x_mm": 50.0,
+      "y_mm": 252.0,
+      "z_mm": 59.99,
+      "solid_volume_cm3": 118.78,
+      "solid_mass_g": 147.3,
+      "watertight": true,
+      "bodies": 1,
+      "sealed_voids": 0
+    },
+    {
+      "part": "base_cover",
+      "quantity": 1,
+      "x_mm": 48.79,
+      "y_mm": 250.4,
+      "z_mm": 12.99,
+      "solid_volume_cm3": 26.18,
+      "solid_mass_g": 32.5,
+      "watertight": true,
+      "bodies": 1,
+      "sealed_voids": 0
+    },
+    {
+      "part": "motor_pinion",
+      "quantity": 1,
+      "x_mm": 11.2,
+      "y_mm": 11.2,
+      "z_mm": 10.0,
+      "solid_volume_cm3": 0.44,
+      "solid_mass_g": 0.5,
+      "watertight": true,
+      "bodies": 1,
+      "sealed_voids": 0
+    },
+    {
+      "part": "compound_gear",
+      "quantity": 1,
+      "x_mm": 40.0,
+      "y_mm": 40.0,
+      "z_mm": 27.2,
+      "solid_volume_cm3": 9.96,
+      "solid_mass_g": 12.4,
+      "watertight": true,
+      "bodies": 1,
+      "sealed_voids": 0
+    },
+    {
+      "part": "drum_gear",
+      "quantity": 1,
+      "x_mm": 44.0,
+      "y_mm": 43.91,
+      "z_mm": 27.2,
+      "solid_volume_cm3": 16.43,
+      "solid_mass_g": 20.4,
+      "watertight": true,
+      "bodies": 1,
+      "sealed_voids": 0
+    },
+    {
+      "part": "door_anchor",
+      "quantity": 1,
+      "x_mm": 60.0,
+      "y_mm": 22.0,
+      "z_mm": 25.0,
+      "solid_volume_cm3": 9.63,
+      "solid_mass_g": 11.9,
+      "watertight": true,
+      "bodies": 1,
+      "sealed_voids": 0
+    },
+    {
+      "part": "magnet_pod",
+      "quantity": 2,
+      "x_mm": 58.0,
+      "y_mm": 20.0,
+      "z_mm": 9.0,
+      "solid_volume_cm3": 7.99,
+      "solid_mass_g": 9.9,
+      "watertight": true,
+      "bodies": 1,
+      "sealed_voids": 2
+    }
+  ]
+}
