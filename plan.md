@@ -123,6 +123,42 @@ Track OpenSCAD, PlatformIO and email tool session/agent IDs. Observe exit codes 
 
 # Dalek fabrication package
 
+## Current revision: one-piece taller skirt
+
+### Locked decisions (user-confirmed; do not revisit)
+
+2026-09-12: "do it!" accepting the proposal to combine the two skirts into one roughly213mm print, reducing tenSTLfiles/elevenprints to nineSTLfiles/tenprints while retaining overall robot height and service access.
+
+Earlier constraints remain: circular300mm strongbase, concealedarmservos, adjustableTTmotor/wheelheadfrictiondrive, originalrear1.14-inchT-Display, fourgroundwheels, Wi-FiAP/network, originalMP3s, stackablebody belowthreefeet. Priorrequest to email the finalPDFandS3videolink remains authorized for this revision.
+
+### Outcome, non-goals, files and proof
+
+Combine only the lower and upper skirt into02_skirt.stl, nominal213mm includingtopregister. Preserveouterprofiles/decoration andoverall563.8mmheight. Remove the redundantmiddleboltedjoint; retainappropriateintegralreinforcement andverifyassemblythroughthenarrowertop. Keep the base, shoulder, neck, head and moving mechanisms separate forservice. This is reducedprint/jointcount, not stretching the robot to320mmpersection or a claimed testedstrengthincrease.
+
+Files: C:/dev/robots/dalek/cad/dalek.scad, affectedskirtSTLs, exporter/check/slice/render scripts, BOMcounts, mechanical/assembly/research/verificationdocs, README andupdatedPDF/PNG/video artifacts; C:/dev/robots/.github/workflows/publish-dalek.yml revisionguard; thissectiononlyofsharedplan.md. No firmware/electrical/MP3/otherrobotchanges, newdependencies, purchases, physicalprint, recurringautomation or newcloudresources.
+
+Proof: exactlynineconnectedwatertightSTLs/tenspecifiedprints; eightunchangedSTLhashesretained;213mmnewskirtfits H2D320mmmax-minus5heighttargetandactualsupport/brimfootprint; base/shoulderinterfacesunchanged; long-driver/nutandbattery/FR4insertionpathschecked; onlynewskirtactuallyreslicedwhileunchangedrecordsarevalidatedbyhash. Matching15drawingPNGs/fiveCADpreviews, updatednarratedvideoandreviewedPDF. ExistingGitHub/OIDCworkflowmustuploadandverifynewMP4/PDF; finalHTMLemailmustreturnSESMessageId.
+
+### Workstreams and milestones
+
+- [~] Mechanical/export/slice, /root/merge_skirt: CADmerge, ninefileinventory, correctBOMjointcounts, assemblyaccessandnewskirtH2Dslice. Donewhen `python scripts/export_cad.py --check-only` andfocusedmergedskirtchecks/slice pass againstfinalhash.
+- [~] Independentaccessreview, /root/merged_access_review: checkactualtool/nut/plate/batteryaccess andnominalstrengthclaims. Donewhenrecordedfocusedcommandsreturn0hits/passandconcretefindingsresolved.
+- [~] Drawings, /root/merged_drawings: ninecomponentmeshes andcorrectexplodedpositions;15PNGs/fivePDFpreviews. Donewhen `python scripts/render_drawings.py` passesandviewsareinspected.
+- [~] Integration, /root: updateassemblynarrative/video/PDF/README toROUND-9andthreebodyjoints; preservefunctionalelectronics. Donewhenfinalmediahashes/counts/fulldecodeandPDFvisualreviewpass.
+- [ ] Delivery, /root andemailagent: focusedcommit/pushexistingworkflow,verifyS3filesandemailnewvideolinkwithPDF. DonewhenworkflowsuccessandsignedURLverification/actualSESMessageIdrecorded.
+
+### Stop conditions (only these)
+
+Missingcredentials/resourcesblockpublication/send; materiallydifferentuserintentrequiresinput; unauthorizedirreversibleactionrequired. Completeindependentworkandreportexactblocker. No physicalrobotavailable; physicalstrengthandloadeddrivingremainunverifiedbuildertests.
+
+### Jobs and retry policy
+
+Trackagent/processIDsandterminalresults. Export240s/part; slicer300s/part; video20minwithprogress; boundedtwochanged-inputretriesperdeterministicfailureclass. Reuseunchangedverifiedartifactsbyhash; do notre-rununaffectedphysicalmodeltestswithoutareason. ExistingGitHubActions/OIDCistheonlyS3uploadpath. Emailonlyafterfinalartifactreview/publication; no retryafteracceptedMessageId. Do notretrypreviouslydeniedtempcleanupthroughdifferenttools/agents.
+
+### Execution log
+
+- 2026-09-12: Readdeploy.md,currentCAD/exporter/mechanicalcheckerandPDFskill. Dalekworktreeclean; unrelatedR2-D2/Fable/sharedplanworkpresentandpreserved. Started /root/merge_skirt, /root/merged_drawings and /root/merged_access_review. Selectedsingle213mmskirt withunchangedshoulderorigin277.8; removeonlyobsolete02/03skirtfilesandmiddlejoint hardware.
+
 ## Current revision: round detailed body and concealed drives
 
 ### Locked decisions (user-confirmed; do not revisit)
