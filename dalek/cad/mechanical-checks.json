@@ -1,18 +1,19 @@
 {
-  "design": "ROUND-9",
-  "method": "Deterministic nominal interior sampling and mesh-vertex paths; no physical test",
+  "design": "MOUNT-1",
+  "method": "Two independent near-axis parity rays; original trimesh.contains on disagreements; deterministic nominal samples and mesh-vertex paths; no physical test",
   "seed": 37773766,
   "all_pass": true,
   "mesh_sha256": {
-    "01_base": "cf36cb9b05210b71e6b5aa08be183e24be2719aa8f4e286b0cb74617b87d6041",
-    "02_skirt": "ff1baa0536e36c0730d69f5cf8004e069f4fe4e430026d6f3e6bc734a125146e",
-    "04_shoulder": "790aabbaea81385830751e0644091a6d3a3bdaf4328a83420313284df890ec16",
-    "05_neck": "ac2f5c6f659673cbda8bae3be9ee448ca490d1970dc9f33793cf4e94567ea36b",
+    "01_base": "630add985fa781c9b147c5d3bb8902277886cb6051b13170d043c3b284b921cb",
+    "02_skirt": "e1c5b30b59fc58872fa6330aae276f9cdba8bbf3136164a0e63bb2e81075dfc6",
+    "04_shoulder": "21f235f8c213f716ceccad8a17a5a4081308266f882cddf93702253585a95cfa",
     "06_head": "2d8d105a7e19b090c0c3eb6a285659584b7bae359712a2be3dce0b2ab521371a",
-    "07_pitch_carrier": "922f03986e7420655de0a873e5cd5602ffca84dbbbf0a8fa0f5b67cf8f2a2f9a",
-    "08_plunger_arm": "489d461791963d76dd37be4a2e8e1b2bcc8aafe207b5d82638bba095d15cd2e0",
-    "09_emitter_arm": "0aacb41cbe14171d80dbbb2f8634d0fe0bfd4dd0de0beef5ef9a4a2bb1335a63",
-    "10_head_motor_carriage": "6a42e0e7136ffcfee13577ed593dbe0c7ba94347412b02ffb829b14c3ea1b590"
+    "07_pitch_carrier": "cbb421e4b1c043b5b38609c142eef79017e42a7e52cfb16f7c10ff4640f53e34",
+    "08_plunger_arm": "b9e0bbe8234d1fe4c02966c9a290c19beecfb816cee6ca6dba13cb547b552164",
+    "09_emitter_arm": "7438754483b5417fd2399facf2edf787cb29da3feaa1d3f5441937a97992bb91",
+    "10_head_motor_carriage": "6a42e0e7136ffcfee13577ed593dbe0c7ba94347412b02ffb829b14c3ea1b590",
+    "11_motor_clamp": "2cc2fe30c3189d2346972caf989f2b90e2006d1196c611d8e3ca648186263fac",
+    "12_electronics_platform": "3e437481e29666f0df7320da469ad02914122c45b5dd4fa570c24a34960b4e9f"
   },
   "checks": [
     {
@@ -51,21 +52,21 @@
       "passed": true
     },
     {
-      "check": "base-rotated-battery",
+      "check": "base-battery-Bioenno",
       "samples": 8000,
       "interior_hits": 0,
       "expected_hits": 0,
       "passed": true
     },
     {
-      "check": "base-FR4--93",
+      "check": "base-battery-SLA-7Ah",
       "samples": 8000,
       "interior_hits": 0,
       "expected_hits": 0,
       "passed": true
     },
     {
-      "check": "base-FR4-93",
+      "check": "base-battery-SLA-14Ah",
       "samples": 8000,
       "interior_hits": 0,
       "expected_hits": 0,
@@ -206,7 +207,7 @@
     },
     {
       "check": "carrier--47-yaw-8",
-      "samples": 300,
+      "samples": 438,
       "interior_hits": 0,
       "expected_hits": 0,
       "passed": true
@@ -220,49 +221,49 @@
     },
     {
       "check": "arm--47-yaw-8-pitch-8",
-      "samples": 2756,
+      "samples": 2759,
       "interior_hits": 0,
       "expected_hits": 0,
       "passed": true
     },
     {
       "check": "cap-case--47--8--8",
-      "samples": 2756,
+      "samples": 2759,
       "interior_hits": 0,
       "expected_hits": 0,
       "passed": true
     },
     {
       "check": "arm--47-yaw-8-pitch0",
-      "samples": 2756,
+      "samples": 2759,
       "interior_hits": 0,
       "expected_hits": 0,
       "passed": true
     },
     {
       "check": "cap-case--47--8-0",
-      "samples": 2756,
+      "samples": 2759,
       "interior_hits": 0,
       "expected_hits": 0,
       "passed": true
     },
     {
       "check": "arm--47-yaw-8-pitch8",
-      "samples": 2756,
+      "samples": 2759,
       "interior_hits": 0,
       "expected_hits": 0,
       "passed": true
     },
     {
       "check": "cap-case--47--8-8",
-      "samples": 2756,
+      "samples": 2759,
       "interior_hits": 0,
       "expected_hits": 0,
       "passed": true
     },
     {
       "check": "carrier--47-yaw0",
-      "samples": 300,
+      "samples": 438,
       "interior_hits": 0,
       "expected_hits": 0,
       "passed": true
@@ -276,49 +277,49 @@
     },
     {
       "check": "arm--47-yaw0-pitch-8",
-      "samples": 2756,
+      "samples": 2759,
       "interior_hits": 0,
       "expected_hits": 0,
       "passed": true
     },
     {
       "check": "cap-case--47-0--8",
-      "samples": 2756,
+      "samples": 2759,
       "interior_hits": 0,
       "expected_hits": 0,
       "passed": true
     },
     {
       "check": "arm--47-yaw0-pitch0",
-      "samples": 2756,
+      "samples": 2759,
       "interior_hits": 0,
       "expected_hits": 0,
       "passed": true
     },
     {
       "check": "cap-case--47-0-0",
-      "samples": 2756,
+      "samples": 2759,
       "interior_hits": 0,
       "expected_hits": 0,
       "passed": true
     },
     {
       "check": "arm--47-yaw0-pitch8",
-      "samples": 2756,
+      "samples": 2759,
       "interior_hits": 0,
       "expected_hits": 0,
       "passed": true
     },
     {
       "check": "cap-case--47-0-8",
-      "samples": 2756,
+      "samples": 2759,
       "interior_hits": 0,
       "expected_hits": 0,
       "passed": true
     },
     {
       "check": "carrier--47-yaw8",
-      "samples": 300,
+      "samples": 438,
       "interior_hits": 0,
       "expected_hits": 0,
       "passed": true
@@ -332,42 +333,42 @@
     },
     {
       "check": "arm--47-yaw8-pitch-8",
-      "samples": 2756,
+      "samples": 2759,
       "interior_hits": 0,
       "expected_hits": 0,
       "passed": true
     },
     {
       "check": "cap-case--47-8--8",
-      "samples": 2756,
+      "samples": 2759,
       "interior_hits": 0,
       "expected_hits": 0,
       "passed": true
     },
     {
       "check": "arm--47-yaw8-pitch0",
-      "samples": 2756,
+      "samples": 2759,
       "interior_hits": 0,
       "expected_hits": 0,
       "passed": true
     },
     {
       "check": "cap-case--47-8-0",
-      "samples": 2756,
+      "samples": 2759,
       "interior_hits": 0,
       "expected_hits": 0,
       "passed": true
     },
     {
       "check": "arm--47-yaw8-pitch8",
-      "samples": 2756,
+      "samples": 2759,
       "interior_hits": 0,
       "expected_hits": 0,
       "passed": true
     },
     {
       "check": "cap-case--47-8-8",
-      "samples": 2756,
+      "samples": 2759,
       "interior_hits": 0,
       "expected_hits": 0,
       "passed": true
@@ -381,7 +382,7 @@
     },
     {
       "check": "carrier-53-yaw-8",
-      "samples": 300,
+      "samples": 438,
       "interior_hits": 0,
       "expected_hits": 0,
       "passed": true
@@ -395,49 +396,49 @@
     },
     {
       "check": "arm-53-yaw-8-pitch-8",
-      "samples": 2756,
+      "samples": 2759,
       "interior_hits": 0,
       "expected_hits": 0,
       "passed": true
     },
     {
       "check": "cap-case-53--8--8",
-      "samples": 2756,
+      "samples": 2759,
       "interior_hits": 0,
       "expected_hits": 0,
       "passed": true
     },
     {
       "check": "arm-53-yaw-8-pitch0",
-      "samples": 2756,
+      "samples": 2759,
       "interior_hits": 0,
       "expected_hits": 0,
       "passed": true
     },
     {
       "check": "cap-case-53--8-0",
-      "samples": 2756,
+      "samples": 2759,
       "interior_hits": 0,
       "expected_hits": 0,
       "passed": true
     },
     {
       "check": "arm-53-yaw-8-pitch8",
-      "samples": 2756,
+      "samples": 2759,
       "interior_hits": 0,
       "expected_hits": 0,
       "passed": true
     },
     {
       "check": "cap-case-53--8-8",
-      "samples": 2756,
+      "samples": 2759,
       "interior_hits": 0,
       "expected_hits": 0,
       "passed": true
     },
     {
       "check": "carrier-53-yaw0",
-      "samples": 300,
+      "samples": 438,
       "interior_hits": 0,
       "expected_hits": 0,
       "passed": true
@@ -451,49 +452,49 @@
     },
     {
       "check": "arm-53-yaw0-pitch-8",
-      "samples": 2756,
+      "samples": 2759,
       "interior_hits": 0,
       "expected_hits": 0,
       "passed": true
     },
     {
       "check": "cap-case-53-0--8",
-      "samples": 2756,
+      "samples": 2759,
       "interior_hits": 0,
       "expected_hits": 0,
       "passed": true
     },
     {
       "check": "arm-53-yaw0-pitch0",
-      "samples": 2756,
+      "samples": 2759,
       "interior_hits": 0,
       "expected_hits": 0,
       "passed": true
     },
     {
       "check": "cap-case-53-0-0",
-      "samples": 2756,
+      "samples": 2759,
       "interior_hits": 0,
       "expected_hits": 0,
       "passed": true
     },
     {
       "check": "arm-53-yaw0-pitch8",
-      "samples": 2756,
+      "samples": 2759,
       "interior_hits": 0,
       "expected_hits": 0,
       "passed": true
     },
     {
       "check": "cap-case-53-0-8",
-      "samples": 2756,
+      "samples": 2759,
       "interior_hits": 0,
       "expected_hits": 0,
       "passed": true
     },
     {
       "check": "carrier-53-yaw8",
-      "samples": 300,
+      "samples": 438,
       "interior_hits": 0,
       "expected_hits": 0,
       "passed": true
@@ -507,70 +508,42 @@
     },
     {
       "check": "arm-53-yaw8-pitch-8",
-      "samples": 2756,
+      "samples": 2759,
       "interior_hits": 0,
       "expected_hits": 0,
       "passed": true
     },
     {
       "check": "cap-case-53-8--8",
-      "samples": 2756,
+      "samples": 2759,
       "interior_hits": 0,
       "expected_hits": 0,
       "passed": true
     },
     {
       "check": "arm-53-yaw8-pitch0",
-      "samples": 2756,
+      "samples": 2759,
       "interior_hits": 0,
       "expected_hits": 0,
       "passed": true
     },
     {
       "check": "cap-case-53-8-0",
-      "samples": 2756,
+      "samples": 2759,
       "interior_hits": 0,
       "expected_hits": 0,
       "passed": true
     },
     {
       "check": "arm-53-yaw8-pitch8",
-      "samples": 2756,
+      "samples": 2759,
       "interior_hits": 0,
       "expected_hits": 0,
       "passed": true
     },
     {
       "check": "cap-case-53-8-8",
-      "samples": 2756,
-      "interior_hits": 0,
-      "expected_hits": 0,
-      "passed": true
-    },
-    {
-      "check": "detached-plunger-insertion--50",
-      "samples": 79924,
-      "interior_hits": 0,
-      "expected_hits": 0,
-      "passed": true
-    },
-    {
-      "check": "detached-plunger-insertion-50",
-      "samples": 79924,
-      "interior_hits": 0,
-      "expected_hits": 0,
-      "passed": true
-    },
-    {
-      "check": "carrier-insertion--47",
-      "samples": 6900,
-      "interior_hits": 0,
-      "expected_hits": 0,
-      "passed": true
-    },
-    {
-      "check": "carrier-insertion-53",
-      "samples": 6900,
+      "samples": 2759,
       "interior_hits": 0,
       "expected_hits": 0,
       "passed": true
@@ -774,34 +747,6 @@
     {
       "check": "slide-L-key-carriage-83.5-8",
       "samples": 3648,
-      "interior_hits": 0,
-      "expected_hits": 0,
-      "passed": true
-    },
-    {
-      "check": "neck-M4-driver-0",
-      "samples": 1680,
-      "interior_hits": 0,
-      "expected_hits": 0,
-      "passed": true
-    },
-    {
-      "check": "neck-M4-driver-90",
-      "samples": 1680,
-      "interior_hits": 0,
-      "expected_hits": 0,
-      "passed": true
-    },
-    {
-      "check": "neck-M4-driver-180",
-      "samples": 1680,
-      "interior_hits": 0,
-      "expected_hits": 0,
-      "passed": true
-    },
-    {
-      "check": "neck-M4-driver-270",
-      "samples": 1680,
       "interior_hits": 0,
       "expected_hits": 0,
       "passed": true

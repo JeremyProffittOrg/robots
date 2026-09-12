@@ -22,7 +22,7 @@ def passive(ref, value, net1, net2):
     wire(net1, net1, ref + ".1", "component", "", value)
     wire(net2, net2, ref + ".2", "component", "", value)
 
-link("BAT_POS", "B1.PP30+", "F1.IN", gauge="18", color="red", note="7.5A fuse within 100mm of pack")
+link("BAT_POS", "B1.PP30+", "F1.IN", gauge="18", color="red", note="Select ONE battery on sheet05; single F1 7.5A within100mm of SLA positive terminal including adapter or Bioenno factory connector; never connect packs together")
 link("BAT_FUSED", "F1.OUT", "S1.1", gauge="18", color="red")
 link("PACK_SW", "S1.3", "S2.1", "F4.IN", "R10.1", gauge="18", color="red", note="NKK S1A ON connects terminals1 and3")
 link("ACT_IN", "S2.3", "F2.IN", "F3.IN", gauge="18", color="orange", note="Physical actuator power disconnect; logic stays powered")
@@ -148,16 +148,16 @@ class Sheet:
         (HERE/name).write_text(s,encoding="utf-8")
 
 def diagrams():
-    s=Sheet("01 / Power distribution and isolation","B1 = Bioenno BLF-1206A + matched BPC-1502DC charger. All grounds join at GROUND_STAR.")
-    s.box(35,115,370,150,"B1 / 12V 6Ah LiFePO4",["72Wh nominal; 12A continuous maximum","PP30 discharge + / -; protected pack","Separate factory DC charge connector","REMOVE pack from robot to charge"])
-    s.box(470,115,400,150,"F1 + S1 / MAIN",["B1.PP30+ -> F1 7.5A -> S1.1","S1.3 -> PACK_SW","NKK S1A, ON joins 1 and 3","F1 within 100mm of battery lead"])
+    s=Sheet("01 / Power distribution and isolation","B1 = ONE battery: Bioenno 6 Ah OR SLA 7 Ah OR SLA 14 Ah. Adapter and charger choices: sheet 05.")
+    s.box(35,115,370,150,"B1 / ONE 12 V battery",["Bioenno 6 Ah or Power-Sonic 7/14 Ah","Same keyed PP30 discharge input","Do not join batteries or chargers","REMOVE pack from robot to charge"])
+    s.box(470,115,400,150,"F1 + S1 / MAIN",["B1.PP30+ -> F1 7.5A -> S1.1","S1.3 -> PACK_SW","NKK S1A, ON joins 1 and 3","F1 close to battery: see sheet05"])
     s.line(405,185,470,185)
     s.box(930,115,620,150,"S2 / ACTUATORS OFF",["PACK_SW -> S2.1; S2.3 -> ACT_IN","NKK S1A, 20A at 30VDC; label OFF position","Cuts input power to BOTH motion converters","Logic/audio supply bypasses S2; power stays on"])
     s.line(870,185,930,185)
     s.box(35,330,475,255,"U2 / MOTOR 5V",["ACT_IN -> F2 3A -> MOTOR_IN -> VIN","Pololu D36V50F5 #4091","VOUT -> U5/U6/U11.VMotor + U9.14","C1 220uF/25V: VIN(+) to GND(-)","C4/C5/C12 470uF: one per driver","R15 100ohm/1W: output to GND","5A motor allowance + 0.05A bleed","Ground return: 18AWG to star"])
     s.box(555,330,475,255,"U3 / SERVO 5V",["ACT_IN -> F3 3A -> SERVO_IN -> VIN","Pololu D36V50F5 #4091","VOUT -> servo distribution + U8.14","C2 220uF/25V: VIN(+) to GND(-)","C6 1000uF/10V at distribution block","R16 100ohm/1W: output to GND","4A allowance + 0.05A bleed","4 separate 22AWG servo branches"])
     s.box(1075,330,475,255,"U4 / LOGIC 5V",["PACK_SW -> F4 1A -> LOGIC_IN -> IN","Adafruit MPM3610 #4739","OUT -> 5V_LOGIC -> amp + run link","C3 100uF/25V: IN(+) to GND(-)","C7 470uF/10V: OUT(+) to GND(-)","EN: no connection (enabled)","Budget 0.9A; maximum rated 1.2A","Do not connect the three 5V rails"])
-    s.box(35,630,715,150,"ADC39 / battery voltage divider",["PACK_SW -> R10 100k -> BAT_ADC -> R11 22k -> GND","BAT_ADC -> GPIO39; C10 100nF BAT_ADC to GND","At 14.6V: ADC = 2.633V. Scale = 122 / 22 = 5.54545","Cutoff 11.2V; re-arm above 12.0V; calibrate with meter"])
+    s.box(35,630,715,150,"ADC39 / battery voltage divider",["PACK_SW -> R10 100k -> BAT_ADC -> R11 22k -> GND","BAT_ADC -> GPIO39; C10 100nF BAT_ADC to GND","At 14.7 V: 2.651 V nominal / 2.695 V worst 1%; scale 122/22","Stop 11.2 V; re-arm 12.0 V; logic remains on after stop"])
     s.box(800,630,750,150,"GPIO36 / actuator power sense",["5V_MOTOR -> R12 10k -> ACT_OK -> R13 15k -> GND","ACT_OK -> GPIO36; C11 100nF ACT_OK to GND","At 5V: GPIO36 = 3.0V. High permits arming; low stops.","Discharge resistors drain stored output energy after OFF"])
     s.box(35,825,715,175,"USB service: prevent two power sources",["J_USB_ISO connects 5V_LOGIC to U1.5V only during RUN.","Before USB: S1 OFF; unplug B1.PP30; open J_USB_ISO.","Connect USB only after external run power is disconnected.","Remove USB before reconnecting run power and the battery.","Never use U1 BAT/JST connector for the 12V pack."])
     s.box(800,825,750,175,"Physical wiring",["18AWG stranded: battery, switches, regulators, motor bus.","22AWG: individual servo branches and logic power.","26AWG: signals. Twisted pairs: each motor; speaker output.","No solderless breadboard for power. Insulate every joint.","Two DC switches are disconnects; this is not a certified E-stop."])
@@ -192,9 +192,9 @@ def diagrams():
     s.box(35,1345,1515,105,"Arm calibration",["Test1500us with horns removed; fit horns at center. Begin at +/-2 degrees and0.10Hz; check every hidden linkage.","Default AND maximum radius:8 degrees. Normal frequency0.40Hz. Keep all four servos inside the shoulder."])
     s.save("03-servos.svg")
 
-    s=Sheet("04 / Circuit details: power, sensing and bridge outputs","Conventional connection symbols. Dots are junctions. Matching net labels join all four sheets.",1600,1250)
+    s=Sheet("04 / Circuit details: power, sensing and bridge outputs","Conventional connection symbols. Dots are junctions. Matching net labels join all five sheets.",1600,1250)
     s.text(40,140,"A. Battery fuse and independent motion disconnect","head")
-    s.box(40,185,200,115,"B1",["BLF-1206A","PP30 + / -"])
+    s.box(40,185,200,115,"B1 / select ONE",["Battery: sheet05","PP30 + / -"])
     s.line(240,215,285,215);s.resistor(285,215,"F1","7.5A")
     s.line(365,215,450,215);s.dot(450,215);s.line(450,215,490,190)
     s.line(505,215,620,215);s.dot(505,215);s.text(450,175,"S1 MAIN","small")
@@ -213,7 +213,7 @@ def diagrams():
     s.line(360,495,630,495);s.text(645,500,"U1.GPIO39","net")
     s.resistor(360,495,"R11","22k 1%",True);s.ground(360,555)
     s.dot(550,495);s.capacitor(550,495,"C10","100nF");s.ground(550,555)
-    s.text(40,620,"14.6V x22/(100+22) =2.633V; firmware multiplier5.54545","small")
+    s.text(40,620,"14.7 V: 2.651 V nominal / 2.695 V worst 1%; multiplier 5.54545","small")
 
     s.text(825,450,"C. Motion power sense / GPIO36","head")
     s.text(825,500,"5V_MOTOR","net");s.line(935,495,970,495)
@@ -247,16 +247,35 @@ def diagrams():
     s.text(40,1140,"POWER NOTES: F2/F3=3A; F4=1A. Correct capacitor polarity. All connection values also appear in sheets01-03.","body")
     s.save("04-circuit-details.svg")
 
+    s=Sheet("05 / Battery choices and removable SLA adapter","Choose ONE B1 option. These are alternative batteries, not three batteries wired together.",1600,1250)
+    s.box(35,115,470,230,"Option A / retained Bioenno",["B1: BLF-1206A, 12 V 6 Ah LiFePO4","0.7 kg; 72 Wh; 12 A continuous rating","Keep factory PP30 discharge connector","Keep separate factory charge connector","CH1: BPC-1502DC, 14.6 V 2 A LiFePO4","This charger is for Option A ONLY.","Foam pads take up space in large cradle."])
+    s.box(550,115,485,230,"Option B / Power-Sonic 7 Ah",["B1: PS-1270 F2, 12 V 7 Ah sealed AGM","151 x 65 x 94 mm case; 100 mm over tabs","Dimensions +/-2 mm; standard 1.97 kg","F2 blades: 6.35 x 0.8 mm","Use insulated blade-to-PP30 adapter","CH1-SLA: PSC-121000ACX, 12 V 1 A","PS-1270 also lists PSC-12500ACX."])
+    s.box(1080,115,470,230,"Option C / Power-Sonic 14 Ah",["B1: PS-12140 F2, 12 V 14 Ah sealed AGM","151 x 98 x 95 mm case; 101 mm over tabs","Dimensions +/-2 mm; 3.78 kg current","Older units can weigh 4.2 kg; weigh yours","Use insulated blade-to-PP30 adapter","CH1-SLA: PSC-121000ACX, 12 V 1 A","Loaded TT drive test is REQUIRED."])
+    s.text(35,395,"Selected SLA battery -> insulated adapter -> existing run harness (18 AWG copper)","head")
+    s.box(35,440,260,140,"Selected B1 SLA",["+ terminal: red lead","- terminal: black lead","No onboard BMS"])
+    s.box(380,440,340,140,"B1.PP30 interface",["Short F2 female-to-PP30 lead","F1 battery tabs need F1 females","Key and mark + / -; meter test"])
+    s.line(295,480,380,480)
+    s.line(720,480,785,480);s.resistor(785,480,"F1","7.5A")
+    s.line(865,480,975,480)
+    s.box(975,440,575,140,"Same existing harness / sheets 01 and 04",["F1.OUT -> S1.1; S1.3 -> PACK_SW","F2/F3 = 3 A; F4 = 1 A; all outputs stay 5 V","Keep ONE main F1 fuse; do not raise its value"])
+    s.line(295,550,380,550);s.line(720,550,800,550);s.line(800,550,800,640)
+    s.text(830,635,"B1.PP30- -> GROUND_STAR","net");s.ground(800,640)
+    s.box(35,700,740,170,"Adapter assembly and fuse location",["Cover each battery blade and contact separately.","Use female contacts rated >=10 A DC and matched to 18 AWG.","SLA positive terminal to F1: <=100 mm TOTAL lead/connector path.","For Bioenno, put F1 <=100 mm from its intact factory PP30.","Strain-relieve leads; no live clips or exposed metal in the body."])
+    s.box(825,700,725,170,"Charger and low-battery rules",["MAIN OFF; unplug PP30; remove battery before any charging.","SLA uses the SLA charger; Bioenno uses its LiFePO4 charger.","Never join packs, charge through TTGO, or run while charging.","Motion stop at 11.2 V leaves logic on: MAIN OFF and UNPLUG.","Keep the SLA unplugged between uses; do not seal its vents."])
+    s.box(35,915,1515,235,"Mechanical and electrical acceptance",["Maximum bare SLA envelope: 100 X 153 Y 103 Z mm including dimensional tolerance and terminal blades.","Contacts, insulating boots, tie heads and wire bends need additional free space below the printed platform.","Battery rests on the base; platform legs carry the boards. Independent padded ties restrain the battery.","Measure actual battery mass and dimensions; capacity labels do not establish universal fit or motor payload.","Check all 5 V rails at 4.8-5.2 V under load; repeat hard-floor turning and temperature tests for each battery option.","The stock 1 A motor bridge limits and 5 V motor supply stay unchanged. No greater drive rating is claimed.","Read docs/battery-options-research.md for sources, fit limits and the removable-skirt service procedure."])
+    s.save("05-battery-options.svg")
+
 def main():
     HERE.mkdir(exist_ok=True)
     with (HERE/"wiring.csv").open("w",newline="",encoding="utf-8") as f:
-        w=csv.DictWriter(f,fieldnames=list(ROWS[0]));w.writeheader();w.writerows(ROWS)
+        w=csv.DictWriter(f,fieldnames=list(ROWS[0]),lineterminator="\n");w.writeheader();w.writerows(ROWS)
     mass, radius, torque = 3.0, .0315, .8*.0980665
     limit_torque=torque*(1.0-.16)/(1.5-.16)
     results={
         "status":"engineering estimates; not measurements of a built robot",
         "battery_nominal_Wh":72,"battery_design_usable_fraction":.75,
-        "battery_max_charge_V":14.6,"battery_adc_V_at_max":14.6*22/122,
+        "battery_max_charge_V":14.7,"battery_adc_V_at_max":14.7*22/122,
+        "battery_adc_V_at_max_worst_1pct":14.7*(22*1.01)/(100*.99+22*1.01),
         "battery_adc_scale":122/22,"battery_stop_V":11.2,"battery_rearm_V":12.0,
         "actuator_sense_V":5*15/25,"motor_current_limit_each_A":1,
         "drive_motor_count":4,"head_motor_count":1,"total_TT_motor_count":5,
@@ -276,9 +295,30 @@ def main():
         "notes":["Stall torque is not continuous torque. Current-to-torque interpolation is an approximation.",
                  "Skid steering scrub can dominate rolling resistance; confirm turns on actual flooring.",
                  "No encoder exists; PWM duty does not prove ground speed.",
-                 "Servo current budget is an allowance because authoritative stall-current data is missing."]}
+                 "Servo current budget is an allowance because authoritative stall-current data is missing.",
+                 "Legacy runtime estimates apply only to the72Wh Bioenno pack;SLA capacity depends on load and cutoff.",
+                 "Low voltage stops motion only;MAIN OFF and battery unplugged are required after a stop and between uses."]}
+    slice_report=json.loads((ROOT/"cad/h2d-slice-check.json").read_text(encoding="utf-8"))
+    assert slice_report["status"] == "pass", "A passing slice report is required for the mass baseline"
+    plastic_kg=slice_report["total_predicted_installed_model_mass_g"]/1000
+    known_components_kg=5*.0306+5*.038+4*.014
+    results["battery_choice_rule"]="ONE selected battery;never connect options in series or parallel;charge outside robot"
+    results["mass_baseline"]={"source":"cad/h2d-slice-check.json","design":slice_report["design"],
+        "installed_plastic_kg":plastic_kg,"five_motors_five_wheels_four_servos_kg":known_components_kg,
+        "remaining_hardware_and_finish":"NOT INCLUDED;weigh complete robot;not a motor payload rating"}
+    results["battery_options"]=[
+        {"model":"Bioenno BLF-1206A","chemistry":"LiFePO4","nominal_Ah":6,"nominal_Wh":72,
+         "battery_mass_kg":.7,"padded_envelope_XYZ_mm":[70,114,76],"charger":"BPC-1502DC14.6V2A",
+         "partial_robot_mass_kg":plastic_kg+known_components_kg+.7},
+        {"model":"Power-Sonic PS-1270 F2","chemistry":"sealed AGM lead acid","nominal_Ah":7,"nominal_Wh":84,
+         "battery_mass_kg":1.97,"max_bare_envelope_XYZ_mm":[67,153,102],"charger":"PSC-121000ACX12V1A or PSC-12500ACX",
+         "partial_robot_mass_kg":plastic_kg+known_components_kg+1.97},
+        {"model":"Power-Sonic PS-12140 F2","chemistry":"sealed AGM lead acid","nominal_Ah":14,"nominal_Wh":168,
+         "battery_mass_kg":3.78,"older_variant_mass_kg":4.2,"max_bare_envelope_XYZ_mm":[100,153,103],
+         "charger":"PSC-121000ACX12V1A","partial_robot_mass_kg":plastic_kg+known_components_kg+3.78}]
+    assert len(results["battery_options"]) == 3 and all(b["partial_robot_mass_kg"]>b["battery_mass_kg"] for b in results["battery_options"])
     (HERE/"calculations.json").write_text(json.dumps(results,indent=2)+"\n",encoding="utf-8")
     diagrams()
-    print(f"PASS: {len(ROWS)} wiring rows, 4 parseable SVG circuit sheets, calculations.json")
+    print(f"PASS: {len(ROWS)} wiring rows, 5 parseable SVG circuit sheets, 3 alternative batteries, calculations.json")
 
 if __name__ == "__main__":main()

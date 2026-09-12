@@ -1,68 +1,69 @@
 {
-  "design": "ROUND-10",
-  "assembly_order": "Center and install yaw servos; feed and support both arms; insert pitch-servo carriers; attach horns and liners; speaker last.",
-  "method": "Deterministic mesh vertices and nominal pitch-servo interior grid at 87 insertion poses per side.",
+  "design": "MOUNT-1",
+  "assembly_order": "Remove upper shell; install yaw servos; feed and support both arms through lower opening; insert both carriers through the left lower opening, then forward and down; horns and liners; rear speaker last.",
+  "method": "Deterministic mesh vertices and nominal pitch-servo interior grid at 154 insertion poses per side.",
   "all_pass": true,
+  "query_method": "Two independent near-axis parity rays; original trimesh.contains on disagreements",
   "mesh_sha256": {
-    "04_shoulder": "790aabbaea81385830751e0644091a6d3a3bdaf4328a83420313284df890ec16",
-    "07_pitch_carrier": "922f03986e7420655de0a873e5cd5602ffca84dbbbf0a8fa0f5b67cf8f2a2f9a",
-    "08_plunger_arm": "489d461791963d76dd37be4a2e8e1b2bcc8aafe207b5d82638bba095d15cd2e0",
-    "09_emitter_arm": "0aacb41cbe14171d80dbbb2f8634d0fe0bfd4dd0de0beef5ef9a4a2bb1335a63"
+    "04_shoulder": "21f235f8c213f716ceccad8a17a5a4081308266f882cddf93702253585a95cfa",
+    "07_pitch_carrier": "cbb421e4b1c043b5b38609c142eef79017e42a7e52cfb16f7c10ff4640f53e34",
+    "08_plunger_arm": "b9e0bbe8234d1fe4c02966c9a290c19beecfb816cee6ca6dba13cb547b552164",
+    "09_emitter_arm": "7438754483b5417fd2399facf2edf787cb29da3feaa1d3f5441937a97992bb91"
   },
   "checks": [
     {
       "check": "carrier-insertion--47-against-held-arms",
-      "poses": 87,
-      "samples": 26100,
+      "poses": 154,
+      "samples": 67452,
       "interior_hits": 0,
       "passed": true
     },
     {
       "check": "carrier-insertion--47-against-shoulder",
-      "poses": 87,
-      "samples": 26100,
+      "poses": 154,
+      "samples": 67452,
       "interior_hits": 0,
       "passed": true
     },
     {
       "check": "pitch-case-insertion--47-against-held-arms",
-      "poses": 87,
-      "samples": 20880,
+      "poses": 154,
+      "samples": 36960,
       "interior_hits": 0,
       "passed": true
     },
     {
       "check": "pitch-case-insertion--47-against-shoulder",
-      "poses": 87,
-      "samples": 20880,
+      "poses": 154,
+      "samples": 36960,
       "interior_hits": 0,
       "passed": true
     },
     {
       "check": "carrier-insertion-53-against-held-arms",
-      "poses": 87,
-      "samples": 26100,
+      "poses": 154,
+      "samples": 67452,
       "interior_hits": 0,
       "passed": true
     },
     {
       "check": "carrier-insertion-53-against-shoulder",
-      "poses": 87,
-      "samples": 26100,
+      "poses": 154,
+      "samples": 67452,
       "interior_hits": 0,
       "passed": true
     },
     {
       "check": "pitch-case-insertion-53-against-held-arms",
-      "poses": 87,
-      "samples": 20880,
+      "poses": 154,
+      "samples": 36960,
       "interior_hits": 0,
       "passed": true
     },
     {
       "check": "pitch-case-insertion-53-against-shoulder",
-      "poses": 87,
-      "samples": 20880,
+      "poses": 154,
+      "samples": 36960,
       "interior_hits": 0,
       "passed": true
     }

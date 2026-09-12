@@ -6,9 +6,9 @@
     {
       "start": 0,
       "end": 5,
-      "title": "Nine STL designs. Ten printed parts.",
-      "instruction": "Bronze Dalek | Original TTGO T-Display ESP32 | CAD assembly preview",
-      "narration": "Simulated assembly. Ten printed parts."
+      "title": "Ten STL designs. Two mounting options.",
+      "instruction": "Fourteen prints with motor clamps; ten with motor ties. One-piece board platform and combined shoulder/neck.",
+      "narration": "Simulated assembly. Ten designs."
     },
     {
       "start": 5,
@@ -20,65 +20,65 @@
     {
       "start": 13,
       "end": 19,
-      "title": "02 | Retain the motors",
-      "instruction": "Eight padded clamp strips and sixteen M3 bolts retain the four motors.",
-      "narration": "Add the clamp strips and sixteen retaining bolts."
+      "title": "02 | Four motor screws, or ties",
+      "instruction": "Use four identical printed hook clamps and one M3 screw per motor. Alternative: omit the clamps and use two longitudinal ties per motor.",
+      "narration": "Four clamps and screws, or eight cable ties."
     },
     {
       "start": 19,
       "end": 25,
-      "title": "03 | One-piece skirt",
-      "instruction": "Seat the full 213 mm skirt on the base. Secure it with four M4 screws before fitting electronics, using the specified long tools.",
-      "narration": "Fit the one piece skirt before adding the electronics."
+      "title": "03 | Choose one battery",
+      "instruction": "Retain the Bioenno6Ah LiFePO4 pack, or use the specified12V7Ah or14Ah SLA case. Secure one pack with two padded zip-tie loops.",
+      "narration": "Choose the original battery, or either lead acid option."
     },
     {
       "start": 25,
       "end": 36,
-      "title": "04 | Electronics and battery",
-      "instruction": "Retain PCB nuts below each plate and keep its upper face clear. Lower it through the centre and move below the flange. Fit boards, then the battery.",
-      "narration": "Retain the nuts below each plate. Fit the plates, boards, and battery."
+      "title": "04 | One printed board platform",
+      "instruction": "Fit boards on the bench. Lower the single platform with its four legs over the battery. Secure the feet with screws or ties; keep terminal boots and wiring clear.",
+      "narration": "Mount the boards on the printed platform. Lower its four legs over the secured battery."
     },
     {
       "start": 36,
       "end": 41,
-      "title": "05 | Check the taller shell",
-      "instruction": "The two skirt sections are now one continuous print. Check wiring and clearance before fitting the removable shoulder.",
-      "narration": "Check clearances inside the one piece skirt."
+      "title": "05 | Lower the skirt around the base",
+      "instruction": "The whole213mm skirt lowers around the completed base assembly. Four M4 screws engage retained nuts. Lift the skirt for battery service.",
+      "narration": "Lower the one piece skirt over the finished base."
     },
     {
       "start": 41,
       "end": 51,
-      "title": "06 | Rear display and controls",
-      "instruction": "Bench fit the rear T-Display, four edge-retaining tabs and both power switches. Keep the shoulder open.",
-      "narration": "Fit the switches and original T T G O T Display. Keep the shoulder open."
+      "title": "06 | Bearings in the combined shell",
+      "instruction": "Shoulder and neck are one186mm print. Fit the lower608 bearing and retainers through the open bottom, then the spacer, upper bearing, shims and spindle.",
+      "narration": "Fit both bearings and the spindle through the open upper shell."
     },
     {
       "start": 51,
       "end": 57,
-      "title": "07 | Concealed arm servos",
-      "instruction": "Fit centred internal arm mechanisms and opaque fabric liners. Feed each arm tip out from inside, then fit the speaker.",
-      "narration": "Fit the concealed arm mechanisms, fabric liners, and speaker."
+      "title": "07 | Smaller concealed arm boxes",
+      "instruction": "Feed the arms and servo carriers through the open bottom before fitting the speaker. Retain servo cases with M2 screws or ties. Horn screws remain required.",
+      "narration": "Fit hidden arm servos, using screws or ties."
     },
     {
       "start": 57,
       "end": 64,
-      "title": "08 | Seat the shoulder",
-      "instruction": "Connect labelled harness plugs, leave service loops and fasten the shoulder. The arm actuators remain behind its armor.",
-      "narration": "Seat the shoulder. Keep cables clear of each joint."
+      "title": "08 | Integrated adjustable head drive",
+      "instruction": "Fit the motor and wheel on the sliding carriage. Lower them from above. Fit the underside nuts while the shell is open, then retract the tyre.",
+      "narration": "Lower the head drive. Fit its fasteners while the shell is open."
     },
     {
       "start": 64,
       "end": 73,
-      "title": "09 | Neck and head bearings",
-      "instruction": "Bench fit two 608 bearings, retainers, inner-race spacer, shims and M8 spindle. Then seat and fasten the complete neck assembly.",
-      "narration": "Fit the bearings, spacer, shims, and spindle. Then fasten the neck."
+      "title": "09 | Fit controls and seat the shell",
+      "instruction": "Fit the speaker, rear T-Display and switches after internal assembly. Connect labelled plugs, then lower and fasten the complete shoulder and neck.",
+      "narration": "Fit the speaker and rear controls. Connect the harness and lower the complete upper shell."
     },
     {
       "start": 73,
       "end": 80,
-      "title": "10 | TT friction drive",
-      "instruction": "Fit the sliding carriage, fifth TT motor and horizontal wheel. Begin with the tyre clear of the head drum.",
-      "narration": "Fit the sliding carriage, T T motor, and friction wheel."
+      "title": "10 | Seat and retain the head",
+      "instruction": "Keep the tyre retracted. Lower the head over the spindle, fit its washer and retaining nut, and verify free rotation.",
+      "narration": "Keep the wheel clear. Seat the head and fit its retaining nut."
     },
     {
       "start": 80,
@@ -109,15 +109,39 @@
       "start": 115,
       "end": 120,
       "title": "Assembly complete | Prototype design",
-      "instruction": "Round base | Concealed arm servos | Adjustable head friction drive | Physical commissioning remains required."
+      "instruction": "Four motor screws or ties | Raised one-piece platform | Smaller arm boxes | Integrated fixed head mount | Physical tests required."
     }
   ],
   "audio_cues": [
-    { "start": 89, "file": "access_point.mp3", "text": "Local control network active." },
-    { "start": 93, "file": "wifi_connected.mp3", "text": "Network connection established." },
-    { "start": 96.45, "file": "head_scan.mp3", "text": "Optical scanner searching." },
-    { "start": 100, "file": "arms_ready.mp3", "text": "Manipulator systems ready." },
-    { "start": 105, "file": "advance.mp3", "text": "Advance. Maintain formation." },
-    { "start": 114, "file": "stopped.mp3", "text": "All movement stopped." }
+    {
+      "start": 89,
+      "file": "access_point.mp3",
+      "text": "Local control network active."
+    },
+    {
+      "start": 93,
+      "file": "wifi_connected.mp3",
+      "text": "Network connection established."
+    },
+    {
+      "start": 96.45,
+      "file": "head_scan.mp3",
+      "text": "Optical scanner searching."
+    },
+    {
+      "start": 100,
+      "file": "arms_ready.mp3",
+      "text": "Manipulator systems ready."
+    },
+    {
+      "start": 105,
+      "file": "advance.mp3",
+      "text": "Advance. Maintain formation."
+    },
+    {
+      "start": 114,
+      "file": "stopped.mp3",
+      "text": "All movement stopped."
+    }
   ]
 }

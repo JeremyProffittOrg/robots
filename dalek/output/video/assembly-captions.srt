@@ -1,7 +1,7 @@
 1
 00:00:00,000 --> 00:00:05,000
-Nine STL designs. Ten printed parts.
-Bronze Dalek | Original TTGO T-Display ESP32 | CAD assembly preview
+Ten STL designs. Two mounting options.
+Fourteen prints with motor clamps; ten with motor ties. One-piece board platform and combined shoulder/neck.
 
 2
 00:00:05,000 --> 00:00:13,000
@@ -10,48 +10,48 @@ Mate four Adafruit 3777 motors with 3766 wheels; lower the pairs into the one-pi
 
 3
 00:00:13,000 --> 00:00:19,000
-02 | Retain the motors
-Eight padded clamp strips and sixteen M3 bolts retain the four motors.
+02 | Four motor screws, or ties
+Use four identical printed hook clamps and one M3 screw per motor. Alternative: omit the clamps and use two longitudinal ties per motor.
 
 4
 00:00:19,000 --> 00:00:25,000
-03 | One-piece skirt
-Seat the full 213 mm skirt on the base. Secure it with four M4 screws before fitting electronics, using the specified long tools.
+03 | Choose one battery
+Retain the Bioenno6Ah LiFePO4 pack, or use the specified12V7Ah or14Ah SLA case. Secure one pack with two padded zip-tie loops.
 
 5
 00:00:25,000 --> 00:00:36,000
-04 | Electronics and battery
-Retain PCB nuts below each plate and keep its upper face clear. Lower it through the centre and move below the flange. Fit boards, then the battery.
+04 | One printed board platform
+Fit boards on the bench. Lower the single platform with its four legs over the battery. Secure the feet with screws or ties; keep terminal boots and wiring clear.
 
 6
 00:00:36,000 --> 00:00:41,000
-05 | Check the taller shell
-The two skirt sections are now one continuous print. Check wiring and clearance before fitting the removable shoulder.
+05 | Lower the skirt around the base
+The whole213mm skirt lowers around the completed base assembly. Four M4 screws engage retained nuts. Lift the skirt for battery service.
 
 7
 00:00:41,000 --> 00:00:51,000
-06 | Rear display and controls
-Bench fit the rear T-Display, four edge-retaining tabs and both power switches. Keep the shoulder open.
+06 | Bearings in the combined shell
+Shoulder and neck are one186mm print. Fit the lower608 bearing and retainers through the open bottom, then the spacer, upper bearing, shims and spindle.
 
 8
 00:00:51,000 --> 00:00:57,000
-07 | Concealed arm servos
-Fit centred internal arm mechanisms and opaque fabric liners. Feed each arm tip out from inside, then fit the speaker.
+07 | Smaller concealed arm boxes
+Feed the arms and servo carriers through the open bottom before fitting the speaker. Retain servo cases with M2 screws or ties. Horn screws remain required.
 
 9
 00:00:57,000 --> 00:01:04,000
-08 | Seat the shoulder
-Connect labelled harness plugs, leave service loops and fasten the shoulder. The arm actuators remain behind its armor.
+08 | Integrated adjustable head drive
+Fit the motor and wheel on the sliding carriage. Lower them from above. Fit the underside nuts while the shell is open, then retract the tyre.
 
 10
 00:01:04,000 --> 00:01:13,000
-09 | Neck and head bearings
-Bench fit two 608 bearings, retainers, inner-race spacer, shims and M8 spindle. Then seat and fasten the complete neck assembly.
+09 | Fit controls and seat the shell
+Fit the speaker, rear T-Display and switches after internal assembly. Connect labelled plugs, then lower and fasten the complete shoulder and neck.
 
 11
 00:01:13,000 --> 00:01:20,000
-10 | TT friction drive
-Fit the sliding carriage, fifth TT motor and horizontal wheel. Begin with the tyre clear of the head drum.
+10 | Seat and retain the head
+Keep the tyre retracted. Lower the head over the spindle, fit its washer and retaining nut, and verify free rotation.
 
 12
 00:01:20,000 --> 00:01:29,000
@@ -76,4 +76,4 @@ Simulated forward travel, broad moving arc, reverse and stop on a level floor.
 16
 00:01:55,000 --> 00:02:00,000
 Assembly complete | Prototype design
-Round base | Concealed arm servos | Adjustable head friction drive | Physical commissioning remains required.
+Four motor screws or ties | Raised one-piece platform | Smaller arm boxes | Integrated fixed head mount | Physical tests required.

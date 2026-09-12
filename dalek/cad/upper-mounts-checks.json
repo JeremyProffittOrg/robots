@@ -1,0 +1,458 @@
+{
+  "design": "MOUNT-1",
+  "method": "Deterministic nominal mesh vertices and component grids; finite path samples",
+  "all_pass": true,
+  "mesh_sha256": {
+    "04_shoulder": "21f235f8c213f716ceccad8a17a5a4081308266f882cddf93702253585a95cfa",
+    "07_pitch_carrier": "cbb421e4b1c043b5b38609c142eef79017e42a7e52cfb16f7c10ff4640f53e34",
+    "08_plunger_arm": "b9e0bbe8234d1fe4c02966c9a290c19beecfb816cee6ca6dba13cb547b552164",
+    "09_emitter_arm": "7438754483b5417fd2399facf2edf787cb29da3feaa1d3f5441937a97992bb91",
+    "10_head_motor_carriage": "6a42e0e7136ffcfee13577ed593dbe0c7ba94347412b02ffb829b14c3ea1b590"
+  },
+  "checks": [
+    {
+      "check": "yaw-ears--47",
+      "samples": 250,
+      "interior_hits": 0,
+      "passed": true
+    },
+    {
+      "check": "pitch-ears--47--8",
+      "samples": 250,
+      "interior_hits": 0,
+      "passed": true
+    },
+    {
+      "check": "pitch-ears--47-0",
+      "samples": 250,
+      "interior_hits": 0,
+      "passed": true
+    },
+    {
+      "check": "pitch-ears--47-8",
+      "samples": 250,
+      "interior_hits": 0,
+      "passed": true
+    },
+    {
+      "check": "yaw-servo-bottom-entry--47",
+      "samples": 67551,
+      "interior_hits": 0,
+      "passed": true
+    },
+    {
+      "check": "yaw-ears-53",
+      "samples": 250,
+      "interior_hits": 0,
+      "passed": true
+    },
+    {
+      "check": "pitch-ears-53--8",
+      "samples": 250,
+      "interior_hits": 0,
+      "passed": true
+    },
+    {
+      "check": "pitch-ears-53-0",
+      "samples": 250,
+      "interior_hits": 0,
+      "passed": true
+    },
+    {
+      "check": "pitch-ears-53-8",
+      "samples": 250,
+      "interior_hits": 0,
+      "passed": true
+    },
+    {
+      "check": "yaw-servo-bottom-entry-53",
+      "samples": 67551,
+      "interior_hits": 0,
+      "passed": true
+    },
+    {
+      "check": "pitch-body-against-carrier",
+      "samples": 343,
+      "interior_hits": 0,
+      "passed": true
+    },
+    {
+      "check": "pitch-ears-against-carrier",
+      "samples": 250,
+      "interior_hits": 0,
+      "passed": true
+    },
+    {
+      "check": "yaw-M2x10-stack--47--19.5",
+      "samples": 1440,
+      "interior_hits": 0,
+      "passed": true
+    },
+    {
+      "check": "yaw-socket-key-entry-and-turn--47--19.5",
+      "samples": 29748,
+      "interior_hits": 0,
+      "passed": true
+    },
+    {
+      "check": "yaw-nut-tool-window--47--19.5",
+      "samples": 13720,
+      "interior_hits": 0,
+      "passed": true
+    },
+    {
+      "check": "yaw-M2x10-stack--47-9.5",
+      "samples": 1440,
+      "interior_hits": 0,
+      "passed": true
+    },
+    {
+      "check": "yaw-socket-key-entry-and-turn--47-9.5",
+      "samples": 29748,
+      "interior_hits": 0,
+      "passed": true
+    },
+    {
+      "check": "yaw-nut-tool-window--47-9.5",
+      "samples": 13720,
+      "interior_hits": 0,
+      "passed": true
+    },
+    {
+      "check": "yaw-tie-loop--47--11",
+      "samples": 2916,
+      "interior_hits": 0,
+      "passed": true
+    },
+    {
+      "check": "yaw-tie-loop--47-3",
+      "samples": 2916,
+      "interior_hits": 0,
+      "passed": true
+    },
+    {
+      "check": "yaw-M2x10-stack-53--19.5",
+      "samples": 1440,
+      "interior_hits": 0,
+      "passed": true
+    },
+    {
+      "check": "yaw-socket-key-entry-and-turn-53--19.5",
+      "samples": 29748,
+      "interior_hits": 0,
+      "passed": true
+    },
+    {
+      "check": "yaw-nut-tool-window-53--19.5",
+      "samples": 13720,
+      "interior_hits": 0,
+      "passed": true
+    },
+    {
+      "check": "yaw-M2x10-stack-53-9.5",
+      "samples": 1440,
+      "interior_hits": 0,
+      "passed": true
+    },
+    {
+      "check": "yaw-socket-key-entry-and-turn-53-9.5",
+      "samples": 29748,
+      "interior_hits": 0,
+      "passed": true
+    },
+    {
+      "check": "yaw-nut-tool-window-53-9.5",
+      "samples": 13720,
+      "interior_hits": 0,
+      "passed": true
+    },
+    {
+      "check": "yaw-tie-loop-53--11",
+      "samples": 2916,
+      "interior_hits": 0,
+      "passed": true
+    },
+    {
+      "check": "yaw-tie-loop-53-3",
+      "samples": 2916,
+      "interior_hits": 0,
+      "passed": true
+    },
+    {
+      "check": "pitch-M2x10-stack-15.75",
+      "samples": 1440,
+      "interior_hits": 0,
+      "passed": true
+    },
+    {
+      "check": "pitch-M2x10-stack-44.25",
+      "samples": 1440,
+      "interior_hits": 0,
+      "passed": true
+    },
+    {
+      "check": "pitch-tie-loop-24",
+      "samples": 2916,
+      "interior_hits": 0,
+      "passed": true
+    },
+    {
+      "check": "pitch-tie-loop-36",
+      "samples": 2916,
+      "interior_hits": 0,
+      "passed": true
+    },
+    {
+      "check": "servo-against-arm-at17-pitch-poses-08_plunger_arm",
+      "samples": 10081,
+      "interior_hits": 0,
+      "passed": true
+    },
+    {
+      "check": "arm-M2-horn-hole-08_plunger_arm--8",
+      "samples": 288,
+      "interior_hits": 0,
+      "passed": true
+    },
+    {
+      "check": "arm-M2-horn-hole-08_plunger_arm-8",
+      "samples": 288,
+      "interior_hits": 0,
+      "passed": true
+    },
+    {
+      "check": "servo-against-arm-at17-pitch-poses-09_emitter_arm",
+      "samples": 10081,
+      "interior_hits": 0,
+      "passed": true
+    },
+    {
+      "check": "arm-M2-horn-hole-09_emitter_arm--8",
+      "samples": 288,
+      "interior_hits": 0,
+      "passed": true
+    },
+    {
+      "check": "arm-M2-horn-hole-09_emitter_arm-8",
+      "samples": 288,
+      "interior_hits": 0,
+      "passed": true
+    },
+    {
+      "check": "bottom-detached-arm-insertion--50",
+      "samples": 502138,
+      "interior_hits": 0,
+      "passed": true
+    },
+    {
+      "check": "bottom-detached-arm-insertion-50",
+      "samples": 598234,
+      "interior_hits": 0,
+      "passed": true
+    },
+    {
+      "check": "head-top-insertion-carriage",
+      "samples": 23920,
+      "interior_hits": 0,
+      "passed": true
+    },
+    {
+      "check": "head-top-insertion-motor",
+      "samples": 44590,
+      "interior_hits": 0,
+      "passed": true
+    },
+    {
+      "check": "head-top-insertion-wheel",
+      "samples": 49920,
+      "interior_hits": 0,
+      "passed": true
+    },
+    {
+      "check": "rear-speaker-envelope",
+      "samples": 2197,
+      "interior_hits": 0,
+      "passed": true
+    },
+    {
+      "check": "upper-joint-driver-front-upper",
+      "samples": 1800,
+      "interior_hits": 0,
+      "passed": true
+    },
+    {
+      "check": "upper-joint-driver-front-speaker",
+      "samples": 1800,
+      "interior_hits": 0,
+      "passed": true
+    },
+    {
+      "check": "upper-joint-driver-front-retracted-carriage",
+      "samples": 1800,
+      "interior_hits": 0,
+      "passed": true
+    },
+    {
+      "check": "upper-joint-driver-front-head-motor",
+      "samples": 1800,
+      "interior_hits": 0,
+      "passed": true
+    },
+    {
+      "check": "upper-joint-driver-front-wheel",
+      "samples": 1800,
+      "interior_hits": 0,
+      "passed": true
+    },
+    {
+      "check": "upper-joint-driver-left-upper",
+      "samples": 1800,
+      "interior_hits": 0,
+      "passed": true
+    },
+    {
+      "check": "upper-joint-driver-left-speaker",
+      "samples": 1800,
+      "interior_hits": 0,
+      "passed": true
+    },
+    {
+      "check": "upper-joint-driver-left-retracted-carriage",
+      "samples": 1800,
+      "interior_hits": 0,
+      "passed": true
+    },
+    {
+      "check": "upper-joint-driver-left-head-motor",
+      "samples": 1800,
+      "interior_hits": 0,
+      "passed": true
+    },
+    {
+      "check": "upper-joint-driver-left-wheel",
+      "samples": 1800,
+      "interior_hits": 0,
+      "passed": true
+    },
+    {
+      "check": "upper-joint-driver-rear-upper",
+      "samples": 1800,
+      "interior_hits": 0,
+      "passed": true
+    },
+    {
+      "check": "upper-joint-driver-rear-speaker",
+      "samples": 1800,
+      "interior_hits": 0,
+      "passed": true
+    },
+    {
+      "check": "upper-joint-driver-rear-retracted-carriage",
+      "samples": 1800,
+      "interior_hits": 0,
+      "passed": true
+    },
+    {
+      "check": "upper-joint-driver-rear-head-motor",
+      "samples": 1800,
+      "interior_hits": 0,
+      "passed": true
+    },
+    {
+      "check": "upper-joint-driver-rear-wheel",
+      "samples": 1800,
+      "interior_hits": 0,
+      "passed": true
+    },
+    {
+      "check": "upper-joint-driver-right-upper",
+      "samples": 1800,
+      "interior_hits": 0,
+      "passed": true
+    },
+    {
+      "check": "upper-joint-driver-right-speaker",
+      "samples": 1800,
+      "interior_hits": 0,
+      "passed": true
+    },
+    {
+      "check": "upper-joint-driver-right-retracted-carriage",
+      "samples": 1800,
+      "interior_hits": 0,
+      "passed": true
+    },
+    {
+      "check": "upper-joint-driver-right-head-motor",
+      "samples": 1800,
+      "interior_hits": 0,
+      "passed": true
+    },
+    {
+      "check": "upper-joint-driver-right-wheel",
+      "samples": 1800,
+      "interior_hits": 0,
+      "passed": true
+    },
+    {
+      "check": "lower-bearing-bottom-insertion",
+      "samples": 17280,
+      "interior_hits": 0,
+      "passed": true
+    },
+    {
+      "check": "lower-bearing-driver-0",
+      "samples": 5760,
+      "interior_hits": 0,
+      "passed": true
+    },
+    {
+      "check": "lower-bearing-driver-120",
+      "samples": 5760,
+      "interior_hits": 0,
+      "passed": true
+    },
+    {
+      "check": "lower-bearing-driver-240",
+      "samples": 5760,
+      "interior_hits": 0,
+      "passed": true
+    }
+  ],
+  "query_method": "Two independent near-axis parity rays; original trimesh.contains on disagreements",
+  "arm_box_outer_mm": [
+    90,
+    52,
+    103
+  ],
+  "previous_arm_box_outer_mm": [
+    94,
+    58,
+    106
+  ],
+  "upper_height_mm": 186.0,
+  "sampled_arm_root_sections": {
+    "08_plunger_arm": {
+      "sample_count": 47,
+      "minimum": {
+        "x_mm": 0.25,
+        "net_area_mm2": 73.43389368883837
+      },
+      "physical_load_rating": null
+    },
+    "09_emitter_arm": {
+      "sample_count": 47,
+      "minimum": {
+        "x_mm": 0.25,
+        "net_area_mm2": 73.43389368883837
+      },
+      "physical_load_rating": null
+    }
+  },
+  "limits": [
+    "No physical strength or hardware fit has been measured.",
+    "Manufacturer does not dimension MG92B shaft offset or ear-hole centers; verify actual parts against slots.",
+    "Fit the opaque arm liners and inspect their folds at every eight-degree extreme.",
+    "All lower access is with the upper shell removed; install speaker last."
+  ]
+}

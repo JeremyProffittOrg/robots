@@ -1,0 +1,88 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1250" viewBox="0 0 1600 1250">
+<style>text{font-family:Arial,sans-serif;fill:#10263a} .title{font-size:30px;font-weight:bold} .head{font-size:20px;font-weight:bold} .body{font-size:17px} .small{font-size:15px} .net{font-family:monospace;font-size:16px;fill:#004879} .wire{stroke:#155a85;stroke-width:2;fill:none}</style>
+<rect width="1600" height="1250" fill="white"/>
+<text x="35" y="45" font-family="Arial, sans-serif" font-size="30" font-weight="bold" fill="#10263a">05 / Battery choices and removable SLA adapter</text>
+<text x="35" y="77" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">Choose ONE B1 option. These are alternative batteries, not three batteries wired together.</text>
+<rect x="35" y="115" width="470" height="230" rx="6" fill="#f1f7fb" stroke="#46677d" stroke-width="1.5"/>
+<text x="50" y="143" font-family="Arial, sans-serif" font-size="20" font-weight="bold" fill="#10263a">Option A / retained Bioenno</text>
+<text x="50" y="171" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">B1: BLF-1206A, 12 V 6 Ah LiFePO4</text>
+<text x="50" y="195" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">0.7 kg; 72 Wh; 12 A continuous rating</text>
+<text x="50" y="219" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">Keep factory PP30 discharge connector</text>
+<text x="50" y="243" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">Keep separate factory charge connector</text>
+<text x="50" y="267" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">CH1: BPC-1502DC, 14.6 V 2 A LiFePO4</text>
+<text x="50" y="291" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">This charger is for Option A ONLY.</text>
+<text x="50" y="315" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">Foam pads take up space in large cradle.</text>
+<rect x="550" y="115" width="485" height="230" rx="6" fill="#f1f7fb" stroke="#46677d" stroke-width="1.5"/>
+<text x="565" y="143" font-family="Arial, sans-serif" font-size="20" font-weight="bold" fill="#10263a">Option B / Power-Sonic 7 Ah</text>
+<text x="565" y="171" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">B1: PS-1270 F2, 12 V 7 Ah sealed AGM</text>
+<text x="565" y="195" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">151 x 65 x 94 mm case; 100 mm over tabs</text>
+<text x="565" y="219" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">Dimensions +/-2 mm; standard 1.97 kg</text>
+<text x="565" y="243" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">F2 blades: 6.35 x 0.8 mm</text>
+<text x="565" y="267" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">Use insulated blade-to-PP30 adapter</text>
+<text x="565" y="291" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">CH1-SLA: PSC-121000ACX, 12 V 1 A</text>
+<text x="565" y="315" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">PS-1270 also lists PSC-12500ACX.</text>
+<rect x="1080" y="115" width="470" height="230" rx="6" fill="#f1f7fb" stroke="#46677d" stroke-width="1.5"/>
+<text x="1095" y="143" font-family="Arial, sans-serif" font-size="20" font-weight="bold" fill="#10263a">Option C / Power-Sonic 14 Ah</text>
+<text x="1095" y="171" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">B1: PS-12140 F2, 12 V 14 Ah sealed AGM</text>
+<text x="1095" y="195" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">151 x 98 x 95 mm case; 101 mm over tabs</text>
+<text x="1095" y="219" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">Dimensions +/-2 mm; 3.78 kg current</text>
+<text x="1095" y="243" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">Older units can weigh 4.2 kg; weigh yours</text>
+<text x="1095" y="267" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">Use insulated blade-to-PP30 adapter</text>
+<text x="1095" y="291" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">CH1-SLA: PSC-121000ACX, 12 V 1 A</text>
+<text x="1095" y="315" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">Loaded TT drive test is REQUIRED.</text>
+<text x="35" y="395" font-family="Arial, sans-serif" font-size="20" font-weight="bold" fill="#10263a">Selected SLA battery -&gt; insulated adapter -&gt; existing run harness (18 AWG copper)</text>
+<rect x="35" y="440" width="260" height="140" rx="6" fill="#f1f7fb" stroke="#46677d" stroke-width="1.5"/>
+<text x="50" y="468" font-family="Arial, sans-serif" font-size="20" font-weight="bold" fill="#10263a">Selected B1 SLA</text>
+<text x="50" y="496" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">+ terminal: red lead</text>
+<text x="50" y="520" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">- terminal: black lead</text>
+<text x="50" y="544" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">No onboard BMS</text>
+<rect x="380" y="440" width="340" height="140" rx="6" fill="#f1f7fb" stroke="#46677d" stroke-width="1.5"/>
+<text x="395" y="468" font-family="Arial, sans-serif" font-size="20" font-weight="bold" fill="#10263a">B1.PP30 interface</text>
+<text x="395" y="496" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">Short F2 female-to-PP30 lead</text>
+<text x="395" y="520" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">F1 battery tabs need F1 females</text>
+<text x="395" y="544" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">Key and mark + / -; meter test</text>
+<path d="M295,480 L380,480" stroke="#155a85" stroke-width="2" fill="none"/>
+<path d="M720,480 L785,480" stroke="#155a85" stroke-width="2" fill="none"/>
+<path d="M785,480 L797,480" stroke="#155a85" stroke-width="2" fill="none"/>
+<rect x="797" y="473" width="56" height="14" fill="white" stroke="#155a85" stroke-width="2"/>
+<path d="M853,480 L865,480" stroke="#155a85" stroke-width="2" fill="none"/>
+<text x="785" y="462" font-family="Arial, sans-serif" font-size="15" font-weight="normal" fill="#10263a">F1 7.5A</text>
+<path d="M865,480 L975,480" stroke="#155a85" stroke-width="2" fill="none"/>
+<rect x="975" y="440" width="575" height="140" rx="6" fill="#f1f7fb" stroke="#46677d" stroke-width="1.5"/>
+<text x="990" y="468" font-family="Arial, sans-serif" font-size="20" font-weight="bold" fill="#10263a">Same existing harness / sheets 01 and 04</text>
+<text x="990" y="496" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">F1.OUT -&gt; S1.1; S1.3 -&gt; PACK_SW</text>
+<text x="990" y="520" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">F2/F3 = 3 A; F4 = 1 A; all outputs stay 5 V</text>
+<text x="990" y="544" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">Keep ONE main F1 fuse; do not raise its value</text>
+<path d="M295,550 L380,550" stroke="#155a85" stroke-width="2" fill="none"/>
+<path d="M720,550 L800,550" stroke="#155a85" stroke-width="2" fill="none"/>
+<path d="M800,550 L800,640" stroke="#155a85" stroke-width="2" fill="none"/>
+<text x="830" y="635" font-family="monospace" font-size="16" font-weight="normal" fill="#004879">B1.PP30- -&gt; GROUND_STAR</text>
+<path d="M800,640 L800,652" stroke="#155a85" stroke-width="2" fill="none"/>
+<path d="M784,652 L816,652" stroke="#155a85" stroke-width="2" fill="none"/>
+<path d="M790,659 L810,659" stroke="#155a85" stroke-width="2" fill="none"/>
+<path d="M796,666 L804,666" stroke="#155a85" stroke-width="2" fill="none"/>
+<rect x="35" y="700" width="740" height="170" rx="6" fill="#f1f7fb" stroke="#46677d" stroke-width="1.5"/>
+<text x="50" y="728" font-family="Arial, sans-serif" font-size="20" font-weight="bold" fill="#10263a">Adapter assembly and fuse location</text>
+<text x="50" y="756" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">Cover each battery blade and contact separately.</text>
+<text x="50" y="780" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">Use female contacts rated &gt;=10 A DC and matched to 18 AWG.</text>
+<text x="50" y="804" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">SLA positive terminal to F1: &lt;=100 mm TOTAL lead/connector path.</text>
+<text x="50" y="828" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">For Bioenno, put F1 &lt;=100 mm from its intact factory PP30.</text>
+<text x="50" y="852" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">Strain-relieve leads; no live clips or exposed metal in the body.</text>
+<rect x="825" y="700" width="725" height="170" rx="6" fill="#f1f7fb" stroke="#46677d" stroke-width="1.5"/>
+<text x="840" y="728" font-family="Arial, sans-serif" font-size="20" font-weight="bold" fill="#10263a">Charger and low-battery rules</text>
+<text x="840" y="756" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">MAIN OFF; unplug PP30; remove battery before any charging.</text>
+<text x="840" y="780" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">SLA uses the SLA charger; Bioenno uses its LiFePO4 charger.</text>
+<text x="840" y="804" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">Never join packs, charge through TTGO, or run while charging.</text>
+<text x="840" y="828" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">Motion stop at 11.2 V leaves logic on: MAIN OFF and UNPLUG.</text>
+<text x="840" y="852" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">Keep the SLA unplugged between uses; do not seal its vents.</text>
+<rect x="35" y="915" width="1515" height="235" rx="6" fill="#f1f7fb" stroke="#46677d" stroke-width="1.5"/>
+<text x="50" y="943" font-family="Arial, sans-serif" font-size="20" font-weight="bold" fill="#10263a">Mechanical and electrical acceptance</text>
+<text x="50" y="971" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">Maximum bare SLA envelope: 100 X 153 Y 103 Z mm including dimensional tolerance and terminal blades.</text>
+<text x="50" y="995" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">Contacts, insulating boots, tie heads and wire bends need additional free space below the printed platform.</text>
+<text x="50" y="1019" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">Battery rests on the base; platform legs carry the boards. Independent padded ties restrain the battery.</text>
+<text x="50" y="1043" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">Measure actual battery mass and dimensions; capacity labels do not establish universal fit or motor payload.</text>
+<text x="50" y="1067" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">Check all 5 V rails at 4.8-5.2 V under load; repeat hard-floor turning and temperature tests for each battery option.</text>
+<text x="50" y="1091" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">The stock 1 A motor bridge limits and 5 V motor supply stay unchanged. No greater drive rating is claimed.</text>
+<text x="50" y="1115" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">Read docs/battery-options-research.md for sources, fit limits and the removable-skirt service procedure.</text>
+<text x="35" y="1226" font-family="Arial, sans-serif" font-size="15" font-weight="normal" fill="#10263a">DALEK ROUND / FRICTION | 2026-09-12 | Circuit + wiring.csv form one drawing set | Physical validation required</text>
+</svg>

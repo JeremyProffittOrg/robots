@@ -1,0 +1,2061 @@
+{
+  "design": "MOUNT-1",
+  "all_pass": true,
+  "method": "Deterministic finite volume, surface and installation-path samples; millimetres in base coordinates",
+  "mesh_query_method": "Two independent near-axis parity rays; original trimesh.contains on disagreements",
+  "mesh_sha256": {
+    "01_base": "630add985fa781c9b147c5d3bb8902277886cb6051b13170d043c3b284b921cb",
+    "02_skirt": "e1c5b30b59fc58872fa6330aae276f9cdba8bbf3136164a0e63bb2e81075dfc6",
+    "11_motor_clamp": "2cc2fe30c3189d2346972caf989f2b90e2006d1196c611d8e3ca648186263fac",
+    "12_electronics_platform": "3e437481e29666f0df7320da469ad02914122c45b5dd4fa570c24a34960b4e9f"
+  },
+  "source_sha256": {
+    "stl/01_base.stl": "630add985fa781c9b147c5d3bb8902277886cb6051b13170d043c3b284b921cb",
+    "stl/02_skirt.stl": "e1c5b30b59fc58872fa6330aae276f9cdba8bbf3136164a0e63bb2e81075dfc6",
+    "stl/11_motor_clamp.stl": "2cc2fe30c3189d2346972caf989f2b90e2006d1196c611d8e3ca648186263fac",
+    "stl/12_electronics_platform.stl": "3e437481e29666f0df7320da469ad02914122c45b5dd4fa570c24a34960b4e9f",
+    "cad/base_mounts.scad": "c17ea3ce7b041f4f2d9534c1cae9c4942bbd9f0bea82642bff0d5a66de21bbcd",
+    "cad/dalek.scad": "6d7e60ce25e627b4fa94c9da662890127f20613b1164fce99424dab9c5042c11",
+    "scripts/mesh_queries.py": "f7c67798f3b32d9f8dbad6649fa88cccfc7b7af0763d160cfc2e97ac0df89e08",
+    "scripts/check_base_mounts.py": "534de2e172e0d81568cfb19a2f5d1d6b566deb940d10fe18cd0ea604a5e5ebf0"
+  },
+  "board_layout": [
+    [
+      "Buffer prototype",
+      [
+        -38,
+        -29
+      ],
+      [
+        81,
+        51,
+        1.6
+      ]
+    ],
+    [
+      "Divider prototype",
+      [
+        -38,
+        29
+      ],
+      [
+        81,
+        51,
+        1.6
+      ]
+    ],
+    [
+      "U10 PCA9685",
+      [
+        39,
+        -44
+      ],
+      [
+        62.5,
+        25.4,
+        3
+      ]
+    ],
+    [
+      "U5 left DRV8833",
+      [
+        23,
+        24
+      ],
+      [
+        26,
+        18,
+        3
+      ]
+    ],
+    [
+      "U2 motor regulator",
+      [
+        24,
+        -10
+      ],
+      [
+        25.4,
+        25.4,
+        9.5
+      ]
+    ],
+    [
+      "U3 servo regulator",
+      [
+        60,
+        -10
+      ],
+      [
+        25.4,
+        25.4,
+        9.5
+      ]
+    ],
+    [
+      "U6 right DRV8833",
+      [
+        59,
+        24
+      ],
+      [
+        26,
+        18,
+        3
+      ]
+    ],
+    [
+      "U11 head DRV8833",
+      [
+        23,
+        53
+      ],
+      [
+        26,
+        18,
+        3
+      ]
+    ],
+    [
+      "U7 amplifier",
+      [
+        59,
+        49
+      ],
+      [
+        19.4,
+        17.8,
+        3
+      ]
+    ],
+    [
+      "U4 logic regulator",
+      [
+        81,
+        32
+      ],
+      [
+        10.16,
+        17.145,
+        3
+      ]
+    ]
+  ],
+  "battery_envelopes_mm": {
+    "Bioenno-BLF1206A": [
+      70,
+      114,
+      76
+    ],
+    "PowerSonic-PS1270-7Ah": [
+      67,
+      153,
+      102
+    ],
+    "PowerSonic-PS12140-14Ah": [
+      100,
+      153,
+      103
+    ]
+  },
+  "deck_underside_base_z_mm": 140,
+  "board_underside_base_z_mm": 152,
+  "motor_screw_count": 4,
+  "motor_alternative_tie_count": 8,
+  "maximum_pcb_underside_hardware_projection_mm": 3,
+  "populated_terminal_headroom_mm": 26,
+  "platform_screw_or_tie_count": 8,
+  "battery_tie_count": 2,
+  "checks": [
+    {
+      "check": "01_base-valid-connected-solid",
+      "samples": 1,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "02_skirt-valid-connected-solid",
+      "samples": 1,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "11_motor_clamp-valid-connected-solid",
+      "samples": 1,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "12_electronics_platform-valid-connected-solid",
+      "samples": 1,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "base-captive-M4-nut-0-pocket",
+      "samples": 36,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "base-captive-M4-nut-0-roof-material",
+      "samples": 36,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "base-captive-M4-nut-90-pocket",
+      "samples": 36,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "base-captive-M4-nut-90-roof-material",
+      "samples": 36,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "base-captive-M4-nut-180-pocket",
+      "samples": 36,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "base-captive-M4-nut-180-roof-material",
+      "samples": 36,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "base-captive-M4-nut-270-pocket",
+      "samples": 36,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "base-captive-M4-nut-270-roof-material",
+      "samples": 36,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "skirt-top-captive-M4-nut-0-pocket",
+      "samples": 36,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "skirt-top-captive-M4-nut-0-roof-material",
+      "samples": 36,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "skirt-top-captive-M4-nut-90-pocket",
+      "samples": 36,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "skirt-top-captive-M4-nut-90-roof-material",
+      "samples": 36,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "skirt-top-captive-M4-nut-180-pocket",
+      "samples": 36,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "skirt-top-captive-M4-nut-180-roof-material",
+      "samples": 36,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "skirt-top-captive-M4-nut-270-pocket",
+      "samples": 36,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "skirt-top-captive-M4-nut-270-roof-material",
+      "samples": 36,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "base-envelope-and-six-mm-floor",
+      "samples": 4,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "platform-print-envelope",
+      "samples": 3,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "motor--1--1-base",
+      "samples": 343,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "motor--1--1-platform",
+      "samples": 343,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "mated-motor-wheel--1--1-vertical-insertion",
+      "samples": 13251,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "clamp--1--1-base",
+      "samples": 320,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "clamp--1--1-motor",
+      "samples": 343,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "clamp--1--1-horizontal-insertion",
+      "samples": 2880,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "clamp--1--1-single-M3-shaft",
+      "samples": 55,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "motor--1--1-tie-68-base",
+      "samples": 700,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "motor--1--1-tie-68-platform",
+      "samples": 700,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "motor--1--1-tie-80-base",
+      "samples": 700,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "motor--1--1-tie-80-platform",
+      "samples": 700,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "motor--1-1-base",
+      "samples": 343,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "motor--1-1-platform",
+      "samples": 343,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "mated-motor-wheel--1-1-vertical-insertion",
+      "samples": 13251,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "clamp--1-1-base",
+      "samples": 320,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "clamp--1-1-motor",
+      "samples": 343,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "clamp--1-1-horizontal-insertion",
+      "samples": 2880,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "clamp--1-1-single-M3-shaft",
+      "samples": 55,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "motor--1-1-tie-62-base",
+      "samples": 700,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "motor--1-1-tie-62-platform",
+      "samples": 700,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "motor--1-1-tie-74-base",
+      "samples": 700,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "motor--1-1-tie-74-platform",
+      "samples": 700,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "motor-1--1-base",
+      "samples": 343,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "motor-1--1-platform",
+      "samples": 343,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "mated-motor-wheel-1--1-vertical-insertion",
+      "samples": 13251,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "clamp-1--1-base",
+      "samples": 320,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "clamp-1--1-motor",
+      "samples": 343,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "clamp-1--1-horizontal-insertion",
+      "samples": 2880,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "clamp-1--1-single-M3-shaft",
+      "samples": 55,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "motor-1--1-tie-68-base",
+      "samples": 700,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "motor-1--1-tie-68-platform",
+      "samples": 700,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "motor-1--1-tie-80-base",
+      "samples": 700,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "motor-1--1-tie-80-platform",
+      "samples": 700,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "motor-1-1-base",
+      "samples": 343,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "motor-1-1-platform",
+      "samples": 343,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "mated-motor-wheel-1-1-vertical-insertion",
+      "samples": 13251,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "clamp-1-1-base",
+      "samples": 320,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "clamp-1-1-motor",
+      "samples": 343,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "clamp-1-1-horizontal-insertion",
+      "samples": 2880,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "clamp-1-1-single-M3-shaft",
+      "samples": 55,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "motor-1-1-tie-62-base",
+      "samples": 700,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "motor-1-1-tie-62-platform",
+      "samples": 700,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "motor-1-1-tie-74-base",
+      "samples": 700,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "motor-1-1-tie-74-platform",
+      "samples": 700,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "Bioenno-BLF1206A-base",
+      "samples": 1089,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "Bioenno-BLF1206A-platform",
+      "samples": 1089,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "Bioenno-BLF1206A-clamp-0",
+      "samples": 1089,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "Bioenno-BLF1206A-clamp-1",
+      "samples": 1089,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "Bioenno-BLF1206A-clamp-2",
+      "samples": 1089,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "Bioenno-BLF1206A-clamp-3",
+      "samples": 1089,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "Bioenno-BLF1206A-vertical-installation",
+      "samples": 14157,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "PowerSonic-PS1270-7Ah-base",
+      "samples": 1089,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "PowerSonic-PS1270-7Ah-platform",
+      "samples": 1089,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "PowerSonic-PS1270-7Ah-clamp-0",
+      "samples": 1089,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "PowerSonic-PS1270-7Ah-clamp-1",
+      "samples": 1089,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "PowerSonic-PS1270-7Ah-clamp-2",
+      "samples": 1089,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "PowerSonic-PS1270-7Ah-clamp-3",
+      "samples": 1089,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "PowerSonic-PS1270-7Ah-vertical-installation",
+      "samples": 14157,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "PowerSonic-PS12140-14Ah-base",
+      "samples": 1089,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "PowerSonic-PS12140-14Ah-platform",
+      "samples": 1089,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "PowerSonic-PS12140-14Ah-clamp-0",
+      "samples": 1089,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "PowerSonic-PS12140-14Ah-clamp-1",
+      "samples": 1089,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "PowerSonic-PS12140-14Ah-clamp-2",
+      "samples": 1089,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "PowerSonic-PS12140-14Ah-clamp-3",
+      "samples": 1089,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "PowerSonic-PS12140-14Ah-vertical-installation",
+      "samples": 14157,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "full-14Ah-footprint-29mm-terminal-headroom",
+      "samples": 3591,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "full-14Ah-footprint-26mm-headroom-after-fasteners",
+      "samples": 3591,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "platform-feet-and-legs-base",
+      "samples": 22764,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "platform-lowers-over-14Ah-base",
+      "samples": 386988,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "platform-lowers-over-14Ah-case",
+      "samples": 386988,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "platform-foot--1--1--8-tie-base",
+      "samples": 700,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "platform-foot--1--1--8-tie-platform",
+      "samples": 700,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "platform-foot--1--1--8-M3-shaft-base",
+      "samples": 45,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "platform-foot--1--1--8-M3-shaft-platform",
+      "samples": 45,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "platform-foot--1--1--8-side-L-key-base",
+      "samples": 405,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "platform-foot--1--1--8-side-L-key-platform",
+      "samples": 405,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "platform-foot--1--1--8-side-L-key-battery",
+      "samples": 405,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "platform-foot--1--1--8-side-L-key-wheels",
+      "samples": 405,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "platform-foot--1--1-8-tie-base",
+      "samples": 700,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "platform-foot--1--1-8-tie-platform",
+      "samples": 700,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "platform-foot--1--1-8-M3-shaft-base",
+      "samples": 45,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "platform-foot--1--1-8-M3-shaft-platform",
+      "samples": 45,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "platform-foot--1--1-8-side-L-key-base",
+      "samples": 405,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "platform-foot--1--1-8-side-L-key-platform",
+      "samples": 405,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "platform-foot--1--1-8-side-L-key-battery",
+      "samples": 405,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "platform-foot--1--1-8-side-L-key-wheels",
+      "samples": 405,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "platform-foot--1-1--8-tie-base",
+      "samples": 700,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "platform-foot--1-1--8-tie-platform",
+      "samples": 700,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "platform-foot--1-1--8-M3-shaft-base",
+      "samples": 45,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "platform-foot--1-1--8-M3-shaft-platform",
+      "samples": 45,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "platform-foot--1-1--8-side-L-key-base",
+      "samples": 405,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "platform-foot--1-1--8-side-L-key-platform",
+      "samples": 405,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "platform-foot--1-1--8-side-L-key-battery",
+      "samples": 405,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "platform-foot--1-1--8-side-L-key-wheels",
+      "samples": 405,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "platform-foot--1-1-8-tie-base",
+      "samples": 700,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "platform-foot--1-1-8-tie-platform",
+      "samples": 700,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "platform-foot--1-1-8-M3-shaft-base",
+      "samples": 45,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "platform-foot--1-1-8-M3-shaft-platform",
+      "samples": 45,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "platform-foot--1-1-8-side-L-key-base",
+      "samples": 405,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "platform-foot--1-1-8-side-L-key-platform",
+      "samples": 405,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "platform-foot--1-1-8-side-L-key-battery",
+      "samples": 405,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "platform-foot--1-1-8-side-L-key-wheels",
+      "samples": 405,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "platform-foot-1--1--8-tie-base",
+      "samples": 700,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "platform-foot-1--1--8-tie-platform",
+      "samples": 700,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "platform-foot-1--1--8-M3-shaft-base",
+      "samples": 45,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "platform-foot-1--1--8-M3-shaft-platform",
+      "samples": 45,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "platform-foot-1--1--8-side-L-key-base",
+      "samples": 405,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "platform-foot-1--1--8-side-L-key-platform",
+      "samples": 405,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "platform-foot-1--1--8-side-L-key-battery",
+      "samples": 405,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "platform-foot-1--1--8-side-L-key-wheels",
+      "samples": 405,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "platform-foot-1--1-8-tie-base",
+      "samples": 700,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "platform-foot-1--1-8-tie-platform",
+      "samples": 700,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "platform-foot-1--1-8-M3-shaft-base",
+      "samples": 45,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "platform-foot-1--1-8-M3-shaft-platform",
+      "samples": 45,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "platform-foot-1--1-8-side-L-key-base",
+      "samples": 405,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "platform-foot-1--1-8-side-L-key-platform",
+      "samples": 405,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "platform-foot-1--1-8-side-L-key-battery",
+      "samples": 405,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "platform-foot-1--1-8-side-L-key-wheels",
+      "samples": 405,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "platform-foot-1-1--8-tie-base",
+      "samples": 700,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "platform-foot-1-1--8-tie-platform",
+      "samples": 700,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "platform-foot-1-1--8-M3-shaft-base",
+      "samples": 45,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "platform-foot-1-1--8-M3-shaft-platform",
+      "samples": 45,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "platform-foot-1-1--8-side-L-key-base",
+      "samples": 405,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "platform-foot-1-1--8-side-L-key-platform",
+      "samples": 405,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "platform-foot-1-1--8-side-L-key-battery",
+      "samples": 405,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "platform-foot-1-1--8-side-L-key-wheels",
+      "samples": 405,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "platform-foot-1-1-8-tie-base",
+      "samples": 700,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "platform-foot-1-1-8-tie-platform",
+      "samples": 700,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "platform-foot-1-1-8-M3-shaft-base",
+      "samples": 45,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "platform-foot-1-1-8-M3-shaft-platform",
+      "samples": 45,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "platform-foot-1-1-8-side-L-key-base",
+      "samples": 405,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "platform-foot-1-1-8-side-L-key-platform",
+      "samples": 405,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "platform-foot-1-1-8-side-L-key-battery",
+      "samples": 405,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "platform-foot-1-1-8-side-L-key-wheels",
+      "samples": 405,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "motor-tie--1--1-68-wheel-inner-face",
+      "samples": 700,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "motor-tie--1--1-68-all-motor-cases",
+      "samples": 700,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "opposed-motor-ties--1-68-62",
+      "samples": 1,
+      "failures": 0,
+      "passed": true,
+      "minimum_separation_mm": 1.2
+    },
+    {
+      "check": "opposed-motor-ties--1-68-74",
+      "samples": 1,
+      "failures": 0,
+      "passed": true,
+      "minimum_separation_mm": 1.2
+    },
+    {
+      "check": "motor-tie--1--1-80-wheel-inner-face",
+      "samples": 700,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "motor-tie--1--1-80-all-motor-cases",
+      "samples": 700,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "opposed-motor-ties--1-80-62",
+      "samples": 1,
+      "failures": 0,
+      "passed": true,
+      "minimum_separation_mm": 13.2
+    },
+    {
+      "check": "opposed-motor-ties--1-80-74",
+      "samples": 1,
+      "failures": 0,
+      "passed": true,
+      "minimum_separation_mm": 1.2
+    },
+    {
+      "check": "motor-tie--1-1-62-wheel-inner-face",
+      "samples": 700,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "motor-tie--1-1-62-all-motor-cases",
+      "samples": 700,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "motor-tie--1-1-74-wheel-inner-face",
+      "samples": 700,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "motor-tie--1-1-74-all-motor-cases",
+      "samples": 700,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "motor-tie-1--1-68-wheel-inner-face",
+      "samples": 700,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "motor-tie-1--1-68-all-motor-cases",
+      "samples": 700,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "opposed-motor-ties-1-68-62",
+      "samples": 1,
+      "failures": 0,
+      "passed": true,
+      "minimum_separation_mm": 1.2
+    },
+    {
+      "check": "opposed-motor-ties-1-68-74",
+      "samples": 1,
+      "failures": 0,
+      "passed": true,
+      "minimum_separation_mm": 1.2
+    },
+    {
+      "check": "motor-tie-1--1-80-wheel-inner-face",
+      "samples": 700,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "motor-tie-1--1-80-all-motor-cases",
+      "samples": 700,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "opposed-motor-ties-1-80-62",
+      "samples": 1,
+      "failures": 0,
+      "passed": true,
+      "minimum_separation_mm": 13.2
+    },
+    {
+      "check": "opposed-motor-ties-1-80-74",
+      "samples": 1,
+      "failures": 0,
+      "passed": true,
+      "minimum_separation_mm": 1.2
+    },
+    {
+      "check": "motor-tie-1-1-62-wheel-inner-face",
+      "samples": 700,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "motor-tie-1-1-62-all-motor-cases",
+      "samples": 700,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "motor-tie-1-1-74-wheel-inner-face",
+      "samples": 700,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "motor-tie-1-1-74-all-motor-cases",
+      "samples": 700,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "battery-tie--25-base",
+      "samples": 700,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "battery-tie--25-platform",
+      "samples": 700,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "battery-tie-25-base",
+      "samples": 700,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "battery-tie-25-platform",
+      "samples": 700,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "Buffer prototype-bounded-underside-hardware-battery",
+      "samples": 75,
+      "failures": 0,
+      "passed": true,
+      "minimum_clearance_above_maximum_terminal_height_mm": 26
+    },
+    {
+      "check": "Buffer prototype-platform",
+      "samples": 75,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "Buffer prototype-deck-edge-margin",
+      "samples": 4,
+      "failures": 0,
+      "passed": true,
+      "minimum_radial_edge_margin_mm": 12.436
+    },
+    {
+      "check": "Divider prototype-bounded-underside-hardware-battery",
+      "samples": 75,
+      "failures": 0,
+      "passed": true,
+      "minimum_clearance_above_maximum_terminal_height_mm": 26
+    },
+    {
+      "check": "Divider prototype-platform",
+      "samples": 75,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "Divider prototype-deck-edge-margin",
+      "samples": 4,
+      "failures": 0,
+      "passed": true,
+      "minimum_radial_edge_margin_mm": 12.436
+    },
+    {
+      "check": "U10 PCA9685-bounded-underside-hardware-battery",
+      "samples": 75,
+      "failures": 0,
+      "passed": true,
+      "minimum_clearance_above_maximum_terminal_height_mm": 26
+    },
+    {
+      "check": "U10 PCA9685-platform",
+      "samples": 75,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "U10 PCA9685-deck-edge-margin",
+      "samples": 4,
+      "failures": 0,
+      "passed": true,
+      "minimum_radial_edge_margin_mm": 17.723
+    },
+    {
+      "check": "U5 left DRV8833-bounded-underside-hardware-battery",
+      "samples": 75,
+      "failures": 0,
+      "passed": true,
+      "minimum_clearance_above_maximum_terminal_height_mm": 26
+    },
+    {
+      "check": "U5 left DRV8833-platform",
+      "samples": 75,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "U5 left DRV8833-deck-edge-margin",
+      "samples": 4,
+      "failures": 0,
+      "passed": true,
+      "minimum_radial_edge_margin_mm": 59.164
+    },
+    {
+      "check": "U2 motor regulator-bounded-underside-hardware-battery",
+      "samples": 75,
+      "failures": 0,
+      "passed": true,
+      "minimum_clearance_above_maximum_terminal_height_mm": 26
+    },
+    {
+      "check": "U2 motor regulator-platform",
+      "samples": 75,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "U2 motor regulator-deck-edge-margin",
+      "samples": 4,
+      "failures": 0,
+      "passed": true,
+      "minimum_radial_edge_margin_mm": 64.847
+    },
+    {
+      "check": "U3 servo regulator-bounded-underside-hardware-battery",
+      "samples": 75,
+      "failures": 0,
+      "passed": true,
+      "minimum_clearance_above_maximum_terminal_height_mm": 26
+    },
+    {
+      "check": "U3 servo regulator-platform",
+      "samples": 75,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "U3 servo regulator-deck-edge-margin",
+      "samples": 4,
+      "failures": 0,
+      "passed": true,
+      "minimum_radial_edge_margin_mm": 31.838
+    },
+    {
+      "check": "U6 right DRV8833-bounded-underside-hardware-battery",
+      "samples": 75,
+      "failures": 0,
+      "passed": true,
+      "minimum_clearance_above_maximum_terminal_height_mm": 26
+    },
+    {
+      "check": "U6 right DRV8833-platform",
+      "samples": 75,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "U6 right DRV8833-deck-edge-margin",
+      "samples": 4,
+      "failures": 0,
+      "passed": true,
+      "minimum_radial_edge_margin_mm": 28.798
+    },
+    {
+      "check": "U11 head DRV8833-bounded-underside-hardware-battery",
+      "samples": 75,
+      "failures": 0,
+      "passed": true,
+      "minimum_clearance_above_maximum_terminal_height_mm": 26
+    },
+    {
+      "check": "U11 head DRV8833-platform",
+      "samples": 75,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "U11 head DRV8833-deck-edge-margin",
+      "samples": 4,
+      "failures": 0,
+      "passed": true,
+      "minimum_radial_edge_margin_mm": 36.306
+    },
+    {
+      "check": "U7 amplifier-bounded-underside-hardware-battery",
+      "samples": 75,
+      "failures": 0,
+      "passed": true,
+      "minimum_clearance_above_maximum_terminal_height_mm": 26
+    },
+    {
+      "check": "U7 amplifier-platform",
+      "samples": 75,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "U7 amplifier-deck-edge-margin",
+      "samples": 4,
+      "failures": 0,
+      "passed": true,
+      "minimum_radial_edge_margin_mm": 18.155
+    },
+    {
+      "check": "U4 logic regulator-bounded-underside-hardware-battery",
+      "samples": 75,
+      "failures": 0,
+      "passed": true,
+      "minimum_clearance_above_maximum_terminal_height_mm": 26
+    },
+    {
+      "check": "U4 logic regulator-platform",
+      "samples": 75,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "U4 logic regulator-deck-edge-margin",
+      "samples": 4,
+      "failures": 0,
+      "passed": true,
+      "minimum_radial_edge_margin_mm": 12.838
+    },
+    {
+      "check": "Buffer prototype-versus-Divider prototype",
+      "samples": 1,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "Buffer prototype-versus-U10 PCA9685",
+      "samples": 1,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "Buffer prototype-versus-U5 left DRV8833",
+      "samples": 1,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "Buffer prototype-versus-U2 motor regulator",
+      "samples": 1,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "Buffer prototype-versus-U3 servo regulator",
+      "samples": 1,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "Buffer prototype-versus-U6 right DRV8833",
+      "samples": 1,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "Buffer prototype-versus-U11 head DRV8833",
+      "samples": 1,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "Buffer prototype-versus-U7 amplifier",
+      "samples": 1,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "Buffer prototype-versus-U4 logic regulator",
+      "samples": 1,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "Divider prototype-versus-U10 PCA9685",
+      "samples": 1,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "Divider prototype-versus-U5 left DRV8833",
+      "samples": 1,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "Divider prototype-versus-U2 motor regulator",
+      "samples": 1,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "Divider prototype-versus-U3 servo regulator",
+      "samples": 1,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "Divider prototype-versus-U6 right DRV8833",
+      "samples": 1,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "Divider prototype-versus-U11 head DRV8833",
+      "samples": 1,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "Divider prototype-versus-U7 amplifier",
+      "samples": 1,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "Divider prototype-versus-U4 logic regulator",
+      "samples": 1,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "U10 PCA9685-versus-U5 left DRV8833",
+      "samples": 1,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "U10 PCA9685-versus-U2 motor regulator",
+      "samples": 1,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "U10 PCA9685-versus-U3 servo regulator",
+      "samples": 1,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "U10 PCA9685-versus-U6 right DRV8833",
+      "samples": 1,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "U10 PCA9685-versus-U11 head DRV8833",
+      "samples": 1,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "U10 PCA9685-versus-U7 amplifier",
+      "samples": 1,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "U10 PCA9685-versus-U4 logic regulator",
+      "samples": 1,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "U5 left DRV8833-versus-U2 motor regulator",
+      "samples": 1,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "U5 left DRV8833-versus-U3 servo regulator",
+      "samples": 1,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "U5 left DRV8833-versus-U6 right DRV8833",
+      "samples": 1,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "U5 left DRV8833-versus-U11 head DRV8833",
+      "samples": 1,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "U5 left DRV8833-versus-U7 amplifier",
+      "samples": 1,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "U5 left DRV8833-versus-U4 logic regulator",
+      "samples": 1,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "U2 motor regulator-versus-U3 servo regulator",
+      "samples": 1,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "U2 motor regulator-versus-U6 right DRV8833",
+      "samples": 1,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "U2 motor regulator-versus-U11 head DRV8833",
+      "samples": 1,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "U2 motor regulator-versus-U7 amplifier",
+      "samples": 1,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "U2 motor regulator-versus-U4 logic regulator",
+      "samples": 1,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "U3 servo regulator-versus-U6 right DRV8833",
+      "samples": 1,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "U3 servo regulator-versus-U11 head DRV8833",
+      "samples": 1,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "U3 servo regulator-versus-U7 amplifier",
+      "samples": 1,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "U3 servo regulator-versus-U4 logic regulator",
+      "samples": 1,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "U6 right DRV8833-versus-U11 head DRV8833",
+      "samples": 1,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "U6 right DRV8833-versus-U7 amplifier",
+      "samples": 1,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "U6 right DRV8833-versus-U4 logic regulator",
+      "samples": 1,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "U11 head DRV8833-versus-U7 amplifier",
+      "samples": 1,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "U11 head DRV8833-versus-U4 logic regulator",
+      "samples": 1,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "U7 amplifier-versus-U4 logic regulator",
+      "samples": 1,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "skirt-lowers-over-populated-chassis",
+      "samples": 32190,
+      "failures": 0,
+      "passed": true,
+      "conservative_radial_clearance_mm": 11.615,
+      "method": "Continuous conservative XY projection bound for all triangles that can reach the chassis"
+    },
+    {
+      "check": "M4-driver-0-platform",
+      "samples": 2016,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "M4-driver-0-skirt",
+      "samples": 2016,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "M4-driver-0-Buffer prototype",
+      "samples": 2016,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "M4-driver-0-Divider prototype",
+      "samples": 2016,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "M4-driver-0-U10 PCA9685",
+      "samples": 2016,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "M4-driver-0-U5 left DRV8833",
+      "samples": 2016,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "M4-driver-0-U2 motor regulator",
+      "samples": 2016,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "M4-driver-0-U3 servo regulator",
+      "samples": 2016,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "M4-driver-0-U6 right DRV8833",
+      "samples": 2016,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "M4-driver-0-U11 head DRV8833",
+      "samples": 2016,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "M4-driver-0-U7 amplifier",
+      "samples": 2016,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "M4-driver-0-U4 logic regulator",
+      "samples": 2016,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "M4-driver-90-platform",
+      "samples": 2016,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "M4-driver-90-skirt",
+      "samples": 2016,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "M4-driver-90-Buffer prototype",
+      "samples": 2016,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "M4-driver-90-Divider prototype",
+      "samples": 2016,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "M4-driver-90-U10 PCA9685",
+      "samples": 2016,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "M4-driver-90-U5 left DRV8833",
+      "samples": 2016,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "M4-driver-90-U2 motor regulator",
+      "samples": 2016,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "M4-driver-90-U3 servo regulator",
+      "samples": 2016,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "M4-driver-90-U6 right DRV8833",
+      "samples": 2016,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "M4-driver-90-U11 head DRV8833",
+      "samples": 2016,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "M4-driver-90-U7 amplifier",
+      "samples": 2016,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "M4-driver-90-U4 logic regulator",
+      "samples": 2016,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "M4-driver-180-platform",
+      "samples": 2016,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "M4-driver-180-skirt",
+      "samples": 2016,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "M4-driver-180-Buffer prototype",
+      "samples": 2016,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "M4-driver-180-Divider prototype",
+      "samples": 2016,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "M4-driver-180-U10 PCA9685",
+      "samples": 2016,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "M4-driver-180-U5 left DRV8833",
+      "samples": 2016,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "M4-driver-180-U2 motor regulator",
+      "samples": 2016,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "M4-driver-180-U3 servo regulator",
+      "samples": 2016,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "M4-driver-180-U6 right DRV8833",
+      "samples": 2016,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "M4-driver-180-U11 head DRV8833",
+      "samples": 2016,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "M4-driver-180-U7 amplifier",
+      "samples": 2016,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "M4-driver-180-U4 logic regulator",
+      "samples": 2016,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "M4-driver-270-platform",
+      "samples": 2016,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "M4-driver-270-skirt",
+      "samples": 2016,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "M4-driver-270-Buffer prototype",
+      "samples": 2016,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "M4-driver-270-Divider prototype",
+      "samples": 2016,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "M4-driver-270-U10 PCA9685",
+      "samples": 2016,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "M4-driver-270-U5 left DRV8833",
+      "samples": 2016,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "M4-driver-270-U2 motor regulator",
+      "samples": 2016,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "M4-driver-270-U3 servo regulator",
+      "samples": 2016,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "M4-driver-270-U6 right DRV8833",
+      "samples": 2016,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "M4-driver-270-U11 head DRV8833",
+      "samples": 2016,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "M4-driver-270-U7 amplifier",
+      "samples": 2016,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "M4-driver-270-U4 logic regulator",
+      "samples": 2016,
+      "failures": 0,
+      "passed": true
+    },
+    {
+      "check": "inputs-unchanged-through-checks",
+      "samples": 8,
+      "failures": 0,
+      "passed": true
+    }
+  ],
+  "limits": [
+    "Finite sampling is not a continuous exact collision proof.",
+    "Actual PCB holes, connectors, wire routes and tie heads require bench fitting.",
+    "Clamp padding, captive-nut fit, SLA terminals and cable bend require physical checks.",
+    "No physical strength, impact, tipping, wheel grip or loaded drive test has been performed."
+  ]
+}

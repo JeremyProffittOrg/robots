@@ -1,5 +1,5 @@
 net,origin,destination,wire_awg,color,note
-BAT_POS,B1.PP30+,F1.IN,18,red,7.5A fuse within 100mm of pack
+BAT_POS,B1.PP30+,F1.IN,18,red,Select ONE battery on sheet05; single F1 7.5A within100mm of SLA positive terminal including adapter or Bioenno factory connector; never connect packs together
 BAT_FUSED,F1.OUT,S1.1,18,red,
 PACK_SW,S1.3,S2.1,18,red,NKK S1A ON connects terminals1 and3
 PACK_SW,S1.3,F4.IN,18,red,NKK S1A ON connects terminals1 and3

@@ -2,19 +2,19 @@
 <style>text{font-family:Arial,sans-serif;fill:#10263a} .title{font-size:30px;font-weight:bold} .head{font-size:20px;font-weight:bold} .body{font-size:17px} .small{font-size:15px} .net{font-family:monospace;font-size:16px;fill:#004879} .wire{stroke:#155a85;stroke-width:2;fill:none}</style>
 <rect width="1600" height="1100" fill="white"/>
 <text x="35" y="45" font-family="Arial, sans-serif" font-size="30" font-weight="bold" fill="#10263a">01 / Power distribution and isolation</text>
-<text x="35" y="77" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">B1 = Bioenno BLF-1206A + matched BPC-1502DC charger. All grounds join at GROUND_STAR.</text>
+<text x="35" y="77" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">B1 = ONE battery: Bioenno 6 Ah OR SLA 7 Ah OR SLA 14 Ah. Adapter and charger choices: sheet 05.</text>
 <rect x="35" y="115" width="370" height="150" rx="6" fill="#f1f7fb" stroke="#46677d" stroke-width="1.5"/>
-<text x="50" y="143" font-family="Arial, sans-serif" font-size="20" font-weight="bold" fill="#10263a">B1 / 12V 6Ah LiFePO4</text>
-<text x="50" y="171" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">72Wh nominal; 12A continuous maximum</text>
-<text x="50" y="195" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">PP30 discharge + / -; protected pack</text>
-<text x="50" y="219" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">Separate factory DC charge connector</text>
+<text x="50" y="143" font-family="Arial, sans-serif" font-size="20" font-weight="bold" fill="#10263a">B1 / ONE 12 V battery</text>
+<text x="50" y="171" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">Bioenno 6 Ah or Power-Sonic 7/14 Ah</text>
+<text x="50" y="195" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">Same keyed PP30 discharge input</text>
+<text x="50" y="219" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">Do not join batteries or chargers</text>
 <text x="50" y="243" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">REMOVE pack from robot to charge</text>
 <rect x="470" y="115" width="400" height="150" rx="6" fill="#f1f7fb" stroke="#46677d" stroke-width="1.5"/>
 <text x="485" y="143" font-family="Arial, sans-serif" font-size="20" font-weight="bold" fill="#10263a">F1 + S1 / MAIN</text>
 <text x="485" y="171" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">B1.PP30+ -&gt; F1 7.5A -&gt; S1.1</text>
 <text x="485" y="195" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">S1.3 -&gt; PACK_SW</text>
 <text x="485" y="219" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">NKK S1A, ON joins 1 and 3</text>
-<text x="485" y="243" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">F1 within 100mm of battery lead</text>
+<text x="485" y="243" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">F1 close to battery: see sheet05</text>
 <path d="M405,185 L470,185" stroke="#155a85" stroke-width="2" fill="none"/>
 <rect x="930" y="115" width="620" height="150" rx="6" fill="#f1f7fb" stroke="#46677d" stroke-width="1.5"/>
 <text x="945" y="143" font-family="Arial, sans-serif" font-size="20" font-weight="bold" fill="#10263a">S2 / ACTUATORS OFF</text>
@@ -57,8 +57,8 @@
 <text x="50" y="658" font-family="Arial, sans-serif" font-size="20" font-weight="bold" fill="#10263a">ADC39 / battery voltage divider</text>
 <text x="50" y="686" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">PACK_SW -&gt; R10 100k -&gt; BAT_ADC -&gt; R11 22k -&gt; GND</text>
 <text x="50" y="710" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">BAT_ADC -&gt; GPIO39; C10 100nF BAT_ADC to GND</text>
-<text x="50" y="734" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">At 14.6V: ADC = 2.633V. Scale = 122 / 22 = 5.54545</text>
-<text x="50" y="758" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">Cutoff 11.2V; re-arm above 12.0V; calibrate with meter</text>
+<text x="50" y="734" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">At 14.7 V: 2.651 V nominal / 2.695 V worst 1%; scale 122/22</text>
+<text x="50" y="758" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">Stop 11.2 V; re-arm 12.0 V; logic remains on after stop</text>
 <rect x="800" y="630" width="750" height="150" rx="6" fill="#f1f7fb" stroke="#46677d" stroke-width="1.5"/>
 <text x="815" y="658" font-family="Arial, sans-serif" font-size="20" font-weight="bold" fill="#10263a">GPIO36 / actuator power sense</text>
 <text x="815" y="686" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">5V_MOTOR -&gt; R12 10k -&gt; ACT_OK -&gt; R13 15k -&gt; GND</text>

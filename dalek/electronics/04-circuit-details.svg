@@ -2,11 +2,11 @@
 <style>text{font-family:Arial,sans-serif;fill:#10263a} .title{font-size:30px;font-weight:bold} .head{font-size:20px;font-weight:bold} .body{font-size:17px} .small{font-size:15px} .net{font-family:monospace;font-size:16px;fill:#004879} .wire{stroke:#155a85;stroke-width:2;fill:none}</style>
 <rect width="1600" height="1250" fill="white"/>
 <text x="35" y="45" font-family="Arial, sans-serif" font-size="30" font-weight="bold" fill="#10263a">04 / Circuit details: power, sensing and bridge outputs</text>
-<text x="35" y="77" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">Conventional connection symbols. Dots are junctions. Matching net labels join all four sheets.</text>
+<text x="35" y="77" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">Conventional connection symbols. Dots are junctions. Matching net labels join all five sheets.</text>
 <text x="40" y="140" font-family="Arial, sans-serif" font-size="20" font-weight="bold" fill="#10263a">A. Battery fuse and independent motion disconnect</text>
 <rect x="40" y="185" width="200" height="115" rx="6" fill="#f1f7fb" stroke="#46677d" stroke-width="1.5"/>
-<text x="55" y="213" font-family="Arial, sans-serif" font-size="20" font-weight="bold" fill="#10263a">B1</text>
-<text x="55" y="241" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">BLF-1206A</text>
+<text x="55" y="213" font-family="Arial, sans-serif" font-size="20" font-weight="bold" fill="#10263a">B1 / select ONE</text>
+<text x="55" y="241" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">Battery: sheet05</text>
 <text x="55" y="265" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">PP30 + / -</text>
 <path d="M240,215 L285,215" stroke="#155a85" stroke-width="2" fill="none"/>
 <path d="M285,215 L297,215" stroke="#155a85" stroke-width="2" fill="none"/>
@@ -68,7 +68,7 @@
 <path d="M534,567 L566,567" stroke="#155a85" stroke-width="2" fill="none"/>
 <path d="M540,574 L560,574" stroke="#155a85" stroke-width="2" fill="none"/>
 <path d="M546,581 L554,581" stroke="#155a85" stroke-width="2" fill="none"/>
-<text x="40" y="620" font-family="Arial, sans-serif" font-size="15" font-weight="normal" fill="#10263a">14.6V x22/(100+22) =2.633V; firmware multiplier5.54545</text>
+<text x="40" y="620" font-family="Arial, sans-serif" font-size="15" font-weight="normal" fill="#10263a">14.7 V: 2.651 V nominal / 2.695 V worst 1%; multiplier 5.54545</text>
 <text x="825" y="450" font-family="Arial, sans-serif" font-size="20" font-weight="bold" fill="#10263a">C. Motion power sense / GPIO36</text>
 <text x="825" y="500" font-family="monospace" font-size="16" font-weight="normal" fill="#004879">5V_MOTOR</text>
 <path d="M935,495 L970,495" stroke="#155a85" stroke-width="2" fill="none"/>

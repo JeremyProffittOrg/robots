@@ -140,7 +140,8 @@ def csv_section(path, title):
 def main():
     OUT.parent.mkdir(parents=True, exist_ok=True)
     docs = [ROOT / 'docs' / name for name in ['assembly.md', 'mechanical.md', 'firmware.md',
-                                            'electronics-research.md', 'research.md', 'appearance-research.md']]
+                                            'electronics-research.md', 'battery-options-research.md',
+                                            'research.md', 'appearance-research.md']]
     for path in docs:
         if not path.is_file():
             raise FileNotFoundError(path)
@@ -165,12 +166,14 @@ def main():
                                                  DRAWING_PAGE[1]-88,id='l')],
                      onPage=page_footer, pagesize=DRAWING_PAGE)])
     story = [para('Dalek round-body design and assembly', 'Chapter'),
-             para('Nine STL designs form a reinforced circular motor base, a one-piece taller skirt, body sections that stack '
-                  'vertically, concealed arm mechanisms and an adjustable head friction drive. '
-                  'The base fits the Bambu Lab H2D in one print.'),
+             para('MOUNT-1 uses ten STL designs for a reinforced circular base, a213mm skirt, a combined186mm shoulder and neck, '
+                  'smaller concealed arm mechanisms and an adjustable head friction drive. '
+                  'Four printed motor clamps use four screws total; motor ties can replace those clamps. '
+                  'The screw-clamp option needs fourteen prints, and the motor-tie option needs ten.'),
              para('The robot keeps four TT drive motors, a rear ESP32 display, Wi-Fi access point and network controls, '
                   'circular arm motion, a fifth TT motor driving the head through a friction wheel, and 24 original MP3 voices. '
-                  'The package includes editable CAD, circuits, mounting hardware lists and assembly instructions.'),
+                  'A single printed board platform with legs fits over the original battery or the specified7Ah/14Ah lead-acid alternatives. '
+                  'The package includes editable CAD, five circuit sheets, both retention options and assembly instructions.'),
              para('This is a digitally checked design for a first prototype. Physical fit, loaded traction, '
                   'supply temperature and stopping behavior require the tests in this manual. Do not skip those gates.'),
              Spacer(1, 10)]

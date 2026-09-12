@@ -1,4 +1,4 @@
-"""Export and validate the nine connected ROUND-9 designs. Existing OpenSCAD/trimesh only."""
+"""Export and validate the ten MOUNT-1 designs. Existing OpenSCAD/trimesh only."""
 import argparse
 import csv
 import json
@@ -10,15 +10,16 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 
 ROOT = Path(__file__).resolve().parents[1]
 PARTS = {
-    "01_base": (1, "PETG", "Floor down; single nozzle", "Diameter300 circular unibody;6mm floor;4mm wall/ribs;6walls6top/bottom40%gyroid;8mmbrim;normal auto supports below wheel-well roofs;remove through bottom wells"),
-    "02_skirt": (1, "PLA", "Large opening down", "One complete210mm two-slope body plus3mm registry; four hemisphere rows and integral tapered middle rib; no middle bolted joint;4walls15%infill;normal auto supports"),
-    "04_shoulder": (1, "PETG", "Bottom flange down", "Concealed servo gunboxes spherical sockets slats rear display frame; normal auto supports inside gunboxes;4walls25%infill"),
-    "05_neck": (1, "PETG", "Bottom flange down", "Integrated three rings grille bearing tower radial slide deck jackscrew lug; support deck underside;4walls30%infill"),
+    "01_base": (1, "PETG", "Floor down; single nozzle", "Diameter300 circular unibody;6mm floor;4mm wall/ribs;6walls6top/bottom40%gyroid;8mmbrim;normal auto supports for captured pockets and ledges;clear through wheel wells"),
+    "02_skirt": (1, "PLA", "Large opening down", "One210mm two-slope body plus3mm register;four hemisphere rows and integral rib;captured top-joint M4 nuts;4walls15%infill;normal auto supports"),
+    "04_shoulder": (1, "PETG", "Bottom flange down", "Shoulder and neck one print; concealed compact servo boxes; integrated bearing tower and fixed friction deck; assemble through open bottom before seating;4walls25%infill;normal auto supports"),
     "06_head": (1, "PLA", "Drum rim down", "Dome eye discs tilted lamps hub friction drum spokes integrated; normal auto supports inside dome under eye and hub;4walls15%infill"),
     "07_pitch_carrier": (2, "PETG", "Floor down", "Print this same file twice;4walls30%infill; actual horn and servo fit gate"),
     "08_plunger_arm": (1, "PLA", "As exported; ensure on bed", "Spherical root and telescoping rings integrated; support cup and root; supplied servo horn; decorative arm only"),
     "09_emitter_arm": (1, "PLA", "As exported; ensure on bed", "Spherical root eight rods muzzle rings integrated; normal auto supports; supplied servo horn; decorative arm only"),
     "10_head_motor_carriage": (1, "PETG", "Floor down", "Radial slots padded TT saddle and cable-tie slots;4walls30%infill"),
+    "11_motor_clamp": (4, "PETG", "As exported", "Four identical hook clamps;one M3 screw each;omit all four clamps for alternative two-ties-per-motor retention;4walls30%infill"),
+    "12_electronics_platform": (1, "PETG", "Deck down; legs up", "One216mm platform with integral legs above battery;invert for assembly;6mm deck;4walls30%infill;four feet retained by screws or ties"),
 }
 
 def openscad_path():
@@ -58,8 +59,8 @@ def validate():
         okay=bool(mesh.is_watertight and mesh.is_winding_consistent and mesh.volume>0 and components==1 and fit)
         rows.append(dict(part=name,quantity=qty,material=material,x_mm=round(float(size[0]),3),y_mm=round(float(size[1]),3),z_mm=round(float(size[2]),3),volume_mm3=round(float(mesh.volume),2),solid_mass_g=round(float(mesh.volume)/1000*(1.27 if material=="PETG" else 1.24),2),watertight=bool(mesh.is_watertight),connected_components=components,enclosed_void_surfaces=int(sum(m.volume<0 for m in surfaces)),brim_mm_per_side=brim,print_rotation_z_degrees=rotation,h2d_single_nozzle_with_brim=fit,pass_check=okay,orientation=orientation,notes=notes))
     with (ROOT/"bom/printed-parts.csv").open("w",newline="",encoding="utf-8") as f:
-        writer=csv.DictWriter(f,fieldnames=rows[0].keys());writer.writeheader();writer.writerows(rows)
-    report={"design":"ROUND-9","mesh_count":len(rows),"maximum_stl_files":10,"all_pass":all(r["pass_check"] for r in rows),"printed_piece_count":sum(r["quantity"] for r in rows),"solid_material_upper_bound_g":round(sum(r["quantity"]*r["solid_mass_g"] for r in rows),1),"bed_envelope_mm":[325,320,325],"body_height_limit_with_5mm_margin_mm":320,"base_brim_envelope_mm":[316,316],"base_print_rotation_z_degrees":0,"nozzle_mode":"single","physical_fit_verified":False,"physical_strength_verified":False,"parts":rows}
+        writer=csv.DictWriter(f,fieldnames=rows[0].keys(),lineterminator="\n");writer.writeheader();writer.writerows(rows)
+    report={"design":"MOUNT-1","mesh_count":len(rows),"maximum_stl_files":10,"all_pass":all(r["pass_check"] for r in rows) and len(rows)<=10,"printed_piece_count":sum(r["quantity"] for r in rows),"printed_piece_count_motor_tie_option":sum(r["quantity"] for r in rows if r["part"]!="11_motor_clamp"),"solid_material_upper_bound_g":round(sum(r["quantity"]*r["solid_mass_g"] for r in rows),1),"bed_envelope_mm":[325,320,325],"body_height_limit_with_5mm_margin_mm":320,"base_brim_envelope_mm":[316,316],"base_print_rotation_z_degrees":0,"nozzle_mode":"single","physical_fit_verified":False,"physical_strength_verified":False,"parts":rows}
     (ROOT/"cad/validation.json").write_text(json.dumps(report,indent=2)+"\n",encoding="utf-8")
     print(json.dumps({k:v for k,v in report.items() if k!="parts"},indent=2),flush=True)
     bad=[r["part"] for r in rows if not r["pass_check"]]

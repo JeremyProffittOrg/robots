@@ -2,8 +2,9 @@
   "status": "engineering estimates; not measurements of a built robot",
   "battery_nominal_Wh": 72,
   "battery_design_usable_fraction": 0.75,
-  "battery_max_charge_V": 14.6,
-  "battery_adc_V_at_max": 2.6327868852459018,
+  "battery_max_charge_V": 14.7,
+  "battery_adc_V_at_max": 2.6508196721311474,
+  "battery_adc_V_at_max_worst_1pct": 2.694555353901996,
   "battery_adc_scale": 5.545454545454546,
   "battery_stop_V": 11.2,
   "battery_rearm_V": 12.0,
@@ -36,6 +37,61 @@
     "Stall torque is not continuous torque. Current-to-torque interpolation is an approximation.",
     "Skid steering scrub can dominate rolling resistance; confirm turns on actual flooring.",
     "No encoder exists; PWM duty does not prove ground speed.",
-    "Servo current budget is an allowance because authoritative stall-current data is missing."
+    "Servo current budget is an allowance because authoritative stall-current data is missing.",
+    "Legacy runtime estimates apply only to the72Wh Bioenno pack;SLA capacity depends on load and cutoff.",
+    "Low voltage stops motion only;MAIN OFF and battery unplugged are required after a stop and between uses."
+  ],
+  "battery_choice_rule": "ONE selected battery;never connect options in series or parallel;charge outside robot",
+  "mass_baseline": {
+    "source": "cad/h2d-slice-check.json",
+    "design": "MOUNT-1",
+    "installed_plastic_kg": 2.46959,
+    "five_motors_five_wheels_four_servos_kg": 0.39899999999999997,
+    "remaining_hardware_and_finish": "NOT INCLUDED;weigh complete robot;not a motor payload rating"
+  },
+  "battery_options": [
+    {
+      "model": "Bioenno BLF-1206A",
+      "chemistry": "LiFePO4",
+      "nominal_Ah": 6,
+      "nominal_Wh": 72,
+      "battery_mass_kg": 0.7,
+      "padded_envelope_XYZ_mm": [
+        70,
+        114,
+        76
+      ],
+      "charger": "BPC-1502DC14.6V2A",
+      "partial_robot_mass_kg": 3.5685900000000004
+    },
+    {
+      "model": "Power-Sonic PS-1270 F2",
+      "chemistry": "sealed AGM lead acid",
+      "nominal_Ah": 7,
+      "nominal_Wh": 84,
+      "battery_mass_kg": 1.97,
+      "max_bare_envelope_XYZ_mm": [
+        67,
+        153,
+        102
+      ],
+      "charger": "PSC-121000ACX12V1A or PSC-12500ACX",
+      "partial_robot_mass_kg": 4.83859
+    },
+    {
+      "model": "Power-Sonic PS-12140 F2",
+      "chemistry": "sealed AGM lead acid",
+      "nominal_Ah": 14,
+      "nominal_Wh": 168,
+      "battery_mass_kg": 3.78,
+      "older_variant_mass_kg": 4.2,
+      "max_bare_envelope_XYZ_mm": [
+        100,
+        153,
+        103
+      ],
+      "charger": "PSC-121000ACX12V1A",
+      "partial_robot_mass_kg": 6.64859
+    }
   ]
 }

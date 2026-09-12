@@ -1,79 +1,40 @@
 # Digital verification and physical limits
 
-ROUND-9 combines the lower and upper skirts into one 213 mm print. The robot remains nominally 563.8 mm tall. The revision removes one printed piece and one bolted interface; it does not establish a measured increase in strength. Physical fit, adhesion, base strength, loaded driving and stopping still require the commissioning gates in `assembly.md`.
+MOUNT-1 has ten STL designs: fourteen prints with the four motor clamps, or ten when motor ties replace them. The platform and its legs form one print. Shoulder and neck form one186mm print. The skirt is213mm and the robot remains563.8mm tall. Both motor and servo-case retention options are documented.
 
-## Reference review and preserved behavior
+## Geometry and access
 
-The existing 100-image reference inventory and appearance review remain applicable. Each source has its original URL, dimensions, file/pixel hashes, observation and design implication. No reference image has been redistributed with the package.
+The following commands passed from C:/dev/robots/dalek. Their reports identify exact current mesh hashes.
 
-Eight other STL designs are byte-identical to ROUND-10. They account for nine physical prints because the pitch carrier is used twice. Firmware, circuits, original MP3s, the four ground drives, rear T-Display, concealed arm mechanisms and adjustable head friction drive are unchanged. PCB mounting hardware and access instructions are updated for the deeper shell.
+- python scripts/export_cad.py --check-only: ten consistently wound, watertight meshes, each one connected positive solid. All fit the stock H2D single-nozzle envelope and recorded brim allowances. Solid-material volume bound:3,202.1g, not sliced or measured mass.
+- python scripts/check_base_mounts.py:309 checks and1,117,361 evaluations. Covers motor/wheel installation, four hook clamps/screws, alternative ties, both platform-foot options, batteries, populated terminal clearance, captured nuts, tools and skirt installation.
+- python scripts/check_upper_mounts.py:68 checks and1,650,576 samples. Covers servo ears and retention, yaw-servo entry, bounded screw/nut tools, detached-arm paths, head/bearing entry, speaker clearance and all four body-joint driver approaches.
+- python scripts/check_arm_assembly.py:8 checks and417,648 samples. Both carriers enter through the left lower opening before moving to their final positions. Both supported arms are included.
+- python scripts/check_mechanical.py:110 checks and374,697 samples. Includes wheels, batteries, skirt interfaces, arm extremes and head adjustment. The30mm outer fabric radius gives zero visible servo targets in4,800 current-body rays.
+- python scripts/mesh_queries.py:4,400 samples and zero differences from the original query on the final upper mesh. Two near-axis rays must agree; disagreements use the original query. Tolerances are unchanged.
 
-## Printable geometry
+Finite sampling does not prove every possible continuous pose. Skirt lowering separately uses a conservative continuous projection bound. Actual servo shaft offsets and ear holes are not fully dimensioned by the maker. The guide specifies measured fit gates and slotted supports.
 
-Command:
+## Printing and mass
 
-```powershell
-python scripts/export_cad.py --check-only
-```
+The H2D script uses isolated installed Bambu Studio settings and never contacts a printer. Eight changed designs were newly sliced, with exact unchanged records retained for the head and carriage. All ten source hashes and deposited heights match. All generated deposition fits the stock left325 x320mm area. Requested brim settings do not prove a separate brim was generated; the report records actual feature output.
 
-Result: nine watertight, consistently wound STL designs, each one connected positive solid, for ten printed pieces. The total solid-material upper bound is 2995.9 g. This is a mesh-volume calculation, not measured or sliced print mass.
+The clamp option predicts4,212.07g filament,2,469.59g installed plastic and124.49hours of sequential printing. The skirt uses1,040.72g PLA and predicts24 hours8 minutes10 seconds: allow1.15kg with reserve. The upper shell uses1,235.49g PETG and predicts39 hours10 minutes11 seconds: allow1.36kg. Both need sufficient capacity or compatible filament changes.
 
-The new `02_skirt.stl` is 300.331848 x 300.331848 x 213 mm. Its SHA256 is `ff1baa0536e36c0730d69f5cf8004e069f4fe4e430026d6f3e6bc734a125146e`. All 39,728 faces are nondegenerate and every edge has two adjacent faces. The final mesh replaced a rejected export with a microscopic internal surface at the old rib-cone junction. A single revolved polygon now forms the reinforcing rib.
+The electrical generator reads the current installed-plastic prediction. Including only plastic, five motors/wheels, four servos and the battery gives incomplete totals of3.569kg Bioenno,4.839kg7Ah SLA and6.649kg14Ah SLA. Other electronics, bearings, fasteners, wiring, padding and finish must be added. Actual weighing is required.
 
-The old lower and upper skirt STLs are removed. The new part retains both outer slopes, all four hemisphere rows, trim and the visible middle band. It retains the base and shoulder interfaces but replaces the middle bolted flanges with an integral tapered rib. Comparison of 8,496 exterior rays against the former pair differed by at most 0.000004554 mm. The other eight STL hashes are unchanged.
+## Circuits, control and media
 
-The 213 mm part is below the 320 mm maximum-minus-5 mm height target. Its requested 5 mm brim allowance also fits the H2D footprint. The full printer envelope is not stretched or scaled to obtain this result. See `cad/validation.json` and `bom/printed-parts.csv`.
+python electronics/generate.py passed185 wiring rows, five parseable circuit sheets and three battery cases. All pre-existing nets, endpoints, wire gauges and colors remain unchanged. The battery-input note and fifth sheet explain the single fused SLA adapter and matched chargers. Regulator outputs and the11.2V stop/12.0V re-arm thresholds remain unchanged. Low voltage stops motion but leaves logic powered: switch MAIN off and unplug after a low-battery stop and between uses.
 
-## Mechanical and assembly access checks
+Firmware, pins and24 original MP3 files are unchanged. Prior compile/control-test evidence applies to those same bytes. The earlier build reported45,416bytes RAM,995,025bytes application flash and a2,097,152-byte filesystem image. No new physical control result is claimed.
 
-Commands:
+python scripts/render_drawings.py passed16 engineering PNGs, five CAD previews and the ZIP. It checks quantities, transforms, board separation and unchanged source hashes. All final views were inspected. Paint boundaries use render-plane cuts without changing STL surfaces.
 
-```powershell
-python scripts/check_mechanical.py
-python scripts/check_skirt_access.py
-```
+python scripts/render_video.py passed the new120-second assembly and simulated-operation video:2,880frames,1920 x1080,24fps,H.264 video,AAC audio,full FFmpeg decode and47 unchanged source hashes. Narration timing rejects overrunning clips. The video includes both motor options, battery choices, the platform, lower-entry upper assembly, adjustable head drive and simulated motion. It is not physical test footage.
 
-The complete current mechanical run passed 118 checks across 554,129 samples against the nine current STL hashes. This includes merged-skirt height, interfaces, bore and long-driver checks, unchanged mechanisms and 4,800 current-body sight rays with no visible servo targets. These finite samples are not an exact continuous collision proof. Results and limits are in `cad/mechanical-checks.json` and `docs/revision-review.md`.
+The PDF is built from current guides, BOM and five circuit sheets, then rendered and visually checked before publication. The existing GitHub Actions/OIDC workflow publishes exact committed PDF/video bytes to private S3 and checks full downloaded hashes. The requested HTML email contains the PDF and a tested video link with explicit expiry. Workflow and SES acceptance identifiers are recorded in the root execution plan.
 
-The focused access report passes 61 checks across 868,363 sample evaluations. Twenty affected plate/retained-hardware checks were rerun after the final insertion-height change; 41 unchanged tool and battery checks were retained only after their mesh hashes matched. The final incremental command was `python scripts/check_skirt_access.py --plates-only`. A full run remains available. See `cad/skirt-access-checks.json`.
+## Physical acceptance
 
-Access relies on the specified 250 mm driver, crowfoot, universal joint and extension. The crowfoot holds the M4 nut while the screw turns. The M2.5 plate nuts require a 5 mm socket. Actual tool profiles must fit the documented conservative envelopes; a tool name alone does not prove clearance.
-
-Retained PCB nuts, washers and adhesive must project no more than 3 mm below the FR4. The plate underside travels at base-local Z44 before moving outward, then lowers to Z34. All underside fittings must remain within the plate outline and wholly outside the 8 mm-radius keepouts around the eight plate-to-base mounting axes. Actual PCB hole locations are a physical template-fit gate. The checker does not invent mounting-hole coordinates from board outlines or certify arbitrary populated plates.
-
-Boards are fitted from above after the plates are seated, with the battery absent. Fasteners must match the actual board holes. The Pololu 4091 regulators have three M2 mounting holes per board. Pre-retained nuts and measured screw lengths avoid inaccessible underside work. Verify the specified motor-case clearance, thread engagement, absence of trace contact and service access before final assembly.
-
-The separate eight arm-order checks across 187,920 samples are retained from ROUND-10. Their four relevant STL hashes are unchanged. `cad/arm-assembly-checks.json` preserves that provenance. The required order still feeds and supports the arms before installing pitch-servo carriers; horns and opaque fabric liners follow.
-
-## Actual H2D slicing
-
-Command:
-
-```powershell
-python scripts/slice_h2d.py --parts 02_skirt
-```
-
-The merged skirt passed an actual Bambu Studio 02.08.02.61 slice using the installed H2D 0.4 mm machine profile in isolated temporary state. Supported assembly-list input places it at X162.5,Y160 without changing the printer/nozzle geometry. Exact triangle count, rigid transform, full 213 mm deposited height, material, process settings and all deposited model/support/brim paths were checked.
-
-The new skirt's bead bounds are X7.7093..317.2917 and Y5.2093..314.7917 mm, within the left 325 x 320 mm area. It predicts 527.879 g of installed model and about 1033.87 g total PLA including supports and brim, with a 23 hour 45 minute 40 second print time. One 1 kg spool is insufficient; allow at least 1.14 kg for this job with reserve and plan filament capacity or a compatible change procedure.
-
-The release report combines this new slice with eight unchanged slice records whose exact STL hashes were checked. It covers nine designs and ten physical prints:
-
-- Installed printed model: 2345.25 g.
-- Total filament including support and brim: 3951.62 g.
-- Sequential print time: 406685.32 seconds, about 112.97 hours.
-- Compared with ROUND-10: 83.95 g less installed plastic, 121.44 g less filament and 3 hours 18 minutes 57 seconds less predicted print time.
-
-The BOM keeps 3 kg each of PETG and PLA as supply allowances, including reserve for the long skirt print. These quantities are not claimed deposited mass. Bambu omitted a separate Brim feature on some retained supported parts despite the requested brim setting; that behavior remains explicitly recorded. All actual generated deposition fits. Inspect adhesion paths before printing.
-
-## Controls, wiring and media
-
-The unchanged firmware and filesystem builds retain their prior passing results: RAM 45,416 bytes, application flash 995,025 bytes and a 2,097,152-byte LittleFS image. Native controls and browser tests already cover the 8-degree arm limit, head PWM cap, reversal delay, fault stop, command leases and no automatic restart. These checks were not needlessly rerun for an unchanged electrical design. All 24 original MP3 hashes remain unchanged. The wiring schedule remains 185 rows with four SVG circuit sheets.
-
-The drawing package now has 15 PNGs: six overview/mechanism sheets and nine component drawings. Five additional CAD previews serve the PDF. Their manifest verifies current source hashes and ZIP contents. The video shows one skirt installation and the plate-first, battery-last sequence, with nine designs and ten prints. Full FFmpeg decoding and FFprobe validate 120 seconds, 2880 frames, 1920 x 1080, 24 fps and AAC audio. Operation is labelled as simulation.
-
-The PDF is rendered and visually reviewed before delivery. The existing GitHub Actions/OIDC workflow publishes the committed PDF and video to private S3 storage and verifies downloaded file hashes. The final email contains the PDF and a signed video link with an explicit expiry. Workflow and SES acceptance identifiers are recorded in the execution plan.
-
-## Physical limits
-
-No robot was printed, wired, powered or driven during this revision. The predicted 2.345 kg of installed plastic excludes the battery, motors, wheels, servos, electronics, fasteners, fabric and finish. Weigh the finished robot and complete the physical checks. A continuous printed skirt and fewer joints do not by themselves prove higher strength, reliable traction or a payload rating.
+The design is not physically validated. Complete actual fit, supported base proof-load, retention, connector-clearance, opaque-liner, hand-rotation, stop and loaded-driving tests. Four small TT gearmotors have no published robot payload rating. A stronger base and a fitting14Ah case do not establish traction, gearbox life or turning ability. Keep the5V supplies and current limits. Use the lighter battery if the SLA build fails its loaded tests.

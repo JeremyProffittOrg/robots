@@ -1,0 +1,14 @@
+{
+  "design": "MOUNT-1",
+  "method": "Two independent near-axis parity rays; original trimesh.contains on disagreements",
+  "seed": 24681357,
+  "samples": 4400,
+  "inside": 1269,
+  "outside": 3131,
+  "mismatches": 0,
+  "default_seconds": 11.363,
+  "accelerated_seconds": 1.01,
+  "sample_description": "1800 uniform shell-envelope points;1600 face-center offsets at+/-0.002 and+/-0.1mm;600 nominal servo-case void points;400 solid yaw-wall points",
+  "mesh_sha256": "21f235f8c213f716ceccad8a17a5a4081308266f882cddf93702253585a95cfa",
+  "all_pass": true
+}
