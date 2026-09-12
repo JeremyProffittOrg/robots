@@ -1,0 +1,961 @@
+{
+  "all_pass": true,
+  "physical_test": false,
+  "analysis_only": true,
+  "summary": {
+    "ratio": 12.0,
+    "efficiency": 0.81,
+    "cable_travel_mm": 94.6514,
+    "turns": 4.8594,
+    "max_tension_n": 151.239,
+    "close_time_s": 19.7575,
+    "latch_period_s": 1.8368,
+    "peak_energy_j": 0.569,
+    "worst_margin": 2.3922,
+    "worst_margin_deg": 90.0,
+    "arm_min_mm": 41.8779,
+    "arm_closed_mm": 50.0581,
+    "arm_open_mm": 41.8779,
+    "psi_closed_deg": 40.8394,
+    "magnet_hold_n": 70.0,
+    "leaf_inertia_kgm2": 11.1386
+  },
+  "checks": [
+    {
+      "check": "offset_removes_dead_centre",
+      "pass": true,
+      "detail": "included angle at the hinge axis is 40.8 deg when shut and 130.8 deg wide open. It never reaches 0 or 180 deg, which are the two collinear dead centres where no tension makes any torque"
+    },
+    {
+      "check": "arm_never_collapses",
+      "pass": true,
+      "detail": "worst-case moment arm over the whole swing is 41.9 mm (peak 65.2 mm), after subtracting the 2 mm mounting tolerance. A straight chord with the exit on the closed-door plane would instead go to 0 mm at 0 deg"
+    },
+    {
+      "check": "drum_holds_travel",
+      "pass": true,
+      "detail": "94.7 mm of travel = 4.86 turns at an effective 3.1 mm winding radius needs 7.6 mm of grooved drum; drum_width is 10 mm"
+    },
+    {
+      "check": "cable_strength",
+      "pass": true,
+      "detail": "cable rated 680 N against a hardware-limited maximum tension of 151 N (safety factor 4.5, 3.0 required)"
+    },
+    {
+      "check": "torque_margin",
+      "pass": true,
+      "detail": "worst torque margin is 2.39x at 90 deg (2.0x required, against the worst-case 0.82 N.m hinge friction and 0.5 deg of frame out-of-plumb)"
+    },
+    {
+      "check": "no_stall_angle",
+      "pass": true,
+      "detail": "the drive holds and moves the door at every angle"
+    },
+    {
+      "check": "close_time_sane",
+      "pass": true,
+      "detail": "full close from 90 deg takes 19.8 s at the quasi-static operating point (the TT motor's 65.4 mN.m and 207 RPM at 5 V cap mechanical power near 0.35 W, so the 5 s sweep of a hydraulic closer is not available at any gear ratio)"
+    },
+    {
+      "check": "energy_cap",
+      "pass": true,
+      "detail": "the leaf arrives carrying 0.57 J - 0.069 J of cable-driven kinetic energy plus 0.50 J of magnet work over the last 15 mm - against the A156.19 1.69 J cap (leaf inertia 11.14 kg.m2)"
+    },
+    {
+      "check": "latch_period_reported",
+      "pass": true,
+      "detail": "the last 10 deg takes 1.84 s under cable drive alone; A156.19's 1.5 s latch period is written for a sprung hydraulic closer with a latch bolt to retract. This design has no latch bolt: the magnets take over at about 1 deg and snap the leaf shut, so the energy check above is the meaningful limit and this figure is reported, not asserted"
+    },
+    {
+      "check": "magnet_holds_closed",
+      "pass": true,
+      "detail": "70.0 N of magnet pull at the as-built 2.0 mm gap (>= 40 N required to keep a 40 kg leaf shut against a draught)"
+    },
+    {
+      "check": "magnet_takes_over",
+      "pass": true,
+      "detail": "at 1 deg - a 16 mm air gap at the latch edge - the magnets alone make 2.56 N.m against 0.85 N.m of resistance, so the last few millimetres are magnet-driven and the cable never has to work near a dead centre"
+    },
+    {
+      "check": "stage1_teeth",
+      "pass": true,
+      "detail": "stage-1 pinion root stress 3.93 MPa against the 5.5 MPa cyclic in-plane allowable (gears print flat, so tooth load stays in the layer plane)"
+    },
+    {
+      "check": "stage2_teeth",
+      "pass": true,
+      "detail": "stage-2 pinion root stress 4.84 MPa against 5.5 MPa"
+    },
+    {
+      "check": "anchor_cable_eye",
+      "pass": true,
+      "detail": "the anchor's cable eye carries the tension in double shear across 100 mm2 of material, 1.51 MPa against the 5.0 MPa across-layer allowable; the eye prints with its axis flat so the load does not peel layers apart"
+    },
+    {
+      "check": "idler_pin_shear",
+      "pass": true,
+      "detail": "the 4 mm steel idler pin sees 6.0 MPa in double shear (120 MPa allowable for plain steel, and the load path is a steel pin rather than a printed cantilever)"
+    },
+    {
+      "check": "anchor_screws",
+      "pass": true,
+      "detail": "3 x M4.0 screws hold the sheave to the door stile in shear: 4.0 MPa on the screw cross-sections"
+    },
+    {
+      "check": "unit_outside_swept_volume",
+      "pass": true,
+      "detail": "an ordinary butt hinge puts the pivot axis in the door's push face, so over 0..90 deg the leaf sweeps only the quadrant at negative polar angles. The whole unit sits at x 0..48 mm, y 0..50 mm - positive in both - so nothing it contains is ever in the leaf's path, and the door still opens fully by hand with the power off"
+    },
+    {
+      "check": "cable_stays_push_side",
+      "pass": true,
+      "detail": "both cable ends sit clear of the leaf's push face - the anchor eye 25 mm off the face, the exit 48 mm off the closed plane - so the straight run between them stays on the push side at every angle and can never foul the leaf or wrap the hinge"
+    },
+    {
+      "check": "unit_within_rebate",
+      "pass": true,
+      "detail": "the shell is 50 mm across the jamb depth and stands 48 mm out into the opening on 12 mm feet, both inside the 51 mm rebate of a 4-9/16 in jamb"
+    },
+    {
+      "check": "exit_reachable_on_shell",
+      "pass": true,
+      "detail": "the cable exit at (47, 48) mm is a point on the shell itself, not a fitting hanging in mid-air"
+    },
+    {
+      "check": "guide_loss_accounted",
+      "pass": true,
+      "detail": "the cable turns 40 deg through the exit chute, so the door only receives 1/1.110 of the drum tension: 136 N delivered from 151 N wound. Every printed part above is checked at the wound figure"
+    },
+    {
+      "check": "anchor_withdrawal",
+      "pass": true,
+      "detail": "the 25 mm standoff turns 151 N of tension into 3.78 N.m on the anchor base; over a 40 mm screw span that is 95 N of withdrawal per screw, against 400 N allowed for a #8 screw 25 mm into a solid-core stile"
+    },
+    {
+      "check": "current_budget",
+      "pass": true,
+      "detail": "motor current is chopped in hardware at 1.0 A by the DRV8833 breakout's 0.2 ohm sense resistors, taken from the USB 5 V rail at the driver, never through the T-Display board"
+    }
+  ],
+  "angle_table": [
+    {
+      "deg": 0.0,
+      "resist_nm": 0.82,
+      "magnet_assist_nm": 62.93,
+      "available_nm": 6.818,
+      "margin": null,
+      "deg_per_s": 6.4,
+      "motor_a": 0.16
+    },
+    {
+      "deg": 1.0,
+      "resist_nm": 0.847,
+      "magnet_assist_nm": 2.563,
+      "available_nm": 6.934,
+      "margin": null,
+      "deg_per_s": 6.29,
+      "motor_a": 0.16
+    },
+    {
+      "deg": 2.0,
+      "resist_nm": 0.875,
+      "magnet_assist_nm": 0.111,
+      "available_nm": 7.047,
+      "margin": 9.23,
+      "deg_per_s": 5.7,
+      "motor_a": 0.25
+    },
+    {
+      "deg": 3.0,
+      "resist_nm": 0.902,
+      "magnet_assist_nm": 0.005,
+      "available_nm": 7.156,
+      "margin": 7.98,
+      "deg_per_s": 5.53,
+      "motor_a": 0.26
+    },
+    {
+      "deg": 4.0,
+      "resist_nm": 0.929,
+      "magnet_assist_nm": 0.0,
+      "available_nm": 7.262,
+      "margin": 7.82,
+      "deg_per_s": 5.44,
+      "motor_a": 0.26
+    },
+    {
+      "deg": 5.0,
+      "resist_nm": 0.956,
+      "magnet_assist_nm": 0.0,
+      "available_nm": 7.364,
+      "margin": 7.7,
+      "deg_per_s": 5.36,
+      "motor_a": 0.27
+    },
+    {
+      "deg": 6.0,
+      "resist_nm": 0.984,
+      "magnet_assist_nm": 0.0,
+      "available_nm": 7.463,
+      "margin": 7.59,
+      "deg_per_s": 5.28,
+      "motor_a": 0.27
+    },
+    {
+      "deg": 7.0,
+      "resist_nm": 1.011,
+      "magnet_assist_nm": 0.0,
+      "available_nm": 7.558,
+      "margin": 7.48,
+      "deg_per_s": 5.2,
+      "motor_a": 0.27
+    },
+    {
+      "deg": 8.0,
+      "resist_nm": 1.038,
+      "magnet_assist_nm": 0.0,
+      "available_nm": 7.65,
+      "margin": 7.37,
+      "deg_per_s": 5.13,
+      "motor_a": 0.27
+    },
+    {
+      "deg": 9.0,
+      "resist_nm": 1.065,
+      "magnet_assist_nm": 0.0,
+      "available_nm": 7.739,
+      "margin": 7.27,
+      "deg_per_s": 5.07,
+      "motor_a": 0.27
+    },
+    {
+      "deg": 10.0,
+      "resist_nm": 1.092,
+      "magnet_assist_nm": 0.0,
+      "available_nm": 7.823,
+      "margin": 7.17,
+      "deg_per_s": 5.0,
+      "motor_a": 0.27
+    },
+    {
+      "deg": 11.0,
+      "resist_nm": 1.118,
+      "magnet_assist_nm": 0.0,
+      "available_nm": 7.905,
+      "margin": 7.07,
+      "deg_per_s": 4.94,
+      "motor_a": 0.28
+    },
+    {
+      "deg": 12.0,
+      "resist_nm": 1.145,
+      "magnet_assist_nm": 0.0,
+      "available_nm": 7.983,
+      "margin": 6.97,
+      "deg_per_s": 4.89,
+      "motor_a": 0.28
+    },
+    {
+      "deg": 13.0,
+      "resist_nm": 1.172,
+      "magnet_assist_nm": 0.0,
+      "available_nm": 8.058,
+      "margin": 6.88,
+      "deg_per_s": 4.83,
+      "motor_a": 0.28
+    },
+    {
+      "deg": 14.0,
+      "resist_nm": 1.198,
+      "magnet_assist_nm": 0.0,
+      "available_nm": 8.129,
+      "margin": 6.78,
+      "deg_per_s": 4.78,
+      "motor_a": 0.28
+    },
+    {
+      "deg": 15.0,
+      "resist_nm": 1.225,
+      "magnet_assist_nm": 0.0,
+      "available_nm": 8.197,
+      "margin": 6.69,
+      "deg_per_s": 4.74,
+      "motor_a": 0.28
+    },
+    {
+      "deg": 16.0,
+      "resist_nm": 1.251,
+      "magnet_assist_nm": 0.0,
+      "available_nm": 8.261,
+      "margin": 6.6,
+      "deg_per_s": 4.69,
+      "motor_a": 0.28
+    },
+    {
+      "deg": 17.0,
+      "resist_nm": 1.277,
+      "magnet_assist_nm": 0.0,
+      "available_nm": 8.322,
+      "margin": 6.52,
+      "deg_per_s": 4.65,
+      "motor_a": 0.29
+    },
+    {
+      "deg": 18.0,
+      "resist_nm": 1.303,
+      "magnet_assist_nm": 0.0,
+      "available_nm": 8.38,
+      "margin": 6.43,
+      "deg_per_s": 4.61,
+      "motor_a": 0.29
+    },
+    {
+      "deg": 19.0,
+      "resist_nm": 1.329,
+      "magnet_assist_nm": 0.0,
+      "available_nm": 8.435,
+      "margin": 6.35,
+      "deg_per_s": 4.57,
+      "motor_a": 0.29
+    },
+    {
+      "deg": 20.0,
+      "resist_nm": 1.355,
+      "magnet_assist_nm": 0.0,
+      "available_nm": 8.486,
+      "margin": 6.26,
+      "deg_per_s": 4.54,
+      "motor_a": 0.29
+    },
+    {
+      "deg": 21.0,
+      "resist_nm": 1.381,
+      "magnet_assist_nm": 0.0,
+      "available_nm": 8.534,
+      "margin": 6.18,
+      "deg_per_s": 4.5,
+      "motor_a": 0.29
+    },
+    {
+      "deg": 22.0,
+      "resist_nm": 1.406,
+      "magnet_assist_nm": 0.0,
+      "available_nm": 8.578,
+      "margin": 6.1,
+      "deg_per_s": 4.47,
+      "motor_a": 0.3
+    },
+    {
+      "deg": 23.0,
+      "resist_nm": 1.431,
+      "magnet_assist_nm": 0.0,
+      "available_nm": 8.62,
+      "margin": 6.02,
+      "deg_per_s": 4.44,
+      "motor_a": 0.3
+    },
+    {
+      "deg": 24.0,
+      "resist_nm": 1.456,
+      "magnet_assist_nm": 0.0,
+      "available_nm": 8.658,
+      "margin": 5.95,
+      "deg_per_s": 4.41,
+      "motor_a": 0.3
+    },
+    {
+      "deg": 25.0,
+      "resist_nm": 1.481,
+      "magnet_assist_nm": 0.0,
+      "available_nm": 8.693,
+      "margin": 5.87,
+      "deg_per_s": 4.39,
+      "motor_a": 0.3
+    },
+    {
+      "deg": 26.0,
+      "resist_nm": 1.506,
+      "magnet_assist_nm": 0.0,
+      "available_nm": 8.725,
+      "margin": 5.79,
+      "deg_per_s": 4.36,
+      "motor_a": 0.3
+    },
+    {
+      "deg": 27.0,
+      "resist_nm": 1.53,
+      "magnet_assist_nm": 0.0,
+      "available_nm": 8.754,
+      "margin": 5.72,
+      "deg_per_s": 4.34,
+      "motor_a": 0.3
+    },
+    {
+      "deg": 28.0,
+      "resist_nm": 1.554,
+      "magnet_assist_nm": 0.0,
+      "available_nm": 8.779,
+      "margin": 5.65,
+      "deg_per_s": 4.32,
+      "motor_a": 0.31
+    },
+    {
+      "deg": 29.0,
+      "resist_nm": 1.578,
+      "magnet_assist_nm": 0.0,
+      "available_nm": 8.802,
+      "margin": 5.58,
+      "deg_per_s": 4.3,
+      "motor_a": 0.31
+    },
+    {
+      "deg": 30.0,
+      "resist_nm": 1.602,
+      "magnet_assist_nm": 0.0,
+      "available_nm": 8.821,
+      "margin": 5.51,
+      "deg_per_s": 4.28,
+      "motor_a": 0.31
+    },
+    {
+      "deg": 31.0,
+      "resist_nm": 1.626,
+      "magnet_assist_nm": 0.0,
+      "available_nm": 8.838,
+      "margin": 5.44,
+      "deg_per_s": 4.27,
+      "motor_a": 0.31
+    },
+    {
+      "deg": 32.0,
+      "resist_nm": 1.649,
+      "magnet_assist_nm": 0.0,
+      "available_nm": 8.852,
+      "margin": 5.37,
+      "deg_per_s": 4.25,
+      "motor_a": 0.31
+    },
+    {
+      "deg": 33.0,
+      "resist_nm": 1.672,
+      "magnet_assist_nm": 0.0,
+      "available_nm": 8.862,
+      "margin": 5.3,
+      "deg_per_s": 4.24,
+      "motor_a": 0.32
+    },
+    {
+      "deg": 34.0,
+      "resist_nm": 1.695,
+      "magnet_assist_nm": 0.0,
+      "available_nm": 8.87,
+      "margin": 5.23,
+      "deg_per_s": 4.23,
+      "motor_a": 0.32
+    },
+    {
+      "deg": 35.0,
+      "resist_nm": 1.717,
+      "magnet_assist_nm": 0.0,
+      "available_nm": 8.875,
+      "margin": 5.17,
+      "deg_per_s": 4.22,
+      "motor_a": 0.32
+    },
+    {
+      "deg": 36.0,
+      "resist_nm": 1.74,
+      "magnet_assist_nm": 0.0,
+      "available_nm": 8.877,
+      "margin": 5.1,
+      "deg_per_s": 4.21,
+      "motor_a": 0.32
+    },
+    {
+      "deg": 37.0,
+      "resist_nm": 1.761,
+      "magnet_assist_nm": 0.0,
+      "available_nm": 8.877,
+      "margin": 5.04,
+      "deg_per_s": 4.2,
+      "motor_a": 0.32
+    },
+    {
+      "deg": 38.0,
+      "resist_nm": 1.783,
+      "magnet_assist_nm": 0.0,
+      "available_nm": 8.873,
+      "margin": 4.98,
+      "deg_per_s": 4.19,
+      "motor_a": 0.33
+    },
+    {
+      "deg": 39.0,
+      "resist_nm": 1.804,
+      "magnet_assist_nm": 0.0,
+      "available_nm": 8.867,
+      "margin": 4.91,
+      "deg_per_s": 4.18,
+      "motor_a": 0.33
+    },
+    {
+      "deg": 40.0,
+      "resist_nm": 1.826,
+      "magnet_assist_nm": 0.0,
+      "available_nm": 8.858,
+      "margin": 4.85,
+      "deg_per_s": 4.18,
+      "motor_a": 0.33
+    },
+    {
+      "deg": 41.0,
+      "resist_nm": 1.846,
+      "magnet_assist_nm": 0.0,
+      "available_nm": 8.847,
+      "margin": 4.79,
+      "deg_per_s": 4.17,
+      "motor_a": 0.33
+    },
+    {
+      "deg": 42.0,
+      "resist_nm": 1.867,
+      "magnet_assist_nm": 0.0,
+      "available_nm": 8.833,
+      "margin": 4.73,
+      "deg_per_s": 4.17,
+      "motor_a": 0.34
+    },
+    {
+      "deg": 43.0,
+      "resist_nm": 1.887,
+      "magnet_assist_nm": 0.0,
+      "available_nm": 8.816,
+      "margin": 4.67,
+      "deg_per_s": 4.17,
+      "motor_a": 0.34
+    },
+    {
+      "deg": 44.0,
+      "resist_nm": 1.907,
+      "magnet_assist_nm": 0.0,
+      "available_nm": 8.797,
+      "margin": 4.61,
+      "deg_per_s": 4.17,
+      "motor_a": 0.34
+    },
+    {
+      "deg": 45.0,
+      "resist_nm": 1.926,
+      "magnet_assist_nm": 0.0,
+      "available_nm": 8.775,
+      "margin": 4.56,
+      "deg_per_s": 4.17,
+      "motor_a": 0.34
+    },
+    {
+      "deg": 46.0,
+      "resist_nm": 1.945,
+      "magnet_assist_nm": 0.0,
+      "available_nm": 8.751,
+      "margin": 4.5,
+      "deg_per_s": 4.17,
+      "motor_a": 0.34
+    },
+    {
+      "deg": 47.0,
+      "resist_nm": 1.964,
+      "magnet_assist_nm": 0.0,
+      "available_nm": 8.724,
+      "margin": 4.44,
+      "deg_per_s": 4.17,
+      "motor_a": 0.35
+    },
+    {
+      "deg": 48.0,
+      "resist_nm": 1.983,
+      "magnet_assist_nm": 0.0,
+      "available_nm": 8.695,
+      "margin": 4.39,
+      "deg_per_s": 4.17,
+      "motor_a": 0.35
+    },
+    {
+      "deg": 49.0,
+      "resist_nm": 2.001,
+      "magnet_assist_nm": 0.0,
+      "available_nm": 8.663,
+      "margin": 4.33,
+      "deg_per_s": 4.18,
+      "motor_a": 0.35
+    },
+    {
+      "deg": 50.0,
+      "resist_nm": 2.018,
+      "magnet_assist_nm": 0.0,
+      "available_nm": 8.629,
+      "margin": 4.28,
+      "deg_per_s": 4.18,
+      "motor_a": 0.35
+    },
+    {
+      "deg": 51.0,
+      "resist_nm": 2.036,
+      "magnet_assist_nm": 0.0,
+      "available_nm": 8.593,
+      "margin": 4.22,
+      "deg_per_s": 4.19,
+      "motor_a": 0.36
+    },
+    {
+      "deg": 52.0,
+      "resist_nm": 2.053,
+      "magnet_assist_nm": 0.0,
+      "available_nm": 8.554,
+      "margin": 4.17,
+      "deg_per_s": 4.2,
+      "motor_a": 0.36
+    },
+    {
+      "deg": 53.0,
+      "resist_nm": 2.069,
+      "magnet_assist_nm": 0.0,
+      "available_nm": 8.514,
+      "margin": 4.11,
+      "deg_per_s": 4.21,
+      "motor_a": 0.36
+    },
+    {
+      "deg": 54.0,
+      "resist_nm": 2.086,
+      "magnet_assist_nm": 0.0,
+      "available_nm": 8.471,
+      "margin": 4.06,
+      "deg_per_s": 4.22,
+      "motor_a": 0.36
+    },
+    {
+      "deg": 55.0,
+      "resist_nm": 2.101,
+      "magnet_assist_nm": 0.0,
+      "available_nm": 8.425,
+      "margin": 4.01,
+      "deg_per_s": 4.23,
+      "motor_a": 0.37
+    },
+    {
+      "deg": 56.0,
+      "resist_nm": 2.117,
+      "magnet_assist_nm": 0.0,
+      "available_nm": 8.378,
+      "margin": 3.96,
+      "deg_per_s": 4.24,
+      "motor_a": 0.37
+    },
+    {
+      "deg": 57.0,
+      "resist_nm": 2.132,
+      "magnet_assist_nm": 0.0,
+      "available_nm": 8.329,
+      "margin": 3.91,
+      "deg_per_s": 4.25,
+      "motor_a": 0.37
+    },
+    {
+      "deg": 58.0,
+      "resist_nm": 2.147,
+      "magnet_assist_nm": 0.0,
+      "available_nm": 8.277,
+      "margin": 3.86,
+      "deg_per_s": 4.26,
+      "motor_a": 0.38
+    },
+    {
+      "deg": 59.0,
+      "resist_nm": 2.161,
+      "magnet_assist_nm": 0.0,
+      "available_nm": 8.223,
+      "margin": 3.81,
+      "deg_per_s": 4.28,
+      "motor_a": 0.38
+    },
+    {
+      "deg": 60.0,
+      "resist_nm": 2.175,
+      "magnet_assist_nm": 0.0,
+      "available_nm": 8.168,
+      "margin": 3.76,
+      "deg_per_s": 4.29,
+      "motor_a": 0.38
+    },
+    {
+      "deg": 61.0,
+      "resist_nm": 2.188,
+      "magnet_assist_nm": 0.0,
+      "available_nm": 8.11,
+      "margin": 3.71,
+      "deg_per_s": 4.31,
+      "motor_a": 0.38
+    },
+    {
+      "deg": 62.0,
+      "resist_nm": 2.201,
+      "magnet_assist_nm": 0.0,
+      "available_nm": 8.05,
+      "margin": 3.66,
+      "deg_per_s": 4.33,
+      "motor_a": 0.39
+    },
+    {
+      "deg": 63.0,
+      "resist_nm": 2.214,
+      "magnet_assist_nm": 0.0,
+      "available_nm": 7.989,
+      "margin": 3.61,
+      "deg_per_s": 4.35,
+      "motor_a": 0.39
+    },
+    {
+      "deg": 64.0,
+      "resist_nm": 2.226,
+      "magnet_assist_nm": 0.0,
+      "available_nm": 7.925,
+      "margin": 3.56,
+      "deg_per_s": 4.37,
+      "motor_a": 0.39
+    },
+    {
+      "deg": 65.0,
+      "resist_nm": 2.238,
+      "magnet_assist_nm": 0.0,
+      "available_nm": 7.86,
+      "margin": 3.51,
+      "deg_per_s": 4.39,
+      "motor_a": 0.4
+    },
+    {
+      "deg": 66.0,
+      "resist_nm": 2.249,
+      "magnet_assist_nm": 0.0,
+      "available_nm": 7.793,
+      "margin": 3.46,
+      "deg_per_s": 4.41,
+      "motor_a": 0.4
+    },
+    {
+      "deg": 67.0,
+      "resist_nm": 2.26,
+      "magnet_assist_nm": 0.0,
+      "available_nm": 7.724,
+      "margin": 3.42,
+      "deg_per_s": 4.43,
+      "motor_a": 0.4
+    },
+    {
+      "deg": 68.0,
+      "resist_nm": 2.27,
+      "magnet_assist_nm": 0.0,
+      "available_nm": 7.653,
+      "margin": 3.37,
+      "deg_per_s": 4.45,
+      "motor_a": 0.41
+    },
+    {
+      "deg": 69.0,
+      "resist_nm": 2.28,
+      "magnet_assist_nm": 0.0,
+      "available_nm": 7.58,
+      "margin": 3.32,
+      "deg_per_s": 4.48,
+      "motor_a": 0.41
+    },
+    {
+      "deg": 70.0,
+      "resist_nm": 2.29,
+      "magnet_assist_nm": 0.0,
+      "available_nm": 7.506,
+      "margin": 3.28,
+      "deg_per_s": 4.51,
+      "motor_a": 0.41
+    },
+    {
+      "deg": 71.0,
+      "resist_nm": 2.299,
+      "magnet_assist_nm": 0.0,
+      "available_nm": 7.43,
+      "margin": 3.23,
+      "deg_per_s": 4.53,
+      "motor_a": 0.42
+    },
+    {
+      "deg": 72.0,
+      "resist_nm": 2.308,
+      "magnet_assist_nm": 0.0,
+      "available_nm": 7.353,
+      "margin": 3.19,
+      "deg_per_s": 4.56,
+      "motor_a": 0.42
+    },
+    {
+      "deg": 73.0,
+      "resist_nm": 2.316,
+      "magnet_assist_nm": 0.0,
+      "available_nm": 7.273,
+      "margin": 3.14,
+      "deg_per_s": 4.59,
+      "motor_a": 0.43
+    },
+    {
+      "deg": 74.0,
+      "resist_nm": 2.324,
+      "magnet_assist_nm": 0.0,
+      "available_nm": 7.192,
+      "margin": 3.1,
+      "deg_per_s": 4.62,
+      "motor_a": 0.43
+    },
+    {
+      "deg": 75.0,
+      "resist_nm": 2.331,
+      "magnet_assist_nm": 0.0,
+      "available_nm": 7.11,
+      "margin": 3.05,
+      "deg_per_s": 4.65,
+      "motor_a": 0.43
+    },
+    {
+      "deg": 76.0,
+      "resist_nm": 2.338,
+      "magnet_assist_nm": 0.0,
+      "available_nm": 7.026,
+      "margin": 3.01,
+      "deg_per_s": 4.69,
+      "motor_a": 0.44
+    },
+    {
+      "deg": 77.0,
+      "resist_nm": 2.344,
+      "magnet_assist_nm": 0.0,
+      "available_nm": 6.941,
+      "margin": 2.96,
+      "deg_per_s": 4.72,
+      "motor_a": 0.44
+    },
+    {
+      "deg": 78.0,
+      "resist_nm": 2.35,
+      "magnet_assist_nm": 0.0,
+      "available_nm": 6.854,
+      "margin": 2.92,
+      "deg_per_s": 4.76,
+      "motor_a": 0.45
+    },
+    {
+      "deg": 79.0,
+      "resist_nm": 2.356,
+      "magnet_assist_nm": 0.0,
+      "available_nm": 6.765,
+      "margin": 2.87,
+      "deg_per_s": 4.79,
+      "motor_a": 0.45
+    },
+    {
+      "deg": 80.0,
+      "resist_nm": 2.361,
+      "magnet_assist_nm": 0.0,
+      "available_nm": 6.675,
+      "margin": 2.83,
+      "deg_per_s": 4.83,
+      "motor_a": 0.46
+    },
+    {
+      "deg": 81.0,
+      "resist_nm": 2.365,
+      "magnet_assist_nm": 0.0,
+      "available_nm": 6.584,
+      "margin": 2.78,
+      "deg_per_s": 4.87,
+      "motor_a": 0.46
+    },
+    {
+      "deg": 82.0,
+      "resist_nm": 2.369,
+      "magnet_assist_nm": 0.0,
+      "available_nm": 6.491,
+      "margin": 2.74,
+      "deg_per_s": 4.91,
+      "motor_a": 0.46
+    },
+    {
+      "deg": 83.0,
+      "resist_nm": 2.373,
+      "magnet_assist_nm": 0.0,
+      "available_nm": 6.397,
+      "margin": 2.7,
+      "deg_per_s": 4.96,
+      "motor_a": 0.47
+    },
+    {
+      "deg": 84.0,
+      "resist_nm": 2.376,
+      "magnet_assist_nm": 0.0,
+      "available_nm": 6.302,
+      "margin": 2.65,
+      "deg_per_s": 5.0,
+      "motor_a": 0.47
+    },
+    {
+      "deg": 85.0,
+      "resist_nm": 2.378,
+      "magnet_assist_nm": 0.0,
+      "available_nm": 6.206,
+      "margin": 2.61,
+      "deg_per_s": 5.04,
+      "motor_a": 0.48
+    },
+    {
+      "deg": 86.0,
+      "resist_nm": 2.381,
+      "magnet_assist_nm": 0.0,
+      "available_nm": 6.108,
+      "margin": 2.57,
+      "deg_per_s": 5.09,
+      "motor_a": 0.49
+    },
+    {
+      "deg": 87.0,
+      "resist_nm": 2.382,
+      "magnet_assist_nm": 0.0,
+      "available_nm": 6.008,
+      "margin": 2.52,
+      "deg_per_s": 5.14,
+      "motor_a": 0.49
+    },
+    {
+      "deg": 88.0,
+      "resist_nm": 2.383,
+      "magnet_assist_nm": 0.0,
+      "available_nm": 5.908,
+      "margin": 2.48,
+      "deg_per_s": 5.19,
+      "motor_a": 0.5
+    },
+    {
+      "deg": 89.0,
+      "resist_nm": 2.384,
+      "magnet_assist_nm": 0.0,
+      "available_nm": 5.807,
+      "margin": 2.44,
+      "deg_per_s": 5.24,
+      "motor_a": 0.5
+    },
+    {
+      "deg": 90.0,
+      "resist_nm": 2.384,
+      "magnet_assist_nm": 0.0,
+      "available_nm": 5.704,
+      "margin": 2.39,
+      "deg_per_s": 5.29,
+      "motor_a": 0.51
+    }
+  ]
+}
