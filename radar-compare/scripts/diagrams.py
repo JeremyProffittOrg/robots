@@ -230,7 +230,7 @@ def beam_width_chart():
     d = [x * 40 for x in range(1, 80)]
     palette = ['#0f4c81', '#2d7dd2', '#4fa3e3', '#1b7f4b', '#f0a202', '#d1495b',
                '#7b3fa0']
-    for i, fov in enumerate([15, 27, 45, 63, 90, 100, 120]):
+    for i, fov in enumerate([19, 27, 45, 60, 90, 100, 120]):
         ax.plot([x / FT for x in d], [beam_width_mm(fov, x) / 25.4 for x in d],
                 color=palette[i], lw=1.5, label='%d deg' % fov)
     for ft in DISTANCES_FT:
@@ -255,7 +255,7 @@ def beam_width_chart():
 # 4. how many pixels a subject fills in a grid imager
 # --------------------------------------------------------------------------
 def pixel_fill_chart():
-    grids = [('VL53L5CX 8x8, 63 deg', 63, 8), ('VL53L7CX 8x8, 90 deg', 90, 8),
+    grids = [('VL53L5CX 8x8, 45 deg H', 45, 8), ('VL53L7CX 8x8, 60 deg H', 60, 8),
              ('AMG8833 8x8, 60 deg', 60, 8), ('MLX90640 32x24, 55 deg', 55, 32)]
     fig, axes = plt.subplots(1, len(grids), figsize=(9.4, 2.7), sharey=True)
     subjects = [('adult_human_standing', '#0f4c81'), ('toddler', '#2d7dd2'),
@@ -317,21 +317,42 @@ def capability_grid(rows, name, title):
 
 
 def main():
-    print('rendering figures')
-    ring_plan(4, 27, title='4 x VL53L1X (27 deg) - the naive ring')
-    ring_plan(6, 63, title='6 x VL53L5CX (63 deg) - looks sufficient, is not')
-    ring_plan(8, 63, title='8 x VL53L5CX (63 deg) - the recommended ring')
-    ring_plan(4, 90, title='4 x VL53L7CX (90 deg) - exactly 360 deg, no margin')
-    ring_plan(5, 90, title='5 x VL53L7CX (90 deg) - 90 deg of designed overlap')
-    ring_plan(8, 63, shape='square', name='ring_8x63_square.png',
-              title='8 x 63 deg on a 350 mm SQUARE platform')
-    ring_plan(3, 100, title='3 x 100 deg mmWave - presence ring')
+    """Every FoV below is the HORIZONTAL figure.
 
-    vertical_profile(100, 63, 0, 'vertical_low_63.png')
+    ST publishes a diagonal field of view on the front page of every VL53
+    datasheet, and it is a separately measured number, not the geometric
+    diagonal of the square detection volume. Sizing a ring from it overstates
+    coverage badly: the VL53L5CX is 63 deg diagonal but 45 x 45 deg horizontal
+    and vertical, and the VL53L7CX is 90 deg diagonal but 60 x 60 deg. Using
+    the diagonal would say six L7CX close a ring; they do not.
+    """
+    print('rendering figures')
+    # single-zone ST parts: VL53L1X is 27 deg diagonal, about 19 deg horizontal
+    ring_plan(8, 19, title='8 x VL53L1X (19 deg horizontal) - the naive ring',
+              name='ring_8x19.png')
+    ring_plan(16, 19, title='16 x VL53L1X (19 deg horizontal) - still 56 deg short',
+              name='ring_16x19.png')
+    # VL53L5CX / VL53L8CX: 45 x 45 deg horizontal and vertical
+    ring_plan(8, 45, title='8 x VL53L5CX (45 deg H) - exactly 360 deg, no margin')
+    ring_plan(10, 45, title='10 x VL53L5CX (45 deg H) - 90 deg of overlap')
+    ring_plan(12, 45, title='12 x VL53L5CX (45 deg H) - the recommended ToF ring')
+    ring_plan(12, 45, shape='square', name='ring_12x45_square.png',
+              title='12 x 45 deg on a 350 mm SQUARE platform')
+    # VL53L7CX: 60 x 60 deg horizontal and vertical
+    ring_plan(6, 60, title='6 x VL53L7CX (60 deg H) - exactly 360 deg, no margin')
+    ring_plan(8, 60, title='8 x VL53L7CX (60 deg H) - the cheaper closed ring')
+    # mmWave presence ring
+    ring_plan(4, 100, title='4 x 100 deg mmWave - a presence ring, not an obstacle ring')
+
+    # vertical, using the real vertical FoV of each part
+    vertical_profile(100, 45, 0, 'vertical_low_45.png',
+                     title='VL53L5CX at 100 mm, 45 deg vertical, no tilt   '
+                           '(green = inside the beam, red = missed)')
     vertical_profile(200, 45, 0, 'vertical_200_45.png')
-    vertical_profile(800, 63, 0, 'vertical_high_63.png')
-    vertical_profile(800, 63, 15, 'vertical_high_63_tilt.png')
-    vertical_profile(400, 90, 10, 'vertical_400_90_tilt.png')
+    vertical_profile(300, 45, 0, 'vertical_300_45.png')
+    vertical_profile(800, 45, 0, 'vertical_high_45.png')
+    vertical_profile(800, 45, 15, 'vertical_high_45_tilt.png')
+    vertical_profile(400, 60, 10, 'vertical_400_60_tilt.png')
 
     beam_width_chart()
     pixel_fill_chart()

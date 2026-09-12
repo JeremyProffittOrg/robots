@@ -16,6 +16,51 @@ Confidence marks used here:
 | **inferred** | Standard external knowledge (e.g. a board's published pin list) applied to repo facts. Not a repo fact. |
 | **not specified in the repo** | The repo is silent. No value is offered. |
 
+---
+
+## 0. Corrections from the adversarial check (2026-09-12)
+
+An independent check re-derived every hard number in this document against the repo files it
+cites and, where a purchased part sets the number, against the manufacturer's own product page.
+Three corrections and three supply flags came out of it. They are applied in place below; this
+block exists so nobody acts on the original figures.
+
+1. **Dalek ideal speed 0.8247 m/s was 25 percent high.** `electronics/calculations.json` keys
+   that value `..._at_250rpm`, but the Adafruit 3777 page specifies "Min. Operating Speed (6V):
+   200 +/- 10% RPM". At 200 rpm and the repo's own 0.0315 m wheel radius the ideal 6 V no-load
+   figure is **0.660 m/s** (0.594 - 0.726 m/s over the tolerance). See section 2.2.
+2. **Every "5.5 A" Pololu D36V50Fx rating in this document was quoted without its condition.**
+   Pololu states 5.5 A "at 36 V in"; both robots run these regulators from a 12 V pack, where
+   the applicable figure comes off an output-current graph and the family range is 3.5 - 8 A.
+   The Dalek's 0.45 A and 1.45 A rail spares are therefore **withdrawn as not established**.
+   The Adafruit MPM3610 1.2 A is unconditional over 6 - 21 V in, so the Dalek's 0.30 A spare
+   logic current — the document's binding electrical constraint — **stands**. Sections 2.4, 4.4.
+3. **Dalek ground clearance 13.8 mm is nominal and unloaded, not measured.** It uses the
+   catalogue radius of an undeflected wheel, and `docs/mechanical.md` requires the clearance be
+   re-checked "with actual tire deformation". Section 2.1.
+
+Supply flags (checked 2026-09-12; the project BOMs already carry the first two, this document
+did not): **Adafruit 3766 TT wheel — out of stock** (needed 5x on `dalek`, 13x on `r2d2`,
+13x on `fable-r2d2`); **Adafruit 1142 TowerPro MG-995 servo — out of stock** (`r2d2` rear-foot
+steering, no second source named); **Pololu D36V50F5 4091 and D36V50F6 4092 — "Rationed
+(Active and Preferred)"**, constrained supply rather than discontinued. Everything else named
+here and checked (Adafruit 3777, 4739, 815, 1195, 1385, 2307, 3405, 5302, 6178, 158, 1313) is
+in stock. Two parts could not be checked against a primary source at all and stay
+**unverifiable**: the **Bioenno BLF-1206A** pack (12 A continuous, 0.7 kg, 72 Wh — no reachable
+vendor page) and the **Actuonix P16-100-256-12-P** actuator (300 N, 20 percent duty — vendor
+site refused the request). Both remain repo-only claims.
+
+Everything else checked came back confirmed: the 300 mm base and its 300.0 x 300.0 x 57.0 STL,
+the 563.8 mm nominal height, the whole Z13.8 / 67.8 / 177.8 / 277.8 / 397.8 / 449.8 / 563.8
+stack, the 1.8 / 4 / 3 mm walls, 2.429 kg installed plastic against a 3157.3 g solid bound with
+no assembled mass anywhere in the repo, the 110 / 90 / 50 / 120 PWM caps and the 100/255 head
+ceiling at 20 kHz, 5.25 A peak at 11.2 V with 3.6 h / 2.16 h runtimes and a 7.5 A main fuse,
+the single-device 0x40 I2C bus, the 27 x 4.2 mm shoulder grille at world Z305.8 - 361.8, the
+12-per-row hemispheres at Z93.8 and Z143.8 with 12 seams, the 76 x 116 mm battery pocket and
+the two 160 x 56 x 2 mm FR4 plates at base-local Z34, and r2d2's 609.6 / 259.25 mm.
+
+---
+
 The three projects are far less alike than their shared parts list suggests. They differ by a
 factor of **3.8 in mass** (about 3.5 kg vs 13.3 kg), by **152 mm in height**, by an order of
 magnitude in **spare 5 V current** (0.3 A vs about 4.1 A), and — most important for sensing —

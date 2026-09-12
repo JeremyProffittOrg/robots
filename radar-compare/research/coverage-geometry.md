@@ -10,6 +10,27 @@ All arithmetic in this document was produced by a Python script and the raw outp
 Every number below is **derived**, not quoted from a vendor, so its confidence class is **datasheet-verified only where a
 field-of-view figure is attributed to a part**; the geometry itself is exact arithmetic.
 
+> **Adversarial spec check, 2026-09-12 — corrections applied in place.**
+> All pure-geometry results in this document were independently recomputed and **every one reproduced exactly**
+> (blind-wedge formula, the 350 mm square constants, `N_min`, all four round-platform `D_tip` tables, the mixed 8-ring
+> ray intersection, both beam-footprint tables, and the floor-strike table). **The errors are all in the FoV attribution,
+> not in the arithmetic:**
+> 1. **The VL53L1X's 27° is a DIAGONAL FoV**, not a horizontal one — ST DS DocID031281 Rev 3 Table 1 reads "Receiver
+>    Field Of View **(diagonal FOV)** Programmable from 15 to 27 degrees". Horizontal is **19.270°**. This document's own
+>    §6 warns about exactly this trap and then falls into it everywhere 27° is used as a ring FoV.
+> 2. **The VL53L5CX's horizontal FoV is 45.0°, published directly** (DS13754 Rev 2 Table 2: 45° H / 45° V / 63°
+>    diagonal) — the earlier "~46.9–48.5° horizontal" was a pinhole estimate that the datasheet supersedes, and the
+>    "65° diagonal" product-page figure could not be confirmed against any ST primary source.
+> 3. **Every ST FoV figure is a conditioned measurement**, not a hard cone. The VL53L5CX 45°/45°/63° is measured at
+>    88 % white reflectance, 1 m, **dark**, 8x8, 14 % sharpener, 15 Hz. Against 17 % grey in 5 klux it is smaller.
+> 4. **The HLK-LD2410's "±60°" is a marketing coverage bullet for a human-presence radar**, with no beamwidth, no
+>    −3 dB contour and no target condition. It reports no azimuth and detects only moving/micro-moving humans in 0.75 m
+>    gates. It cannot serve as the 120° perimeter obstacle sensor this document's tables imply.
+> 5. **The VL53L0X "25°" could not be verified** — ST's server did not respond during this check. Do not design on it.
+>
+> Consequences are stated inline at §3, §6, §7 and §10. Headline: the "27° ring needs 27 sensors, 63° ring needs 12"
+> conclusion is wrong; the real parts need **38 VL53L1X** or **16 VL53L5CX**.
+
 ---
 
 ## 1. Conventions and primitives
@@ -239,6 +260,18 @@ is `Ω = −18°`. **It has eight permanently blind wedges open to infinite rang
 independent bumper pokers. An 8-ring of 63° array sensors closes only at 584 mm from centre (409 mm past the skin) — a
 cat can sit 400 mm from the robot, dead on a wedge bisector, and be completely invisible.
 
+> **Correction — the two rows people will actually build are worse than the 27° and 63° rows above.** Those two rows use
+> the *marketing* FoV. Both ST parts publish a **diagonal** or a separately-measured horizontal number (see §6):
+>
+> - **VL53L1X**: the datasheet figure is **27° diagonal** (DS DocID031281 Rev 3, Table 1), so the horizontal FoV is
+>   **19.270°**. An 8-ring is `Ω = −25.73°`, not −18°. The ring does not close at **any N below 19**
+>   (`N_min = floor(360/19.270)+1 = 19`), and even N = 19 puts the wedge tip at **10 418.8 mm** from centre. N = 20
+>   gives 2 643.8 mm. **The smallest VL53L1X ring that bounds the tip within 350 mm of centre is N = 38 (343.0 mm).**
+> - **VL53L5CX**: the datasheet horizontal figure is **45.0°** (DS13754 Rev 2, Table 2, at 88 % white / 1 m / dark /
+>   8x8 / 14 % sharpener / 15 Hz), not 63°. An 8-ring is `Ω = 0` — **OPEN, infinite blind wedges**, the exact failure
+>   §2.1 warns about. It is not 584 mm; it never closes. N = 9 is the first closed ring; **N = 12 closes at 513.1 mm
+>   from centre (338.1 mm past the skin)**, and **N = 16 is the smallest that bounds the tip within 350 mm (343.3 mm).**
+
 **Table 12 — smallest N that bounds the wedge tip** (round platform):
 
 | FoV (°) | tip ≤ 247 mm | tip ≤ 350 mm | tip ≤ 500 mm | tip ≤ 1000 mm |
@@ -256,6 +289,17 @@ cat can sit 400 mm from the robot, dead on a wedge bisector, and be completely i
 
 If the acceptance criterion is "nothing bigger than a cat can hide within 350 mm of the robot centre" then a 27° ToF ring
 needs **27 sensors** and a 63° array ring needs **12**. That is the honest cost of the geometry.
+
+**But those are the wrong two rows for real parts.** Table 12 is indexed by *horizontal* FoV, and 27° and 63° are the
+*diagonal* headline numbers of the VL53L1X and VL53L5CX. Read the table at the datasheet horizontal FoV instead:
+
+| part | datasheet FoV as published | horizontal FoV to size the ring with | smallest N with tip ≤ 350 mm |
+|---|---|---|---|
+| VL53L1X | 27° **diagonal**, ROI-reducible to 20°/15° (DS DocID031281 Rev 3, Tables 1 and 9) | 19.270° | **N = 38** (343.0 mm) |
+| VL53L5CX | 45° H / 45° V / 63° diagonal (DS13754 Rev 2, Table 2; 88 % white, 1 m, dark, 8x8, 14 % sharpener, 15 Hz) | 45.0° | **N = 16** (343.3 mm) |
+
+**That is the honest cost of the geometry: 38 VL53L1X, or 16 VL53L5CX — not 27 and 12.** Both are far past the point
+where a ring of single-point or single-array ToF modules is the right architecture.
 
 ---
 
@@ -427,22 +471,45 @@ tan(Φ_d/2) = √2 · tan(Φ_h/2)    →    Φ_h = 2·atan( tan(Φ_d/2) / √2 )
 | 100.0 | 80.241 | 4 | 5 | +1 |
 | 120.0 | 101.537 | 4 | 4 | 0 |
 
-The ST VL53L5CX is the concrete case: the [ST datasheet](https://www.st.com/resource/en/datasheet/vl53l5cx.pdf) quotes
-**63° diagonal** while the [ST product page](https://www.st.com/en/imaging-and-photonics-solutions/vl53l5cx.html) quotes
-**65° diagonal** — a vendor-internal discrepancy worth flagging (**confidence: datasheet-verified for 63°,
-vendor-page-verified for 65°**). Either way the *horizontal* FoV is ~46.9–48.5°, and ST's own
-[UM2884 application note](https://www.pololu.com/file/0J1885/um2884-a-guide-to-using-the-vl53l5cx-multizone-timeofflight-ranging-sensor-with-wide-field-of-view-ultra-lite-driver-uld-stmicroelectronics.pdf)
-describes the square FoV as roughly 45°×45°. **A ring designed on "63°" needs 8 sensors, not 6.**
+**Footnote — this table is the pinhole prediction, and for the two ST parts the datasheet beats it.** For the VL53L5CX,
+ST publishes the horizontal FoV directly as **45.0°** (DS13754 Rev 2 Table 2), not the 46.856° the pinhole row predicts,
+so the true penalty is **6 → 9 sensors, +3**, not +2. For the VL53L1X the datasheet's 27° is already labelled *diagonal*,
+so the pinhole conversion is the right one to apply and Φ_h = **19.270°** → **N = 19**, not 14.
 
-Reference FoV attributions used in this lane:
+The ST VL53L5CX is the concrete case, and it does **not** need the pinhole conversion at all, because ST publishes the
+horizontal number directly. **[VL53L5CX datasheet DS13754 Rev 2 (Aug 2021), Table 2 "FoV angles"](https://www.st.com/resource/en/datasheet/vl53l5cx.pdf)**:
 
-| part | quoted FoV | confidence |
-|---|---|---|
-| [VL53L0X](https://www.st.com/resource/en/datasheet/vl53l0x.pdf) | 25° system FoV | datasheet-verified |
-| [VL53L1X](https://www.st.com/resource/en/datasheet/vl53l1x.pdf) | 27° typ. full FoV, ROI-reducible | datasheet-verified |
-| [VL53L5CX](https://www.st.com/resource/en/datasheet/vl53l5cx.pdf) | 63° diagonal (65° on product page) | datasheet-verified / vendor-page-verified |
-| [HLK-LD2410](https://www.hlktech.net/index.php?id=988) | ±60° detection angle (120° full) | vendor-page-verified |
-| [HLK-LD2450](https://www.hlktech.net/index.php?id=1157) | azimuth ±60°, tilt ±35° | vendor-page-verified |
+| | Horizontal | Vertical | Diagonal |
+|---|---|---|---|
+| **Detection volume** (the usable system FoV) | **45°** | **45°** | **63°** |
+| Collector exclusion zone (cover-window opening) | 55.5° | 61° | 82° |
+
+**Measurement condition, quoted from the datasheet note — without it the number is meaningless:** "*measured with a
+white 88 % reflectance perpendicular target in full FoV, located at 1 m from the sensor, without ambient light (dark
+conditions), with an 8x8 resolution and 14 % sharpener (default value), in Continuous mode at 15 Hz*". The same note
+adds that "*detection volume depends on the environment and sensor configuration as well as target distance,
+reflectance, ambient light level, sensor resolution, sharpener, ranging mode, and integration time*". Against a 17 %
+grey target in 5 klux the usable angular extent is smaller than 45°, not equal to it.
+
+So **ST's own horizontal figure is 45.0°, not the 46.856° the pinhole conversion predicts from 63° diagonal.** ST's
+45°/45°/63° triple is not self-consistent under a pinhole model (45°×45° square implies a 60.7° diagonal), so use the
+measured 45° horizontal and treat the 63° diagonal as the marketing headline. UM2884 does not contradict this — its own
+text says "*8x8 zones with a wide 63 ° diagonal field of view (FoV)*", i.e. it repeats the diagonal, it does not state
+45°×45°. **A ring designed on "63°" needs 9 sensors, not 6 and not 8** (`floor(360/45)+1 = 9`).
+
+A "65° diagonal" figure could not be confirmed against any ST primary source in this check (the ST product page did not
+respond); the datasheet says 63°. **Confidence: 45°/45°/63° datasheet-verified with condition; 65° UNVERIFIED — do not
+design on it.**
+
+Reference FoV attributions used in this lane — **corrected against the primary datasheets**:
+
+| part | what the primary source actually says | usable **horizontal** FoV for ring sizing | confidence |
+|---|---|---|---|
+| [VL53L0X](https://www.st.com/resource/en/datasheet/vl53l0x.pdf) | 25° "system FoV" (ST DS) — ST does not label it H or diagonal | 25° if system/full; **~18° if it is the diagonal** | **UNVERIFIED in this check — ST server did not respond. Do not design on 25° until Table "FoV" of the DS is read.** |
+| [VL53L1X](https://www.st.com/resource/en/datasheet/vl53l1x.pdf) | DS DocID031281 Rev 3, Table 1: "Receiver Field Of View **(diagonal FOV)** Programmable from 15 to 27 degrees"; Table 9: diagonal FoV 27°/20°/15° for 16x16/8x8/4x4 ROI. Test condition: target covers full FoV, long distance mode, 100 ms budget, no cover glass, dark = no 940 nm ±30 nm IR | **19.27°** (= 2·atan(tan(13.5°)/√2)) | datasheet-verified; **the 27° is DIAGONAL, not horizontal** |
+| [VL53L5CX](https://www.st.com/resource/en/datasheet/vl53l5cx.pdf) | DS13754 Rev 2, Table 2: detection volume 45° H / 45° V / 63° diagonal, measured at 88 % white, 1 m, dark, 8x8, 14 % sharpener, 15 Hz | **45.0°** | datasheet-verified **with condition** |
+| [HLK-LD2410](https://www.hlktech.net/index.php?id=988) | Manual V1.03 §2.1 feature bullet: "Large detection angle, coverage up to ±60 degrees". No beamwidth, no −3 dB contour, no target RCS, no condition of any kind | ±60° is **not** a usable beam spec | **MISLEADING as used** — marketing coverage bullet for a *presence* radar that only reports moving/micro-moving **human** targets in 0.75 m distance gates. It does not range inanimate obstacles and reports no azimuth. It cannot be a perimeter collision sensor at any N. |
+| [HLK-LD2450](https://www.hlktech.net/index.php?id=1157) | Vendor page: "Azimuth angle ±60°, pitch angle ±35°" — no datasheet condition published | ±60° azimuth, nominal | vendor-page-verified only; **no measurement condition stated** |
 
 ---
 
@@ -545,6 +612,12 @@ The `h = 800, Φ_v = 25` row is the cat-blind row in full: the beam floor never 
 - a standing human (1500–1900 mm) is inside the upper half of the beam from ~1.5 m outward with `Φ_v = 63°`
   (`z_hi(1524) = 200 + 1524·tan 31.5° = 200 + 934 = 1134 mm` — only the legs and hips, which is enough to detect
   but not enough to classify by height).
+
+> **No part in this lane has a 63° vertical FoV.** The `Φ_v = 63°` column is a hypothetical. The VL53L5CX's published
+> vertical FoV is **45°** (DS13754 Rev 2, Table 2 — 45° H / 45° V / 63° diagonal), so the row that actually applies to
+> it is `Φ_v = 45°`: `z_hi(1524) = 200 + 1524·tan 22.5° = 200 + 631 = 831 mm`, and first floor strike at
+> **482.8 mm**. A standing human is seen only below knee-to-thigh height at 5 ft, which strengthens rather than weakens
+> the two-tier conclusion below.
 
 **The two-tier consequence.** One level ring cannot simultaneously (i) see a 200 mm cat at 300 mm and (ii) see a standing
 human's torso at 3 m, unless `Φ_v` is enormous. The geometry forces **two tiers**: a low tier at `h ≈ 150–250 mm` with
@@ -709,8 +782,11 @@ problem. **Every millimetre of recess must be budgeted before the ring is sized.
 1. **Use `N = ceil(360/(Φ − overlap))` with overlap 10–20°, never `N = 360/Φ`.** At `Ω = 0` the beam edges are parallel
    and the wedge never closes at any range.
 2. **The blind wedge is the binding constraint, not the ring count.** `D_tip = r[cos(Δ/2) + sin(Δ/2)·cot(Ω/2)]`, and
-   `D_tip ∝ 1/Ω` for small overlap. Eight 27° ToF sensors give eight infinite blind wedges. Twelve 63° arrays close at
-   321.9 mm from centre (146.9 mm past the skin) — the first design in the table that is defensible.
+   `D_tip ∝ 1/Ω` for small overlap. Eight 27° ToF sensors give eight infinite blind wedges.
+   **Size the ring on the datasheet *horizontal* FoV, never the diagonal headline.** The VL53L1X's 27° and the
+   VL53L5CX's 63° are both diagonal figures; horizontally they are **19.270°** and **45.0°**. Twelve VL53L5CX close at
+   **513.1 mm** from centre (338.1 mm past the skin), not 321.9 mm; **16** are needed to reach 343.3 mm. Twelve
+   VL53L1X do not close at all — that part needs **N ≥ 19** merely to close and **N = 38** to bound the tip at 350 mm.
 3. **Make the platform round if you can.** The square's 494.975 mm diagonal, 72.487 mm corner protrusion, and the
    face-vs-corner mounting trade (338 mm corner hole vs 653 mm face hole at 120° FoV) are all pure cost.
    If square, mount on **face centres** at `Φ ≥ 120°` and protect the corners mechanically.
@@ -732,7 +808,11 @@ problem. **Every millimetre of recess must be budgeted before the ring is sized.
 
 - [VL53L5CX datasheet (ST)](https://www.st.com/resource/en/datasheet/vl53l5cx.pdf)
 - [VL53L5CX product page (ST)](https://www.st.com/en/imaging-and-photonics-solutions/vl53l5cx.html)
-- [UM2884 — guide to using the VL53L5CX multizone ToF sensor with wide field of view](https://www.pololu.com/file/0J1885/um2884-a-guide-to-using-the-vl53l5cx-multizone-timeofflight-ranging-sensor-with-wide-field-of-view-ultra-lite-driver-uld-stmicroelectronics.pdf)
+- UM2884 — guide to using the VL53L5CX multizone ToF sensor with wide field of view. **Note: the link previously used
+  here was a [Pololu-hosted mirror](https://www.pololu.com/file/0J1885/um2884-a-guide-to-using-the-vl53l5cx-multizone-timeofflight-ranging-sensor-with-wide-field-of-view-ultra-lite-driver-uld-stmicroelectronics.pdf)
+  — a reseller copy, not the primary source. It is retained only because ST's own server did not respond during
+  verification. UM2884 states "8x8 zones with a wide 63 ° diagonal field of view (FoV)"; it does **not** state
+  45°×45°. The 45° horizontal figure comes from the datasheet (DS13754 Rev 2, Table 2), which is primary.**
 - [VL53L1X datasheet (ST)](https://www.st.com/resource/en/datasheet/vl53l1x.pdf)
 - [VL53L0X datasheet (ST)](https://www.st.com/resource/en/datasheet/vl53l0x.pdf)
 - [HLK-LD2410 product page (Hi-Link)](https://www.hlktech.net/index.php?id=988)

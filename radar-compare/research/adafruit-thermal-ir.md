@@ -5,6 +5,18 @@
 **Requirements under test:** (a) any collidable obstacle, (b) humans, (c) pets 200–500 mm tall, (d) human vs pet vs inanimate discrimination.
 **All prices read from adafruit.com on 2026-09-12.**
 
+> **Adversarial verification pass, 2026-09-12.** Every headline number below was re-checked against the
+> primary source — the manufacturer datasheet PDF where one exists, the Adafruit product page for price
+> and stock. PDFs opened and text-extracted in this pass: Panasonic Grid-EYE AMG88 (02 Apr 2017),
+> Melexis MLX90640 (Rev 12, 03 Dec 2019, Table 15 and Table 14), Melexis MLX90614 (doc server Rev 012 /
+> datasheet Rev 021, 02-Jun-2026, Table 19), ST STHS34PF80 (DS13916, Table 3 and §1). Corrections made
+> in this pass are marked inline and listed here: the Grid-EYE per-pixel 7.7° figure is a **half angle**,
+> not a half-power width; the 4407 and 4469 boards have **different dimensions and weight**; the 55°
+> MLX90640 does dilute a bare face beyond **6.7 m**; the 110° part dilutes a face beyond **3.3 m**, not
+> ~4 m; the two MLX90614 boards carry **different Melexis order codes** (BAA and AAA) though both are
+> 90° xAA optics; and **no detection range is published for the UTi165H/UTi165K** — only a 1 m optimal
+> measuring distance. Everything else listed below was confirmed verbatim.
+
 ---
 
 ## 0. The headline finding, stated first
@@ -51,8 +63,10 @@ Broadening to `thermal camera`, `PIR`, `motion sensor`, `thermopile`, `Grid-EYE`
 | Product | ID | Price | Stock | Notes |
 |---|---|---|---|---|
 | Adafruit STHS34PF80 IR Presence / Motion Sensor – STEMMA QT / Qwiic | 6426 | $14.95 | In stock | ST TMOS, 80° FFOV, **new Oct 2025**; Adafruit's stated replacement for the MLX90614 |
-| Melexis MLX90614 Contact-less IR Sensor – 3 V (MLX90614ESF-BAA) | 1747 | $15.95 | **No longer stocked** | 90° FoV; Adafruit redirects to the AMG8833 |
-| Melexis MLX90614 Contact-less IR Sensor – 5 V | 1748 | $15.95 | **No longer stocked** | 90° FoV; Adafruit redirects to the STHS34PF80 |
+| Melexis MLX90614 Contact-less IR Sensor – 3 V (MLX90614ESF-**BAA**) | 1747 | $15.95 | **No longer stocked** | 90° FoV; object range −70 °C to +380 °C; Adafruit redirects to the AMG8833 |
+| Melexis MLX90614 Contact-less IR Sensor – 5 V (MLX90614ESF-**AAA**, per the 1748 product page — *different order code from 1747*, same x**AA** optical family) | 1748 | $15.95 | **No longer stocked** | 90° FoV; object range −70 °C to +380 °C; Adafruit redirects to the STHS34PF80 |
+
+The 90° figure is **datasheet-verified, not just vendor-page**: Melexis MLX90614 datasheet (doc server Rev 012, datasheet Rev 021, 02-Jun-2026) Table 19 "FOV summary" gives "Type x**AA** … Width zone 1 = 90°", against 35° for xCC, 10° for xCF, 12° for xCH, 5° for xCI and 13° for xCK. Both 1747 and 1748 are xAA parts, so both are 90°. The same datasheet repeats the MLX90640's warning: accuracy is "valid if the object fills the FOV of the sensor completely", and "the measured value is the average temperature of all objects in the Field Of View" — which for a 90° cone is the room, not the person.
 
 ### 1.3 PIR (pyroelectric motion) — motion only, no presence, no classification
 
@@ -66,8 +80,10 @@ Broadening to `thermal camera`, `PIR`, `motion sensor`, `thermopile`, `Grid-EYE`
 
 | Product | ID | Price | Stock | Array | FoV | Range/accuracy |
 |---|---|---|---|---|---|---|
-| Thermal Camera Imager for Fever Screening – UTi165H | 4578 | $250.00 (was $524.95) | 5 in stock | 160×120 | 56° × 42° | 30–45 °C, ±0.5 °C at 1 m, <9 Hz |
-| Thermal Camera Imager with USB Video Output – UTi165K | 4579 | $499.95 | 91 in stock | 160×120 | 56° × 42° | 30–45 °C, ±0.5 °C at 1 m, <9 Hz |
+| Thermal Camera Imager for Fever Screening – UTi165H | 4578 | $250.00 (was $524.95) | 5 in stock | 160×120 | 56° (H) × 42° (V) | 30–45 °C, ±0.5 °C at 1 m, <9 Hz |
+| Thermal Camera Imager with USB Video Output – UTi165K | 4579 | $499.95 | 91 in stock | 160×120 | 56° (H) × 42° (V) | 30–45 °C, ±0.5 °C at 1 m, <9 Hz |
+
+**No detection range is published for either imager, and none should be inferred.** The 4578 spec table gives only "Minimum measuring distance: 15cm" and "Optimal measuring distance: 1 meter", with "Accuracy ±0.5˚C @1m", "IFOV 6mrad", "Thermal imaging sensitivity ＜50mk" and "Infrared bandwidth 8~14μm". A claim that these units "work to about 10 m" appears nowhere on the vendor page and is not supported by any primary source found in this pass. Treat 1 m as the only stated working distance.
 
 These are battery-powered handhelds with a 2.8" 320×240 LCD. The UTi165K adds USB-C real-time video out, which is in principle machine-readable, but the 30–45 °C measurement window is tuned for fever screening and clips everything at room temperature. Not suitable.
 
@@ -91,8 +107,8 @@ All values below are quoted from the Panasonic *Infrared Array Sensor Grid-EYE (
 |---|---|---|
 | Number of pixels | "64 (Vertical 8 × Horizontal 8 Matrix)" | — |
 | Viewing angle | "Typical 60 °" | horizontal **and** vertical, per the viewing-field figure |
-| Each pixel's viewing angle | "horizontal direction 7.7 ° (Typical) vertical direction 8 ° (Typical)" | central 4 pixels (No. 28, 29, 36, 37), half-power |
-| Optical axis gap | "Within Typical ±5.6 °" | both H and V — **this is 0.75 of a pixel of boresight error** |
+| Each pixel's viewing angle | "Central 4 pixels (Pixel No. 28, 29, 36, 37) viewing angle (half angle): horizontal direction 7.7 ° (Typical) vertical direction 8 ° (Typical)" | the datasheet figure is titled "Each pixel's viewing angle (**half angle**)" — **not** half-power. Read literally, one pixel's full acceptance cone is 15.4 ° H, roughly twice the 7.5 ° pixel pitch, so adjacent pixels overlap heavily and a point target bleeds into its neighbours. Verified against the PDF, 02 Apr 2017, "Optical properties" figure (2) |
+| Optical axis gap | "Sensor's optical center (the origin of graph below) gap: within ±5.6 ° (Typical) (Both horizontal and vertical directions)" — spec table wording is "Within Typical ±5.6 °" | both H and V — **this is 0.75 of a pixel of boresight error** |
 | Temperature accuracy | "Typical ±2.5 °C" | high-gain part |
 | Temperature range of measuring object | "0 °C to 80 °C" | high-gain part |
 | Temperature output resolution | "0.25 °C" | LSB size |
@@ -108,7 +124,7 @@ All values below are quoted from the Panasonic *Infrared Array Sensor Grid-EYE (
 
 On the Adafruit breakout 3538 the default address is **0x69**, changeable to **0x68** by bridging the `Addr` jumper (vendor-page/learn-guide verified). The board regulates to 3.3 V and accepts 3–5 V in, with STEMMA QT / Qwiic connectors and an interrupt pin.
 
-**Read the human-detection condition carefully.** 7 m is *not* a classification range. It is the range at which a 700 × 250 mm body, 4 °C hotter than its background, still produces a signal distinguishable from noise in a single pixel. At 7 m one Grid-EYE pixel covers 918 mm square. The 700 × 250 mm target fills 21 % of it, so the apparent rise is 0.21 × 4 = **0.83 °C**, which is about 5× the 10 Hz NETD of 0.16 °C. The arithmetic checks out — and it also tells you that at 7 m the human is **half a pixel wide**. Nothing can be classified from that.
+**Read the human-detection condition carefully.** 7 m is *not* a classification range. It is the range at which a 700 × 250 mm body, 4 °C hotter than its background, still produces a signal distinguishable from noise in a single pixel. At 7 m one Grid-EYE pixel covers 918 mm square. The 700 × 250 mm target fills 21 % of it, so the apparent rise is 0.21 × 4 = **0.83 °C**, which is about 5× the 10 Hz NETD of 0.16 °C. The arithmetic checks out — and it also tells you that at 7 m the datasheet's own 700 mm-wide body is **0.76 of a pixel wide** (700 ÷ 918), and the 450 mm torso used in §4 is **0.49 of a pixel** wide. Either way it is under one pixel. Nothing can be classified from that.
 
 ### 2.2 Melexis MLX90640 — Adafruit 4407 (55°) and 4469 (110°)
 
@@ -131,7 +147,7 @@ Quoted from the Melexis *MLX90640 32×24 IR array* datasheet, **Revision 12 — 
 | **Thermal stabilisation** | "there is thermal stabilization time necessary before the device can reach the specified accuracy – **up to 4 min**" | §12.2.2 |
 | Noise caveat | "it is normal that the noise will decrease for high temperature and increase for lower temperatures"; "pixels in the corner of the frame are noisier" | §12.3 |
 
-Adafruit's own board pages list, verbatim: "−40°C to 300°C" target, "±2°C (in the 0-100°C range)" accuracy, "Maximum frame rate of 16 Hz", "0.5Hz…64Hz (0.25 ~ 32 FPS)", "3.3V-5V supply voltage, regulated to 3.3V", "Less than 23mA", 25.8 × 17.8 × 10.5 mm, 3.0 g, STEMMA QT.
+Adafruit's own board pages list, verbatim: "−40°C to 300°C" target, "−40°C to 85°C" operating, "±2°C (in the 0-100°C range)" accuracy, "Maximum frame rate of 16 Hz" (4407), "0.5Hz…64Hz (0.25 ~ 32 FPS)" (4469), "3.3V-5V supply voltage, regulated to 3.3V", "Less than 23mA", STEMMA QT. **The two boards are not the same size**: 4407 is 25.7 × 17.7 × 16.0 mm, 3.5 g (the 55° can is taller); 4469 is 25.8 × 17.8 × 10.5 mm, 3.0 g. Read from each product page on 2026-09-12.
 
 **The subpage trap.** Adafruit's own parenthetical "(0.25 ~ 32 FPS)" against "0.5Hz…64Hz" is the give-away: the programmed refresh rate applies **per subpage**, and the device alternates subpage 0 and subpage 1 ("It is always subpage 0 to be measured first after POR then subpage 1 and so on alternating"). A *complete* frame therefore arrives at **half** the programmed refresh rate. "16 Hz" means **8 full frames per second**. In the default chess reading pattern, a fast-moving target produces a checkerboard tearing artifact across the two half-frames, which will corrupt any blob-shape classifier unless you either drop to a low rate or classify on a single subpage at half vertical resolution.
 
@@ -226,7 +242,7 @@ A pixel reports the flux-weighted average across its whole footprint. If the tar
 | Bare face 200×250, ΔT 12 °C | 12.00 | 12.00 | 12.00 | 5.87 | 3.76 | 1.40 | 0.71 |
 | Cat 250×200, ΔT 8 °C | 8.00 | 8.00 | 8.00 | 3.91 | 2.51 | 0.93 | **0.48** |
 
-**MLX90640 55°:** every one of these targets fully fills at least one pixel at every range out to 7 m, so there is **no dilution at all** — the 55° part reports the true surface ΔT. The 110° part starts diluting a bare face beyond ~4 m and a cat beyond ~4 m.
+**MLX90640 55°:** a clothed torso (450 mm) fills a pixel out to 15 m and a cat (250 × 200 mm) out to 7.8 m, so neither is diluted anywhere in this table. The one exception is the **bare face**: the 200 mm horizontal dimension equals the 55° part's H pixel footprint at 200 ÷ 30.0 = **6.7 m**, so at 7 m the face fills 0.95 of a pixel and reads 11.4 °C instead of 12 °C. For practical purposes the 55° part reports the true surface ΔT across the whole range of interest. **110° part:** the H pixel footprint is 60.0 mm/m, so a bare face begins to dilute beyond **3.3 m** (200 ÷ 60.0) and a cat beyond **3.7 m** (V-limited: 200 ÷ 54.6). Corrected 2026-09-12 — the earlier "~4 m and ~4 m" was rounded the wrong way and the "no dilution at all" for the 55° part was true only out to 6.7 m.
 
 This is the single most important practical difference. **On a Grid-EYE, apparent temperature encodes range as much as it encodes species.** A cat at 1 m and a human at 5 m can produce the same pixel value. Any threshold-based classifier built on Grid-EYE absolute values will be wrong in a way that no amount of tuning fixes.
 

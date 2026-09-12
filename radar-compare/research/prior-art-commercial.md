@@ -16,6 +16,34 @@ round footprint, 600-1200 mm tall**, that must (a) avoid collisions with anythin
 | **inferred** | Derived by me from two or more verified facts, or from a teardown description without a part number. |
 | **unverified** | Reported by press, reviewer or user community only; no primary source located. |
 
+## Corrections (adversarial re-verification, 2026-09-12)
+
+An independent check against primary sources overturned six numbers in the first revision. Each is
+corrected in place below; this list exists so a reader who already quoted the old figures can find
+them fast.
+
+1. **Create 3 "940 nm, AC coupled, range depends on surface quality of the target"** - was marked
+   datasheet-verified. **It is in no iRobot source.** Now unverified. (section 2.1)
+2. **Create 3 IR sensor mounting height "not published"** - wrong. It **is** published:
+   `ir_intensity_z_pos = "-0.7*cm2m"` = **-0.007 m** relative to `base_link`. (2.1, 14)
+3. **StarSight 2.0 "range 1-5 m"** - Roborock publishes **no range at all**, on either its US or its
+   global StarSight page. Figure withdrawn. (6.1)
+4. **Vacuum Wars "24 objects" and "fleet average ~17/24"** - it is a 24-**point** score, and **no
+   24-point average is published**. The real published averages are ~9/12 on the retired scale and
+   3.27 on a 5-point rating. (6.3)
+5. **Roomba Max 705 at $899.99 / $1,299.99** - not reproducible; iRobot's 705 pages 404 and the
+   current Max SKUs are the **715 Vac at $599.99** and **875 Combo at $1,199.99**. (2.3)
+6. **Roomba s9 "230,000 data points/s" and "3D sensor 25x/s"** - source pages are dead, product
+   discontinued; both downgraded from vendor-page-verified to unverified. (2.4)
+
+Also withdrawn for lack of any source: the **Dreame L50 Ultra 24/24** and **MOVA P10 Pro Ultra
+19/24** rows. Also downgraded: the **Roomba j7/j9 bumper camera + two IR windows** layout, which is
+inferred from photographs, not vendor-published. A secondary search-reported figure of "6 IR obstacle
+sensors" on the Create 3 base is **contradicted by iRobot's own docs**, which say **seven pairs**;
+use seven.
+
+---
+
 A recurring theme below: **almost none of the consumer robots publish a detection range with its
 measurement condition.** Where a vendor gives "5 m" with no target reflectivity and no ambient-light
 figure, I record it as vendor-page-verified and say the condition is not published. I have not
@@ -28,11 +56,11 @@ invented conditions for any of them.
 | Platform | Class | Footprint / height | Perimeter sensors | Human detect | Pet detect | Classifies H vs P vs object | Price (2026-09-12) | Confidence |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | Roomba 600 series | Floor vac | ~340 mm dia, ~92 mm | Mechanical bumper, 4 IR cliff, IR wall follower, omni IR receiver | No | No | No | Discontinued; retail clearance only | vendor-page-verified |
-| iRobot Create 3 | ROS base | 339 mm dia, 91 mm | 7 IR proximity pairs on bumper (940 nm), 2 bumper zones, 4 IR cliff, IMU, optical flow, encoders | No | No | No | ~$299 (educational, stock varies) | datasheet-verified (sensor set), unverified (price) |
-| TurtleBot 4 Standard | ROS platform | Create 3 base + tower, ~340 mm dia | Create 3 set + RPLIDAR A1M8 (0.15-12 m, 8 kHz, 360°, 1°) + OAK-D-Pro stereo with IR dot projector | Via software (OAK-D models) | Via software | Via software only | ~$2,000-2,400 typical reseller | datasheet-verified (sensors), unverified (price) |
+| iRobot Create 3 | ROS base | 339 mm dia, 91 mm | 7 IR proximity pairs on multizone bumper (**wavelength not published - see 2.1**), 4 IR cliff, IMU, optical odometry, wheel encoders + current sensors | No | No | No | ~$299 (educational, stock varies) | vendor-page-verified (sensor counts), unverified (940 nm, price) |
+| TurtleBot 4 Standard | ROS platform | Create 3 base + tower, ~340 mm dia | Create 3 set + RPLIDAR A1M8 (0.15-12 m, 8K samples/s, 360°, **≤**1°, 5.5 Hz scan; **no reflectivity or ambient-light condition published**) + OAK-D-Pro (IMX378 4K + OV9282 stereo, IR dot projector + flood IR LED) | Via software (OAK-D models) | Via software | Via software only | ~$2,000-2,400 typical reseller | datasheet-verified (sensors), unverified (price) |
 | Roomba j7 / j9 | Floor vac | ~339 mm dia | Forward RGB camera on bumper + 2 IR obstacle windows + bumper + IR cliff; top vSLAM camera | Indirectly (feet/legs as obstacles) | Detects pet **waste**, not pets | Object classes only | j7+ discontinued; j9+ clearance | vendor-page-verified |
-| Roomba Max 705 | Floor vac | ~340 mm dia | "ClearView Pro" LiDAR turret + PrecisionVision camera + bumper + cliff | No | Waste class only | Object classes only | $899.99 Vac + AutoEmpty; $1,299.99 Combo | vendor-page-verified |
-| Roborock Saros 10R | Floor vac | ~350 mm dia, 79.8 mm | StarSight 2.0: dual-transmitter solid-state LiDAR, 3D ToF, 21,600 points, QVGA 320x240, 1-5 m + RGB camera + vertical structured light | Not claimed | Not claimed (waste class) | 108-301 object classes | $1,299.99 | vendor-page-verified |
+| Roomba Max 705 | Floor vac | ~340 mm dia | "ClearView Pro" LiDAR + PrecisionVision camera (**PrecisionVision on the 705 specifically is unconfirmed**) + bumper + cliff | No | Waste class only | Object classes only | **Price unverified; not listed on irobot.com 2026-09-12 (404). Current Max SKUs: 715 Vac $599.99, 875 Combo $1,199.99. See 2.3** | unverified |
+| Roborock Saros 10R | Floor vac | ~350 mm dia, 79.8 mm | StarSight 2.0: dual-transmitter solid-state LiDAR, 3D ToF, 21,600 points, QVGA (**range not published by Roborock**) + RGB camera + vertical structured light | Not claimed | Not claimed (waste class) | 108-301 object classes (figures disagree) | $1,299.99 (was $1,599.99), in stock | vendor-page-verified |
 | Ecovacs Deebot (AIVI 3D 3.0) | Floor vac | ~350 mm dia | RGB camera + 3D structured light + dToF LiDAR turret | Not claimed | Waste class | Image-based object classes | T90 Pro Omni $598.99-799.99 | vendor-page-verified |
 | Amazon Astro | Home robot | 424 x 250 mm, 440 mm tall (1067 mm with mast) | 5 MP bezel camera, 1080p/12 MP periscope camera (132° diag), IR + ToF suite around chassis, custom cliff sensors, mic array | Yes - Visual ID face recognition, stranger following | Yes - cat/dog model, no individual ID | **Yes** (only consumer robot found that does all three) | $1,599 launch, invite-only; Business line bricked 2024-09-25 | vendor-page-verified + teardown (unverified detail) |
 | Double 3 | Telepresence | ~600 mm dia base, ~1200 mm tall | 2 x Intel RealSense D430 (1280x720 depth, 0.2-10 m), 5 ultrasonic, 2 x 2048 PPR encoders, 9-DOF IMU | Implicit (obstacle) | No | No | $3,999 launch price | datasheet-verified |
@@ -72,7 +100,30 @@ in consumer robotics:
 
 > "The IR obstacle sensors use 940 nm light and are AC coupled (external source lighting-insensitive)
 > reflective sensors. Their range depends on surface quality of the target."
-> (datasheet-verified)
+> (**unverified - CORRECTED 2026-09-12.** Previously marked datasheet-verified. This sentence is
+> **not** in any iRobot Create 3 primary source. Checked and not found in:
+> [hw/overview](https://iroboteducation.github.io/create3_docs/hw/overview/),
+> [hw/electrical](https://iroboteducation.github.io/create3_docs/hw/electrical/),
+> [hw/mechanical](https://iroboteducation.github.io/create3_docs/hw/mechanical/), the FAQ, and a
+> full text scan of every file in `iRobotEducation/create3_docs`, `create3_sim` and
+> `create3_examples` for `940`, `AC coupl` and `surface quality` - zero hits. A GitHub-wide code
+> search for `"surface quality of the target"` also returns 0 results. **iRobot publishes no
+> wavelength, no coupling method and no range figure for these sensors.** The 940 nm figure is
+> plausible for a reflective IR proximity part but is an assumption here, not a sourced number.)
+
+What iRobot **does** publish, verbatim and confirmed 2026-09-12:
+
+> "The front of the robot features a multizone bumper with seven pairs of IR proximity sensors,
+> which can be used to detect obstacles."
+> ([hw/overview](https://iroboteducation.github.io/create3_docs/hw/overview/), vendor-page-verified)
+
+> "The bottom of the robot includes four cliff sensors to keep the robot on solid ground ... two
+> wheels with current sensors and encoders, and an optical odometry sensor."
+> ([hw/overview](https://iroboteducation.github.io/create3_docs/hw/overview/), vendor-page-verified)
+
+> "[7 sets of IR emitters and receivers] are available in the front bumper to detect objects at
+> close range."
+> ([api/hazards](https://iroboteducation.github.io/create3_docs/api/hazards/), vendor-page-verified)
 
 The **angular layout** is published in the simulation URDF and is the most transferable single fact in
 this document. From
@@ -90,8 +141,21 @@ this document. From
 
 Seven emitter/detector pairs spanning **±75°, spaced 25° apart**, mounted on a 339 mm-diameter
 bumper. That is the shipping answer, from a company that has built more consumer mobile robots than
-anyone, to the question "how many short-range sensors do I need on a 350 mm robot". Sensor mounting
-height (`ir_intensity_z_pos`) is a xacro variable and is **not published** in that file.
+anyone, to the question "how many short-range sensors do I need on a 350 mm robot".
+
+**CORRECTED 2026-09-12 - the mounting height IS published.** An earlier revision of this document
+said `ir_intensity_z_pos` was "a xacro variable and not published". It is a xacro variable *and* its
+value is set in the same file, on the same pinned commit:
+
+```
+ir_intensity_z_pos = "-0.7*cm2m"
+```
+
+That is **-0.007 m**, i.e. 7 mm **below** `base_link`, before `base_link_z_offset` is added. So the
+IR proximity ring sits just below the reference frame origin, near the top of the bumper skirt, not
+at an unknown height. The datum is `base_link`, not the floor - the absolute height above the floor
+still requires `base_link_z_offset`, which is defined elsewhere in the xacro tree.
+(datasheet-verified, source file as cited above.)
 
 The cliff sensors are four units - two "center" (front) and two "back"/side - with pitch and yaw
 again parameterised and not published numerically in the same file.
@@ -114,10 +178,17 @@ again parameterised and not published numerically in the same file.
 
 ### 2.2 The camera generation (Roomba j7, j7+, j9, j9+)
 
-The j-series added iRobot's **PrecisionVision Navigation**: a **forward-facing RGB camera centred on
-the front of the bumper, flanked by two IR obstacle windows** (vendor-page-verified via Vacuum Wars
-and iRobot marketing). The j7 dropped the separate top-mounted vSLAM camera - the same front camera
-does navigation and object recognition.
+The j-series added iRobot's **PrecisionVision Navigation**. iRobot's own published description of it
+is one sentence and contains no optical detail: *"Precision Vision: the navigation system that
+detects and avoids obstacles like power cords and pet waste."*
+
+**DOWNGRADED 2026-09-12.** The physical layout - a **forward-facing RGB camera centred on the front
+of the bumper, flanked by two IR obstacle windows** - was marked vendor-page-verified in the earlier
+revision. It is **not** vendor-published. iRobot does not state the camera's position, sensor,
+resolution, FOV, or the count or function of the adjacent bumper windows anywhere primary, and the
+Vacuum Wars j7+ review URL cited for it now returns **HTTP 404**. The layout is **inferred from
+product photographs** and should be marked as such. The claim that the j7 dropped the separate
+top-mounted vSLAM camera is likewise **unverified** against a primary source.
 
 Recognised classes at launch were **cords, socks, shoes, and solid pet waste**. iRobot backed the
 last one with a commercial guarantee, the **Pet Owner Official Promise (P.O.O.P.)**: if a covered
@@ -145,8 +216,29 @@ firmware updates.
 iRobot's newest top-end model reverses the camera-only bet. The **Max 705** carries **"ClearView Pro"
 LiDAR** for mapping "even in dim lighting", **plus** the PrecisionVision camera for object classes.
 
-- Max 705 Vac + AutoEmpty Dock: **$899.99** (vendor/retailer-verified 2026-09-12)
-- Max 705 Combo + AutoWash Dock: **$1,299.99** MSRP (vendor-page-verified)
+**CORRECTED 2026-09-12 - both prices were wrong / stale, and the Max 705 is not the current SKU.**
+
+- ~~Max 705 Vac + AutoEmpty Dock: **$899.99**~~ and ~~Max 705 Combo + AutoWash Dock: **$1,299.99**~~.
+  Neither figure could be reproduced from an iRobot page on 2026-09-12. `irobot.com` product URLs for
+  the 705 return **HTTP 404**; the model appears only inside navigation menus ("705 Combo", "705V").
+- What iRobot's own homepage actually shows on **2026-09-12**: **Roomba Max 875 Combo $1,199.99**,
+  **Roomba Max 715 Vac $599.99** (marked down from $699.99), **Roomba Plus 678 Combo $899.99**,
+  **Roomba Electro Plus $329.99** (from $399.99). **No Max 705 is listed.**
+- iRobot's own lineup announcement, as reported by Vacuum Wars, names **Max 715 Vac + AutoEmpty Dock
+  at $699.99** and **Max 775 Combo + AutoWash Dock at $999.99** - there is no Max 705 in that
+  announcement at any price.
+  ([Vacuum Wars](https://vacuumwars.com/irobot-expands-lineup/))
+- The Max 705 **does exist** as a retail product - the Amazon listing title is verbatim *"iRobot
+  Roomba Max 705 Robot Vacuum with AutoEmpty Dock, Powerful Suction, Dual Rubber Anti-Tangle Brushes,
+  LiDAR Navigation, Obstacle & Anti-Fall Detection, for Carpet and Hard Floors"* - but **no price was
+  retrievable** and it is absent from iRobot's current lineup. Treat it as **superseded by the
+  715/775/875 Max SKUs**; availability is channel stock, not a live iRobot listing.
+- Note also that the Amazon title claims only **"LiDAR Navigation, Obstacle & Anti-Fall Detection"**
+  and does **not** name PrecisionVision. The "ClearView Pro LiDAR + PrecisionVision AI" pairing is
+  attributed by Vacuum Wars to the **Max** models and the Plus 575 Combo as a class, verbatim: *"All
+  five new robot models use LiDAR-based navigation, with the premium Max models and Plus 575 Combo
+  adding ClearView Pro LiDAR and PrecisionVision AI for obstacle recognition."* Whether the 705
+  specifically carries PrecisionVision is **not confirmed by a primary iRobot page**.
 
 **Lesson:** the company that most publicly argued a single RGB camera was enough has shipped a
 LiDAR + camera fusion stack at the top of its line. Ranging and classification are separate jobs and
@@ -154,9 +246,18 @@ the industry has converged on separate sensors for them.
 
 ### 2.4 Roomba s9 / s9+
 
+**DOWNGRADED 2026-09-12: both s9 numbers are now unverifiable, and the product is gone.** iRobot's
+s9/s9+ product pages return **HTTP 404**, the s9 does not appear in iRobot's current lineup, and
+neither the "over 230,000 data points per second" vSLAM figure nor the "3D sensor scanning 25 times
+per second" PerfectEdge figure could be located on any surviving iRobot page or in the Wikipedia
+Roomba article. They were **marked vendor-page-verified in the earlier revision without a live
+vendor page behind them**; they are now **unverified** and rest on archived marketing copy only.
+Treat the s9 as a discontinued product with unrecoverable specifications.
+
 The s9 used **top-mounted vSLAM** ("over 230,000 data points per second", vendor claim, condition not
-published) plus a **3D sensor scanning "25 times per second"** for PerfectEdge corner work
-(vendor-page-verified, wavelength/range/technology not published). Notably the s9 did **not** have
+published, **source page now dead**) plus a **3D sensor scanning "25 times per second"** for
+PerfectEdge corner work (**unverified**, wavelength/range/technology not published).
+Notably the s9 did **not** have
 object-class recognition - it had a 3D ranging sensor and no classifier. It is the clean counter-
 example: geometry without semantics.
 
@@ -315,10 +416,21 @@ a dark floor is functionally the same perception problem as avoiding a sleeping 
 Vendor-page-verified specs:
 
 - **Dual-transmitter solid-state LiDAR**, two optical phased arrays steering IR pulses.
-- **3D Time-of-Flight, 21,600 sensor points**, **QVGA 320 x 240**.
-- Stated **range 1-5 m** (target reflectivity and ambient-light condition **not published**).
+- **3D Time-of-Flight, 21,600 sensor points** (verbatim: "21,600 sensor points* for 3D scanning"),
+  **QVGA** ToF sensor - Roborock says "QVGA ToF sensor"; the 320 x 240 figure is the definition of
+  QVGA, **inferred**, not printed by Roborock.
+- ~~Stated **range 1-5 m**.~~ **CORRECTED 2026-09-12: Roborock publishes no range figure at all.**
+  Checked both [us.roborock.com StarSight](https://us.roborock.com/pages/roborock-starsight-autonomous-system)
+  and [global.roborock.com StarSight](https://global.roborock.com/pages/roborock-starsight-autonomous-system);
+  neither states a detection range in metres. The "1-5 m" figure in the earlier revision has **no
+  primary source** and should not be relied on. **unverified.**
 - Sampling frequency "21 times higher than LDS2" (relative claim; absolute rate not published).
-- Detects objects **"down to as small as 2 cm wide and 2 cm tall"** (condition not published).
+- Detects objects **"down to as small as 2 cm wide and 2 cm tall"** - and Roborock does state its
+  condition, verbatim: *"Based on internal testing carried out by the manufacturer, the robot vacuum
+  can see and bypass objects down to as small as 2cm wide and 2cm tall. Recognition accuracy may vary
+  depending on environmental factors."* So the condition is "manufacturer's own internal testing,
+  environment-dependent" - which is a disclaimer, not a measurement condition. No target
+  reflectivity, no illuminance, no standoff distance.
 - StarSight 2.0 adds **vertical structured light** on top of the dual-light ToF, projecting a pattern
   onto walls and furniture and measuring its distortion - specifically to catch **tall or narrow**
   obstacles that a floor-plane sensor misses.
@@ -352,22 +464,45 @@ gives the label; neither alone is sufficient.**
 
 ### 6.3 The independent benchmark (Vacuum Wars)
 
-Vacuum Wars runs the only consistent public obstacle-avoidance benchmark: **24 objects** across a
-standard test (six objects evenly spaced on hard floor - cords, novelty pet waste, cloth, toy vacuum)
-and a "torture test" (all six at once, randomly placed, on patterned rugs), scored against an average
-across **205+ robots tested**.
+Vacuum Wars runs the only consistent public obstacle-avoidance benchmark. **CORRECTED 2026-09-12 -
+the methodology description in the earlier revision was wrong on three points:**
 
-| Model | Score /24 | Sensor technology | Price |
-| --- | --- | --- | --- |
-| Roborock Saros 10R | 24 | StarSight 2.0 solid-state LiDAR + 3D ToF + RGB + vertical structured light | $1,299.99 |
-| Eufy Omni S2 | 24 | ToF + binocular cameras | $1,599.99 |
-| Dreame L50 Ultra | 24 | Binocular AI camera stack | (not captured) |
-| Ecovacs T90 Pro Omni | 23 | Structured light + embedded LiDAR | $598.99-799.99 |
-| Ecovacs X12 OmniCyclone | 23 | Structured light + LiDAR | $1,499.99 |
-| Eufy E28 Omni | 23 | Sensor fusion (not detailed) | $679.99-999.99 |
-| Dreame X60 Max Ultra | 22 | Binocular AI cameras + "Proactive Illumination" | $1,614.99-1,699.99 |
-| MOVA P10 Pro Ultra | 19 | (not captured) | (not captured) |
-| Fleet average | ~17 | mixed | - |
+- It is a **24-point score**, not "24 objects". The earlier revision said "24 objects"; that is a
+  misreading of the `/24` denominator.
+- The published structure is **five scored scenarios** - **Pet Test** (simulated solid pet waste),
+  **Toy Test**, **Cloth Test**, **Cord Test**, and a **Torture Test** (all of the above at once,
+  chaotic placement) - each scored individually and summed. The roundup page separately describes
+  "six objects positioned evenly" on hard floor for the standard run and "cords, novelty pet waste,
+  a cloth, and a small toy vacuum" as the objects, and the torture run adds patterned rugs.
+  ([Vacuum Wars - Saros 10R](https://vacuumwars.com/vacuum-wars-names-roborock-saros-10r-best-obstacle-avoidance-robot-vacuum-of-mid-2025/))
+- **There is no published "~17/24" fleet average.** The earlier revision asserted one. What Vacuum
+  Wars actually publishes is (a) on the **retired 12-point** scale, *"The highest possible score was
+  12, with the average robot scoring around 9"*, and (b) on a separate **5-point** obstacle rating,
+  *"Average Robot Vacuum Tested" = **3.27*** against the Saros 10R's **4.90**. Neither converts
+  cleanly to the 24-point scale. **Do not quote a 24-point fleet average; none exists.**
+
+The "**205+ robot vacuums**" figure is also narrower than stated earlier: Vacuum Wars says it has
+*"independently tested 205+ robot vacuums"* **in total**, across all test categories. It does not
+say 205+ robots were run through the 24-point obstacle-avoidance suite.
+
+Scores and prices re-verified against the primary pages on **2026-09-12**. Rows marked
+**unverified** could not be found on either Vacuum Wars page cited in Sources.
+
+| Model | Score /24 | Sensor technology | Price | Status 2026-09-12 |
+| --- | --- | --- | --- | --- |
+| Roborock Saros 10R | 24 | StarSight 2.0 solid-state LiDAR + 3D ToF + RGB + vertical structured light | $1,299.99 (was $1,599.99) | confirmed, in stock at Roborock US |
+| Eufy Omni S2 | 24 | ToF + binocular cameras (**sensor tech not stated on the Vacuum Wars page - unverified**) | $1,599.99 | score and price confirmed |
+| Ecovacs T90 Pro Omni | 23 | Structured light + embedded LiDAR (**not stated on the Vacuum Wars page - unverified**) | $598.99-799.99 | score and price confirmed |
+| Ecovacs X12 OmniCyclone | 23 | Structured light + LiDAR (**unverified**) | $1,499.99 | score and price confirmed |
+| Eufy E28 Omni | 23 | Sensor fusion (not detailed) | $679.99-999.99 | score and price confirmed |
+| Dreame X60 Max Ultra Complete | 22 | verbatim: "binocular AI cameras, edge sensors, and Proactive Illumination to detect objects as small as 1 cm" | $1,614.99-1,699.99 | score, price and sensor text confirmed |
+| ~~Dreame L50 Ultra~~ | ~~24~~ | - | - | **NOT FOUND 2026-09-12.** Absent from the cited Vacuum Wars obstacle-avoidance roundup. Row withdrawn. |
+| ~~MOVA P10 Pro Ultra~~ | ~~19~~ | - | - | **NOT FOUND 2026-09-12.** Absent from the cited roundup. Row withdrawn. |
+| ~~Fleet average~~ | ~~~17~~ | - | - | **WITHDRAWN.** No 24-point average is published. See above. |
+
+Note also that the Saros 10R's 24/24 comes from Vacuum Wars' **dedicated Saros 10R article**, not
+from the obstacle-avoidance roundup - as of 2026-09-12 the roundup page does not list the Saros 10R
+at all, and its top entry is the Eufy Omni S2 at 24/24.
 
 Two things fall out of this table:
 
@@ -561,7 +696,7 @@ consumer robot in this survey**. A hobby robot cannot buy safety; it can only bu
 
 | Failure mode | Which sensor fails | Evidence | Severity for the target robot |
 | --- | --- | --- | --- |
-| **Dark / IR-absorbing targets** (black socks, dark furniture, black cables, dark pet fur) | Reflective IR proximity, IR cliff, active IR stereo | Create 3 docs: range "depends on surface quality of the target"; universal dark-rug false-cliff behaviour | **Critical.** A black cat is the single worst-case pet target for an IR-based stack. |
+| **Dark / IR-absorbing targets** (black socks, dark furniture, black cables, dark pet fur) | Reflective IR proximity, IR cliff, active IR stereo | **NOT from Create 3 docs** - iRobot publishes no range or surface-dependence statement (see 2.1). Evidence here is the universal dark-rug false-cliff behaviour plus first-principles reflective-IR physics. **inferred, not vendor-stated.** | **Critical.** A black cat is the single worst-case pet target for an IR-based stack. |
 | **Darkness / no ambient light** | RGB camera classifiers | Roomba j-series cannot classify in dark rooms; Navimow night range halves to 1.8 m and FOV to 150° | **Critical** if the robot operates at night. Mandates an illuminator or a non-visible-light ranging channel. |
 | **Low, flat objects** (cables, pet waste, sleeping cat) | 2D LiDAR at turret height, bumper, ultrasonic | Husqvarna: "Objects lying flat or very close to the ground may not be detected" | **Critical.** A 200 mm pet is below every turret-height 2D scan plane. |
 | **Contact-only animal detection** | Bumper, wheel current, ultrasonic | Oxford study: 18-19 of 19 mowers required physical contact | **Critical.** The entire prior-art class fails the pet requirement. |
@@ -673,9 +808,18 @@ turned backs.
   Roborock (1-5 m, no target reflectivity), not temi (5 m, no condition), not Navimow (3 m people, no
   condition), not Astro (nothing published at all). The only conditioned numbers in this document
   come from the component datasheets that consumer vendors decline to cite.
-- **No published mounting height for the Create 3 IR proximity ring.** It is a xacro variable in the
-  public URDF.
+- ~~**No published mounting height for the Create 3 IR proximity ring.**~~ **WITHDRAWN 2026-09-12.**
+  This negative finding was wrong. `ir_intensity_z_pos = "-0.7*cm2m"` (-0.007 m relative to
+  `base_link`) is set in `create3.urdf.xacro` at the pinned commit. See section 2.1.
+- **iRobot publishes no wavelength, coupling method or range for the Create 3 IR proximity sensors.**
+  The widely repeated "940 nm, AC coupled, range depends on surface quality of the target" sentence
+  does not appear in any iRobot source (see section 2.1 for the search that establishes this).
 - **iRobot does not publish whether the j9 has an illumination LED.** Reviewers contradict each other.
+- **Vacuum Wars publishes no fleet average on its 24-point obstacle-avoidance scale.** The only
+  published averages are "the average robot scoring around 9" on the retired 12-point scale, and an
+  "Average Robot Vacuum Tested" figure of **3.27** on a separate 5-point obstacle rating. See 6.3.
+- **Roborock publishes no detection range for StarSight 2.0.** Neither the US nor the global
+  StarSight page states a range in metres. See 6.1.
 
 ---
 

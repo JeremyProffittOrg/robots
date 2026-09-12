@@ -35,14 +35,14 @@ The brief also names **SEN0611**. No DFRobot SKU `SEN0611` exists in the DFRobot
 
 | SKU | Product | Chip/band | Max range (condition) | Beam H × V | Reports | Interface | Price | Confidence |
 |---|---|---|---|---|---|---|---|---|
-| SEN0609 | C4001 mmWave Presence Sensor 25 m | 24 GHz FMCW (silicon not published; HW string `JYSJ_5807_A01`) | Presence 16 m; motion + ranging 25 m; ranging 1.2–25 m | 100° × 40° | range (m), radial speed (m/s), energy, 1 target max | UART ASCII + OUT pin | $13.90 | datasheet-verified |
+| SEN0609 | C4001 mmWave Presence Sensor 25 m | 24 GHz FMCW (silicon not published; HW string `JYSJ_5807_A01`) | Presence 16 m; motion + ranging 25 m; ranging 1.2–25 m. **Condition: human target ("Human detection: Detection range up to 16 meters and motion detection range up to 25 meters"); 25 m needs "a significant movement" and is "depending on the target characteristics"; no RCS or reflectivity figure published** | 100° × 40° | range (m), radial speed (m/s), energy, 1 target max | UART ASCII + OUT pin | $13.90 | datasheet-verified |
 | SEN0610 | Gravity C4001 mmWave Presence Sensor 12 m | 24 GHz FMCW (same family) | Presence 8 m; motion 12 m; ranging 1.2–12 m | 100° × 80° | range, speed, energy, target count 0/1 | I2C 0x2A/0x2B + UART | $12.90 | vendor-page-verified |
-| SEN0691 | Fermion C4002 Motion & Static Presence | 24–24.25 GHz FMCW | Motion 11 m; micro-motion/static 10 m; configurable 0–1100 cm | 120° × 120° | target state, presence distance + energy, motion distance + speed + direction + energy, ambient lux, per-gate energy | UART (57.6 k–1 M) + OUT pin | $8.90 | datasheet-verified (library header) |
+| SEN0691 | Fermion C4002 Motion & Static Presence | 24–24.25 GHz FMCW | Motion 11 m; micro-motion/static 10 m; configurable 0–1100 cm. **Condition: target published as "Motion, Micro-Motion/Stationary Human Body"; no RCS figure. Note the store SKU headline is "(10m)", not 11 m** | 120° × 120° | target state, presence distance + energy, motion distance + speed + direction + energy, ambient lux, per-gate energy | UART (57.6 k–1 M) + OUT pin | $8.90 | datasheet-verified (library header) |
 | SEN0306 | 24 GHz Microwave Radar Distance Sensor 20 m | 24 GHz FMCW, 6 dBm typ (10 dBm max) | 0.5–20 m | 78° × 23° (−3 dB) | distance (cm) + optional 126-bin spectrum | UART 57600 8N1 | $65.90 | vendor-page-verified |
 | SEN0623 | C1001 60 GHz Fall / Sleep Detection | 61–61.5 GHz, 6 dBm | 11 m presence; sleep chest 0.4–2.5 m; breath/HR chest 0.4–1.5 m | 100° × 100° | presence flag, movement, moving range, fall state, static-residency state, breath/HR | UART 115200 | $29.00 | vendor-page-verified |
 | SEN0676 | 80 GHz Liquid Level Radar 40 m | 77–81 GHz, 4 GHz bandwidth | 0.15–40 m | ±25° × ±25° (±3° with lens) | level distance, ±5 mm accuracy, 1 mm resolution | UART Modbus | $59.00 | vendor-page-verified |
 | (Seeed) | MR60BHA2 Breathing & Heartbeat | **ADT6101P**, 57–64 GHz FMCW, 2T2R | breath/HR chest 0.4–1.5 m | ±60° × ±60° (−3 dB) | has_target, num_targets, distance, breath_rate, heart_rate | UART | not a DFRobot SKU | datasheet-verified |
-| (Seeed) | MR60FDA2 Fall Detection | **ADT6101P**, 57–64 GHz FMCW, 2T2R | fall detection radius **2 m max** | ±60° × ±60° (−3 dB) | fall flag, presence | UART | not a DFRobot SKU | datasheet-verified |
+| (Seeed) | MR60FDA2 Fall Detection | **ADT6101P**, 57–64 GHz FMCW, 2T2R | fall detection radius **2 m max**. **Condition published: "The detection range of the radar module is closely related to the target RCS and environmental factors... it is normal for the effective detection range to fluctuate within a certain range"** | ±60° × ±60° (−3 dB) | fall flag, presence | UART | not a DFRobot SKU | **beta**-datasheet-verified |
 
 ---
 
@@ -60,9 +60,11 @@ DFRobot therefore publishes **no range accuracy and no range resolution for the 
 
 Verbatim from the same section:
 
-> "The C4001 millimeter wave presence sensor module has a 1 m transition zone, which means that if the maximum detection distance is set to 3 meters, it is possible to detect targets between 3~25 meters."
+> "The C4001 millimeter wave presence sensor module has a 1m transition zone, which means that if the maximum detection distance is set to 3 meters, it is possible to detect targets between 3~25 meters. When approaching 25 meters, a significant movement is required to be detected, and it is also possible that the target cannot be detected at the 25-meter position (depending on the target characteristics). However, no targets will be detected beyond 25 meters, such as 27 meters. Therefore, users need to pay special attention to this feature when configuring the maximum distance parameter in order to accurately define the detection area."
 
-So `setRange 0.6 3` does **not** produce a hard 3 m cutoff. Targets beyond the set maximum still get reported, with decreasing probability, out to the module's physical 25 m. For a 350 mm robot that wants "anything inside 1.5 m is a collision risk", this is a serious problem: you cannot bound the detection volume tightly in software, so a person standing 4 m away can still latch the single target slot and mask a chair leg at 0.9 m.
+**Correction (adversarial re-check, 2026-09-12): an earlier revision of this file quoted only the first sentence of that passage.** The truncation mattered. The two clauses it dropped are the only measurement conditions DFRobot publishes for the 25 m figure anywhere: detection at 25 m requires *"a significant movement"* and is *"depending on the target characteristics"*, and 25 m is a **hard ceiling**, not a soft one. So the 25 m number is a best-case, large-motion, favourable-target figure — quote it that way or not at all.
+
+So `setRange 0.6 3` does **not** produce a hard 3 m cutoff. Targets beyond the set maximum still get reported, with decreasing probability, out to the module's physical 25 m — where the detection then stops hard. For a 350 mm robot that wants "anything inside 1.5 m is a collision risk", this is a serious problem: you cannot bound the detection volume tightly in software, so a person standing 4 m away can still latch the single target slot and mask a chair leg at 0.9 m.
 
 ### 3.3 Velocity — three published numbers that disagree
 
@@ -174,6 +176,8 @@ $8.90, and despite being the cheapest it produces by far the richest data struct
 
 **Specs:** 3.6–5.5 V, 24–24.25 GHz FMCW, detection angle 120° × 120°, motion 11 m, micro-motion/stationary 10 m, ambient light sensor 0–50 lux, −20 to 85 °C, 22 × 26 mm. Current consumption **not published**.
 
+**Range condition, verified 2026-09-12:** the DFRobot wiki spec table names the detection target explicitly — *"Motion, Micro-Motion/Stationary Human Body"*. So unlike the C4001, the C4002's 11 m / 10 m figures *are* scoped to a human body; what is still missing is any RCS, target-size or aspect condition. Do not read 11 m as a range against a chair leg or a cat. Note also that DFRobot's own store title for SEN0691 is *"Fermion: C4002 mmWave Human Presence Sensor - Static & Motion Detection for Home Assistant (10m)"* — **the SKU headline says 10 m while the wiki spec says motion 11 m**. Unresolved vendor inconsistency; plan against 10 m.
+
 **What it reports per frame** (`getNoteInfo()` → `sRetResult_t`):
 
 - `targetState`: `eNoTarget` 0, `ePresence` 1, `eMotion` 2 (plus OUT-pin combination states 3–5)
@@ -187,7 +191,11 @@ $8.90, and despite being the cheapest it produces by far the richest data struct
 
 > "When the resolution mode is 80cm, 0 to 15 bits may be set to 1 to represent the presence of the target. When the resolution mode is 20cm, 0 to 25 bits may be set to 1."
 
-So: **16 gates × 0.80 m = 12.8 m coverage**, or **26 gates × 0.20 m = 5.2 m coverage**. The 20 cm mode is the interesting one for a robot — 20 cm range bins out to 5.2 m is a coarse 1D occupancy vector, and `setGateThresh(gateType, thresh[])` lets you set a **per-gate threshold 0–99** independently for motion gates and presence gates.
+So: **16 gates × 0.80 m = 12.8 m of gate span**, or **26 gates × 0.20 m = 5.2 m of gate span**.
+
+**Correction (adversarial re-check, 2026-09-12): "12.8 m coverage" is arithmetic, not a capability, and an earlier revision of this file presented it as a capability.** Two published limits sit below it. `setDetectRange(closest, farthest)` is capped at **1100 cm**, and the wiki spec is **motion 11 m / micro-motion 10 m** against a human body. The 80 cm mode therefore cannot deliver 12.8 m of usable detection: gates above index 13 (≈11.2 m) lie outside both the configurable window and the specified range. Read the 80 cm mode as **≤11 m of usable span in 16 gates**, and treat the top one or two gates as unspecified. The 20 cm mode's 5.2 m span sits well inside every published limit and is unaffected.
+
+The 20 cm mode is the interesting one for a robot — 20 cm range bins out to 5.2 m is a coarse 1D occupancy vector, and `setGateThresh(gateType, thresh[])` lets you set a **per-gate threshold 0–99** independently for motion gates and presence gates.
 
 That per-gate threshold array is the closest thing in this entire lane to a mechanism for tolerating a moving platform: you can blind the first two or three gates (0–60 cm) so the robot's own shell and its own bumper hardware stop dominating the CFAR window, without giving up sensitivity at 1–3 m.
 
@@ -217,7 +225,7 @@ $65.90, five times the price of a C4001, and it is the only DFRobot 24 GHz part 
 
 **Output frame.** Header `0xFF 0xFF 0xFF`, then 16-bit distance in **centimetres**, high byte first. If the mode pin (pin 6) is tied to ground, the frame continues with **126 spectral line amplitudes, each in the range 1–44**, then a tail.
 
-That 126-bin spectrum is the only raw radar data any DFRobot part exposes. DFRobot's own wording: *"After post-processing, users can use these spectral lines to realize multiple targets detection."* In other words, DFRobot ships you a range-FFT magnitude vector and tells you to do your own CFAR. For a robot this is the correct primitive — you can implement your own ego-motion-aware detector instead of fighting a black-box presence algorithm. It is also the only part here where you can see a static wall and a moving person in the same frame and separate them yourself.
+That 126-bin spectrum is the only raw radar data any DFRobot part exposes. DFRobot's own wording, verbatim from `wiki.dfrobot.com/sen0306/docs/20390`: *"After post-processing, users can use these spectral lines to realize mutilple targets detection."* (vendor's spelling). The same wiki also claims the module *"can detect up to 5 obstacles"* — that is a vendor claim about what the spectrum supports after your own peak-finding, **not** a reported target list on the wire. The wire gives one distance plus the spectrum. In other words, DFRobot ships you a range-FFT magnitude vector and tells you to do your own CFAR. For a robot this is the correct primitive — you can implement your own ego-motion-aware detector instead of fighting a black-box presence algorithm. It is also the only part here where you can see a static wall and a moving person in the same frame and separate them yourself.
 
 The 78° × 23° beam is well matched to a robot: wide enough in azimuth to cover a sector, narrow enough in elevation that floor and ceiling multipath is reduced. Mounted at 300–400 mm on a 600–1200 mm robot, a 23° vertical beam illuminates roughly 0.4 m of height at 1 m and 2.0 m at 5 m, which covers a cat's body at short range and a standing human's torso at medium range.
 
@@ -264,9 +272,17 @@ Both are built on the **ADT6101P**: *"monolithically integrates a 57~64GHz radio
 | Horizontal beam (−3 dB) | ±60° | ±60° |
 | Vertical beam (−3 dB) | ±60° | ±60° |
 | Operating voltage | 3.1 / 3.3 / 3.5 V | 3.1 / 3.3 / 3.5 V |
-| Operating current | **max 600 mA** | **max 600 mA** |
-| Function | breath/HR chest 0.4–1.5 m, ≥90% accuracy | **fall detection radius max 2 m**, 90% recognition |
-| Mounting | — | **top-mounted, hanging height 2.2–3.0 m** |
+| Operating current | ICC table **max 600 mA**; Precautions demand a supply of **≥1 A** | ICC table **max 600 mA**; Precautions demand a supply of **≥1 A** |
+| Function | breath/HR chest 0.4–1.5 m, breath accuracy **90 % typical** | **fall detection radius max 2 m**, fall recognition accuracy **90 % typical** |
+| Mounting | — | **top-mounted, hanging height 2.2–3.0 m**, "maximum sensing radius 2m" |
+
+**Correction (adversarial re-check, 2026-09-12): an earlier revision of this file gave the MR60 power budget as "600 mA max" only.** That is the ICC row of section 4.2. Section 7 (Precautions) of the same datasheet says something harder, verbatim:
+
+> "The radar module has extremely high power requirements, requiring an input voltage of 3.1~3.5V, power supply ripple ≤50mV, and current ≥1A. If a DCDC power supply is used, the switching frequency is required to be no less than 2MHZ."
+
+**Budget ≥1 A at 3.3 V with ≤50 mV ripple, not 600 mA.** On a battery robot that is the difference between a shared rail and a dedicated regulator. The two numbers are a vendor contradiction; the Precautions figure is the design-safe one.
+
+**Document-quality warning.** The MR60FDA2 file is titled *"Fall detection module technical specifications (Beta Version)"*, Revision History `V1.0 / 2024/03/05 / Beta version`, and its own section 1 opens *"MR60FDC1 is a radar sensing module developed based on the ADT6101P chip"* — a **different part number from the one on the cover**. Treat every MR60FDA2 number here as beta-grade and unconfirmed against a released datasheet.
 
 The ESPHome `seeed_mr60bha2` component exposes exactly five entities: `has_target`, `breath_rate`, `heart_rate`, `distance`, `num_targets`. **No x/y/z.** `distance` is documented as *"straight-line distance between the radar and the monitoring object"* — 1D again.
 
@@ -311,7 +327,7 @@ An FMCW presence radar separates "person" from "furniture" by Doppler. Anything 
 | Vertical beam and the floor | SEN0306's 23° vertical beam is the only one narrow enough to keep the floor out of the main lobe at short range. The C4001 25 m at 40° and the C4002 at 120° will both illuminate the floor within 1 m and get a strong specular return. The C4001 12 m at 80° and C1001 at 100° are worse. |
 | Radome | Mount behind ABS/PC/PP, thickness tuned near a half-wavelength multiple (≈6.25 mm at 24 GHz, ≈2.5 mm at 60 GHz). **No metal, no carbon fill, no metallic paint.** Seeed's datasheet warning about radome-induced beam distortion, isolation loss and receiver saturation applies to every part here. |
 | 360° coverage | With 100–120° azimuth beams, three C4002s at 120° spacing nominally covers 360°. But all three are monostatic 24 GHz FMCW with no published sync or interference-avoidance mechanism — **multi-sensor interference behaviour is not published for any DFRobot radar in this lane**, and co-located same-band FMCW radars routinely ghost each other. Unverified and high risk. |
-| Power budget | C4001/C4002 current **not published** — plan a measurement. C1001 ≤100 mA. SEN0306 >100 mA. SEN0676 30 mA. MR60xx up to 600 mA. |
+| Power budget | C4001/C4002 current **not published** — plan a measurement. C1001 ≤100 mA. SEN0306 >100 mA. SEN0676 30 mA. MR60xx: ICC table says 600 mA max, but the datasheet's own Precautions section requires a **≥1 A supply at 3.1–3.5 V with ≤50 mV ripple**. Budget 1 A. |
 
 ### 7.4 Human vs pet vs inanimate — the honest assessment
 
@@ -350,6 +366,25 @@ Recorded explicitly so no downstream reader assumes these were missed rather tha
 
 ---
 
+## 10. Adversarial verification log — 2026-09-12
+
+Every headline number below was re-checked against the manufacturer datasheet PDF or the vendor product page, not against a reseller listing.
+
+| Claim | Verdict | Primary source checked |
+|---|---|---|
+| SEN0609 25 m motion + ranging, 16 m presence, 1.2–25 m, 100° H, $13.90, 1 target | **MISLEADING** — every number confirmed, but the transition-zone quote was truncated. Datasheet adds "a significant movement is required", "depending on the target characteristics", and a hard ceiling "no targets will be detected beyond 25 meters". Fixed in §3.2. | `dfrobot.com/product-2793.html`; SEN0609 datasheet V1 §Characteristics, §Technical Specifications, §1.1 |
+| SEN0610 12 m motion, 8 m presence, 1.2–12 m, 100° H, $12.90, 1 target | **CONFIRMED** verbatim: "Maximum Detection Range: 12m", "presence detection range of 8 meters", "motion detection and ranging range of 12 meters", "can measure distances from 1.2m to 12m", "Beam Angle: 100*80°", $12.90 | `dfrobot.com/product-2795.html` |
+| SEN0691 motion 11 m, static 10 m, 0–1100 cm window, 120° H, $8.90, 16×80 cm or 26×20 cm gates, per-gate threshold 0–99 | **MISLEADING** — gate counts, window and threshold confirmed in `DFRobot_C4002.h`; 11 m/10 m/120° confirmed on wiki; $8.90 confirmed in catalogue. But "16 gates × 0.80 m = 12.8 m of coverage" exceeds both the 1100 cm config cap and the 11 m spec. Also the target condition **is** published ("Motion, Micro-Motion/Stationary Human Body"), and the store SKU headline says "(10m)". Fixed in §2 and §4. | `wiki.dfrobot.com/SKU_SEN0691_...`; `DFRobot_C4002.h`; `dfrobot.com/search-radar.html` |
+| SEN0306 20 m, 78° H at −3 dB, $65.90, 126-bin spectrum | **CONFIRMED** — "0.5-20m", "78（-3db）" H / "23（-3db）" V, "±0.1m", "0.01m", "10Hz", $65.90; "The first three Oxff are data headers", 126 spectral lines, "The amplitude ranges from 1 to 44". Reflectivity condition genuinely not published. Added the vendor's "up to 5 obstacles" claim and its correct scope in §5. | `dfrobot.com/product-1882.html`; `wiki.dfrobot.com/sen0306/`; `wiki.dfrobot.com/sen0306/docs/20390` |
+| SEN0623 11 m presence, sleep 0.4–2.5 m, breath/HR 0.4–1.5 m, 100° H, $29.00, no zones | **CONFIRMED** — "11m", "100×100 degrees", "0.4-2.5m", "0.4-1.5m", "10-25 breaths per minute", "60-100 beats per minute", 2.7 m ceiling mount, $29.00 | `dfrobot.com/product-2861.html` |
+| SEN0676 40 m against a liquid surface, ±25° standard / ±3° with lens, $59.00 | **CONFIRMED** — "0.15–40m", "±5mm", "1mm", "77–81GHz, 4GHz bandwidth", "Horizontal ±25°, Vertical ±25°", lens "±3°", "30mA", $59.00. Non-liquid target behaviour genuinely not addressed. | `wiki.dfrobot.com/sen0676/`; `dfrobot.com/search-radar.html` |
+| MR60BHA2 breath/HR chest 0.4–1.5 m, ±60° at −3 dB, not a DFRobot SKU | **CONFIRMED** — §4.1 "Breathing and heartbeat detection distance (chest)" min 0.4 max 1.5 m; §4.3 horizontal and vertical beam (−3 dB) −60/+60°; 58–62 GHz, 12 dBm, 4 dBi, ICC max 600 mA. **No human-presence range appears anywhere in the datasheet** — the 6 m figure is not vendor-datasheet material. Accuracy corrected from "≥90%" to "90 % typical". | MR60BHA2 datasheet §4.1–4.3 |
+| MR60FDA2 fall radius max 2 m, RCS caveat, ±60°, not a DFRobot SKU | **CONFIRMED** — §4.1 "Fall detection detection radius" maximum 2 m; §6.4 "Top-mounted hanging height 2.2-3.0m, maximum sensing radius 2m"; §7 Precautions carries the RCS sentence verbatim. Two defects found in this file instead: the 600 mA figure understates the datasheet's own "current ≥1A" requirement, and the document is a **Beta Version** whose §1 names the part "MR60FDC1". Both fixed in §6.2 and §7.3. | MR60FDA2 datasheet §4.1, §4.2, §6.4, §7, Revision History |
+
+**Catalogue state on 2026-09-12.** `dfrobot.com/search-radar.html` lists exactly eight radar SKUs — SEN0192, SEN0306, SEN0395, SEN0557, SEN0609, SEN0610, SEN0676, SEN0691 — **all shown In Stock, none marked discontinued, EOL or retired**. `SEN0611` does not exist, as stated in §0. MR60BHA2 and MR60FDA2 are Seeed Studio parts and correctly carry no DFRobot price.
+
+---
+
 ## Sources
 
 - [SEN0609 C4001 mmWave Presence Sensor 25m — DFRobot Wiki](https://wiki.dfrobot.com/SKU_SEN0609_C4001_mmWave_Presence_Sensor_25m)
@@ -374,6 +409,8 @@ Recorded explicitly so no downstream reader assumes these were missed rather tha
 - [MR60FDA2 Fall Detection Module datasheet (Seeed)](https://files.seeedstudio.com/wiki/mmwave-for-xiao/mr60/datasheet/MR60FDA2_Fall_Detection_Module_Datasheet.pdf)
 - [MR60BHA2 Breathing and Heartbeat Module datasheet (Seeed)](https://files.seeedstudio.com/wiki/mmwave-for-xiao/mr60/datasheet/MR60BHA2_Breathing_and_Heartbeat_Module.pdf)
 - [ESPHome seeed_mr60bha2 component](https://esphome.io/components/seeed_mr60bha2/)
+- [SEN0306 data output format (frame header, 126 spectral lines) — DFRobot Wiki](https://wiki.dfrobot.com/sen0306/docs/20390)
+- [DFRobot_C4002 library header (gate resolution modes, setDetectRange, setGateThresh)](https://raw.githubusercontent.com/DFRobot/DFRobot_C4002/master/src/DFRobot_C4002.h)
 - [A New Wave in Robotics: Survey on Recent mmWave Radar Applications in Robotics (arXiv 2305.01135)](https://arxiv.org/html/2305.01135v4)
 - [Static Background Removal in Vehicular Radar (arXiv 2307.01444)](https://arxiv.org/pdf/2307.01444)
 - [RadarTrack: Enhancing Ego-Vehicle Speed Estimation with Single-chip mmWave Radar (arXiv 2504.14495)](https://arxiv.org/html/2504.14495)

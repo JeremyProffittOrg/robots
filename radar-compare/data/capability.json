@@ -1,0 +1,563 @@
+{
+ "levels": {
+  "0": "nothing",
+  "1": "presence only",
+  "2": "obstacle + range",
+  "3": "living vs not",
+  "4": "human vs pet",
+  "5": "full silhouette"
+ },
+ "rcs_m2": {
+  "adult_human_standing": 0.7,
+  "toddler": 0.2,
+  "large_dog": 0.05,
+  "small_dog": 0.02,
+  "cat": 0.012,
+  "cat_lying": 0.012,
+  "chair_leg": 0.01,
+  "power_cable": 0.0005,
+  "table_top": 0.3
+ },
+ "sensors": {
+  "3967": {
+   "name": "VL53L1X",
+   "sku": "3967",
+   "vendor": "Adafruit",
+   "tech": "tof-single",
+   "per_distance": {
+    "1ft": {
+     "beam_width_mm": 146.4,
+     "targets": {
+      "adult_human_standing": {
+       "level": 2,
+       "label": "obstacle + range",
+       "why": "single zone, nearest surface in a 27 deg cone"
+      },
+      "cat": {
+       "level": 2,
+       "label": "obstacle + range",
+       "why": "single zone, nearest surface in a 27 deg cone"
+      },
+      "chair_leg": {
+       "level": 2,
+       "label": "obstacle + range",
+       "why": "single zone, nearest surface in a 27 deg cone"
+      }
+     }
+    },
+    "3ft": {
+     "beam_width_mm": 439.1,
+     "targets": {
+      "adult_human_standing": {
+       "level": 2,
+       "label": "obstacle + range",
+       "why": "single zone, nearest surface in a 27 deg cone"
+      },
+      "cat": {
+       "level": 2,
+       "label": "obstacle + range",
+       "why": "single zone, nearest surface in a 27 deg cone"
+      },
+      "chair_leg": {
+       "level": 2,
+       "label": "obstacle + range",
+       "why": "single zone, nearest surface in a 27 deg cone"
+      }
+     }
+    },
+    "5ft": {
+     "beam_width_mm": 731.8,
+     "targets": {
+      "adult_human_standing": {
+       "level": 0,
+       "label": "nothing",
+       "why": "beyond 1.30 m reach on this target"
+      },
+      "cat": {
+       "level": 0,
+       "label": "nothing",
+       "why": "beyond 1.30 m reach on this target"
+      },
+      "chair_leg": {
+       "level": 0,
+       "label": "nothing",
+       "why": "beyond 1.30 m reach on this target"
+      }
+     }
+    },
+    "8ft": {
+     "beam_width_mm": 1170.8,
+     "targets": {
+      "adult_human_standing": {
+       "level": 0,
+       "label": "nothing",
+       "why": "beyond 1.30 m reach on this target"
+      },
+      "cat": {
+       "level": 0,
+       "label": "nothing",
+       "why": "beyond 1.30 m reach on this target"
+      },
+      "chair_leg": {
+       "level": 0,
+       "label": "nothing",
+       "why": "beyond 1.30 m reach on this target"
+      }
+     }
+    },
+    "10ft": {
+     "beam_width_mm": 1463.5,
+     "targets": {
+      "adult_human_standing": {
+       "level": 0,
+       "label": "nothing",
+       "why": "beyond 1.30 m reach on this target"
+      },
+      "cat": {
+       "level": 0,
+       "label": "nothing",
+       "why": "beyond 1.30 m reach on this target"
+      },
+      "chair_leg": {
+       "level": 0,
+       "label": "nothing",
+       "why": "beyond 1.30 m reach on this target"
+      }
+     }
+    }
+   }
+  },
+  "5396": {
+   "name": "VL53L5CX",
+   "sku": "5396",
+   "vendor": "Adafruit",
+   "tech": "tof-multizone",
+   "per_distance": {
+    "1ft": {
+     "beam_width_mm": 373.6,
+     "targets": {
+      "adult_human_standing": {
+       "level": 4,
+       "label": "human vs pet",
+       "why": "4.8 x 18.2 zones - width and height separate adult from pet"
+      },
+      "cat": {
+       "level": 3,
+       "label": "living vs not",
+       "why": "1.5 x 2.7 zones - height profile separates tall from low"
+      },
+      "chair_leg": {
+       "level": 2,
+       "label": "obstacle + range",
+       "why": "fills 0.32 of a zone - still a valid range return, but partial fill and no shape at all"
+      }
+     }
+    },
+    "3ft": {
+     "beam_width_mm": 1120.7,
+     "targets": {
+      "adult_human_standing": {
+       "level": 3,
+       "label": "living vs not",
+       "why": "1.6 x 6.1 zones - height profile separates tall from low"
+      },
+      "cat": {
+       "level": 2,
+       "label": "obstacle + range",
+       "why": "fills 0.50 of a zone - still a valid range return, but partial fill and no shape at all"
+      },
+      "chair_leg": {
+       "level": 2,
+       "label": "obstacle + range",
+       "why": "fills 0.11 of a zone - still a valid range return, but partial fill and no shape at all"
+      }
+     }
+    },
+    "5ft": {
+     "beam_width_mm": 1867.8,
+     "targets": {
+      "adult_human_standing": {
+       "level": 0,
+       "label": "nothing",
+       "why": "beyond 1.40 m reach on this target"
+      },
+      "cat": {
+       "level": 0,
+       "label": "nothing",
+       "why": "beyond 1.40 m reach on this target"
+      },
+      "chair_leg": {
+       "level": 0,
+       "label": "nothing",
+       "why": "beyond 1.40 m reach on this target"
+      }
+     }
+    },
+    "8ft": {
+     "beam_width_mm": 2988.5,
+     "targets": {
+      "adult_human_standing": {
+       "level": 0,
+       "label": "nothing",
+       "why": "beyond 1.40 m reach on this target"
+      },
+      "cat": {
+       "level": 0,
+       "label": "nothing",
+       "why": "beyond 1.40 m reach on this target"
+      },
+      "chair_leg": {
+       "level": 0,
+       "label": "nothing",
+       "why": "beyond 1.40 m reach on this target"
+      }
+     }
+    },
+    "10ft": {
+     "beam_width_mm": 3735.6,
+     "targets": {
+      "adult_human_standing": {
+       "level": 0,
+       "label": "nothing",
+       "why": "beyond 1.40 m reach on this target"
+      },
+      "cat": {
+       "level": 0,
+       "label": "nothing",
+       "why": "beyond 1.40 m reach on this target"
+      },
+      "chair_leg": {
+       "level": 0,
+       "label": "nothing",
+       "why": "beyond 1.40 m reach on this target"
+      }
+     }
+    }
+   }
+  },
+  "4010": {
+   "name": "RPLIDAR A1M8",
+   "sku": "4010",
+   "vendor": "Adafruit",
+   "tech": "tof-lidar-scanning",
+   "per_distance": {
+    "1ft": {
+     "beam_width_mm": 5.3,
+     "targets": {
+      "adult_human_standing": {
+       "level": 3,
+       "label": "living vs not",
+       "why": "73 points - enough for leg-pair and gait inference in software, which is a program you write, not a sensor output"
+      },
+      "cat": {
+       "level": 3,
+       "label": "living vs not",
+       "why": "26 points - enough for leg-pair and gait inference in software, which is a program you write, not a sensor output"
+      },
+      "chair_leg": {
+       "level": 2,
+       "label": "obstacle + range",
+       "why": "5.6 points - an outline; one plane cannot tell a human leg from a chair leg"
+      }
+     }
+    },
+    "3ft": {
+     "beam_width_mm": 16.0,
+     "targets": {
+      "adult_human_standing": {
+       "level": 3,
+       "label": "living vs not",
+       "why": "28 points - enough for leg-pair and gait inference in software, which is a program you write, not a sensor output"
+      },
+      "cat": {
+       "level": 3,
+       "label": "living vs not",
+       "why": "9 points - enough for leg-pair and gait inference in software, which is a program you write, not a sensor output"
+      },
+      "chair_leg": {
+       "level": 2,
+       "label": "obstacle + range",
+       "why": "1.9 points - a range return, no shape"
+      }
+     }
+    },
+    "5ft": {
+     "beam_width_mm": 26.6,
+     "targets": {
+      "adult_human_standing": {
+       "level": 3,
+       "label": "living vs not",
+       "why": "17 points - enough for leg-pair and gait inference in software, which is a program you write, not a sensor output"
+      },
+      "cat": {
+       "level": 2,
+       "label": "obstacle + range",
+       "why": "5.3 points - an outline; one plane cannot tell a human leg from a chair leg"
+      },
+      "chair_leg": {
+       "level": 2,
+       "label": "obstacle + range",
+       "why": "1.1 points - a range return, no shape"
+      }
+     }
+    },
+    "8ft": {
+     "beam_width_mm": 42.6,
+     "targets": {
+      "adult_human_standing": {
+       "level": 3,
+       "label": "living vs not",
+       "why": "11 points - enough for leg-pair and gait inference in software, which is a program you write, not a sensor output"
+      },
+      "cat": {
+       "level": 2,
+       "label": "obstacle + range",
+       "why": "3.3 points - an outline; one plane cannot tell a human leg from a chair leg"
+      },
+      "chair_leg": {
+       "level": 0,
+       "label": "nothing",
+       "why": "under one scan point on the subject (0.70)"
+      }
+     }
+    },
+    "10ft": {
+     "beam_width_mm": 53.2,
+     "targets": {
+      "adult_human_standing": {
+       "level": 3,
+       "label": "living vs not",
+       "why": "8 points - enough for leg-pair and gait inference in software, which is a program you write, not a sensor output"
+      },
+      "cat": {
+       "level": 2,
+       "label": "obstacle + range",
+       "why": "2.6 points - a range return, no shape"
+      },
+      "chair_leg": {
+       "level": 0,
+       "label": "nothing",
+       "why": "under one scan point on the subject (0.56)"
+      }
+     }
+    }
+   }
+  },
+  "SEN0610": {
+   "name": "C4001 mmWave 25m",
+   "sku": "SEN0610",
+   "vendor": "DFRobot",
+   "tech": "mmwave-24ghz",
+   "per_distance": {
+    "1ft": {
+     "beam_width_mm": 726.5,
+     "targets": {
+      "adult_human_standing": {
+       "level": 3,
+       "label": "living vs not",
+       "why": "reports presence + range; RCS-scaled reach 25.0 m on this target; micro-motion separates a living body from furniture; no species output: adult-versus-pet needs micro-Doppler work on raw data, which this module does not expose"
+      },
+      "cat": {
+       "level": 3,
+       "label": "living vs not",
+       "why": "reports presence + range; RCS-scaled reach 9.0 m on this target; micro-motion separates a living body from furniture; no species output: adult-versus-pet needs micro-Doppler work on raw data, which this module does not expose"
+      },
+      "chair_leg": {
+       "level": 2,
+       "label": "obstacle + range",
+       "why": "ranges a static object; RCS-scaled reach 8.6 m on this target"
+      }
+     }
+    },
+    "3ft": {
+     "beam_width_mm": 2179.5,
+     "targets": {
+      "adult_human_standing": {
+       "level": 3,
+       "label": "living vs not",
+       "why": "reports presence + range; RCS-scaled reach 25.0 m on this target; micro-motion separates a living body from furniture; no species output: adult-versus-pet needs micro-Doppler work on raw data, which this module does not expose"
+      },
+      "cat": {
+       "level": 3,
+       "label": "living vs not",
+       "why": "reports presence + range; RCS-scaled reach 9.0 m on this target; micro-motion separates a living body from furniture; no species output: adult-versus-pet needs micro-Doppler work on raw data, which this module does not expose"
+      },
+      "chair_leg": {
+       "level": 2,
+       "label": "obstacle + range",
+       "why": "ranges a static object; RCS-scaled reach 8.6 m on this target"
+      }
+     }
+    },
+    "5ft": {
+     "beam_width_mm": 3632.5,
+     "targets": {
+      "adult_human_standing": {
+       "level": 3,
+       "label": "living vs not",
+       "why": "reports presence + range; RCS-scaled reach 25.0 m on this target; micro-motion separates a living body from furniture; no species output: adult-versus-pet needs micro-Doppler work on raw data, which this module does not expose"
+      },
+      "cat": {
+       "level": 3,
+       "label": "living vs not",
+       "why": "reports presence + range; RCS-scaled reach 9.0 m on this target; micro-motion separates a living body from furniture; no species output: adult-versus-pet needs micro-Doppler work on raw data, which this module does not expose"
+      },
+      "chair_leg": {
+       "level": 2,
+       "label": "obstacle + range",
+       "why": "ranges a static object; RCS-scaled reach 8.6 m on this target"
+      }
+     }
+    },
+    "8ft": {
+     "beam_width_mm": 5811.9,
+     "targets": {
+      "adult_human_standing": {
+       "level": 3,
+       "label": "living vs not",
+       "why": "reports presence + range; RCS-scaled reach 25.0 m on this target; micro-motion separates a living body from furniture; no species output: adult-versus-pet needs micro-Doppler work on raw data, which this module does not expose"
+      },
+      "cat": {
+       "level": 3,
+       "label": "living vs not",
+       "why": "reports presence + range; RCS-scaled reach 9.0 m on this target; micro-motion separates a living body from furniture; no species output: adult-versus-pet needs micro-Doppler work on raw data, which this module does not expose"
+      },
+      "chair_leg": {
+       "level": 2,
+       "label": "obstacle + range",
+       "why": "ranges a static object; RCS-scaled reach 8.6 m on this target"
+      }
+     }
+    },
+    "10ft": {
+     "beam_width_mm": 7264.9,
+     "targets": {
+      "adult_human_standing": {
+       "level": 3,
+       "label": "living vs not",
+       "why": "reports presence + range; RCS-scaled reach 25.0 m on this target; micro-motion separates a living body from furniture; no species output: adult-versus-pet needs micro-Doppler work on raw data, which this module does not expose"
+      },
+      "cat": {
+       "level": 3,
+       "label": "living vs not",
+       "why": "reports presence + range; RCS-scaled reach 9.0 m on this target; micro-motion separates a living body from furniture; no species output: adult-versus-pet needs micro-Doppler work on raw data, which this module does not expose"
+      },
+      "chair_leg": {
+       "level": 2,
+       "label": "obstacle + range",
+       "why": "ranges a static object; RCS-scaled reach 8.6 m on this target"
+      }
+     }
+    }
+   }
+  },
+  "3538": {
+   "name": "AMG8833 Grid-EYE",
+   "sku": "3538",
+   "vendor": "Adafruit",
+   "tech": "thermal-ir-array",
+   "per_distance": {
+    "1ft": {
+     "beam_width_mm": 352.0,
+     "targets": {
+      "adult_human_standing": {
+       "level": 4,
+       "label": "human vs pet",
+       "why": "5.1 x 19.3 px - size separates an adult from a pet"
+      },
+      "cat": {
+       "level": 3,
+       "label": "living vs not",
+       "why": "warm body over 1.6 px, but size is not yet separable"
+      },
+      "chair_leg": {
+       "level": 0,
+       "label": "nothing",
+       "why": "no thermal contrast: furniture sits at room temperature"
+      }
+     }
+    },
+    "3ft": {
+     "beam_width_mm": 1055.9,
+     "targets": {
+      "adult_human_standing": {
+       "level": 3,
+       "label": "living vs not",
+       "why": "warm body over 1.7 px, but size is not yet separable"
+      },
+      "cat": {
+       "level": 1,
+       "label": "presence only",
+       "why": "about one pixel (0.53 x 0.95) - a warm smear, no shape"
+      },
+      "chair_leg": {
+       "level": 0,
+       "label": "nothing",
+       "why": "no thermal contrast: furniture sits at room temperature"
+      }
+     }
+    },
+    "5ft": {
+     "beam_width_mm": 1759.8,
+     "targets": {
+      "adult_human_standing": {
+       "level": 1,
+       "label": "presence only",
+       "why": "about one pixel (1.02 x 3.86) - a warm smear, no shape"
+      },
+      "cat": {
+       "level": 0,
+       "label": "nothing",
+       "why": "subject fills 0.32 of a pixel; the contrast is diluted below the noise floor"
+      },
+      "chair_leg": {
+       "level": 0,
+       "label": "nothing",
+       "why": "no thermal contrast: furniture sits at room temperature"
+      }
+     }
+    },
+    "8ft": {
+     "beam_width_mm": 2815.6,
+     "targets": {
+      "adult_human_standing": {
+       "level": 1,
+       "label": "presence only",
+       "why": "about one pixel (0.64 x 2.42) - a warm smear, no shape"
+      },
+      "cat": {
+       "level": 0,
+       "label": "nothing",
+       "why": "subject fills 0.20 of a pixel; the contrast is diluted below the noise floor"
+      },
+      "chair_leg": {
+       "level": 0,
+       "label": "nothing",
+       "why": "no thermal contrast: furniture sits at room temperature"
+      }
+     }
+    },
+    "10ft": {
+     "beam_width_mm": 3519.5,
+     "targets": {
+      "adult_human_standing": {
+       "level": 1,
+       "label": "presence only",
+       "why": "about one pixel (0.51 x 1.93) - a warm smear, no shape"
+      },
+      "cat": {
+       "level": 0,
+       "label": "nothing",
+       "why": "subject fills 0.16 of a pixel; the contrast is diluted below the noise floor"
+      },
+      "chair_leg": {
+       "level": 0,
+       "label": "nothing",
+       "why": "no thermal contrast: furniture sits at room temperature"
+      }
+     }
+    }
+   }
+  }
+ }
+}

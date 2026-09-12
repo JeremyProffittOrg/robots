@@ -28,7 +28,7 @@ The governing design rule that falls out of all of it: **a single-modality perim
 
 ISO 13482:2014 *Robots and robotic devices — Safety requirements for personal care robots* is the closest existing standard to a domestic household robot. It covers three types: **mobile servant robot**, **physical assistant robot**, and **person carrier robot**. A 350 mm, 600–1200 mm tall household robot is a *mobile servant robot*.
 
-The key honest admission inside the standard itself: *"for hazards related to impact (e.g. due to a collision) no exhaustive and internationally recognized data (e.g. pain or injury limits) exist at the time of publication of ISO 13482:2014."* ([ISO 13482:2014](https://www.iso.org/standard/53820.html)) In other words, ISO 13482 **does not give you a number for how hard your robot may hit someone**. It gives you a process: hazard identification, risk estimation per ISO 12100, then protective measures — inherently safe design first, then safeguarding, then information for use.
+The key honest admission attributed to the standard: *"for hazards related to impact (e.g. due to a collision) no exhaustive and internationally recognized data (e.g. pain or injury limits) exist at the time of publication of ISO 13482:2014."* `unverified` — **not** `standard-verified`. On 2026-09-12 this quotation could not be confirmed at any primary source: ISO 13482:2014 is paywalled, and both [iso.org/standard/53820.html](https://www.iso.org/standard/53820.html) and the ISO Online Browsing Platform return **HTTP 403** to an unauthenticated fetch. The phrase *"at the time of publication of ISO 13482:2014"* is itself a tell that the sentence has been relayed through a secondary source, since a standard refers to itself as "this document". See Section 10. The conclusion it supports still holds on its own: ISO 13482 **does not give you a number for how hard your robot may hit someone**. It gives you a process: hazard identification, risk estimation per ISO 12100, then protective measures — inherently safe design first, then safeguarding, then information for use.
 
 Its concrete mechanisms that matter here: **safety-related control system** requirements, **software limits** on operating space, speed and force, and mandatory **protective stop** capability.
 
@@ -59,16 +59,22 @@ TÜV highlight this as the major change from the superseded EN 1525:1997: EN 152
 
 **Required Performance Level (PL):** *"The standard clarifies that the SRP/CS of the Detection of Personnel and the Braking System have to comply with a level of PLr d."* `standard-verified` via TÜV. PL d under ISO 13849-1 implies, in practice, a Category 3 architecture: redundancy, cross-monitoring, and a single fault must not lose the safety function.
 
-**Speed numbers from Annex A Table A.1**, as reproduced by TÜV:
+**Speed numbers from Annex A Table A.1**, as reproduced by TÜV. Column names and cell values below are transcribed verbatim from the TÜV "EXTRACT OF TABLE A.1" figure:
 
-| Condition | Clearance C1 / C2 / C3 | Personnel detection | Max speed | Zone | Reachable stop within 600 mm | Auto restart |
-|---|---|---|---|---|---|---|
-| 1a | > 500 mm all round | **Active (PL d)** | **Rated speed** | Operating | No | No |
-| 1b | > 500 mm all round | **Muted** | **0.3 m/s** | Operating hazard | No | Conditional |
+| Condition | Clearance C1 / C2 / C3 | Personnel detection | Max speed | Required zone classification | Reachable stop function required within 600 mm | Floor/ground marking or extra warnings required | Auto restart permitted |
+|---|---|---|---|---|---|---|---|
+| 1a | > 500 mm all round | **Active (PL d)** | **Rated speed** | Operating | NO | NO | NO |
+| 1b | > 500 mm all round | **Muted** | **0,3 m/s** | Operating hazard | NO | **YES** | Conditional (note b) |
 
-`standard-verified`. Two numbers to keep: **0.3 m/s is the speed the industrial world considers acceptable when personnel detection is muted or absent**, and **600 mm is the maximum reach to an emergency stop device** when a personnel-detection function cannot be implemented.
+Note b, verbatim: *"In these specific cases, automatic restart is permitted without personnel detection means if side clearance is >500 mm on at least one side or clearance is >500 mm from the current position to the fixed closed structure/object in the direction of travel if determined to be acceptable by a risk assessment."*
 
-Normal climatic conditions declared by the standard: average ambient +25 °C continuous, +40 °C short-term (up to 1 h), +5 °C minimum indoor, −20 °C minimum outdoor, altitude 2000 m. `standard-verified`. Note how narrow that is — the thermal-sensor failure in Section 6.3 lives exactly at the +40 °C end.
+`standard-verified` **against the 2020 first edition** — see the edition caveat below. The number to keep: **0,3 m/s is the speed the industrial world considers acceptable when personnel detection is muted**, and in that same row the standard requires **floor/ground marking or extra warnings**, which an earlier revision of this document omitted.
+
+> **Correction (2026-09-12 adversarial check) — the 600 mm figure was mis-stated.** An earlier revision said *"600 mm is the maximum reach to an emergency stop device when a personnel-detection function cannot be implemented."* No verified source supports that framing. In TÜV's Table A.1 extract, "Reachable stop function required within 600 mm" is a **per-zone column**, and for **both** rows reproduced here — 1a (detection active) and 1b (detection muted) — the value is **NO**. The 600 mm requirement therefore attaches to *other* zone classifications not shown in the free extract, not to a "detection cannot be implemented" fallback. Treat 600 mm as **an unverified reading of a paywalled clause**, not as a design rule.
+
+> **Edition caveat (2026-09-12 adversarial check).** The TÜV whitepaper this section relies on is titled *"ISO 3691-4:2020 — A Standard for Automated Guided Vehicles"*. Table A.1, the 27 safety functions, the PLr d statement and the climatic conditions below are therefore verified against the **2020 first edition**, not the **2023 second edition** named in this section's heading. Only the clause numbering (4.1.2 Normal climatic conditions, 4.2 Braking system, 4.3.1/4.3.2, 4.8.1 Emergency stop, 4.8.2 Detection of persons in the path, 4.11 Safety-related parts of the control system, 4.12 Electromagnetic immunity) is verified against the 2023 edition's own published contents page. The free 2023 preview stops at the end of Clause 3 (Terms and definitions), so no Clause 4 or Annex A value in this document has been read at the 2023 text.
+
+Normal climatic conditions declared by the standard, quoted verbatim from TÜV: *"Avg. ambient temperature continuous duty: +25 °C · Max. ambient temperature, short term (up to 1h): +40 °C · Lowest ambient temperature, normal use indoor: +5 °C · Lowest ambient temperature, normal use outdoor: −20 °C · Altitude: 2,000 m"*. `standard-verified` (2020 edition). Note how narrow that is — the thermal-sensor failure in Section 6.3 lives exactly at the +40 °C end.
 
 ### 2.3 ANSI/RIA (now ANSI/A3) R15.08 — Industrial mobile robots
 
@@ -93,7 +99,13 @@ IEC 61496 is the product standard for the *sensor as a safety device*. Types:
 | Type 2, Type 4 | Interruption of a beam between a separate transmitter and receiver | Safety light curtain |
 | **Type 3** | **Detection by reflection of the emitted light** | **Safety laser scanner** |
 
-A Type 3 device must additionally meet requirements for **minimum detectable target reflectance of 1.8 %**, ambient-light immunity, and resistance to the effects of dirt, background and obstruction ([IEC 61496 overview](https://industrialsafetysensor.com/blog/safety-laser-scanners-guide/), [Hokuyo](https://www.hokuyo-aut.jp/products/data.php?id=112)). That 1.8 % figure is the single most important number in this document, because it is the pass mark that a certified scanner must hit and a hobby sensor does not: **it is the reason a certified scanner sees a black sock and a VL53L5CX does not.**
+A Type 3 device must additionally meet requirements for **minimum detectable target reflectance of 1.8 %**, ambient-light immunity, and resistance to the effects of dirt, background and obstruction. `datasheet-verified` at a certified product: the Keyence SZ-V series, declared to *"IEC61496-1, EN61496-1, UL61496-1 (Type 3 ESPE)"* and *"IEC61496-3, EN61496-3 (Type 3 AOPDDR)"*, specifies its minimum detectable object as *"Diameter 20, 30, 40, 50, 70, 150 mm (depends on the setting) **Reflectance 1.8 % min.**"* ([Keyence SZ-V specifications](https://www.keyence.com/products/safety/laser-scanner/sz-v/specs/)). SICK's ESPE whitepaper independently confirms the device class: *"For AOPDDR the Type 3 is defined"*, and that requirements covering *"optical sources of interference (sunlight, different lamp types, devices of the same design, etc.), reflective surfaces, misalignment during normal operation and the diffuse reflection of safety laser scanners play an important role"* ([SICK ESPE whitepaper](https://www.sick.com/media/docs/7/57/057/whitepaper_electro_sensitive_protective_devices_espe_for_safe_machines_en_im0062057.pdf)).
+
+> **Correction (2026-09-12 adversarial check).** An earlier revision of this document cited [Hokuyo's IEC 61496 page](https://www.hokuyo-aut.jp/products/data.php?id=112) for the 1.8 % figure. That page was re-read on 2026-09-12 and contains **no** reflectance, ambient-light, dirt or background figure at all — it only distinguishes the types by detection principle. The citation has been replaced with a certified product's own declared specification.
+
+> **The condition that makes 1.8 % meaningful, and that was missing before:** 1.8 % is the **protective-zone** figure. The same Keyence specification states that *"20 % or more reflectance is necessary for the minimum detectable object in the **warning zone**"* — an order of magnitude more light. So a certified scanner detects a black sock **inside the protective field but not reliably inside the warning field**. Quoting 1.8 % without that split overstates what the warning field in Section 2.4 and Section 3.5 actually buys you: the slow-down tier degrades on dark targets even on certified hardware.
+
+That 1.8 % protective-zone figure is still the single most important number in this document, because it is the pass mark that a certified scanner must hit and a hobby sensor does not: **it is the reason a certified scanner sees a black sock in its protective field and a VL53L5CX does not.**
 
 **Protective field vs warning field.** These are two independently configured polygons around the robot:
 
@@ -136,6 +148,10 @@ Banner's own worked AGV example (Example #6) gives the Z terms real values `data
 > *ZF = 100 mm (4") … The ground clearance of the transfer cart's sides is 60 mm (2.4") and the wheels are not accessible.*
 > *ZA = 500 mm (20") … crushing/trapping hazard … The total Protective Field length (Minimum Distance) from the Scanner to the leading edge of the Protective Field is 1895 mm (75").*
 
+Every figure in that block — 1200 mm/s, 900 mm, 160 ms, 100 ms, 1212 mm, ZSM 83 mm, Zrefl 0, ZF 100 mm, ZA 500 mm, 1895 mm — was re-read from the AG4 guide PDF on 2026-09-12 and is correct as quoted. `datasheet-verified`.
+
+> **Source-vintage caveat (2026-09-12 adversarial check).** The AG4 Applications Guide is **P/N 147900 rev. A, dated 03/2010**, and it is written against the *superseded* AGV standard: it requires, verbatim, that *"Automatic start and restart (automatic reset) function must incorporate a two-second delay after the Protective Field becomes clear (**per BS/DIN EN 1525**)."* EN 1525:1997 is exactly the standard ISO 3691-4 replaced, and Section 2.2 of this document uses that replacement as its main argument. The Z-factor *method* (Z_SM, Z_refl, Z_F, Z_A) is still the right discipline to copy, but do not treat this 2010 document as evidence of any current ISO 3691-4 requirement, and note that Example #6 guards a **rail-guided transfer cart inside fencing**, not a free-roaming AMR.
+
 Also from the same document, and directly applicable to a small robot: the AGV application uses **70 mm resolution**; the scanner is mounted **150 mm above the floor**; and *"the plane of the Protective Field should not exceed 200 mm (7.9") above the floor."* `datasheet-verified`. Torso detection on a vertical field uses **150 mm resolution**; hand detection uses **30 mm**; leg detection in a horizontal stationary field uses **50 mm**.
 
 ### 3.2 The robot's own deceleration ceiling — it tips before it slides
@@ -150,11 +166,21 @@ PART 1 -- pure robot stopping distance (target stationary), no human approach te
   tip-over decel limit, mid CG 450 mm, 350 mm footprint: a_tip = 9.81*0.175/0.45 = 3.81 m/s^2
   tip-over decel limit, high CG 600 mm, 350 mm footprint: a_tip = 9.81*0.175/0.6 = 2.86 m/s^2
 
-   v (m/s) |       gentle / comfort |        firm controlled | tip-limited, CG 300 mm | hard e-stop, will tip
-       0.3 |                  45 mm |                  22 mm |                  13 mm |                   9 mm
-       0.5 |                 125 mm |                  62 mm |                  37 mm |                  25 mm
-       1.0 |                 500 mm |                 250 mm |                 147 mm |                 100 mm
+  braking distance = v^2 / (2a), each column at the deceleration named in its header
+
+   v (m/s) | gentle a=1.0 m/s^2 | firm a=2.0 m/s^2 | a=3.4 m/s^2 (tip limit @ CG 505 mm) | a=5.0 m/s^2
+       0.3 |              45 mm |            22 mm |                               13 mm |        9 mm
+       0.5 |             125 mm |            62 mm |                               37 mm |       25 mm
+       1.0 |             500 mm |           250 mm |                              147 mm |      100 mm
+
+  braking distance AT the three tip limits computed above
+   v (m/s) | CG 300 mm, a=5.72 | CG 450 mm, a=3.81 | CG 600 mm, a=2.86
+       0.3 |              8 mm |             12 mm |             16 mm
+       0.5 |             22 mm |             33 mm |             44 mm
+       1.0 |             87 mm |            131 mm |            175 mm
 ```
+
+> **Correction (2026-09-12 adversarial check).** An earlier revision headed the third column *"tip-limited, CG 300 mm"* and the fourth *"hard e-stop, will tip"*. Both labels were wrong. The 13/37/147 mm column is v²/(2a) at **a = 3.4 m/s²**, which is the tip limit for a CG at **505 mm**, not 300 mm. The true CG-300 mm tip limit of 5.72 m/s² gives **8/22/87 mm**, and the 9/25/100 mm column is **a = 5.0 m/s²**, which is *below* the 5.72 m/s² CG-300 tip limit and therefore would **not** tip that robot. The arithmetic in every column was correct; only the headers lied about which deceleration produced it. The second table above is new and gives the braking distance actually reachable at each CG without pitching forward.
 
 **Finding:** a robot with its CG at 600 mm cannot brake harder than **2.86 m/s²** without tipping. That is the real deceleration ceiling — not the tyre friction limit. Every stopping-distance calculation below uses **a = 2.0 m/s²**, comfortably inside the tip limit for a mid-height CG. `inferred`.
 
@@ -183,7 +209,13 @@ Sensor latency here is one frame period (the worst case: the event occurs just a
 
 ### 3.4 The number that actually governs — a human walking *into* the robot
 
-ISO 13855 uses **K = 1600 mm/s** as the approach speed of a walking person; Banner's worked examples use it verbatim (`Ds = 1600 mm/s × (0.1s + 0.08s + 0.025s) + 1200 mm + 83 mm = 1611 mm`). A robot at 0.5 m/s meeting a person walking at 1.6 m/s has a **2.1 m/s closing speed**, not 0.5.
+ISO 13855 uses **K = 1600 mm/s** as the approach speed of a walking person, and Banner's worked example computes `Ds = 1600 mm/s × (0.1s + 0.08s + 0.025s) + 1200 mm + 83 mm = 1611 mm (63")` — verified verbatim in the AG4 guide. A robot at 0.5 m/s meeting a person walking at 1.6 m/s has a **2.1 m/s closing speed**, not 0.5.
+
+**Conditions on that 1611 mm example, which an earlier revision omitted and which change how far it transfers to a robot** `datasheet-verified`:
+- It is **Example #1, a *stationary* horizontal danger-zone guard**, not a mobile one: leg detection at **50 mm resolution**, scanner mounted on perimeter fencing **300 mm above the floor** "to prevent crawling under the Protective Fields". It is not the AGV case.
+- The three times are *"a robot stopping time of 100 ms, Scanner response time of 80 ms, the response time of a safety interfacing device is 25 ms (UM-FA-9A safety module)"*.
+- The 1200 mm term is **not** an ISO 13855 term. Banner states it as *"the Dpf adder is equal to 1200 mm (**U.S. formula**)"*, applied *"because an individual can reach over the detection plane by bending at the waist"*. Banner's guide uses the U.S./ANSI form for its worked numbers and cites EN ISO 13855 only as a positioning reference. So the equation above is **the ANSI-form separation distance, presented here in ISO 13855 shape**; the two give different Dpf adders and must not be conflated.
+- K = 1600 mm/s is the correct constant here because this is **whole-body/leg detection** (detection capability > 40 mm). For hand detection (capability ≤ 40 mm) ISO 13855 requires **K = 2000 mm/s** where the resulting distance is ≤ 500 mm. The 1600 mm/s used throughout Section 3.4 is right for a robot perimeter, and wrong for a finger or hand guard.
 
 ```
 ====================================================================================================
@@ -349,7 +381,9 @@ PART 7 -- cliff detection: travel after the edge is seen
 
 ## 5. The failure catalogue — ToF (VL53L0X / L1X / L5CX / L7CX)
 
-`peer-reviewed-measured` values below come from Cabrera et al., *On the Characterisation of the Time-of-Flight VL53L5CX Sensor by STMicroelectronics for Indoor Robotics Applications*, Sensors 26(5):1639 ([MDPI](https://www.mdpi.com/1424-8220/26/5/1639) / [PMC12986679](https://pmc.ncbi.nlm.nih.gov/articles/PMC12986679/)).
+`peer-reviewed-measured` values below come from **Caroleo, Albini and Maiolino**, *On the Characterisation of the Time-of-Flight VL53L5CX Sensor by STMicroelectronics for Indoor Robotics Applications*, Sensors, vol. 26, no. 5, art. 1639, 2026 ([MDPI](https://www.mdpi.com/1424-8220/26/5/1639) / [PMC12986679](https://pmc.ncbi.nlm.nih.gov/articles/PMC12986679/)).
+
+> **Correction (2026-09-12 adversarial check).** An earlier revision of this document attributed this paper to *"Cabrera et al."*. The paper was re-read at PMC on 2026-09-12; the authors are **Giammarco Caroleo, Alessandro Albini and Perla Maiolino**. There is no author named Cabrera. Every measured value cited from it below was re-checked against the paper and is correct as quoted, with one refinement: the paper reports the white-board fit as *"slopes {0.9939, 1.0384} mm/mm and offsets {24.1, 18.15} mm"* and the black board as *"slopes {0.9766, 0.9698, 0.9763} mm/mm and offsets {27.79, 32.08, 32.42} mm"*, and the self-heating figure as **51.61 ± 1.70 °C**. The "1.005 slope" quoted in T1 below is a rounded mid-point of the two published white-board slopes, not a figure printed in the paper.
 
 | # | Failure mode | Verified evidence and condition | Mitigation |
 |---|---|---|---|
@@ -475,7 +509,7 @@ The two must be handled asymmetrically: OR the stop signals (any sensor says sto
 | **Compliant leading surface** | 20–50 mm foam/sprung bumper over a switch | Section 3.7: converts 250–1500 N into 25–100 N. The last line of defence when everything above it fails, and the only one that works against a black sock at 1 m/s. |
 | **Cliff detection** | 4–6 downward ToF, ≥ 50 Hz, "no return = cliff" | Section 4. Separate mandatory function. Nothing else does it. |
 | **Geometric obstacle field, 360°** | 2D lidar **plus** a ToF array, or a full ToF ring (6–8 × VL53L5CX/L7CX) | Lidar gives range and 360° cheaply; the ToF array covers the sub-plane and above-plane volume the lidar's slice misses, and the two disagree on *different* targets (lidar loses black; ToF loses at 65° FoV edges). |
-| **Emergency stop reachable by a person** | Physical button on the shell | ISO 3691-4's fallback when personnel detection cannot be implemented: a stop device within **600 mm of the hazardous point**. On a 350 mm robot, one button on top satisfies this everywhere. |
+| **Emergency stop reachable by a person** | Physical button on the shell | Keep the button. Do **not** justify it with the 600 mm figure: see the correction in Section 2.2 — "reachable stop function required within 600 mm" is a per-zone column in Annex A Table A.1 and reads **NO** for both rows published in the free extract, and the claim that it is a fallback for "personnel detection cannot be implemented" is unverified. On a 350 mm robot one button on top is reachable from any side regardless. |
 | **Two-tier field logic** | Software | Warning field (slow + announce) at ~2× the protective field; protective field (stop) sized from Section 3.5. Speed-dependent field sets. |
 
 ### 9.2 Nice to have
@@ -518,7 +552,9 @@ You will not achieve PL d. PL d requires a Category 3 architecture with certifie
 - **RPLIDAR A1/C1 maximum range against a black or 10 % grey target.** The datasheet qualifies its range as "White objects" and gives no low-reflectance figure. **Not published.**
 - **VL53L5CX multipath and mirror magnitude.** The Sensors characterisation paper explicitly lists these as future work. **Not measured.**
 - **Any published pain or injury limit for a pet.** **Does not exist.** ISO/TS 15066 values are human cobot values and are used here as the nearest available proxy.
-- **ISO 13482 impact limits.** The standard states outright that no internationally recognised pain or injury data existed at publication. **Not published by the standard.**
+- **ISO 13482 impact limits.** Section 2.1 quotes the standard as saying that no exhaustive, internationally recognised pain or injury data existed at publication. **That quotation could not be confirmed at a primary source on 2026-09-12.** ISO 13482:2014 is paywalled; `iso.org/standard/53820.html` and the ISO Online Browsing Platform both return **HTTP 403** to an unauthenticated fetch, and no free extract carrying the sentence was found. The wording itself is suspect: the quoted sentence refers to *"the time of publication of ISO 13482:2014"*, which is how a **secondary** source cites the standard, not how a standard refers to itself (it would say "this document"). Treat the sentence as **`unverified`, secondary-sourced paraphrase**, not as `standard-verified`. The conclusion drawn from it — that ISO 13482 gives no design number for impact — is unchanged and is separately supported by the fact that ISO/TS 15066 cobot values are the nearest published human-tolerance data anyone cites for this case.
+- **ISO 3691-4 "180 mm" personnel-detection gap figure.** A claim circulates that personnel detection must detect persons to within 180 mm between the edge of the safety fields and surrounding objects. **No such figure appears anywhere in this document, in the TÜV whitepaper, or in the free ISO 3691-4:2023 preview** (which stops at the end of Clause 3). **Unverifiable** — do not adopt it.
+- **ISO 3691-4:2023 Clause 4 and Annex A text.** The free preview ends at Clause 3. Every Clause 4 / Annex A value in Section 2.2 is second-hand from a TÜV whitepaper on the **2020 first edition**. **Not verified at the 2023 text.**
 
 ---
 
@@ -538,7 +574,8 @@ You will not achieve PL d. PL d requires a Category 3 architecture with certifie
 - [Hokuyo — The standards for safety LiDAR (IEC 61496 types)](https://www.hokuyo-aut.jp/products/data.php?id=112)
 - [SICK — Electro-sensitive protective devices (ESPE) for safe machines, whitepaper](https://www.sick.com/media/docs/7/57/057/whitepaper_electro_sensitive_protective_devices_espe_for_safe_machines_en_im0062057.pdf)
 - [Pilz — EN/IEC 61496](https://www.pilz.com/en-US/iec-en-61496-1)
-- [Cabrera et al., On the Characterisation of the VL53L5CX Sensor for Indoor Robotics, Sensors 26(5):1639 (MDPI)](https://www.mdpi.com/1424-8220/26/5/1639)
+- [Caroleo, Albini and Maiolino, On the Characterisation of the Time-of-Flight VL53L5CX Sensor by STMicroelectronics for Indoor Robotics Applications, Sensors 26(5):1639, 2026 (MDPI)](https://www.mdpi.com/1424-8220/26/5/1639)
+- [Keyence SZ-V Series safety laser scanner specifications — "Reflectance 1.8 % min.", IEC61496-3 Type 3 AOPDDR](https://www.keyence.com/products/safety/laser-scanner/sz-v/specs/)
 - [Same paper, full text on PubMed Central](https://pmc.ncbi.nlm.nih.gov/articles/PMC12986679/)
 - [STMicroelectronics VL53L5CX product page](https://www.st.com/en/imaging-and-photonics-solutions/vl53l5cx.html)
 - [ST AN5856 — Guidelines for the cover glass of the VL53L5CX](https://www.st.com/resource/en/application_note/an5856-guidelines-for-the-cover-glass-of-the-vl53l5cx-timeofflight-8x8-multizone-sensor-with-wide-field-of-view-stmicroelectronics.pdf)

@@ -1,0 +1,6 @@
+name,vendor,sku,url,tech,chip,price_usd,min_range_m,max_range_m,max_range_dark_m,max_range_sunlight_m,fov_h_deg,fov_v_deg,zones,zones_across,update_hz,accuracy,interface,supply_v,current_ma,output_type,reports_velocity,static_human_detect,angular_resolution_deg,needs_line_of_sight,sees_through_plastic,sunlight_ok,stock_status,strengths,weaknesses,confidence,source_url,classification_output,scan_plane_height_mm,detects_static_objects
+VL53L1X,Adafruit,3967,,tof-single,,,0.04,4.0,1.3,,27,27,1,1,50,,,,,distance mm,,,,yes,no,,,,,,,,,
+VL53L5CX,Adafruit,5396,,tof-multizone,,,0.02,4.0,1.4,,63,63,8x8,8,15,,,,,distance mm per zone,,,,yes,,,,,,,,,,
+RPLIDAR A1M8,Adafruit,4010,,tof-lidar-scanning,,,0.15,12.0,,,360,0,360,1,5.5,,,,,range + angle,,,1.0,yes,,,,,,,,,150,
+C4001 mmWave 25m,DFRobot,SEN0610,,mmwave-24ghz,,,0.3,25.0,,,100,40,1,1,10,,,,,presence + range,yes,yes,,no,yes,,,,,,,,,yes
+AMG8833 Grid-EYE,Adafruit,3538,,thermal-ir-array,,,0,7.0,,,60,60,8x8,8,10,,,,,degC per pixel,,,,yes,no,,,,,,,,,

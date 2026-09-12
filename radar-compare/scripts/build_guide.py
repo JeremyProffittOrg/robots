@@ -544,21 +544,25 @@ CHAPTERS = [
     ('coverage-geometry.md',          'portrait', [
         ('beam_width.png', 500, 'Beam footprint width against range. A sensor does not '
          'see a ray; it sees a cone, and at 10 ft a 63 deg cone is 3.7 m wide.'),
-        ('ring_4x27.png', 330, 'Four 27 deg sensors cover 108 deg of 360 deg. Three '
-         'quarters of the perimeter is blind at every range.'),
-        ('ring_6x63.png', 330, 'Six 63 deg sensors total 378 deg, so the wedges do '
-         'close - but not until 3.3 m out. Inside that, six blind corridors.'),
-        ('ring_8x63.png', 330, 'Eight 63 deg sensors close the wedges 410 mm past the '
-         'platform edge. This is the ring the recommendation is built on.'),
-        ('ring_8x63_square.png', 330, 'The same eight sensors on a 350 mm square '
-         'platform. The corners push two sensors further out and skew the wedges.'),
-        ('ring_5x90.png', 330, 'Five 90 deg sensors: 90 deg of designed overlap, '
-         'wedges closed 379 mm out, and one sensor may fail without opening a gap.'),
-        ('vertical_low_63.png', 520, 'Ring at 100 mm, 63 deg vertical. Everything from '
-         'a lying cat upward is inside the beam, at the price of constant floor return.'),
-        ('vertical_high_63.png', 520, 'The same sensor at 800 mm. A standing cat at 1 ft '
-         'is under the beam entirely. Mounting height decides what a robot runs over.'),
-        ('vertical_high_63_tilt.png', 520, 'Adding 15 deg of down-tilt at 800 mm buys '
+        ('ring_8x19.png', 330, 'Eight VL53L1X at their true 19 deg horizontal cone '
+         'cover 152 deg of 360 deg. Most of the perimeter is blind at every range.'),
+        ('ring_16x19.png', 330, 'Sixteen of them still total only 304 deg. A ring of '
+         'single-zone ST parts cannot be closed at any sane count.'),
+        ('ring_8x45.png', 330, 'Eight VL53L5CX at 45 deg horizontal total exactly '
+         '360 deg. Exactly is not enough: the wedges never close.'),
+        ('ring_10x45.png', 330, 'Ten gives 90 deg of overlap and closes the wedges '
+         '678 mm out - still beyond the robot at walking pace.'),
+        ('ring_12x45.png', 330, 'Twelve closes them 338 mm past the edge. This is the '
+         'ring the recommendation is built on.'),
+        ('ring_12x45_square.png', 330, 'The same twelve on a 350 mm SQUARE platform. '
+         'The corners push four sensors outboard and skew the wedges.'),
+        ('ring_8x60.png', 330, 'Eight VL53L7CX at 60 deg horizontal close 495 mm out '
+         'with four fewer parts, four fewer apertures and four fewer addresses.'),
+        ('vertical_low_45.png', 520, 'Ring at 100 mm, 45 deg vertical. Everything from '
+         'a lying cat upward is in the beam, at the price of constant floor return.'),
+        ('vertical_high_45.png', 520, 'The same sensor at 800 mm. A standing cat at '
+         '1 ft is under the beam entirely - this is what a robot runs over.'),
+        ('vertical_high_45_tilt.png', 520, 'Adding 15 deg of down-tilt at 800 mm buys '
          'back the near field and costs the top of the beam.'),
     ]),
     ('modality-primer.md',            'portrait', []),
