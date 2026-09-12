@@ -116,8 +116,9 @@ def views(executable):
         "section": ("section", "1400,-1700,900,0,0,330"),
     }
     for name, (part, camera) in cameras.items():
+        backend = ["--backend=manifold", "--render"] if "nightly" in executable.lower() else []
         result = subprocess.run(
-            [executable, "-o", str(ROOT / "cad" / f"{name}.png"), "--imgsize=1600,1600", "--colorscheme=Tomorrow",
+            [executable, *backend, "-o", str(ROOT / "cad" / f"{name}.png"), "--imgsize=1600,1600", "--colorscheme=Tomorrow",
              "--projection=o", "--viewall", "--autocenter", f"--camera={camera}", "-D", f'part="{part}"', str(SCAD)],
             capture_output=True, text=True, timeout=1800)
         if result.returncode:

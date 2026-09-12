@@ -61,6 +61,7 @@ def slice_part(name, settings_cache):
     info = PARTS[name]
     stl = ROOT / "stl" / f"{name}.stl"
     material = info["material"]
+    import trimesh
     if material not in settings_cache:
         settings_cache[material] = {
             "machine": flatten("machine", "Bambu Lab H2D 0.4 nozzle"),
@@ -77,10 +78,16 @@ def slice_part(name, settings_cache):
         env["APPDATA"] = str(tmp / "app")
         env["LOCALAPPDATA"] = str(tmp / "local")
         (tmp / "state").mkdir()
-        args = [str(EXE), "--datadir", str(tmp / "state"), "--arrange", "1",
+        # Centre the mesh on the left-extruder bed ourselves; the CLI arrange step rejects
+        # parts that nearly fill the bed even though they fit.
+        mesh = trimesh.load_mesh(stl, process=False)
+        centred = tmp / f"{name}.stl"
+        mesh.apply_translation([-mesh.bounds[0][0] - mesh.extents[0] / 2 + 162.5, -mesh.bounds[0][1] - mesh.extents[1] / 2 + 160, -mesh.bounds[0][2]])
+        mesh.export(centred)
+        args = [str(EXE), "--datadir", str(tmp / "state"), "--arrange", "0",
                 "--load-settings", str(tmp / "machine.json") + ";" + str(tmp / "process.json"),
                 "--load-filaments", str(tmp / "filament.json"), "--curr-bed-type", "Textured PEI Plate",
-                "--slice", "0", "--debug", "2", "--export-3mf", str(tmp / "part.3mf"), str(stl)]
+                "--slice", "0", "--debug", "2", "--export-3mf", str(tmp / "part.3mf"), str(centred)]
         startup = subprocess.STARTUPINFO()
         startup.dwFlags |= subprocess.STARTF_USESHOWWINDOW
         startup.wShowWindow = 0

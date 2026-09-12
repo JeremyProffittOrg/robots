@@ -7,8 +7,11 @@
 scale_factor = 0.68386;
 $fn = 96;
 
-// ---------- print envelope (H2D left extruder 325 x 320 x 320 minus 3 mm buffer) ----------
-env_x = 322; env_y = 317; env_z = 320;
+// ---------- print envelope ----------
+// H2D left extruder 325 x 320 x 320 mm minus the requested 3 mm buffer on X and Y, and the
+// operator's rule "print at max height minus 5 mm": Z limit 315. Every part is sized to use
+// as much of this envelope as its geometry allows so the part count stays minimal.
+env_x = 322; env_y = 317; env_z = 315;
 
 // ---------- body ----------
 body_od = 317.0;                 // = env_y; cylinder limited by the 320 mm axis
@@ -46,9 +49,9 @@ shoulder_index_r = 45; shoulder_index_d = 6.2;          // 6 mm dowel index pins
 shoulder_index_angles = [0, 18];                        // 0 = two-leg, 18 = three-leg (leg forward)
 shoulder_spacer = 8;             // flanged bushing + washer stack between pad and leg
 
-// electronics tray (in body_upper local frame, sits on bosses at this height)
-tray_z_upper = 40;               // above the seam; battery top is 110 in body_lower (below seam)
-tray_boss_n = 4; tray_boss_r = 125;
+// electronics deck: an INTEGRAL horizontal deck inside body_upper (no separate tray part)
+tray_z_upper = 40;               // deck top face above the seam; battery top is 110 in body_lower
+tray_boss_n = 4; tray_boss_r = 125;   // (kept for reference; the deck is printed into the ring)
 tray_size = [230, 190, 4];
 
 // battery (12 V 7 Ah SLA on its side: 151 long X, 94 deep Y, 65 tall)
@@ -102,7 +105,7 @@ susan_access_angles = [0, 90, 180, 270];              // access holes for the to
 susan_screw_m = 5; susan_access_d = 12;
 top_plate_opening_r = 50;        // central opening in the body top plate
 head_wheel_r = 133;              // friction wheel centre radius under the dome plate
-head_slot = [36, 42];            // slot in the body top plate (radial x tangential)
+head_slot = [36, 60];            // slot in the body top plate (radial x tangential; 63 mm wheel chord)
 head_drive_hinge_m = 4;          // hinge bolt through the mount lugs
 head_drive_tension_m = 5;        // M5 x 40 adjuster with spring and thumb nut
 slip_ring_d = 12.5; slip_ring_l = 19.5;               // Adafruit 1195 body, clamped at the axis

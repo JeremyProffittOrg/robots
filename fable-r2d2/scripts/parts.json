@@ -1,16 +1,82 @@
 {
-  "envelope_mm": [322, 317, 320],
-  "buffer_note": "H2D left-extruder printable area 325 x 320 x 320 mm minus the requested 3 mm buffer on X and Y. Height uses the lower (left extruder) limit.",
+  "envelope_mm": [
+    322,
+    317,
+    315
+  ],
+  "buffer_note": "H2D left-extruder printable area 325 x 320 x 320 mm minus the requested 3 mm buffer on X and Y and 5 mm on Z (operator rule: print at max height minus 5 mm).",
   "parts": {
-    "dome": {"quantity": 1, "material": "PETG", "mirror": false, "orientation": "Lip down on the plate; crown up", "print_rotation_z": 0, "notes": "One-piece detailed dome with display cutouts; tree supports under the top disc only"},
-    "body_upper": {"quantity": 1, "material": "PETG", "mirror": false, "orientation": "Bottom (mating lip) down", "print_rotation_z": 0, "notes": "Upper body ring with shoulder bosses, head ring and lazy-susan seat; no brim"},
-    "body_lower": {"quantity": 1, "material": "PETG", "mirror": false, "orientation": "Skirt bottom down", "print_rotation_z": 0, "notes": "Lower body ring, skirt, battery bay, centre-leg socket, electronics tray; no brim"},
-    "leg_upper": {"quantity": 2, "material": "PETG", "mirror": true, "orientation": "Shoulder face down", "print_rotation_z": 0, "notes": "Left file supplied; mirror in the slicer for the right leg"},
-    "leg_lower": {"quantity": 2, "material": "PETG", "mirror": true, "orientation": "Splice face down", "print_rotation_z": 0, "notes": "Left file supplied; mirror in the slicer for the right leg"},
-    "foot_outer": {"quantity": 2, "material": "PETG", "mirror": true, "orientation": "Sole down", "print_rotation_z": 0, "notes": "Left file supplied; mirror in the slicer for the right foot; two motors and four wheels"},
-    "leg_center": {"quantity": 1, "material": "PETG", "mirror": false, "orientation": "Body flange down", "print_rotation_z": 0, "notes": "Centre leg with caster pivot boss"},
-    "foot_center": {"quantity": 1, "material": "PETG", "mirror": false, "orientation": "Sole down", "print_rotation_z": 0, "notes": "Centre foot with caster stem; two motors and four wheels"},
-    "head_drive": {"quantity": 1, "material": "PETG", "mirror": false, "orientation": "Base down", "print_rotation_z": 0, "notes": "Pivoting friction-drive motor mount with tension screw"},
-    "tray_electronics": {"quantity": 1, "material": "PETG", "mirror": false, "orientation": "Flat", "print_rotation_z": 0, "notes": "Pi 4, KB2040, four DRV8833, regulators and fuse block"}
+    "dome": {
+      "quantity": 1,
+      "material": "PETG",
+      "mirror": false,
+      "orientation": "Lip down on the plate; crown up",
+      "print_rotation_z": 0,
+      "notes": "One-piece detailed dome with display cutouts; tree supports under the top disc only"
+    },
+    "body_upper": {
+      "quantity": 1,
+      "material": "PETG",
+      "mirror": false,
+      "orientation": "Bottom (mating lip) down",
+      "print_rotation_z": 0,
+      "notes": "Upper body ring with integral electronics deck, shoulder bosses, head ring and lazy-susan seat; no brim"
+    },
+    "body_lower": {
+      "quantity": 1,
+      "material": "PETG",
+      "mirror": false,
+      "orientation": "Skirt bottom down",
+      "print_rotation_z": 0,
+      "notes": "Lower body ring, skirt, battery bay, centre-leg socket, electronics tray; no brim"
+    },
+    "leg_upper": {
+      "quantity": 2,
+      "material": "PETG",
+      "mirror": true,
+      "orientation": "Shoulder face down",
+      "print_rotation_z": 0,
+      "notes": "Left file supplied; mirror in the slicer for the right leg"
+    },
+    "leg_lower": {
+      "quantity": 2,
+      "material": "PETG",
+      "mirror": true,
+      "orientation": "Splice face down",
+      "print_rotation_z": 0,
+      "notes": "Left file supplied; mirror in the slicer for the right leg"
+    },
+    "foot_outer": {
+      "quantity": 2,
+      "material": "PETG",
+      "mirror": true,
+      "orientation": "Sole down",
+      "print_rotation_z": 0,
+      "notes": "Left file supplied; mirror in the slicer for the right foot; two motors and four wheels"
+    },
+    "leg_center": {
+      "quantity": 1,
+      "material": "PETG",
+      "mirror": false,
+      "orientation": "Body flange down",
+      "print_rotation_z": 0,
+      "notes": "Centre leg with caster pivot boss"
+    },
+    "foot_center": {
+      "quantity": 1,
+      "material": "PETG",
+      "mirror": false,
+      "orientation": "Sole down",
+      "print_rotation_z": 0,
+      "notes": "Centre foot with caster stem; two motors and four wheels"
+    },
+    "head_drive": {
+      "quantity": 1,
+      "material": "PETG",
+      "mirror": false,
+      "orientation": "Base down",
+      "print_rotation_z": 0,
+      "notes": "Pivoting friction-drive motor mount with tension screw"
+    }
   }
 }

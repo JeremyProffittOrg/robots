@@ -31,6 +31,13 @@ status email (template `~/.claude/templates/email-status.html`) via SES from an
 `@jeremy.ninja` sender to proffitt.jeremy@gmail.com with the assembly-manual PDF attached and
 the S3 link in the body. Send from a subagent; require the SES MessageId. Send once.
 
+2026-09-12 (mid-run), operator, verbatim: "make sure you are printing max height -5mm on the 3d
+printer to do less parts and make them stronger". Applied: Z limit 315 mm (H2D left extruder 320
+minus 5), `env_z = 315` in params and parts.json; the separate electronics tray was folded into
+body_upper as an integral deck, giving nine unique STL files; body rings (246 + 135.1 mm) and the
+dome (199 mm) each stay below 315 mm; the outer leg (480 mm long) still needs two prints because
+no bed axis or diagonal reaches 480 mm, and it prints flat for layer strength.
+
 Derived working decisions (operator unreachable; recorded 2026-09-12 so they are not
 re-litigated mid-run):
 

@@ -54,13 +54,14 @@ module at_foot(side) { translate([side * leg_offset_x, ankle_y_three_leg, foot_c
 module at_center_leg() { translate([0, skirt_bottom_y_three_leg, center_foot_top_z]) children(); }
 module at_center_foot() { translate([0, skirt_bottom_y_three_leg - caster_trail, foot_clear]) children(); }
 module at_head_drive() { at_body() translate([0, 0, body_top_plate_z]) children(); }
-module at_tray() { at_body_upper() translate([0, 0, tray_z_upper]) children(); }
 
 // ---------- purchased-part envelopes for renders ----------
-module wheels_and_motors_outer() {
-    for (y = [-foot_axle_y, foot_axle_y]) translate([0, y, wheel_axle_z]) {
-        color("gold") rotate([0, 0, 90]) rotate([0, -90, 0]) tt_motor();
-        for (x = [-wheel_x, wheel_x]) color("orange") translate([x, 0, 0]) rotate([0, 0, 90]) tt_wheel();
+module wheels_and_motors(center = false) {
+    // motor placement follows feet.scad (ft_motor_at, ft_motor_tilt_o, ft_phi_c_*)
+    for (sy = [-1, 1]) {
+        phi = center ? (sy > 0 ? ft_phi_c_front : ft_phi_c_rear) : sy * (90 + ft_motor_tilt_o);
+        color("gold") ft_motor_at(sy * foot_axle_y, phi) tt_motor();
+        for (x = [-wheel_x, wheel_x]) color("orange") translate([x, sy * foot_axle_y, wheel_axle_z]) rotate([0, 0, 90]) tt_wheel();
     }
 }
 
@@ -68,15 +69,14 @@ module assembly(explode = 0) {
     e = explode;
     color("white") at_body() translate([0, 0, -e * 0.3]) body_lower();
     color("white") at_body_upper() translate([0, 0, e]) body_upper();
-    color("lightgray") at_tray() translate([0, 0, e * 0.6]) tray_electronics();
     color("silver") at_dome() translate([0, 0, e * 2.2]) dome();
     color("darkgray") at_head_drive() translate([0, 0, e * 1.6]) head_drive_native();
     for (s = [-1, 1]) {
         color("white") at_leg(s) translate([s * e * 0.8, 0, 0]) { leg_upper_native(); translate([0, 0, -e * 0.5]) leg_lower_native(); }
-        color("white") at_foot(s) translate([s * e * 0.8, 0, -e * 0.5]) { foot_outer(); wheels_and_motors_outer(); }
+        color("white") at_foot(s) translate([s * e * 0.8, 0, -e * 0.5]) { foot_outer(); wheels_and_motors(); }
     }
     color("white") at_center_leg() translate([0, 0, -e * 0.8]) leg_center_native();
-    color("white") at_center_foot() translate([0, 0, -e * 1.3]) { foot_center(); wheels_and_motors_outer(); }
+    color("white") at_center_foot() translate([0, 0, -e * 1.3]) { foot_center(); wheels_and_motors(true); }
 }
 
 if (part == "assembly") assembly();
@@ -91,7 +91,6 @@ else if (part == "foot_outer") foot_outer();
 else if (part == "leg_center") leg_center();
 else if (part == "foot_center") foot_center();
 else if (part == "head_drive") head_drive();
-else if (part == "tray_electronics") tray_electronics();
 // interference checks: each must produce an empty (or exact contact-plane only) result
 else if (part == "check_seam") at_body() intersection() { body_lower(); translate([0, 0, body_lower_h]) body_upper(); }
 else if (part == "check_dome") intersection() { at_body_upper() body_upper(); at_dome() dome(); }
@@ -100,5 +99,4 @@ else if (part == "check_shoulder") intersection() { at_body_upper() body_upper()
 else if (part == "check_ankle") intersection() { at_leg(1) leg_lower_native(); at_foot(1) foot_outer(); }
 else if (part == "check_leg_split") intersection() { at_leg(1) leg_upper_native(); at_leg(1) leg_lower_native(); }
 else if (part == "check_center") intersection() { at_center_leg() leg_center_native(); union() { at_body() body_lower(); at_center_foot() foot_center(); } }
-else if (part == "check_tray") intersection() { at_tray() tray_electronics(); at_body_upper() body_upper(); }
 else echo(str("Unknown part: ", part));
