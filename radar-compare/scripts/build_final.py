@@ -1,8 +1,10 @@
-"""Build the two-page final answer from docs/final-answer.md.
+"""Build the three-page final answer from docs/final-answer.md.
 
+Two pages of prose and tables, then a full-width coverage map on page 3.
 Reuses the renderer in build_guide.py so the short document and the 100-page
-reference cannot drift apart typographically. Fails loudly if the result is not
-exactly two pages, because "two pages" is the brief.
+reference cannot drift apart typographically, and the figure comes from
+coverage_map.py, which shares the geometry engine. Fails loudly if the result is
+not exactly TARGET_PAGES, because the page count is the brief.
 
 Run: python scripts/build_final.py
 Output: radar-compare/output/best-three-options.pdf
@@ -24,7 +26,7 @@ OUT = ROOT / 'output' / 'best-three-options.pdf'
 
 MARGIN = 38
 PAGE = G.PORTRAIT
-TARGET_PAGES = 2
+TARGET_PAGES = 3
 
 
 def footer(canvas, doc):
@@ -67,7 +69,40 @@ def build(scale):
                   leftPadding=0, rightPadding=0, topPadding=0, bottomPadding=0)
     doc.addPageTemplates([PageTemplate(id='p', pagesize=PAGE, frames=[frame],
                                        onPage=footer)])
-    story = G.render_markdown(SRC, PAGE[0] - 2 * MARGIN, wide_table_threshold=5)
+    avail = PAGE[0] - 2 * MARGIN
+    story = G.render_markdown(SRC, avail, wide_table_threshold=5)
+
+    # page 3: the coverage map, on its own sheet so it prints at full width
+    fig = ROOT / 'figures' / 'option_b_coverage.png'
+    if fig.exists():
+        from reportlab.platypus import Image, PageBreak
+        story.append(PageBreak())
+        story.append(G.para('Coverage map: Option B on a 350 mm round platform',
+                            'Chapter'))
+        story.append(G.para(
+            'Plan views are evaluated point by point rather than assumed: red is '
+            'ground no cone reaches. Both rings close, and the near-field wedges '
+            'they leave are what the compliant bumper is in the bill of materials '
+            'for. The elevation is the argument for the 200 mm mounting height - '
+            'at 800 mm the same ring sails over a cat and a lying cat at close '
+            'range, which is precisely what a robot runs over.', 'Body'))
+        img = Image(str(fig))
+        ratio = img.imageHeight / float(img.imageWidth)
+        cap_room = 96
+        img.drawWidth = avail
+        img.drawHeight = avail * ratio
+        ceiling = PAGE[1] - 34 - 40 - cap_room
+        if img.drawHeight > ceiling:
+            img.drawHeight = ceiling
+            img.drawWidth = ceiling / ratio
+        img.hAlign = 'CENTER'
+        story.append(Spacer(1, 4))
+        story.append(img)
+        story.append(G.para(
+            'Every distance ring, cone angle, wedge-closure figure and subject '
+            'height in this drawing is produced by radar-compare/scripts/'
+            'geometry.py, the same code that generates the tables in the full '
+            'reference, so the drawing cannot disagree with them.', 'Caption'))
     doc.build(story)
     d = fitz.open(str(OUT))
     n = d.page_count
