@@ -16,6 +16,16 @@
 
 2026-09-12: "148 pieces is fine, keep the final under 200"
 
+2026-09-12 (evening), operator, verbatim: "save this as verison c and build out a version d". "this" was the fable-r2d2 final build mock-up; it is saved as git tag `fable-r2d2-revision-c` with hashes in `fable-r2d2/docs/revision-c.json`.
+
+2026-09-12 (evening), operator answers, verbatim:
+- Scope: "Finish sibling r2d2 rev D". Version D is this r2d2 revision D; fable-r2d2 stays at revision C.
+- Transition: "Motorized, interlocked (Recommended)". A linear actuator moves the center leg; the positive shoulder lock is sensed; drive is refused during a transition; command or power loss leaves a safe held state.
+- Controller: first "Keep Pi 4 + KB2040 (Recommended)", then on the conflict question "DFRobot Romeo ESP32-S3 (Recommended)". The DFR0994 lock stands; the Pi 4 + KB2040 answer does not apply to r2d2.
+- Delivery: "Email PDF + video link (Recommended)". Publish through `.github/workflows/publish-r2d2.yml`, verify download hashes, send one SES email to proffitt.jeremy@gmail.com from a subagent; an accepted MessageId ends retries.
+
+Tracked delegated jobs (2026-09-12 evening): `mechanical` runs in a background agent (owns r2d2/cad, scripts/check_kinematics.py, tests/test_kinematics*, bom/development-purchased.csv, docs/revision-d-mechanism.md, stl/development). `controls-migration` runs in a background agent (owns r2d2/firmware, r2d2/electronics, tests/test_firmware*/test_ui*). Restart policy: an agent that returns without its definition-of-done output is re-spawned once with narrower scope, then the parent does the work inline. The per-failure-class ceiling below governs; agents do not add their own retry budgets.
+
 This supersedes the99-piece ceiling: the final maximum is199 purchased physical pieces, excluding printed parts. The148 known pieces are acceptable as a subtotal; the remaining51-piece allowance must cover all unresolved hardware and wiring. Outcome: update the enforced boundary and active documentation. Files: existing verification/export/drawing scripts, their count reports, the existing BOM test, README and development status. Proof:199 passes,200 fails, and unresolved quantities still prevent a complete-BOM pass. Non-goals for this limit amendment: no new geometry, component purchase or release of the incomplete robot.
 
 Controller selection is now locked: DFRobot Romeo ESP32-S3 DFR0994, retaining the specified Adafruit3777 motors and3766 wheels. Do not request this approval again. Stock current limits and VIN/VM isolation remain engineering checks, not renewed permission gates. Next bounded milestone: turn the researched physical-piece ledger into a machine-counted candidate, expose all quantity gaps, and enforce199 before freezing the wiring/firmware design. Files: r2d2/bom/development-purchased.csv, existing scripts/verify.py, the resulting count report, development status and this plan. Proof:199 passes arithmetic checks;200, invalid quantities, duplicate IDs and unresolved counts fail. This does not certify an exhaustive or physically validated robot assembly.
@@ -49,6 +59,8 @@ Files: C:/dev/robots/r2d2/cad/{kinematics,loadframe,r2d2}.scad and affected meta
 Unavailable required resources/credentials, a necessary unapproved irreversible action or material scope expansion. Physical tests require a built prototype and remain explicitly unperformed. No scheduled automation. Bound CAD export to600s/part, slice to300s/part and network calls to45s; fix deterministic failures before at most two corrected attempts per failure class. Track every running process/session and terminal result. Do not change the published revision C artifact bytes to imply revision D completion.
 
 ### Execution log
+
+2026-09-12 evening: saved fable-r2d2 as revision C (tag `fable-r2d2-revision-c` -> e848bbe, commit eef6833 with docs/revision-c.json). Recorded the revision D scope, motorized interlocked transition, controller reconfirmation and email delivery. Launched the `mechanical` and `controls-migration` background agents.
 
 2026-09-12 limit amendment: updated the active maximum to199 through the shared PURCHASED_PIECE_LIMIT constant used by verification, development reporting and drawing labels. `python -m unittest discover -s tests -p test_purchased_bom.py -v` passed5 tests, including199 acceptance/200 rejection and148 with unresolved hardware still failing completeness. Default `python scripts/verify.py` reports148 known /199 maximum,9 unresolved and0 invalid; it correctly exits1 for incompleteness, with0 excess known pieces. Development geometry checks passed unchanged; drawing session94367 completed10 PNGs with updated labels and no CAD/STL edits. The remaining known allowance is51 pieces, not proof that the final robot is within the limit. No obsolete99-piece restriction should drive further simplification.
 
