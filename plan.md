@@ -8,6 +8,14 @@
 
 2026-09-12: "Front deployment, like R2-D2"
 
+2026-09-12: "Still no where the detail required and need a 3d printed frame, we can insert 2020 extrusion where you need and reduce bom list to under 100 items not including 3d printed parts"
+
+2026-09-12: "Fewer than 100 individual pieces"
+
+The confirmed ceiling is99 total purchased pieces, NOT99 part types. Count every installed screw, nut, washer, bearing, cut rail, motor and wheel separately; count factory-assembled boards and terminated cable assemblies as purchased assemblies, without concealing loose hardware in kit/allowance rows. List consumables and any uncertain counting boundaries explicitly. The preliminary separate upper/lower frame and bolted shoulder-carrier architecture is not a compliant final design. Consolidate the printed chassis and eliminate unnecessary purchased joints before freezing CAD or the purchase manifest.
+
+This supersedes the custom machined/welded frame. Revision D uses printed structural modules, 2020 extrusion reinforcement and purchased shafts/bearings/fasteners. The confirmed ceiling above applies to total physical quantities, including each small fastener; the earlier part-type interpretation is superseded. Integrated exterior relief must be visibly richer in front/rear/side and component closeups. Preserve whole stackable body sections and whole side-leg prints. Outcome of this amendment: actual printable frame geometry, detailed exterior and a counted purchase manifest. Non-goals: purchasing, physical strength claims or unrelated robot edits. Reuse current CAD/export/BOM tools. Proof: actual exported solids, assembly clearance checks, source-matched drawings and explicit purchase count <=99.
+
 These answers supersede revision C's rear-deployment/all-three-feet-down assumption. Revision C remains the previously published design; its digital verification does not establish front deployment or two-foot standing.
 
 ### Outcome, files and proof
@@ -35,6 +43,8 @@ Unavailable required resources/credentials, a necessary unapproved irreversible 
 ### Execution log
 
 2026-09-12: Read deploy.md and the actual kinematics, frame, firmware, mass budget and existing checks. Recorded both user decisions verbatim. Identified missing shoulder restraint and insufficient two-foot CG coverage. Requirements/documentation change only; no revision D CAD, firmware or physical verification is claimed.
+
+2026-09-12: New printed-frame/detail/BOM amendment started. Read the full exterior source and actual hardware/electronics CSVs:95+47=142 existing rows. Viewed reference front photograph and prior CAD rendering; feet are boxy, shoulder forms simplified and many body details shallow. Research skill delegates only bounded primary-source hardware reading to /root/printed_frame_research; root owns CAD and integration. Existing accepted revision C load figures will not be assigned to printed joints.
 
 ## R2-D2 revision C publication amendment
 
@@ -401,3 +411,64 @@ Agents: /root/mechanical, /root/electronics, /root/firmware. Parent monitors age
 - 2026-09-11: Package commit ec42789 pushed to main. Added `.gitattributes` to preserve the PDF as binary across Git checkouts and removed four extra trailing blank lines in new firmware text files; commit 02ebe17c37032c05c2c7e289fef32a3c27580e0e pushed. `git diff --check 89f41a9 -- dalek` passed. `git ls-remote origin refs/heads/main` matched that commit. `gh workflow list` and `gh run list` returned no workflows/runs. Unrelated untracked r2d2 work was preserved.
 - 2026-09-11: Automatic approval review rejected the combined temporary-review-file cleanup command with `blocked by policy`; no cleanup ran. Ignored PDF QA/render files and Python cache remain local. No attempt was made to bypass that block. All requested source and deliverable files are committed; no temporary review files were committed.
 - 2026-09-11 21:31:27 UTC: Delegated agent /root/electronics sent the explicitly requested HTML email with the final PDF to proffitt.jeremy@gmail.com using SES us-east-1. SES MessageId `010001a09261ef8f-b40da59d-d288-49e0-9e34-ae0376e6ea19-000000`. Parent checked the persisted receipt. One send only. Attachment is 2436278 bytes, 55 pages, SHA256 `3200203432dd3221ffca5ebd302f7e6d50f668022f9c82eb3a8bf92302e5a26e`; committed and local PDF bytes match. SES acceptance is verified; inbox delivery was not independently checked.
+
+---
+
+# doorbot — automatic door closer (independent task)
+
+## Locked decisions (user-confirmed; do not revisit)
+
+2026-09-12 user request, verbatim: "buld for me a door closing robot entirely from 3d printed
+parts (bambu labs pla tough+), and using a tt-motor https://www.adafruit.com/product/3777  it
+needs to operate using a time of flight sensor, https://www.adafruit.com/search?q=time+of+flight,
+to be able to detect a hand waving over a specific part, and a movement sensor to allow me to kick
+the door a couple times and it will close.  It shoudl also be able to detect objects in the doro
+way or the path reqauired for the door to close and auto close.  use a ttgo tdisplay esp32 for the
+brains, and we'll supply 5v via usb input to the ttgo display ,  We want just a few (less than 10)
+3d printed parts, the less the better, unibody design for the base unit it's self.  You can use a
+string or something like that if you want, you can also use a magenet
+https://www.adafruit.com/product/3875 or other adafruit magnets, to close the door the last few
+inches (to pull it completely closed.)  must have exploded disagrams and build instructions, but be
+very non-verbose on instgructions, less is more there, tons of pictures and diagrams for the build,
+build a final assembly and usage video when done.  when done, send me the video and pdf in email."
+
+2026-09-12 answered: mount is "On the jamb/frame, hinge side". The base unit is stationary on the
+door frame. The string runs from the unit to an anchor on the door. Kick detection must therefore
+work through the frame, not from a sensor riding the door.
+
+2026-09-12 answered: size and load-check for a "Solid-core / heavier door" — 36 in solid-core,
+30-40 kg, ordinary butt hinges.
+
+2026-09-12 answered obstacle policy, verbatim: "Retry every 19 seconds for a minute, then alert".
+
+Standing authorizations carried from prior runs in this repo: commit and push to `main`, run the
+GitHub Actions publication workflow, provision the private S3/CloudFront delivery stack through
+that workflow, and send exactly one SES email with the PDF and the video link to
+proffitt.jeremy@gmail.com. No purchases. No physical testing is claimed.
+
+## Verified facts
+
+2026-09-12 direct reads on this machine: OpenSCAD at `C:\Program Files\OpenSCAD\openscad.exe`;
+`ffmpeg` 8.1.2 on PATH; Python 3.14.0 with reportlab 4.4.10, PIL, numpy, matplotlib;
+`aws sts get-caller-identity` returns `arn:aws:iam::759775734231:user/github`.
+`C:/dev/robots/dalek/firmware/platformio.ini` already targets `board = lilygo-t-display` with
+TFT_eSPI 2.5.43 and an explicit ST7789 pin set — reuse that env shape.
+`C:/dev/robots/.github/workflows/publish-dalek.yml` is the working OIDC publish pattern
+(hash-verify inputs, `aws-actions/configure-aws-credentials@v4`, `vars.AWS_DEPLOY_ROLE_ARN`,
+CloudFormation `dalek/infra/deliverables.yaml`, private bucket + verified upload).
+`C:/dev/robots/r2d2/scripts/{export_cad,render_video,package}.py` are the working
+export/validate/render/package patterns to mirror.
+
+## Stop conditions (only these)
+
+Missing credentials or an unavailable required resource; an irreversible action not covered by the
+standing authorizations above; a material change of scope. Physical testing requires a built
+prototype and stays explicitly unperformed. No scheduled automation. Bound each CAD part export to
+600 s, each video frame to 90 s and each network call to 45 s. Diagnose deterministic failures
+before retrying; at most two corrected attempts per failure class.
+
+## Execution log
+
+2026-09-12: Read repo conventions, toolchain and the dalek/r2d2 patterns. Recorded the three
+answered decisions verbatim. Created `C:/dev/robots/doorbot/` skeleton. Starting primary-source
+hardware research and the mechanism design panel.
