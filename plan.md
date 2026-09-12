@@ -635,3 +635,14 @@ builder to flash the firmware. Added as step 1 of "First run" with the exact
 `199966255c63fd05...` to `62f1a338910c0e7d...`, so the published bytes are being updated and a
 short correction email follows. Publishing a different file behind a link whose hash was
 already quoted would have been worse than one extra email.
+
+2026-09-12: Correction email accepted once, MessageId
+`010001a0977b3cba-7769e2dd-8a6e-4d10-9617-4051a1ce400f-000000`, 1,767,593 bytes, PDF attached
+and hash-checked at `62f1a338...` before sending.
+
+2026-09-12: One more defect found on a page-by-page read of the BOM page: the price and
+quantity columns truncated their last character, so 27.99 printed as 27.9. The table helper now
+right-aligns numeric columns and never truncates them. Final PDF hash
+`cfe949556188b6bbc4187c1e694a56a29c779c34441bd1b3df40446d293dcc8c`. This is published so the
+live link serves the best artefact; the attachment on the correction email is that one
+cosmetic render behind, which is stated to the operator directly rather than by a third email.

@@ -147,7 +147,10 @@ class Guide:
             return self.wrap(detail, x + 9 * mm, y - 8 * mm, w - 9 * mm, 9, 11.5, MUTED)
         return y - 8 * mm
 
-    def table(self, rows, x, y, widths, size=8.2, header=True, row_h=5.2 * mm):
+    def table(self, rows, x, y, widths, size=8.2, header=True, row_h=5.2 * mm,
+              numeric=()):
+        """Draw a table. Columns listed in `numeric` are right-aligned and never truncated:
+        clipping the last character off a price or a quantity is worse than a narrow column."""
         c = self.c
         for r, row in enumerate(rows):
             if header and r == 0:
@@ -156,11 +159,15 @@ class Guide:
             c.setFont("Helvetica-Bold" if header and r == 0 else "Helvetica", size)
             c.setFillColor(INK if header and r == 0 else MUTED)
             cx = x
-            for value, width in zip(row, widths):
+            for i, (value, width) in enumerate(zip(row, widths)):
                 text = str(value)
-                while stringWidth(text, "Helvetica", size) > width - 2 * mm and len(text) > 4:
-                    text = text[:-2]
-                c.drawString(cx + 1 * mm, y - row_h + 3 * mm, text)
+                if i in numeric:
+                    c.drawRightString(cx + width - 1 * mm, y - row_h + 3 * mm, text)
+                else:
+                    while (stringWidth(text, "Helvetica", size) > width - 2 * mm
+                           and len(text) > 4):
+                        text = text[:-2]
+                    c.drawString(cx + 1 * mm, y - row_h + 3 * mm, text)
                 cx += width
             y -= row_h
         return y
@@ -207,7 +214,7 @@ def main():
             ["door it is sized for", f"{p['door_width_mm']:.0f} mm solid core, "
                                      f"{p['door_mass_kg']:.0f} kg"],
             ["magnet hold", f"{s['magnet_hold_n']:.0f} N at a 2 mm gap"]]
-    g.table(rows, 206 * mm, y - 6 * mm, [36 * mm, 52 * mm], 9, True, 6 * mm)
+    g.table(rows, 204 * mm, y - 6 * mm, [36 * mm, 54 * mm], 9, True, 6 * mm)
     g.end()
 
     # ---------------------------------------------------------------- what it does
@@ -243,7 +250,8 @@ def main():
         rows.append([r["part"], r["quantity"],
                      f"{float(r['x_mm']):.0f}x{float(r['y_mm']):.0f}x{float(r['z_mm']):.0f}",
                      r["solid_mass_g"]])
-    y = g.table(rows, 170 * mm, 178 * mm, [40 * mm, 12 * mm, 30 * mm, 14 * mm])
+    y = g.table(rows, 170 * mm, 178 * mm, [40 * mm, 12 * mm, 32 * mm, 14 * mm],
+                numeric=(1, 3))
     y = g.wrap("Slice settings that matter: 0.2 mm layers, 4 walls, 40% infill everywhere "
                "except the gears and the nose, which want 100%. No supports needed on any "
                "part. Print the gears and the nose in PLA Tough+ for impact; if you have it, "
@@ -262,24 +270,24 @@ def main():
     rows = [["vendor", "sku", "item", "qty", "$"]]
     for r in electronics:
         rows.append([r["vendor"], r["sku"], r["item"], r["quantity"], r["line_usd"]])
-    y = g.table(rows, 16 * mm, H - 34 * mm, [22 * mm, 18 * mm, 78 * mm, 12 * mm, 14 * mm],
-                8.2, True, 4.8 * mm)
+    y = g.table(rows, 14 * mm, H - 34 * mm, [19 * mm, 15 * mm, 64 * mm, 11 * mm, 15 * mm],
+                8.0, True, 4.8 * mm, numeric=(3, 4))
     rows = [["vendor", "sku", "item", "qty", "$"]]
     for r in hardware:
         rows.append([r["vendor"], r["sku"], r["item"], r["quantity"], r["line_usd"]])
-    g.table(rows, 150 * mm, H - 34 * mm, [26 * mm, 24 * mm, 66 * mm, 12 * mm, 14 * mm],
-            8.2, True, 4.8 * mm)
+    g.table(rows, 146 * mm, H - 34 * mm, [23 * mm, 21 * mm, 58 * mm, 11 * mm, 15 * mm],
+            8.0, True, 4.8 * mm, numeric=(3, 4))
     y = g.wrap("Two substitutions worth knowing. Adafruit 3875 is an ELECTROMAGNET, not a "
                "permanent magnet: it would need 0.6 A held continuously and the door would "
                "fall open on a power cut, so the design uses four K&J D84 permanent discs "
                "instead. Adafruit's own permanent disc (product 9) is out of stock and has no "
                "published pull force, which is why it is not specified here.",
-               16 * mm, 62 * mm, 125 * mm, 9.5, 12.5, BAD)
+               14 * mm, 56 * mm, 125 * mm, 9.5, 12.5, BAD)
     g.wrap("The motor's 5 V comes off the same USB source as the T-Display but is taken AT THE "
            "DRIVER. The board's only path from USB VBUS to its 5 V header pin is one unfused "
            "1 A Schottky that also feeds the 3.3 V regulator, so a 1 A motor step on that node "
            "resets the ESP32.",
-           150 * mm, 62 * mm, 125 * mm, 9.5, 12.5, MUTED)
+           146 * mm, 56 * mm, 128 * mm, 9.5, 12.5, MUTED)
     g.end()
 
     # ---------------------------------------------------------------- exploded
