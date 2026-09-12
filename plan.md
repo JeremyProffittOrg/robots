@@ -567,3 +567,41 @@ hardware research and the mechanism design panel.
 scoped to exactly the two final object keys) and `.github/workflows/publish-doorbot.yml` committed
 as `97c2a0d` and pushed. GitHub Actions run `34705401319` finished `completed success`; its upload
 step is a deliberate no-op until `doorbot/output/delivery/manifest.json` exists.
+
+## doorbot execution log
+
+2026-09-12: Primary-source research on eight component questions completed (Adafruit 3777 TT
+motor, the VL53 time-of-flight line, jamb impact sensing, magnets, the T-Display GPIO map,
+motor drivers, PLA Tough+ and door physics). The three design proposals and three judges in the
+same run died on a session limit; the synthesis was done inline instead rather than idling for
+two hours, and the research brief is what it was built on.
+
+2026-09-12: The research killed two of the user's starting assumptions, both recorded here
+because they change the build:
+- Adafruit 3875 is a 5 V 0.6 A ELECTROMAGNET, not a permanent magnet. It would hold only while
+  powered and would drop the door on a power cut. Four K&J D84 permanent discs are specified
+  instead; Adafruit's only permanent disc (product 9) is out of stock with no published pull
+  force.
+- A hinge-side cable whose exit lies on the closed-door plane has a moment arm of exactly zero
+  when shut. The exit is offset 40 mm off that plane, which is what makes the machine work at
+  all.
+
+2026-09-12: Revision A frozen in `C:/dev/robots/doorbot/cad/params.scad`. Seven printed
+designs, eight pieces, 256 g. 12:1 through two printed spur stages onto a 2.5 mm drum;
+151 N of cable tension, capped by the DRV8833 breakout's own 1.0 A chop rather than by
+firmware; 42-54 mm moment arm; 2.98x worst-case torque margin; 21 s close; 0.57 J of arrival
+energy against the 1.69 J A156.19 cap.
+
+2026-09-12: `python scripts/verify.py` passes all seven steps: mechanism analysis (24 checks),
+CAD analysis (18 checks), wiring and pin map, BOM, params-versus-firmware consistency,
+`pio test -e native` (13 behaviour cases) and `pio run -e tdisplay`. A host g++ was installed
+through WinGet so the behaviour tests could actually run rather than be claimed.
+
+2026-09-12: Four real defects were caught by those checks rather than by eye - a floating
+sensor boss, a gear-sweep cut that removed the floor under both dowel bosses, a blank PNG from
+an unknown part name that OpenSCAD reported as success, and two boot-time firmware bugs (the
+first hand wave was swallowed by its own debounce, and the first single knock read as a double
+kick). All four are fixed and each now has a check that would catch it again.
+
+2026-09-12: Ten generated drawings, a 14-page build guide PDF and the delivery infrastructure
+are committed. Commits `44bf778`, `6fb7392`, `ed4c622`, `2380349`.
