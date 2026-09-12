@@ -1,0 +1,721 @@
+{
+  "type": "CAD animation and simulated operation, not physical footage",
+  "seconds": 120,
+  "fps": 24,
+  "frames": 2880,
+  "resolution": [
+    1920,
+    1080
+  ],
+  "video_codec": "h264",
+  "audio_codec": "aac",
+  "printed_designs": 10,
+  "printed_instances": 11,
+  "source_sha256": {
+    "cad\\dalek.scad": "78dd1dadec37aae25459367c0c975d9ea8a13d5f8e925786d209957865f96a05",
+    "firmware\\include\\config.h": "f5555e330cfffa2eeab37bf13992b38f6946b7e68001b01b43cb710325b84a5f",
+    "firmware\\include\\control.h": "0e0f33479b649cf0fe868ed182a13aacee709f16b873b12e990de458089216d5",
+    "stl\\01_base.stl": "40a076687c45c4f8de67554f14a7ba382395e333e479f36c5acdbfd35ba62955",
+    "stl\\02_lower_skirt.stl": "dfcf92bff7aa7db46451d0d82994102d1963fc492ad26a40dd076a2e85a74d5c",
+    "stl\\03_upper_skirt.stl": "3693c825c18a91228aa893ebc82572126315ecb8c10062c029e5fadabb8c7590",
+    "stl\\04_shoulder.stl": "c0e7d360d83daafcf8514e0d120f01d9a3e91fad118a31a4a05ba42c7b204c55",
+    "stl\\05_neck.stl": "be168b3f1fd1abf81758478ea58f483ddcd44f1bd5bbe97e5dd200b3b0fb4793",
+    "stl\\06_head.stl": "9def0e13c9499554883a6714d3dd01a2a5d54ca15a4bedaa9de8d56614a28669",
+    "stl\\07_pitch_carrier.stl": "eff1cb02f20fbca124f87469d936865f27773884cbdf7cc3576d698cebb75ae8",
+    "stl\\08_plunger_arm.stl": "894d60473def2a47a24578af2eae73d16b49f3b3e713a55c2efef09446e5fb52",
+    "stl\\09_emitter_arm.stl": "df8656bf06f25fc153c29e973dd71df2b1473d4913e4b9270cf26dcb6e62f26e",
+    "stl\\10_servo_pulley.stl": "e1cea25d665ed32182f576a66d73ffc769a1dcae243c2a1494d396e002cdd903",
+    "firmware\\data\\audio\\access_point.mp3": "72f6956ea46b0ef1849fa5b1b0ee236d9cd9069137f3fd04782d9333d8113b17",
+    "firmware\\data\\audio\\advance.mp3": "736e7e2c1f56f86de7b431525f1cc66d4392c67a2070c3067d44ce55e2e08e7a",
+    "firmware\\data\\audio\\affirmative.mp3": "52bb73797536885fb1350c2e2e7707bc1ba36f944b45f40fe8efd6b933253b94",
+    "firmware\\data\\audio\\arms_ready.mp3": "430be14cec20cefac4dd735ad28a9c9484e7f48b78acccd186ec595195608ad8",
+    "firmware\\data\\audio\\battery_low.mp3": "686eb97eb801c979a5d897f5a61bb77876f6fdc3fbffde0279b11d2e1758adc0",
+    "firmware\\data\\audio\\charging.mp3": "bdcaad8d19fa45c4088c6072c26ee506d358045114f5fb13693f0dec14407c20",
+    "firmware\\data\\audio\\exterminate.mp3": "1564fe5ddf0b7d183c77e057e7b14616a753e4b274c4cc854a10c507fd65ae91",
+    "firmware\\data\\audio\\goodbye.mp3": "75eee91775253b6227f4c92058a17cecfebd4ba531bda7725e66445fb64335c9",
+    "firmware\\data\\audio\\halt.mp3": "a9a5300d2bfe1bbd6dd9a0ea5401df29c87f661cdac6794d82c39da97f4553ff",
+    "firmware\\data\\audio\\head_scan.mp3": "67f42ef19da9d90f5f11024da29280a2d8d38e5435e060cf75e162fba2bfc0c6",
+    "firmware\\data\\audio\\hello.mp3": "c4604a20efa9eb2b213ea3232b1b71a38c2f304a85cd354b52209a39924a27f5",
+    "firmware\\data\\audio\\intruder.mp3": "b0cf6d383f754f5ada535a1d8358c1c8cbb2ad15fa51ecccfec6accf3ab599c7",
+    "firmware\\data\\audio\\link_lost.mp3": "2e6faf455930a4b47d7250f4f54605d6f6a1e789f7a5a46fef5b8243bca1c996",
+    "firmware\\data\\audio\\negative.mp3": "84d75305fe1b515b93612fd77ed3dfeaf9c6952bf6df04e38a103e9f9826ad3d",
+    "firmware\\data\\audio\\obey.mp3": "f27994cfa1b2180c78787b3967f7f72e2ea8b1d6ea0bc9c4ae8743d0831ddd87",
+    "firmware\\data\\audio\\patrol.mp3": "f3b841c513d5de54fb4d363fd5df0a826d6c93cafb286b0b327f11d48b14beca",
+    "firmware\\data\\audio\\recharge.mp3": "2a22de72fb96f4084884d8c7ab620181deaef1d4a42cfdfe1f1a44b19695618f",
+    "firmware\\data\\audio\\retreat.mp3": "b56773af649ed4d337ffe44c0b13d8a1a3b42a058f0bb2fd8975463557a5023a",
+    "firmware\\data\\audio\\scan.mp3": "fc6fde871bfea08f5dbb1578996c047d4edc88b8f1418d514640aabb81b0adb8",
+    "firmware\\data\\audio\\stopped.mp3": "c09b8bce621614df5047c8ebc34b8fc1abb9d1846fefcb0b8c6e450192f32ce4",
+    "firmware\\data\\audio\\systems_online.mp3": "7b1857a295f45c28b5c320aaffeed72c162c873ed394a0e19d1905b5e4639f65",
+    "firmware\\data\\audio\\turning.mp3": "d8e5261b033db23bb668268107dacf76350812eef38ad073b22f4d67d06b9f04",
+    "firmware\\data\\audio\\victory.mp3": "ef5e2ba129869ae621727e56381ac19ac92f0799bc2fe5ab38a12f1029f8eb83",
+    "firmware\\data\\audio\\wifi_connected.mp3": "549ae90815e6010cf3d86fe0eb74859e4ce8aa240a1d2569d4add4db4382a42c"
+  },
+  "inputs_unchanged": true,
+  "video_sha256": "3963575e9534807a58278a3284b1b19df8ffce80eea6291a70c659341fb6f993",
+  "video_bytes": 31011514,
+  "render_seconds": 79.58,
+  "renderer": "ANGLE (NVIDIA, NVIDIA Quadro M2000 (0x00001430) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+  "motion_keyframes": [
+    {
+      "time": -0.0,
+      "drive": {
+        "x": 0,
+        "y": 0,
+        "yaw": 0,
+        "left": 0,
+        "right": 0,
+        "action": "STOPPED"
+      },
+      "motion": {
+        "head": 0,
+        "yaw": 0,
+        "pitch": 0,
+        "active": false
+      },
+      "printed_instances": [
+        "01_base",
+        "02_lower_skirt",
+        "03_upper_skirt",
+        "04_shoulder",
+        "05_neck",
+        "06_head",
+        "10_servo_pulley",
+        "07_pitch_carrier",
+        "08_plunger_arm",
+        "07_pitch_carrier",
+        "09_emitter_arm"
+      ],
+      "simulation": true
+    },
+    {
+      "time": 11,
+      "drive": {
+        "x": 0,
+        "y": 0,
+        "yaw": 0,
+        "left": 0,
+        "right": 0,
+        "action": "STOPPED"
+      },
+      "motion": {
+        "head": 0,
+        "yaw": 0,
+        "pitch": 0,
+        "active": false
+      },
+      "printed_instances": [
+        "01_base"
+      ],
+      "simulation": true
+    },
+    {
+      "time": 18,
+      "drive": {
+        "x": 0,
+        "y": 0,
+        "yaw": 0,
+        "left": 0,
+        "right": 0,
+        "action": "STOPPED"
+      },
+      "motion": {
+        "head": 0,
+        "yaw": 0,
+        "pitch": 0,
+        "active": false
+      },
+      "printed_instances": [
+        "01_base"
+      ],
+      "simulation": true
+    },
+    {
+      "time": 24,
+      "drive": {
+        "x": 0,
+        "y": 0,
+        "yaw": 0,
+        "left": 0,
+        "right": 0,
+        "action": "STOPPED"
+      },
+      "motion": {
+        "head": 0,
+        "yaw": 0,
+        "pitch": 0,
+        "active": false
+      },
+      "printed_instances": [
+        "01_base",
+        "02_lower_skirt"
+      ],
+      "simulation": true
+    },
+    {
+      "time": 29,
+      "drive": {
+        "x": 0,
+        "y": 0,
+        "yaw": 0,
+        "left": 0,
+        "right": 0,
+        "action": "STOPPED"
+      },
+      "motion": {
+        "head": 0,
+        "yaw": 0,
+        "pitch": 0,
+        "active": false
+      },
+      "printed_instances": [
+        "01_base",
+        "02_lower_skirt"
+      ],
+      "simulation": true
+    },
+    {
+      "time": 35,
+      "drive": {
+        "x": 0,
+        "y": 0,
+        "yaw": 0,
+        "left": 0,
+        "right": 0,
+        "action": "STOPPED"
+      },
+      "motion": {
+        "head": 0,
+        "yaw": 0,
+        "pitch": 0,
+        "active": false
+      },
+      "printed_instances": [
+        "01_base",
+        "02_lower_skirt"
+      ],
+      "simulation": true
+    },
+    {
+      "time": 40,
+      "drive": {
+        "x": 0,
+        "y": 0,
+        "yaw": 0,
+        "left": 0,
+        "right": 0,
+        "action": "STOPPED"
+      },
+      "motion": {
+        "head": 0,
+        "yaw": 0,
+        "pitch": 0,
+        "active": false
+      },
+      "printed_instances": [
+        "01_base",
+        "02_lower_skirt",
+        "03_upper_skirt"
+      ],
+      "simulation": true
+    },
+    {
+      "time": 49,
+      "drive": {
+        "x": 0,
+        "y": 0,
+        "yaw": 0,
+        "left": 0,
+        "right": 0,
+        "action": "STOPPED"
+      },
+      "motion": {
+        "head": 0,
+        "yaw": 0,
+        "pitch": 0,
+        "active": false
+      },
+      "printed_instances": [
+        "01_base",
+        "02_lower_skirt",
+        "03_upper_skirt",
+        "04_shoulder"
+      ],
+      "simulation": true
+    },
+    {
+      "time": 56,
+      "drive": {
+        "x": 0,
+        "y": 0,
+        "yaw": 0,
+        "left": 0,
+        "right": 0,
+        "action": "STOPPED"
+      },
+      "motion": {
+        "head": 0,
+        "yaw": 0,
+        "pitch": 0,
+        "active": false
+      },
+      "printed_instances": [
+        "01_base",
+        "02_lower_skirt",
+        "03_upper_skirt",
+        "04_shoulder"
+      ],
+      "simulation": true
+    },
+    {
+      "time": 63,
+      "drive": {
+        "x": 0,
+        "y": 0,
+        "yaw": 0,
+        "left": 0,
+        "right": 0,
+        "action": "STOPPED"
+      },
+      "motion": {
+        "head": 0,
+        "yaw": 0,
+        "pitch": 0,
+        "active": false
+      },
+      "printed_instances": [
+        "01_base",
+        "02_lower_skirt",
+        "03_upper_skirt",
+        "04_shoulder",
+        "05_neck"
+      ],
+      "simulation": true
+    },
+    {
+      "time": 67,
+      "drive": {
+        "x": 0,
+        "y": 0,
+        "yaw": 0,
+        "left": 0,
+        "right": 0,
+        "action": "STOPPED"
+      },
+      "motion": {
+        "head": 0,
+        "yaw": 0,
+        "pitch": 0,
+        "active": false
+      },
+      "printed_instances": [
+        "01_base",
+        "02_lower_skirt",
+        "03_upper_skirt",
+        "04_shoulder",
+        "05_neck"
+      ],
+      "simulation": true
+    },
+    {
+      "time": 72,
+      "drive": {
+        "x": 0,
+        "y": 0,
+        "yaw": 0,
+        "left": 0,
+        "right": 0,
+        "action": "STOPPED"
+      },
+      "motion": {
+        "head": 0,
+        "yaw": 0,
+        "pitch": 0,
+        "active": false
+      },
+      "printed_instances": [
+        "01_base",
+        "02_lower_skirt",
+        "03_upper_skirt",
+        "04_shoulder",
+        "05_neck",
+        "06_head"
+      ],
+      "simulation": true
+    },
+    {
+      "time": 79,
+      "drive": {
+        "x": 0,
+        "y": 0,
+        "yaw": 0,
+        "left": 0,
+        "right": 0,
+        "action": "STOPPED"
+      },
+      "motion": {
+        "head": 0,
+        "yaw": 0,
+        "pitch": 0,
+        "active": false
+      },
+      "printed_instances": [
+        "01_base",
+        "02_lower_skirt",
+        "03_upper_skirt",
+        "04_shoulder",
+        "05_neck",
+        "06_head",
+        "10_servo_pulley"
+      ],
+      "simulation": true
+    },
+    {
+      "time": 87.5,
+      "drive": {
+        "x": 0,
+        "y": 0,
+        "yaw": 0,
+        "left": 0,
+        "right": 0,
+        "action": "STOPPED"
+      },
+      "motion": {
+        "head": 0,
+        "yaw": 0,
+        "pitch": 0,
+        "active": false
+      },
+      "printed_instances": [
+        "01_base",
+        "02_lower_skirt",
+        "03_upper_skirt",
+        "04_shoulder",
+        "05_neck",
+        "06_head",
+        "10_servo_pulley",
+        "07_pitch_carrier",
+        "08_plunger_arm",
+        "07_pitch_carrier",
+        "09_emitter_arm"
+      ],
+      "simulation": true
+    },
+    {
+      "time": 91,
+      "drive": {
+        "x": 0,
+        "y": 0,
+        "yaw": 0,
+        "left": 0,
+        "right": 0,
+        "action": "STOPPED"
+      },
+      "motion": {
+        "head": 0,
+        "yaw": 0,
+        "pitch": 0,
+        "active": false
+      },
+      "printed_instances": [
+        "01_base",
+        "02_lower_skirt",
+        "03_upper_skirt",
+        "04_shoulder",
+        "05_neck",
+        "06_head",
+        "10_servo_pulley",
+        "07_pitch_carrier",
+        "08_plunger_arm",
+        "07_pitch_carrier",
+        "09_emitter_arm"
+      ],
+      "simulation": true
+    },
+    {
+      "time": 94.5,
+      "drive": {
+        "x": 0,
+        "y": 0,
+        "yaw": 0,
+        "left": 0,
+        "right": 0,
+        "action": "STOPPED"
+      },
+      "motion": {
+        "head": 0,
+        "yaw": 0,
+        "pitch": 0,
+        "active": false
+      },
+      "printed_instances": [
+        "01_base",
+        "02_lower_skirt",
+        "03_upper_skirt",
+        "04_shoulder",
+        "05_neck",
+        "06_head",
+        "10_servo_pulley",
+        "07_pitch_carrier",
+        "08_plunger_arm",
+        "07_pitch_carrier",
+        "09_emitter_arm"
+      ],
+      "simulation": true
+    },
+    {
+      "time": 97,
+      "drive": {
+        "x": 0,
+        "y": 0,
+        "yaw": 0,
+        "left": 0,
+        "right": 0,
+        "action": "STOPPED"
+      },
+      "motion": {
+        "head": 0.7853981633974483,
+        "yaw": 0.08207030357735365,
+        "pitch": -0.11296008205145021,
+        "active": true
+      },
+      "printed_instances": [
+        "01_base",
+        "02_lower_skirt",
+        "03_upper_skirt",
+        "04_shoulder",
+        "05_neck",
+        "06_head",
+        "10_servo_pulley",
+        "07_pitch_carrier",
+        "08_plunger_arm",
+        "07_pitch_carrier",
+        "09_emitter_arm"
+      ],
+      "simulation": true
+    },
+    {
+      "time": 99,
+      "drive": {
+        "x": 0,
+        "y": 0,
+        "yaw": 0,
+        "left": 0,
+        "right": 0,
+        "action": "STOPPED"
+      },
+      "motion": {
+        "head": 2.356194490192345,
+        "yaw": 0.13279254065518026,
+        "pitch": 0.043146911971677075,
+        "active": true
+      },
+      "printed_instances": [
+        "01_base",
+        "02_lower_skirt",
+        "03_upper_skirt",
+        "04_shoulder",
+        "05_neck",
+        "06_head",
+        "10_servo_pulley",
+        "07_pitch_carrier",
+        "08_plunger_arm",
+        "07_pitch_carrier",
+        "09_emitter_arm"
+      ],
+      "simulation": true
+    },
+    {
+      "time": 106,
+      "drive": {
+        "x": 0,
+        "y": -133.33333333333331,
+        "yaw": 0,
+        "left": 4.232804232804233,
+        "right": 4.232804232804233,
+        "action": "FORWARD"
+      },
+      "motion": {
+        "head": 7.853981633974483,
+        "yaw": -1.3679436044243839e-16,
+        "pitch": 0.13962634015954636,
+        "active": true
+      },
+      "printed_instances": [
+        "01_base",
+        "02_lower_skirt",
+        "03_upper_skirt",
+        "04_shoulder",
+        "05_neck",
+        "06_head",
+        "10_servo_pulley",
+        "07_pitch_carrier",
+        "08_plunger_arm",
+        "07_pitch_carrier",
+        "09_emitter_arm"
+      ],
+      "simulation": true
+    },
+    {
+      "time": 110,
+      "drive": {
+        "x": 33.84873822993164,
+        "y": -378.67749947127777,
+        "yaw": 0.3375,
+        "left": 13.455357142857142,
+        "right": 10.830357142857142,
+        "action": "BROAD ARC"
+      },
+      "motion": {
+        "head": 10.995574287564276,
+        "yaw": -0.08207030357735348,
+        "pitch": -0.11296008205145033,
+        "active": true
+      },
+      "printed_instances": [
+        "01_base",
+        "02_lower_skirt",
+        "03_upper_skirt",
+        "04_shoulder",
+        "05_neck",
+        "06_head",
+        "10_servo_pulley",
+        "07_pitch_carrier",
+        "08_plunger_arm",
+        "07_pitch_carrier",
+        "09_emitter_arm"
+      ],
+      "simulation": true
+    },
+    {
+      "time": 111.08333333333333,
+      "drive": {
+        "x": 47.36340359826894,
+        "y": -413.6510053851903,
+        "yaw": 0.4,
+        "left": 14.88888888888889,
+        "right": 11.777777777777779,
+        "action": "PAUSE"
+      },
+      "motion": {
+        "head": 11.846422297911507,
+        "yaw": 0.029029948465264917,
+        "pitch": 0.13657516962630292,
+        "active": true
+      },
+      "printed_instances": [
+        "01_base",
+        "02_lower_skirt",
+        "03_upper_skirt",
+        "04_shoulder",
+        "05_neck",
+        "06_head",
+        "10_servo_pulley",
+        "07_pitch_carrier",
+        "08_plunger_arm",
+        "07_pitch_carrier",
+        "09_emitter_arm"
+      ],
+      "simulation": true
+    },
+    {
+      "time": 113,
+      "drive": {
+        "x": 14.25716784981342,
+        "y": -335.347394349843,
+        "yaw": 0.4,
+        "left": 12.190013420334122,
+        "right": 9.078902309223011,
+        "action": "REVERSE"
+      },
+      "motion": {
+        "head": 13.351768777756622,
+        "yaw": -0.13279254065518034,
+        "pitch": 0.04314691197167681,
+        "active": true
+      },
+      "printed_instances": [
+        "01_base",
+        "02_lower_skirt",
+        "03_upper_skirt",
+        "04_shoulder",
+        "05_neck",
+        "06_head",
+        "10_servo_pulley",
+        "07_pitch_carrier",
+        "08_plunger_arm",
+        "07_pitch_carrier",
+        "09_emitter_arm"
+      ],
+      "simulation": true
+    },
+    {
+      "time": 114.5,
+      "drive": {
+        "x": 0.6332025212308778,
+        "y": -303.12368610484407,
+        "yaw": 0.4,
+        "left": 11.079365079365079,
+        "right": 7.968253968253968,
+        "action": "STOPPED"
+      },
+      "motion": {
+        "head": 14.137166941154069,
+        "yaw": 0,
+        "pitch": 0,
+        "active": false
+      },
+      "printed_instances": [
+        "01_base",
+        "02_lower_skirt",
+        "03_upper_skirt",
+        "04_shoulder",
+        "05_neck",
+        "06_head",
+        "10_servo_pulley",
+        "07_pitch_carrier",
+        "08_plunger_arm",
+        "07_pitch_carrier",
+        "09_emitter_arm"
+      ],
+      "simulation": true
+    },
+    {
+      "time": 119,
+      "drive": {
+        "x": 0.6332025212308778,
+        "y": -303.12368610484407,
+        "yaw": 0.4,
+        "left": 11.079365079365079,
+        "right": 7.968253968253968,
+        "action": "STOPPED"
+      },
+      "motion": {
+        "head": 14.137166941154069,
+        "yaw": 0,
+        "pitch": 0,
+        "active": false
+      },
+      "printed_instances": [
+        "01_base",
+        "02_lower_skirt",
+        "03_upper_skirt",
+        "04_shoulder",
+        "05_neck",
+        "06_head",
+        "10_servo_pulley",
+        "07_pitch_carrier",
+        "08_plunger_arm",
+        "07_pitch_carrier",
+        "09_emitter_arm"
+      ],
+      "simulation": true
+    }
+  ],
+  "audio_source": "Local Zira narration and existing original robot MP3s",
+  "verification": "FFprobe dimensions/rate/count/duration/audio checks and full FFmpeg decode passed",
+  "limitations": [
+    "Purchased hardware is simplified.",
+    "Assembly motions and speeds are illustrative.",
+    "No physical strength, fit, Wi-Fi connection or driving test is depicted."
+  ]
+}

@@ -1,0 +1,79 @@
+1
+00:00:00,000 --> 00:00:05,000
+Ten STL designs. Eleven printed parts.
+Bronze Dalek | Original TTGO T-Display ESP32 | CAD assembly preview
+
+2
+00:00:05,000 --> 00:00:13,000
+01 | Reinforced motor base
+Mate four Adafruit 3777 motors with 3766 wheels; lower the pairs into the one-piece base.
+
+3
+00:00:13,000 --> 00:00:19,000
+02 | Retain the motors
+Eight padded clamp strips and sixteen M3 bolts retain the four motors.
+
+4
+00:00:19,000 --> 00:00:25,000
+03 | Lower skirt first
+Fasten the lower ring to the base before fitting electronics; seat its locating joint.
+
+5
+00:00:25,000 --> 00:00:36,000
+04 | Electronics and battery
+Fit two FR4 plates, nylon spacers and boards; secure the disconnected 12 V, 6 Ah battery with two straps.
+
+6
+00:00:36,000 --> 00:00:41,000
+05 | Stack the upper skirt
+Seat the complete upper skirt and fasten its four M4 joints.
+
+7
+00:00:41,000 --> 00:00:51,000
+06 | Fit the shoulder components
+Bench fit speaker, rear T-Display, four edge-retaining tabs and both power switches.
+
+8
+00:00:51,000 --> 00:00:57,000
+07 | Seat the shoulder
+Connect labelled harness plugs, leave service loops and fasten the shoulder.
+
+9
+00:00:57,000 --> 00:01:04,000
+08 | Fasten the neck
+Tighten the neck bolts before fitting the head drive servo.
+
+10
+00:01:04,000 --> 00:01:13,000
+09 | Bearing-supported head
+Fit two 608 bearings, retainers, inner-race spacer, narrow shims and M8 spindle. Keep the head loose for belt fitting.
+
+11
+00:01:13,000 --> 00:01:20,000
+10 | Head drive
+Fit the FS5103R and pulley. Preload the O-ring on the loose head hub, then lower and retain the head.
+
+12
+00:01:20,000 --> 00:01:29,000
+11 | Two-axis arm assemblies
+Fit two yaw servos, two shared carriers, two pitch servos and both arms; centre horns before attachment.
+
+13
+00:01:29,000 --> 00:01:36,000
+12 | Local Wi-Fi control
+Illustrative rear screen: direct access point, then access point plus a 2.4 GHz network.
+
+14
+00:01:36,000 --> 00:01:44,000
+13 | Head and arm motion
+Simulated continuous head rotation and circular arm-tip paths. Original robot sound effects.
+
+15
+00:01:44,000 --> 00:01:55,000
+14 | Four-wheel motion
+Simulated forward travel, broad moving arc, reverse and stop on a level floor.
+
+16
+00:01:55,000 --> 00:02:00,000
+Assembly complete | Prototype design
+543.8 mm tall | Physical fit, strength, driving and stop tests remain required. See the assembly manual.

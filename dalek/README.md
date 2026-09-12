@@ -6,6 +6,7 @@ Start with [the design and assembly PDF](output/pdf/dalek-design-and-assembly.pd
 
 ## Files to use
 
+- [Assembly and operation video (MP4)](output/video/dalek-assembly-and-operation.mp4): two minutes at 1080p with narration, component assembly, original robot sounds and simulated operation. [Captions](output/video/assembly-captions.srt) and [video verification](output/video/video-manifest.json) are included. The head stays loose while its belt is fitted; cutaways expose hidden components. This is CAD animation, not physical test footage.
 - [MATLAB-style PNG set (ZIP)](output/drawings/dalek-matlab-style-pngs.zip), with [assembled robot](output/drawings/01_robot_assembled.png), [exploded assembly](output/drawings/02_robot_exploded.png), [orthographic views](output/drawings/03_robot_orthographic.png), [component sheet](output/drawings/04_printed_components.png), [base hardware breakout](output/drawings/05_base_drive_breakout.png), and [ten individual component drawings](output/drawings/components/).
 - [Assembly sequence and physical tests](docs/assembly.md).
 - [Exact mechanical assembly, dimensions, fasteners and print settings](docs/mechanical.md).
@@ -42,10 +43,13 @@ pio run -d firmware -t buildfs
 node firmware/test/test_ui.js
 python scripts/build_manual.py
 python scripts/render_drawings.py
+python scripts/render_video.py
 ```
 
 The firmware guide gives the native safety-test command and the USB upload commands. OpenSCAD preview rendering commands and view coordinates are in the mechanical guide. The PDF builder needs those final preview images and the final BOMs. Do not regenerate only some of the STLs after changing shared CAD dimensions and then treat the older meshes as current.
 
 The MATLAB-style drawings use the installed Matplotlib, NumPy, trimesh and Pillow tools. They render the delivered STL geometry without changing it. The assembled and orthographic views show the bronze finish; exploded and component views use part colours for identification. Gray purchased hardware is drawn as nominal envelopes. The drawing manifest records source hashes and PNG dimensions. The original 1.14-inch TTGO T-Display board was confirmed on 2026-09-12.
+
+The video reuses those meshes with the installed Python Playwright, Chrome/WebGL and FFmpeg tools. `render_video.py --preview` makes review keyframes. A full render creates local speech narration, reuses existing robot MP3s, and writes the MP4, poster, captions and manifest. The temporary local renderer never connects to a printer, robot, user browser profile or network account. Video motion and speed are illustrative; the existing physical commissioning gates still apply.
 
 No cloud service is part of robot operation. GitHub contains the design source. Firmware flashing is a local hardware assembly step. The repository has no cloud deployment workflow for this package.

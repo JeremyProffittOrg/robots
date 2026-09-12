@@ -75,10 +75,10 @@ Proof: all ten input STL hashes unchanged; all eleven printed instances included
 
 ### Workstreams
 
-- [~] Renderer/video, /root: reuse current geometry and installed headless Chrome/WebGL through existing Python Playwright, encode with installed FFmpeg, produce MP4, poster and verification manifest. One-time local rendering only; no user browser state or printer connection.
-- [x] Sequence/kinematic review, /root/video_sequence_review: read actual manual/CAD/firmware. Verified motor/wheel pairs precede clamps, lower ring precedes electronics, neck bolts precede head servo, and head/arm pivots match source. Final visual review to follow.
-- [~] Storyboard/audio, /root/video_audio: shared 120-second chapter JSON and reproducible Windows speech/FFmpeg script; verify narration fits each interval and preserve original MP3s.
-- [ ] Delivery: review, commit/push only task files on main, check any workflow, provide the finished video.
+- [x] Renderer/video, /root: current geometry rendered with installed headless Chrome/WebGL through existing Python Playwright and encoded with installed FFmpeg. MP4, poster, captions and verification manifest complete. One-time local rendering only; no user browser state or printer connection.
+- [x] Sequence/kinematic review, /root/video_sequence_review: read actual manual/CAD/firmware. Verified motor/wheel pairs precede clamps, lower ring precedes electronics, neck bolts precede head servo, and head/arm pivots match source. Independent review of fourteen frames extracted from the final encoded MP4 passed, including belt fitting, visible arm/head motion, driving arc and final stop.
+- [x] Storyboard/audio, /root/video_audio: shared 120-second chapter JSON and reproducible Windows speech/FFmpeg script complete; narration fits each interval, robot cues do not overlap and original MP3s remain unchanged. Final render regenerated the soundtrack from the final storyboard.
+- [~] Delivery: reviewed MP4 and README links ready; commit/push only task files on main, check any workflow, provide the finished video.
 
 ### Stop conditions and jobs
 
@@ -87,6 +87,9 @@ Stop only for missing credentials or a material scope expansion that needs user 
 ### Execution log
 
 - 2026-09-12: Read parent deploy.md, current drawing renderer/CAD, firmware motion limits and audio catalog. Working tree clean. FFmpeg/FFprobe, Python Playwright, Chrome, NumPy/trimesh/Pillow are installed. No Blender or separate OpenGL Python framework is installed. Selected the existing browser graphics engine for a local headless render. Delegated bounded sequence and soundtrack work to the agents listed above.
+- 2026-09-12: Preview review corrected the pitch servo transform, eased arm start/stop, added a pause before reversing, and moved the rear display board in from inside the shoulder. The head remains loose while the closed belt is fitted; a labelled cutaway exposes the drive before the head is seated. Renderer/source milestone committed as 12816a8. Existing CAD/STLs, electronics, firmware, robot MP3s and PDF unchanged.
+- 2026-09-12: `python scripts/render_video.py` completed in tracked session 20072 with exit 0; FFmpeg PID 236248 reached success. Output: `PASS: 120s / 2880 frames / 1920x1080 H.264+AAC; full decode; unchanged inputs`. MP4 is 31,011,514 bytes, SHA256 3963575e9534807a58278a3284b1b19df8ffce80eea6291a70c659341fb6f993. Manifest records all eleven printed instances, source hashes, frame evidence and final stopped state. Physical operation is simulated and labelled throughout.
+- 2026-09-12: Root reviewed assembly closeups and finished views; /root/video_sequence_review independently extracted and inspected fourteen frames directly from the final MP4 and returned PASS for the same SHA256. Encoded frame comparisons confirm circular arm/head motion and the broad driving arc, then all motion stops. The agent removed its fourteen review scratch PNGs. The two-minute video includes twelve assembly narration clips, six original robot MP3 cues, captions and a poster.
 
 ## Current drawing task: MATLAB-style PNGs
 
