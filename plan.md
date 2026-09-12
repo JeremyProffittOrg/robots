@@ -70,7 +70,7 @@ Files: C:/dev/robots/dalek/scripts/render_drawings.py; C:/dev/robots/dalek/outpu
 
 - [x] Renderer and PNGs, /root: 15 PNGs generated with actual STL surfaces, millimetre axes, shaded surfaces, correct depth visibility and dimension/quantity labels. Render command passed; CAD/STL hashes unchanged. ZIP contents and PNG dimensions verified.
 - [x] Transform review, /root/drawing_layout_audit: exact transforms agree with cad/dalek.scad. Independent final visual review passed all five overview sheets, callouts 07/10, rear display, component counts/materials/dimensions, and clipping/occlusion checks.
-- [ ] Delivery: create a ZIP containing the PNGs, commit/push only task files on main and check any triggered workflow. Show the main PNGs and provide access to the complete set.
+- [x] Delivery: 15-PNG ZIP and all individual PNGs committed and pushed in 9554a2c9f63448aaa7101c2525dcdac92983b0cb. No workflow run was triggered. Drawing links are in the Dalek README; main views are available to show in the conversation.
 
 ### Stop conditions and jobs
 
@@ -81,6 +81,7 @@ Stop only for missing credentials or a requested material scope change. Tools ar
 - 2026-09-12: Read parent deploy.md, current CAD, print manifest, mechanical guide and exporter. Working tree was clean. Matplotlib 3.11.0 and trimesh 4.12.2 are available. Delegated independent transform review to /root/drawing_layout_audit. Verified arm mapping: remove each STL's print Z offset before applying Rz(-90)Rx(90).
 - 2026-09-12: First render exposed Matplotlib mean-depth sorting artifacts on hollow STL shells. Replaced painter rendering with a per-pixel depth buffer, keeping Matplotlib axes and the unchanged meshes. Final render session 62661 exited 0: `PASS: 15 PNG drawings; 10 STL designs / 11 pieces; assembly transforms; unchanged CAD/STL hashes; ZIP verified`. Assembled/orthographic plots use the bronze finish; breakout plots use MATLAB-family part colours.
 - 2026-09-12: User confirmed the existing board choice while drawings were being created. No controller or geometry changes were needed. Root and /root/drawing_layout_audit inspected final PNGs; no visible clipping, label overlap or depth-rendering defect remains. Files are in C:/dev/robots/dalek/output/drawings, with a 15-PNG ZIP and input/output hash manifest.
+- 2026-09-12: Final verification returned `PASS: 15 PNGs and ZIP; all source hashes unchanged`. PNG dimensions range from2160x1620 to3240x2340 pixels. `git diff --cached --check` passed. Commit9554a2c pushed to main; `gh run list` returned no runs. No PDF, STL, electronics, firmware or audio file changed, and no email was sent for this PNG-only request.
 
 ## Current revision: strong base and ten STL files
 
