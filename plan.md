@@ -8,14 +8,19 @@ Create a 609.6 mm tall robot fabrication package in C:/dev/robots/r2d2: six Adaf
 
 2026-09-11: "email me the design pdf when doee"
 2026-09-11: "continue"
+2026-09-12: "Four wheels per foot; twelve total"
+2026-09-12: "Phone over Wi-Fi"
+2026-09-12: "Create original robot sounds"
 
 ## R2-D2 verified facts and assumptions
 
 Verified: repository main at https://github.com/JeremyProffittOrg/robots.git. Parent deploy.md, agents.md, CLAUDE.md read. OpenSCAD, PlatformIO, FFmpeg, Python/ReportLab/trimesh available. Adafruit 3777 motor 3-6 V, 1.5 A stall at 6 V, 0.8 kg.cm stall torque. Wheel 3766 is 63 x 29 mm; listed out of stock. H2D dual-nozzle envelope 300 x 320 x 325 mm. Sources: C:/dev/robots/r2d2/docs/component-research.md. Local Git operator address proffitt.jeremy@gmail.com; existing SES delivery route confirmed by concurrent task.
 
-Assumptions following instruction to continue: two motors/four wheels per foot; phone Wi-Fi access point; original beeps and whistles. These are assumptions, not verbatim user confirmations. Indoor level hard floor, gentle arcs, no pivot turns. Digital prototype; physical load/fit/runtime validation remains mandatory.
+Confirmed by user2026-09-12: four wheels per foot/twelve total, phone Wi-Fi control and original robot sounds; these match the current six-motor design and drawings. Remaining operating assumptions: indoor level hard floor, gentle arcs, no pivot turns. Digital prototype; physical load/fit/runtime validation remains mandatory.
 
 ## R2-D2 milestones
+
+- [x] Drawings,2026-09-12 user: "show me matlab style drawings of the robot plus components broken out as png's". Created eight MATLAB-style PNG sheets from Revision B meshes: assembled, orthographic, exploded, mechanism views and all29 printed components. Files: r2d2/scripts/draw_robot.py and r2d2/output/drawings. `python scripts/draw_robot.py` passed; generation session32519 completed; all PNGs visually reviewed, source SHA256 values unchanged and ZIP CRCs passed. Replaced inaccurate painter-order surface shading with depth-buffered triangle plotting; corrected label spacing. Existing Matplotlib/trimesh only, no geometry/firmware/hardware/PDF changes. Purchased shapes explicitly schematic. Drawing-only request does not require another PDF email. Deliver by focused commit/push and show PNGs with ZIP download.
 
 - [x] Revision B: user2026-09-11 "That's too many pieces, adjust the size so the body prints as single stackable pieces, same for the arms". Delivered two complete stackable body prints and one295mm print per arm, at609.6mm overall height.29 meshes/83 printed pieces. Removed14 superseded STLs. All geometry, mating-plane and four whole-part H2D PETG slice checks passed. Updated hardware list,35-page PDF and ZIP pushed in20126db6f74ef44463c791edad89d30b1aa6840e and emailed. No physical build or purchases.
 

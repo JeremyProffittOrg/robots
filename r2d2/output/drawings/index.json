@@ -1,0 +1,103 @@
+{
+  "style": "MATLAB-style Matplotlib surface drawings",
+  "revision": "B",
+  "printed_components": 29,
+  "geometry_changed": false,
+  "sources": {
+    "coupon": "18f4e7055579e6686148ba56bb1e88526f022c292f3ae8517d9c91d6f57e33b6",
+    "body_lower": "44e85a2358049ceb9e710709299958e800efc75531b08673c69c11e774fef78a",
+    "body_upper": "a4c8d50338d38485735532cf4b7c37f1f965ce36e707f201cfee50bf2ae2b7ec",
+    "arm_left": "bda5e9fe7e224de6f19e3ee8022bcbc774e0c898a7f5dcc1526e4ae5564ced07",
+    "arm_right": "0b3883371880457fd89e75de1ce73050fe3eeed58503b4aeb77248ba88098627",
+    "foot_deck": "72076aee7f7dfcf36346b7924a0ab644df15aee4be3b33a9823ca742c8678686",
+    "foot_cover": "93e7b48e9e6d1fe9e7f9594d7f025f373e846b08017e6d62cb6959330b2e61fa",
+    "motor_cradle": "91e66ede003418f5d486ac3c10e9f452bc3c6f0801a105da962188584c14e04c",
+    "rear_bracket": "94a528f23f8ef98e1545177ee6f29f15ae291e3661ea5dbdcf2b42df781cd6a8",
+    "rear_attach": "7fb8e8547afa2abdf4590bacd67ead4b10c011760ad02dc771e278f88a65b2ec",
+    "bearing_tower": "185f85d0c9446a7d1ea142c32fdefa3d93d051895839c9c44e119c9c982e0062",
+    "bearing_cap": "7c180c3bff42ad07470328bc29f8d6583ccada94524b08459fac6ce104e22372",
+    "race_spacer": "0145a10d624b4af05c21d0b64a259cfd5fc5beac33a87d2f9db8609e5bef3fce",
+    "spindle_sleeve": "2a72669df6b046ec8b9647c9b5fde1a9287884bb8418bb65553f5b29fd200f2e",
+    "gear_hub": "1b8b1d99788db6e8ce0f08968bb576fbe8f29a90da28d6c7db53e52048d9f88d",
+    "servo_pinion": "552304ef283098969fa983f1d867713a8bb920f1a37bf62d07bb65f33b06b55a",
+    "servo_mount": "305d332588fab25df341aa545fa887c4ea1e64b306f1803ad690fb43abe4b5e6",
+    "servo_shim_1": "8a4e4787953c50192f72a1483f3ec2805763e029f29f4843bdd0b4ac20d3e1bd",
+    "servo_shim_2": "0ec74dcbb51b6592f4773dae9fb7903e1778a377231964e0323b91c5d33cb222",
+    "servo_shim_4": "84d8e7c415298439351988d3f097069727df801e011f947eabd7e83246507de9",
+    "head_plate": "e22359d03a76b04ff78b3286fc19c038c8f4d056f1e12ce1a35a2f0a48064ae0",
+    "dome_spacer": "a5df1670371b9bd898f363e00d2688db0942a3690b26ceed65b9299f6ffd79c7",
+    "dome": "988abac4eb0c46526a5c00ce6ff9a1e64ac40dcb2ed53db6f8a09081de7aca24",
+    "eye": "26ee8fb3c01bb48cfaab005eb83d3d74f274c2ab81e280c97bd435bc2e961c9b",
+    "detail_panel": "a21ed98704b48bad3d80ed2c7d15f3d71b3bacd9270a728864ce0e2166d14374",
+    "utility_deck": "41b313ebcd8a5634ba0d13bd5a5e178946152c8d473e2c110fa7e86022eac03e",
+    "pcb_spacer": "141e511ead429d72b8e332ebf989cc7acc877a2455429ee9712ff5193148843b",
+    "speaker_mount": "f21ef06d9be7d5daba28ae104ae53eb38f2875997f1a78a7a97ee007f728c08e",
+    "switch_plate": "0172e6f6700e6dd382131060a588670659e548b0778905ffa0ed030a8abbde71"
+  },
+  "pngs": [
+    {
+      "file": "01-robot-isometric.png",
+      "pixels": [
+        2210,
+        1700
+      ],
+      "sha256": "fac13a6b4020a2c9ed2ed0d30ca90de6bd85be2fe58426a22a9fbb9916e6ee43"
+    },
+    {
+      "file": "02-robot-orthographic.png",
+      "pixels": [
+        3060,
+        1530
+      ],
+      "sha256": "4e1173b7f6f214c67f2f7dfb39fa7b048f9db9f6af11fce33bcef146c6d09989"
+    },
+    {
+      "file": "03-robot-exploded.png",
+      "pixels": [
+        2210,
+        1870
+      ],
+      "sha256": "dad83f00c8ebe4be54ec97ac366bf6ed25c717436cd03bd72a72521d8398ed24"
+    },
+    {
+      "file": "04-mechanisms-exploded.png",
+      "pixels": [
+        2720,
+        1700
+      ],
+      "sha256": "6cd9d4ce0a24b98d82c237ab29034311a4a6c90ae622ebe5b13d8eeb9869b9c2"
+    },
+    {
+      "file": "05-body-and-arm-components.png",
+      "pixels": [
+        3060,
+        1870
+      ],
+      "sha256": "efa357bc407303d5339089c6719664174e5b089fd13ee1a07cbf31abfddef663"
+    },
+    {
+      "file": "06-foot-and-steering-components.png",
+      "pixels": [
+        3060,
+        1870
+      ],
+      "sha256": "0c03be7873cb67b60a634a6d3ed06cfcb9e5785a611047985d71901372e833a0"
+    },
+    {
+      "file": "07-head-drive-components.png",
+      "pixels": [
+        3060,
+        1870
+      ],
+      "sha256": "3ca4f8f6cb2901c108ff449c45f45268c01499dedc013f395a50ce76b14c8a2c"
+    },
+    {
+      "file": "08-mounts-and-small-components.png",
+      "pixels": [
+        3060,
+        1870
+      ],
+      "sha256": "4408305e38acd62310ee25e7f84faa531b88b8babcb36aad041c78de72eb110a"
+    }
+  ]
+}
