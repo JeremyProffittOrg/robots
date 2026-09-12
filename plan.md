@@ -605,3 +605,21 @@ kick). All four are fixed and each now has a check that would catch it again.
 
 2026-09-12: Ten generated drawings, a 14-page build guide PDF and the delivery infrastructure
 are committed. Commits `44bf778`, `6fb7392`, `ed4c622`, `2380349`.
+
+2026-09-12: Published. Commit `f8a2f39` pushed to `main`; GitHub Actions run `34719085764`
+finished `completed success`. Independently re-verified from this machine afterwards:
+
+```
+doorbot-assembly-and-usage.mp4  HTTP 200  4e09b3fd9cbb536f41f893be14d688fdf65702b2a8aa730bfe4348857681e9a6
+doorbot-build-guide.pdf         HTTP 200  199966255c63fd0526cb5203d3e22acdcd9164daa4ef33e2d9073d418e52090e
+range 206
+direct s3 403
+```
+
+Both hashes match the committed bytes exactly, video byte-ranges work, and direct S3 access is
+refused. Base URL `https://d1m4e9ooxv95y.cloudfront.net/doorbot/revision-a`.
+A `.gitattributes` marking pdf/mp4/png/stl as binary was added first; without it Git's CRLF
+filter would have altered the committed bytes and broken the hash check in the workflow.
+
+2026-09-12: Authorized delivery email delegated to a subagent with both files attached and both
+links. Awaiting the SES MessageId.
