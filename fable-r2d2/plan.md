@@ -103,23 +103,37 @@ re-litigated mid-run):
 
 ### cad — parametric OpenSCAD, fewest STLs, H2D-fit, strong
 - [x] params — `cad/params.scad` single source of dimensions
-- [~] dome — one-piece detailed dome with display cutouts (workflow wf_91a1b56a-6fd)
-- [~] body — stacked rings, battery bay, electronics tray, shoulder bosses, head ring
-- [~] legs — outer legs (two prints each) and centre leg with caster ankle
-- [~] feet — three feet, two motors and four wheels each
-- [~] head-drive — tensioned friction drive under the top plate
-- [ ] export-validate — `python scripts/export_cad.py` passes: watertight, one component,
-  inside 322 x 317 x 320 mm; `python scripts/slice_check.py` passes on every STL.
+- [x] dome — one-piece detailed dome, 316.8 x 316.8 x 199.1 mm, radar eye per the club
+  construction sheets, three holoprojectors, two PSIs, front/rear logic windows, lazy-susan
+  inserts, wire anchor
+- [~] body — two rings (317 x 317 x 141.1 and 317 x 317 x 264.0) with skirt, battery shelf,
+  integral electronics deck, shoulder bosses, top plate; adversarial review returned 4
+  blockers and 14 majors, recorded in `cad/review-body-findings.md`, fix in progress
+- [x] legs — outer legs in two flat prints on two M8 rods, centre leg with 6001 caster bore;
+  ankle lock holes, caster stop and wire route reconciled with the feet (asserts added)
+- [x] feet — three feet, two motors and four wheels each, drop-in motor channels
+- [x] head-drive — friction drive, spring tension, thumb nut, lift stop, 7 deg release
+- [x] stance — centre leg moved 45 mm behind the body axis and caster trail 35 mm after
+  `scripts/stability.py` measured only 3.9 deg of tip-back margin
+- [ ] export-validate — `python scripts/export_cad.py` passes (9/9 PASS as of 12:46);
+  `python scripts/slice_check.py` passes on every STL (body_upper still failing the
+  multi-extruder bed rule; bed centring under test)
 
 ### documents — drawings, BOM, manual, wiring, firmware, video
-- [ ] drawings — `python scripts/draw_robot.py` writes MATLAB-style PNG set
-- [ ] bom-xlsx — `python scripts/build_bom.py` writes `bom/bill-of-materials.xlsx`
+- [~] drawings — `python scripts/draw_robot.py` writes 25 MATLAB-style PNGs and the ZIP;
+  re-run needed after the body fix, and two defects to correct (piece count says eleven,
+  outer-foot wheels not drawn)
+- [x] bom-xlsx — `python scripts/build_bom.py` writes `bom/bill-of-materials.xlsx`
+  (6 sheets, live formulas, 54 electronics + 33 hardware rows)
 - [~] wiring — `python scripts/electronics.py` writes SVG sheets and `electronics/wiring.csv`
 - [x] firmware — Pi control server and KB2040 CircuitPython; 47 + 44 unit tests pass
   (`docs/firmware.md`); display update to four 8x8 matrices in progress
-- [ ] manual — `python scripts/build_manual.py` writes `output/pdf/r2d2-assembly-manual.pdf`
-- [ ] video — `python scripts/render_video.py` writes `output/video/r2d2-assembly-and-operation.mp4`
+- [~] manual — `python scripts/build_manual.py` writes a 98-page
+  `output/pdf/r2d2-assembly-manual.pdf`, all figures embedded; re-run after the body fix
+- [~] video — `python scripts/render_video.py` writes a verified 170 s 1920x1080 H.264+AAC
+  `output/video/r2d2-assembly-and-operation.mp4`; re-run after the body fix
 - [ ] verify-all — `python scripts/verify.py` passes; commit and push to main
+- [ ] deliver — upload the video to S3, presign 7 days, email it with the PDF attached
 
 ## Stop conditions (only these)
 - A purchase, physical action, or email would be required.
@@ -135,3 +149,16 @@ re-litigated mid-run):
   OpenSCAD nightly 2026.09.11 at C:/Users/Jeremy/tools/openscad-nightly (manifold backend).
 - 2026-09-12 04:20 CAD workflow wf_91a1b56a-6fd launched (5 builders, integrate, 10 reviews,
   fix, verify). Electronics/BOM agent and firmware display update launched in parallel.
+- 2026-09-12 11:42 CAD workflow finished: dome, legs, feet and head drive delivered and
+  reviewed; body.scad was lost to a session limit and was authored separately afterwards.
+- 2026-09-12 12:20 All nine parts export and validate. Seven interference checks are empty or
+  zero-volume contact planes (`cad/interference-final.txt`).
+- 2026-09-12 12:35 `scripts/stability.py` (new) measured the mass and centre of gravity from
+  the real meshes: 11.7 kg, tip-back margin 20.3 mm / 3.9 deg against a 15 deg criterion.
+  Fix applied to params: `center_leg_y_in_body = -45`, `caster_trail = 35`, `battery_y = 45`;
+  legs, feet and the lower ring re-cut to match.
+- 2026-09-12 12:55 Drawings (25 PNGs), video (170 s, verified) and manual (98 pages) all
+  built end to end, then the session limit stopped the agents. Pipelines are proven; all
+  three need one more run against the final meshes.
+- 2026-09-12 15:15 Session limit reset. Body review fixes and the slicer bed-centring are the
+  remaining blockers before the final regeneration.

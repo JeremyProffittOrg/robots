@@ -15,6 +15,16 @@
       "check": "audio",
       "pass": true,
       "detail": "12 clips, mismatches=[]"
+    },
+    {
+      "check": "bom",
+      "pass": true,
+      "detail": "purchased subtotal $1,052.34; xlsx=present; problems=[]"
+    },
+    {
+      "check": "wiring",
+      "pass": true,
+      "detail": "136 wires; KB2040 pins in wiring not in code.py: []"
     }
   ],
   "physical_validation": false

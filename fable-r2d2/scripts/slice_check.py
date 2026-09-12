@@ -57,6 +57,28 @@ def filament_profile(material):
     return fallback
 
 
+def single_nozzle(machine):
+    """Put the H2D profile into single-nozzle mode WITHOUT changing any array length.
+
+    The H2D has two extruders whose printable areas differ (left 0..325, right 25..350 in X),
+    and the slicer rejects G-code that leaves the active extruder's area. A 317 mm ring cannot
+    sit inside the 300 mm overlap, so both extruders are given the same full 325 x 320 area,
+    which is Bambu's published single-nozzle build volume and the envelope this design is sized
+    to. Array lengths are preserved: dropping entries makes the slicer dereference a missing
+    extruder and crash (access violation 0xC0000005).
+    """
+    machine = dict(machine)
+    area = machine.get("extruder_printable_area") or []
+    if area:
+        machine["extruder_printable_area"] = [area[0]] * len(area)
+    height = machine.get("extruder_printable_height") or []
+    if height:
+        machine["extruder_printable_height"] = [min(height)] * len(height)
+    machine["printable_area"] = ["0x0", "325x0", "325x320", "0x320"]
+    machine["printable_height"] = "320"
+    return machine
+
+
 def slice_part(name, settings_cache):
     info = PARTS[name]
     stl = ROOT / "stl" / f"{name}.stl"
@@ -64,7 +86,7 @@ def slice_part(name, settings_cache):
     import trimesh
     if material not in settings_cache:
         settings_cache[material] = {
-            "machine": flatten("machine", "Bambu Lab H2D 0.4 nozzle"),
+            "machine": single_nozzle(flatten("machine", "Bambu Lab H2D 0.4 nozzle")),
             "process": dict(flatten("process", "0.20mm Standard @BBL H2D"), **OVERRIDES),
             "filament": flatten("filament", filament_profile(material)),
         }
@@ -78,7 +100,7 @@ def slice_part(name, settings_cache):
         env["APPDATA"] = str(tmp / "app")
         env["LOCALAPPDATA"] = str(tmp / "local")
         (tmp / "state").mkdir()
-        # Centre the mesh on the left-extruder bed ourselves; the CLI arrange step rejects
+        # Centre the mesh on the single-nozzle bed ourselves; the CLI arrange step rejects
         # parts that nearly fill the bed even though they fit.
         mesh = trimesh.load_mesh(stl, process=False)
         centred = tmp / f"{name}.stl"
@@ -108,7 +130,7 @@ def slice_part(name, settings_cache):
                         "predicted_mass_g": plate["filaments"][0]["total_used_g"],
                         "predicted_time_s": plate["total_predication"],
                         "predicted_time_h": round(plate["total_predication"] / 3600, 2),
-                        "bbox_mm": plate["objects"][0]["bbox"]})
+                        "bbox_mm": (plate.get("objects") or [{}])[0].get("bbox")})
         row["pass"] = bool(row.get("return_code") == 0 and not row.get("warning") and row.get("gcode_present"))
         return row
 
@@ -130,7 +152,7 @@ def main():
     report = {
         "checked_at_utc": datetime.datetime.now(datetime.timezone.utc).isoformat(),
         "test_type": "Local Bambu Studio CLI slicing of package meshes; no printer connection or physical print",
-        "profiles": {"machine": "Bambu Lab H2D 0.4 nozzle", "process": "0.20mm Standard @BBL H2D", "overrides": OVERRIDES, "bed": "Textured PEI Plate"},
+        "profiles": {"machine": "Bambu Lab H2D 0.4 nozzle, trimmed to single-nozzle mode (325 x 320 x 320)", "process": "0.20mm Standard @BBL H2D", "overrides": OVERRIDES, "bed": "Textured PEI Plate"},
         "all_pass": all(r["pass"] for r in rows), "rows": rows,
         "total_predicted_mass_g": round(sum(r.get("predicted_mass_g", 0) * PARTS[Path(r["part"]).stem]["quantity"] for r in rows), 1),
         "total_predicted_time_h": round(sum(r.get("predicted_time_s", 0) * PARTS[Path(r["part"]).stem]["quantity"] for r in rows) / 3600, 1),

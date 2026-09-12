@@ -1,0 +1,10 @@
+part,quantity,material,mirror_for_second,x_mm,y_mm,z_mm,volume_cm3,solid_mass_g,faces,watertight,winding_consistent,connected_solids,print_rotation_z,fits_envelope,pass_check,orientation,notes
+dome,1,PETG,False,316.83,316.83,199.139,1027.01,1304.3,49934,True,True,1,0,True,True,Lip down on the plate; crown up,One-piece detailed dome with display cutouts; tree supports under the top disc only
+body_upper,1,PETG,False,317.0,317.0,264.0,2618.57,3325.6,64922,True,True,1,0,True,True,Bottom (mating lip) down,"Upper body ring with integral electronics deck, shoulder bosses, head ring and lazy-susan seat; no brim"
+body_lower,1,PETG,False,317.0,317.0,141.1,1537.19,1952.2,36966,True,True,1,0,True,True,Skirt bottom down,"Lower body ring, skirt, battery bay, centre-leg socket, electronics tray; no brim"
+leg_upper,2,PETG,True,289.7,139.4,50.79,1137.99,1445.2,10820,True,True,1,0,True,True,Shoulder face down,Left file supplied; mirror in the slicer for the right leg
+leg_lower,2,PETG,True,232.0,100.0,58.25,524.37,666.0,7314,True,True,1,0,True,True,Splice face down,Left file supplied; mirror in the slicer for the right leg
+foot_outer,2,PETG,True,181.8,265.0,105.2,673.21,855.0,15452,True,True,1,0,True,True,Sole down,Left file supplied; mirror in the slicer for the right foot; two motors and four wheels
+leg_center,1,PETG,False,140.0,100.0,47.518,257.15,326.6,7384,True,True,1,0,True,True,Body flange down,Centre leg with caster pivot boss
+foot_center,1,PETG,False,123.3,180.2,119.9,385.66,489.8,8840,True,True,1,0,True,True,Sole down,Centre foot with caster stem; two motors and four wheels
+head_drive,1,PETG,False,116.5,72.283,39.914,84.11,106.8,7752,True,True,1,0,True,True,Base down,Pivoting friction-drive motor mount with tension screw

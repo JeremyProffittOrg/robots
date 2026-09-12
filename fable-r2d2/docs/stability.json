@@ -1,0 +1,410 @@
+{
+  "method": "STL volumes x 1.27 g/cm3 x fill fraction; purchased parts as point masses; screening only",
+  "fill_fraction": 0.45,
+  "total_mass_g": 11890.2,
+  "printed_mass_g": 6231.6,
+  "purchased_mass_g": 5658.6,
+  "centre_of_gravity_mm": [
+    0.0,
+    55.2,
+    302.9
+  ],
+  "wheel_contact_y_range_mm": [
+    -25.8,
+    161.2
+  ],
+  "wheel_contact_x_range_mm": [
+    -205.5,
+    205.5
+  ],
+  "outer_foot_axle_mean_y_mm": 116.2,
+  "center_foot_axle_mean_y_mm": 19.2,
+  "center_foot_static_share": 0.628,
+  "tip_back_margin_mm": 81.0,
+  "tip_forward_margin_mm": 105.9,
+  "tip_back_angle_deg": 15.0,
+  "tip_forward_angle_deg": 19.3,
+  "tip_side_angle_deg": 34.2,
+  "items": [
+    {
+      "name": "body_lower",
+      "mass_g": 964.6,
+      "centre_mm": [
+        1.1,
+        80.7,
+        213.3
+      ],
+      "kind": "printed"
+    },
+    {
+      "name": "body_upper",
+      "mass_g": 1550.0,
+      "centre_mm": [
+        0.1,
+        17.9,
+        429.4
+      ],
+      "kind": "printed"
+    },
+    {
+      "name": "dome",
+      "mass_g": 586.9,
+      "centre_mm": [
+        -1.2,
+        -38.2,
+        590.9
+      ],
+      "kind": "printed"
+    },
+    {
+      "name": "head_drive",
+      "mass_g": 48.1,
+      "centre_mm": [
+        0.5,
+        -106.1,
+        470.4
+      ],
+      "kind": "printed"
+    },
+    {
+      "name": "leg_upper_right",
+      "mass_g": 650.4,
+      "centre_mm": [
+        187.2,
+        15.7,
+        414.8
+      ],
+      "kind": "printed"
+    },
+    {
+      "name": "leg_lower_right",
+      "mass_g": 299.7,
+      "centre_mm": [
+        186.9,
+        93.6,
+        174.5
+      ],
+      "kind": "printed"
+    },
+    {
+      "name": "foot_outer_right",
+      "mass_g": 384.7,
+      "centre_mm": [
+        161.9,
+        132.1,
+        59.0
+      ],
+      "kind": "printed"
+    },
+    {
+      "name": "leg_upper_left",
+      "mass_g": 650.4,
+      "centre_mm": [
+        -187.2,
+        15.7,
+        414.8
+      ],
+      "kind": "printed"
+    },
+    {
+      "name": "leg_lower_left",
+      "mass_g": 299.7,
+      "centre_mm": [
+        -186.9,
+        93.6,
+        174.5
+      ],
+      "kind": "printed"
+    },
+    {
+      "name": "foot_outer_left",
+      "mass_g": 384.7,
+      "centre_mm": [
+        -161.9,
+        132.1,
+        59.0
+      ],
+      "kind": "printed"
+    },
+    {
+      "name": "leg_center",
+      "mass_g": 182.9,
+      "centre_mm": [
+        -0.0,
+        58.0,
+        158.2
+      ],
+      "kind": "printed"
+    },
+    {
+      "name": "foot_center",
+      "mass_g": 229.5,
+      "centre_mm": [
+        0.0,
+        26.7,
+        63.8
+      ],
+      "kind": "printed"
+    },
+    {
+      "name": "battery",
+      "mass_g": 2260.0,
+      "centre_mm": [
+        0.0,
+        115.8,
+        252.1
+      ],
+      "kind": "purchased"
+    },
+    {
+      "name": "electronics_and_harness",
+      "mass_g": 750.0,
+      "centre_mm": [
+        0.0,
+        38.3,
+        345.3
+      ],
+      "kind": "purchased"
+    },
+    {
+      "name": "lazy_susan",
+      "mass_g": 250.0,
+      "centre_mm": [
+        0.0,
+        -20.1,
+        525.0
+      ],
+      "kind": "purchased"
+    },
+    {
+      "name": "dome_electronics",
+      "mass_g": 200.0,
+      "centre_mm": [
+        0.0,
+        -39.3,
+        584.0
+      ],
+      "kind": "purchased"
+    },
+    {
+      "name": "body_rods_and_fasteners",
+      "mass_g": 850.0,
+      "centre_mm": [
+        0.0,
+        38.1,
+        345.7
+      ],
+      "kind": "purchased"
+    },
+    {
+      "name": "foot_outer_right_motor",
+      "mass_g": 30.6,
+      "centre_mm": [
+        181.7,
+        71.2,
+        31.5
+      ],
+      "kind": "purchased"
+    },
+    {
+      "name": "foot_outer_right_motor",
+      "mass_g": 30.6,
+      "centre_mm": [
+        181.7,
+        161.2,
+        31.5
+      ],
+      "kind": "purchased"
+    },
+    {
+      "name": "foot_outer_right_wheel",
+      "mass_g": 38.0,
+      "centre_mm": [
+        157.9,
+        71.2,
+        31.5
+      ],
+      "kind": "purchased"
+    },
+    {
+      "name": "foot_outer_right_wheel",
+      "mass_g": 38.0,
+      "centre_mm": [
+        205.5,
+        71.2,
+        31.5
+      ],
+      "kind": "purchased"
+    },
+    {
+      "name": "foot_outer_right_wheel",
+      "mass_g": 38.0,
+      "centre_mm": [
+        157.9,
+        161.2,
+        31.5
+      ],
+      "kind": "purchased"
+    },
+    {
+      "name": "foot_outer_right_wheel",
+      "mass_g": 38.0,
+      "centre_mm": [
+        205.5,
+        161.2,
+        31.5
+      ],
+      "kind": "purchased"
+    },
+    {
+      "name": "foot_outer_left_motor",
+      "mass_g": 30.6,
+      "centre_mm": [
+        -181.7,
+        71.2,
+        31.5
+      ],
+      "kind": "purchased"
+    },
+    {
+      "name": "foot_outer_left_motor",
+      "mass_g": 30.6,
+      "centre_mm": [
+        -181.7,
+        161.2,
+        31.5
+      ],
+      "kind": "purchased"
+    },
+    {
+      "name": "foot_outer_left_wheel",
+      "mass_g": 38.0,
+      "centre_mm": [
+        -157.9,
+        71.2,
+        31.5
+      ],
+      "kind": "purchased"
+    },
+    {
+      "name": "foot_outer_left_wheel",
+      "mass_g": 38.0,
+      "centre_mm": [
+        -205.5,
+        71.2,
+        31.5
+      ],
+      "kind": "purchased"
+    },
+    {
+      "name": "foot_outer_left_wheel",
+      "mass_g": 38.0,
+      "centre_mm": [
+        -157.9,
+        161.2,
+        31.5
+      ],
+      "kind": "purchased"
+    },
+    {
+      "name": "foot_outer_left_wheel",
+      "mass_g": 38.0,
+      "centre_mm": [
+        -205.5,
+        161.2,
+        31.5
+      ],
+      "kind": "purchased"
+    },
+    {
+      "name": "foot_center_motor",
+      "mass_g": 30.6,
+      "centre_mm": [
+        0.0,
+        -25.8,
+        31.5
+      ],
+      "kind": "purchased"
+    },
+    {
+      "name": "foot_center_motor",
+      "mass_g": 30.6,
+      "centre_mm": [
+        0.0,
+        64.2,
+        31.5
+      ],
+      "kind": "purchased"
+    },
+    {
+      "name": "foot_center_wheel",
+      "mass_g": 38.0,
+      "centre_mm": [
+        -23.8,
+        -25.8,
+        31.5
+      ],
+      "kind": "purchased"
+    },
+    {
+      "name": "foot_center_wheel",
+      "mass_g": 38.0,
+      "centre_mm": [
+        23.8,
+        -25.8,
+        31.5
+      ],
+      "kind": "purchased"
+    },
+    {
+      "name": "foot_center_wheel",
+      "mass_g": 38.0,
+      "centre_mm": [
+        -23.8,
+        64.2,
+        31.5
+      ],
+      "kind": "purchased"
+    },
+    {
+      "name": "foot_center_wheel",
+      "mass_g": 38.0,
+      "centre_mm": [
+        23.8,
+        64.2,
+        31.5
+      ],
+      "kind": "purchased"
+    },
+    {
+      "name": "head_drive_motor_wheel",
+      "mass_g": 69.0,
+      "centre_mm": [
+        0.0,
+        -137.7,
+        456.3
+      ],
+      "kind": "purchased"
+    },
+    {
+      "name": "leg_rods_-1",
+      "mass_g": 320.0,
+      "centre_mm": [
+        -181.5,
+        46.4,
+        320.3
+      ],
+      "kind": "purchased"
+    },
+    {
+      "name": "leg_rods_1",
+      "mass_g": 320.0,
+      "centre_mm": [
+        181.5,
+        46.4,
+        320.3
+      ],
+      "kind": "purchased"
+    }
+  ]
+}

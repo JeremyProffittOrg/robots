@@ -1,0 +1,140 @@
+{
+  "total_seconds": 170,
+  "fps": 24,
+  "narration_voice_candidates": [
+    "Microsoft Zira Desktop",
+    "Microsoft Zira",
+    "Microsoft David Desktop",
+    "Microsoft David",
+    "Microsoft Hazel Desktop"
+  ],
+  "sound_directory": "firmware/pi/sounds",
+  "note": "CAD assembly animation and simulated operation of the fable-r2d2 package. Every printed piece is the delivered STL placed by scripts/assembly_layout.py. Purchased parts are nominal envelopes. Motion speeds are illustrative. Follow the assembly manual for wiring, torque, calibration and physical test gates.",
+  "chapters": [
+    {
+      "name": "title-card",
+      "start": 0,
+      "end": 8,
+      "title": "Nine STL files. Twelve printed pieces.",
+      "instruction": "R2-D2 | 317 mm body | three powered feet | six drive wheels per pair | Raspberry Pi 4 and KB2040 | 12 V 7 Ah battery",
+      "narration": "Simulated assembly. Nine printed designs make twelve pieces."
+    },
+    {
+      "name": "feet",
+      "start": 8,
+      "end": 25,
+      "title": "01 | Three feet, six motors, twelve wheels",
+      "instruction": "Load two Adafruit 3777 motors and four 3766 wheels into each foot through the sole, then fit the motor tab bolts. Right and centre feet are shown cut away.",
+      "narration": "Each foot takes two T T motors and four wheels, loaded from the sole."
+    },
+    {
+      "name": "outer-legs",
+      "start": 25,
+      "end": 42,
+      "title": "02 | Outer legs, two prints each",
+      "instruction": "Slide the lower leg tongue into the foot slot, splice the upper leg over it, run two M8 rods the full length, then fit the ankle pivot and lock bolts.",
+      "narration": "Join each leg over two M8 rods, then bolt the ankle pivot and lock."
+    },
+    {
+      "name": "centre-leg-caster",
+      "start": 42,
+      "end": 55,
+      "title": "03 | Centre leg and caster",
+      "instruction": "Press two bearings onto the centre-foot stem, drop the centre leg over them, fit the M12 caster bolt and the sixty degree stop pin. The foot then swivels freely.",
+      "narration": "The centre foot swivels on two bearings and one M12 caster bolt."
+    },
+    {
+      "name": "body-lower",
+      "start": 55,
+      "end": 70,
+      "title": "04 | Lower ring, battery and power",
+      "instruction": "Lower the body floor onto the centre-leg flange bolts. Strap the 12 V 7 Ah battery to its shelf, then fit the speaker, the charge port and the main switch.",
+      "narration": "Bolt the lower ring to the centre leg. Strap the battery to its shelf."
+    },
+    {
+      "name": "body-upper",
+      "start": 70,
+      "end": 83,
+      "title": "05 | Upper ring and shoulders",
+      "instruction": "Seat the upper ring. Set both shoulder index pins to the three-leg angle, then run the M12 shoulder bolts through the leg discs into the body bosses.",
+      "narration": "Seat the upper ring. Index each shoulder, then fit the M12 shoulder bolts."
+    },
+    {
+      "name": "electronics-deck",
+      "start": 83,
+      "end": 95,
+      "title": "06 | Integral electronics deck",
+      "instruction": "Mount the Raspberry Pi 4, the KB2040, four DRV8833 drivers, both regulators, the ADS1115 and the fuse blocks on the deck printed into the upper ring.",
+      "narration": "Mount the Pi, the K B twenty forty, four motor drivers, regulators and fuses."
+    },
+    {
+      "name": "rings-joined",
+      "start": 95,
+      "end": 105,
+      "title": "07 | Join the two rings",
+      "instruction": "The locating lip aligns the rings. Fit eight M4 seam bolts through the internal flange, then four M8 rods on radius 138 to clamp the whole stack.",
+      "narration": "Eight seam bolts and four M8 rods clamp the two rings together."
+    },
+    {
+      "name": "head-drive",
+      "start": 105,
+      "end": 117,
+      "title": "08 | Head friction drive",
+      "instruction": "Bolt the drive base under the top plate. Fit the seventh motor and its wheel on the pivoting arm, then the spring, the M5 adjuster and the thumb nut.",
+      "narration": "A seventh motor turns the dome by friction under the top plate."
+    },
+    {
+      "name": "dome-electronics",
+      "start": 117,
+      "end": 128,
+      "title": "09 | Dome displays and lights",
+      "instruction": "On the bench: the twelve-wire slip ring at the hub, the round TFT behind the radar eye, four logic matrices, two PSI jewels and three holoprojector LEDs.",
+      "narration": "Fit the slip ring, the eye display, the logic matrices and the P S I jewels."
+    },
+    {
+      "name": "dome-seated",
+      "start": 128,
+      "end": 141,
+      "title": "10 | Lazy susan and dome",
+      "instruction": "Screw the lazy susan to the top plate, lower the dome onto it, then tighten the thumb nut until the drive wheel presses the dome plate by 0.6 mm.",
+      "narration": "Screw down the lazy susan, seat the dome, then tension the drive wheel."
+    },
+    {
+      "name": "power-on",
+      "start": 141,
+      "end": 149,
+      "title": "11 | Power on",
+      "instruction": "Simulated: the logic displays, the holoprojectors and both PSI lights come up behind the dome cutouts, and the dome begins to rotate.",
+      "narration": "Power on. Logic displays, holoprojectors and P S I lights.",
+      "narration_start": 142.4
+    },
+    {
+      "name": "drive-demo",
+      "start": 149,
+      "end": 164,
+      "title": "12 | Simulated drive",
+      "instruction": "Forward 400 mm, a wide left arc with the centre foot castering to the path, stop, reverse 150 mm, stop, then nudge the dome left and right.",
+      "narration": "Forward, a wide left arc, stop, reverse, then a dome nudge."
+    },
+    {
+      "name": "closing-card",
+      "start": 164,
+      "end": 170,
+      "title": "Assembly complete | Prototype design",
+      "instruction": "{HEIGHT} mm tall | 317 mm body | nine STL files | twelve printed pieces | physical fit, strength and driving tests are still required. See the assembly manual.",
+      "narration": "Physical fit, strength and driving tests are still required."
+    }
+  ],
+  "audio_cues": [
+    { "start": 15.5, "file": "chirp-double.wav", "text": "Wheels seated." },
+    { "start": 34.0, "file": "acknowledge.wav", "text": "Leg splice complete." },
+    { "start": 91.0, "file": "scan.wav", "text": "Electronics deck populated." },
+    { "start": 141.05, "file": "power-on.wav", "text": "Power on." },
+    { "start": 155.4, "file": "whistle-up.wav", "text": "Left arc." },
+    { "start": 158.8, "file": "chirp-double.wav", "text": "Stop." },
+    { "start": 159.4, "file": "whistle-down.wav", "text": "Reverse." },
+    { "start": 162.4, "file": "happy.wav", "text": "Dome nudge." }
+  ],
+  "keyframes": [0, 4, 14, 20, 28, 36, 44, 50, 53.5, 58, 66, 72, 79, 86, 92, 99, 104, 110, 116, 120, 126, 133, 139, 145, 152, 158, 160, 162, 166, 169],
+  "poster_time": 145.4
+}
