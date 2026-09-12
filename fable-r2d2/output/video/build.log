@@ -1,0 +1,95 @@
+WHEELS 12 placed; roll signs measured from the mesh: [1]
+AUDIO building narration and robot cues
+tart":  128.35,
+                      "duration":  5.3745,
+                      "text":  "Screw down the lazy susan, seat the dome, then tension the drive wheel."
+                  },
+                  {
+                      "kind":  "robot",
+                      "start":  141.05,
+                      "duration":  1,
+                      "text":  "Power on."
+                  },
+                  {
+                      "kind":  "narration",
+                      "start":  142.4,
+                      "duration":  5.9195,
+                      "text":  "Power on. Logic displays, holoprojectors and P S I lights."
+                  },
+                  {
+                      "kind":  "narration",
+                      "start":  149.35,
+                      "duration":  5.8545,
+                      "text":  "Forward, a wide left arc, stop, reverse, then a dome nudge."
+                  },
+                  {
+                      "kind":  "robot",
+                      "start":  155.4,
+                      "duration":  0.4,
+                      "text":  "Left arc."
+                  },
+                  {
+                      "kind":  "robot",
+                      "start":  158.8,
+                      "duration":  0.16,
+                      "text":  "Stop."
+                  },
+                  {
+                      "kind":  "robot",
+                      "start":  159.4,
+                      "duration":  0.4,
+                      "text":  "Reverse."
+                  },
+                  {
+                      "kind":  "robot",
+                      "start":  162.4,
+                      "duration":  0.490068,
+                      "text":  "Dome nudge."
+                  },
+                  {
+                      "kind":  "narration",
+                      "start":  164.35,
+                      "duration":  4.4145,
+                      "text":  "Physical fit, strength and driving tests are still required."
+                  }
+              ]
+}
+RENDERER ANGLE (NVIDIA, NVIDIA Quadro M2000 (0x00001430) Direct3D11 vs_5_0 ps_5_0, D3D11); 12 printed pieces packed
+RENDER encoder PID 109308; 4080 frames at 24 fps
+FRAME 0/4080 | t 0.0s | elapsed 3.7s
+FRAME 120/4080 | t 5.0s | elapsed 8.3s
+FRAME 240/4080 | t 10.0s | elapsed 12.9s
+FRAME 360/4080 | t 15.0s | elapsed 16.5s
+FRAME 480/4080 | t 20.0s | elapsed 20.3s
+FRAME 600/4080 | t 25.0s | elapsed 24.3s
+FRAME 720/4080 | t 30.0s | elapsed 28.2s
+FRAME 840/4080 | t 35.0s | elapsed 31.9s
+FRAME 960/4080 | t 40.0s | elapsed 35.7s
+FRAME 1080/4080 | t 45.0s | elapsed 39.3s
+FRAME 1200/4080 | t 50.0s | elapsed 42.7s
+FRAME 1320/4080 | t 55.0s | elapsed 46.2s
+FRAME 1440/4080 | t 60.0s | elapsed 50.1s
+FRAME 1560/4080 | t 65.0s | elapsed 53.9s
+FRAME 1680/4080 | t 70.0s | elapsed 57.7s
+FRAME 1800/4080 | t 75.0s | elapsed 61.6s
+FRAME 1920/4080 | t 80.0s | elapsed 66.0s
+FRAME 2040/4080 | t 85.0s | elapsed 70.2s
+FRAME 2160/4080 | t 90.0s | elapsed 74.1s
+FRAME 2280/4080 | t 95.0s | elapsed 77.9s
+FRAME 2400/4080 | t 100.0s | elapsed 81.8s
+FRAME 2520/4080 | t 105.0s | elapsed 85.7s
+FRAME 2640/4080 | t 110.0s | elapsed 89.5s
+FRAME 2760/4080 | t 115.0s | elapsed 93.2s
+FRAME 2880/4080 | t 120.0s | elapsed 96.9s
+FRAME 3000/4080 | t 125.0s | elapsed 100.7s
+FRAME 3120/4080 | t 130.0s | elapsed 104.8s
+FRAME 3240/4080 | t 135.0s | elapsed 108.7s
+FRAME 3360/4080 | t 140.0s | elapsed 112.6s
+FRAME 3480/4080 | t 145.0s | elapsed 116.4s
+FRAME 3600/4080 | t 150.0s | elapsed 120.3s
+FRAME 3720/4080 | t 155.0s | elapsed 124.4s
+FRAME 3840/4080 | t 160.0s | elapsed 128.7s
+FRAME 3960/4080 | t 165.0s | elapsed 133.2s
+PASS: 170s / 4080 frames / 1920x1080 H.264 + AAC; full decode; 12 printed pieces from 9 STL files; render 138.9s
+C:\dev\robots\fable-r2d2\output\video\r2d2-assembly-and-operation.mp4
+VIDEO_EXIT=0

@@ -13,22 +13,22 @@
   "printed_instances": 12,
   "overall_height_mm": 723.4,
   "source_sha256": {
-    "stl/body_lower.stl": "5a8c650546aac6efff07b148673336b566d284aac536649307bd1c8f358e86ed",
-    "stl/body_upper.stl": "5dcdbe21aa3b45a993fa97cd7e9a8a31fb96f099fe57bb15a3b8983ef9e0645d",
+    "stl/body_lower.stl": "789998b7c9b477ee9a84835372aff6db3b58f2a5df663450d01aceddcb3a4628",
+    "stl/body_upper.stl": "62b1b7f0b1bf260e75e2bd21f9f8301adb6778aa497aaf77d6ed2610cd0c8937",
     "stl/dome.stl": "3e9f78192f089c09851ddda57372694860e48db1eaefa648d9b2ab6aff0857f5",
     "stl/foot_center.stl": "4dd301c211f0195377392eb0e92d7c63efa33dfbf8c05585e9e66387acac57d1",
     "stl/foot_outer.stl": "172e3c3653a7c69e4f8834aecdf8aa0e287a5757755106eded939cda2e905f75",
     "stl/head_drive.stl": "1753da501c331f486908725ab931ad5f5c65bc14655866734426b8bdf433bf8a",
-    "stl/leg_center.stl": "eea75b9fe20d051c40ded9dc54d371ba466616c6d9a4854f092bc20b6d636914",
+    "stl/leg_center.stl": "79e737249a44aa86e3252f205450e504d30c49f696e280912931f9a19387501e",
     "stl/leg_lower.stl": "988e404c8b275d17f85e247d55a8aa0a41c8a8b0e6f180d0e81d1a1d2857e60b",
     "stl/leg_upper.stl": "b09b795d23000666d6e552bd0e043ce82b50cd40146168a84273331390297f80",
     "scripts/video_scene.js": "e68435ca6bc652ffd021d5f0b622cff2a2485d8615962c931cd17c465dc1ec7f",
     "scripts/video_storyboard.json": "b799137d6a563f201642342ac6e865bc9e2d7eccc4a3e3009a98eac909ad0f0f"
   },
   "inputs_unchanged": true,
-  "video_sha256": "d57c776c0740bf5c663b2009554643d8590ff9ac4e41f0b2924f6d360a4cf563",
-  "video_bytes": 52963044,
-  "render_seconds": 161.84,
+  "video_sha256": "d9743065b5b8d87914d1c90a7e93811453cdc4df96de939bfe3821c8e34939bd",
+  "video_bytes": 53105201,
+  "render_seconds": 138.86,
   "renderer": "ANGLE (NVIDIA, NVIDIA Quadro M2000 (0x00001430) Direct3D11 vs_5_0 ps_5_0, D3D11)",
   "motion_keyframes": [
     {

@@ -1,0 +1,29 @@
+PNG output\drawings\01_robot_assembled.png  2720x2210
+PNG output\drawings\02_robot_exploded.png  2890x2210
+PNG output\drawings\03_robot_orthographic.png  3230x1785
+PNG output\drawings\04_printed_components.png  3230x2210
+PNG output\drawings\05_body_rings.png  2890x2210
+PNG output\drawings\06_dome.png  2890x2210
+PNG output\drawings\07_legs.png  3060x2125
+PNG output\drawings\08_feet.png  2890x2125
+PNG output\drawings\09_head_drive.png  2720x1870
+PNG output\drawings\10_exploded_feet.png  3060x2040
+PNG output\drawings\11_exploded_leg.png  2720x2210
+PNG output\drawings\12_exploded_center_leg.png  2720x2125
+PNG output\drawings\13_exploded_body.png  2805x2210
+PNG output\drawings\14_exploded_head_drive.png  2805x2040
+PNG output\drawings\15_exploded_dome.png  2890x2125
+PNG output\drawings\16_exploded_robot.png  3060x2295
+PNG output\drawings\components\dome.png  2210x1700
+PNG output\drawings\components\body_upper.png  2210x1700
+PNG output\drawings\components\body_lower.png  2210x1700
+PNG output\drawings\components\leg_upper.png  2210x1700
+PNG output\drawings\components\leg_lower.png  2210x1700
+PNG output\drawings\components\leg_center.png  2210x1700
+PNG output\drawings\components\foot_outer.png  2210x1700
+PNG output\drawings\components\foot_center.png  2210x1700
+PNG output\drawings\components\head_drive.png  2210x1700
+JSON output\drawings\drawing-manifest.json  25 PNG entries
+ZIP  output\drawings\r2d2-matlab-style-drawings.zip  26 entries
+PASS 25 PNG drawings, manifest and ZIP written to output\drawings
+DRAW_EXIT=0
