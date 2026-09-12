@@ -1,0 +1,26 @@
+{
+  "revision": "C",
+  "saved": "2026-09-12",
+  "git_tag": "fable-r2d2-revision-c",
+  "commit": "50dd1c35cc1256930d8500acf18c5711c7f4e86f",
+  "summary": "317 mm printable R2-D2: 9 STL files, 12 printed pieces, three-leg operating stance, pin-indexed unpowered shoulders, Raspberry Pi 4 + KB2040, 12 V 7 Ah SLA; verify.py ALL PASS on nine checks; delivered by SES MessageId 010001a097d00729-b3e2c2bc-8943-49ef-8147-e92663a7fb87-000000",
+  "restore": "git checkout fable-r2d2-revision-c -- fable-r2d2",
+  "sha256": {
+    "stl\\body_lower.stl": "789998b7c9b477ee9a84835372aff6db3b58f2a5df663450d01aceddcb3a4628",
+    "stl\\body_upper.stl": "62b1b7f0b1bf260e75e2bd21f9f8301adb6778aa497aaf77d6ed2610cd0c8937",
+    "stl\\dome.stl": "3e9f78192f089c09851ddda57372694860e48db1eaefa648d9b2ab6aff0857f5",
+    "stl\\foot_center.stl": "4dd301c211f0195377392eb0e92d7c63efa33dfbf8c05585e9e66387acac57d1",
+    "stl\\foot_outer.stl": "172e3c3653a7c69e4f8834aecdf8aa0e287a5757755106eded939cda2e905f75",
+    "stl\\head_drive.stl": "1753da501c331f486908725ab931ad5f5c65bc14655866734426b8bdf433bf8a",
+    "stl\\leg_center.stl": "79e737249a44aa86e3252f205450e504d30c49f696e280912931f9a19387501e",
+    "stl\\leg_lower.stl": "988e404c8b275d17f85e247d55a8aa0a41c8a8b0e6f180d0e81d1a1d2857e60b",
+    "stl\\leg_upper.stl": "b09b795d23000666d6e552bd0e043ce82b50cd40146168a84273331390297f80",
+    "cad/params.scad": "223cf9a7291a69580a8091d7d828704055ec4b0b916bd367631d18bd2b7c4993",
+    "bom/bill-of-materials.xlsx": "a136c78c0383f7fbb224022097c4f32fc8135c3411d19ea20cead990cc52cd33",
+    "output/pdf/r2d2-assembly-manual.pdf": "ce78f5a2aeaf0b43763d7b17d1eabc60285eb507cae2b08dcca3f16b9bcfdf66",
+    "output/video/r2d2-assembly-and-operation.mp4": "d9743065b5b8d87914d1c90a7e93811453cdc4df96de939bfe3821c8e34939bd",
+    "output/drawings/00_final_build_mockup.png": "53f68d8ec5b1f628146794bb4ecb3dc7bf09effa57e55c1db55d6afed3c7b35a",
+    "output/drawings/r2d2-matlab-style-drawings.zip": "0623e14f61d5219c9b93675e56d468fe6e38422b2c711f3eb6e4b5f9298e7083",
+    "docs/verification.json": "bf54aa66c7cf67f8a79acd1a69fbfd3ba4540ab65cd10ff400faecf3cdb6d662"
+  }
+}
