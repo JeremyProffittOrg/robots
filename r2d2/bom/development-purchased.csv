@@ -1,0 +1,67 @@
+id,item,quantity,count_status,basis
+P001,Adafruit3777 motor with factory leads,7,counted,Conservative research candidate; mounting design is not frozen
+P002,Adafruit3766 wheel,13,counted,Conservative research candidate; mounting design is not frozen
+P003,HFS5-2020 body rail228mm,4,counted,Conservative research candidate; mounting design is not frozen
+P004,HFS5-2020 leg rail180mm,2,counted,Conservative research candidate; mounting design is not frozen
+P005,HFS5-2020 post rail310mm,1,counted,Conservative research candidate; mounting design is not frozen
+P006,Shaft,1,counted,Conservative research candidate; mounting design is not frozen
+P007,Shoulder bearings,4,counted,Conservative research candidate; mounting design is not frozen
+P008,Hubs,2,counted,Conservative research candidate; mounting design is not frozen
+P009,Hub screws,8,counted,Conservative research candidate; mounting design is not frozen
+P010,Head turntable,1,counted,Conservative research candidate; mounting design is not frozen
+P011,Head screws,8,counted,Conservative research candidate; mounting design is not frozen
+P012,Head nuts,8,counted,Conservative research candidate; mounting design is not frozen
+P013,Post actuator,1,counted,Conservative research candidate; mounting design is not frozen
+P014,ExtR,1,counted,Conservative research candidate; mounting design is not frozen
+P015,Servos,2,counted,Conservative research candidate; mounting design is not frozen
+P016,Horns,2,counted,Conservative research candidate; mounting design is not frozen
+P017,Horn screws,2,counted,Conservative research candidate; mounting design is not frozen
+P018,Servo mount screws,8,counted,Conservative research candidate; mounting design is not frozen
+P019,Servo mount nuts,8,counted,Conservative research candidate; mounting design is not frozen
+P020,Limit switches,3,counted,Conservative research candidate; mounting design is not frozen
+P021,Limit screws,6,counted,Conservative research candidate; mounting design is not frozen
+P022,Limit nuts,6,counted,Conservative research candidate; mounting design is not frozen
+P023,SKF SA12E rod end,1,counted,Conservative research candidate; mounting design is not frozen
+P024,M12 jam nut,1,counted,Conservative research candidate; mounting design is not frozen
+P025,12mm center shoulder axle bolt,1,counted,Conservative research candidate; mounting design is not frozen
+P026,M10 center axle locknut,1,counted,Conservative research candidate; mounting design is not frozen
+P027,Center axle washer,1,counted,Conservative research candidate; mounting design is not frozen
+P028,Center axle shim,1,counted,Conservative research candidate; mounting design is not frozen
+P029,Actuator pins,2,counted,Conservative research candidate; mounting design is not frozen
+P030,Pin Rclips,4,counted,Conservative research candidate; mounting design is not frozen
+P031,GN lock,1,counted,Conservative research candidate; mounting design is not frozen
+P032,Receiver,1,counted,Conservative research candidate; mounting design is not frozen
+P033,Lock screws,2,counted,Conservative research candidate; mounting design is not frozen
+P034,Lock nuts,2,counted,Conservative research candidate; mounting design is not frozen
+P035,Release link,1,counted,Conservative research candidate; mounting design is not frozen
+P036,Release joints,2,counted,Conservative research candidate; mounting design is not frozen
+P037,Release joint screws,2,counted,Conservative research candidate; mounting design is not frozen
+P038,Release joint nuts,2,counted,Conservative research candidate; mounting design is not frozen
+P039,Steer link,1,counted,Conservative research candidate; mounting design is not frozen
+P040,Steer joints,2,counted,Conservative research candidate; mounting design is not frozen
+P041,Steer joint screws,2,counted,Conservative research candidate; mounting design is not frozen
+P042,Steer joint nuts,2,counted,Conservative research candidate; mounting design is not frozen
+P043,DFRobot DFR0994 controller board,1,counted,Conservative research candidate; mounting design is not frozen
+P044,DFR0994 external antenna,1,counted,Conservative research candidate; mounting design is not frozen
+P045,DFR0994 supplied camera; unused accessory counted conservatively,1,counted,Conservative research candidate; mounting design is not frozen
+P046,Motor regulator,1,counted,Conservative research candidate; mounting design is not frozen
+P047,Post regulator,1,counted,Conservative research candidate; mounting design is not frozen
+P048,Amp,1,counted,Conservative research candidate; mounting design is not frozen
+P049,Speaker,1,counted,Conservative research candidate; mounting design is not frozen
+P050,Buffer board,1,counted,Conservative research candidate; mounting design is not frozen
+P051,Battery,1,counted,Conservative research candidate; mounting design is not frozen
+P052,Charger,1,counted,Conservative research candidate; mounting design is not frozen
+P053,Main and RUN switches,2,counted,Conservative research candidate; mounting design is not frozen
+P054,Main fuse holder,1,counted,Conservative research candidate; mounting design is not frozen
+P055,Main fuse,1,counted,Conservative research candidate; mounting design is not frozen
+P056,Branch holders,2,counted,Conservative research candidate; mounting design is not frozen
+P057,Branch fuses,2,counted,Conservative research candidate; mounting design is not frozen
+G001,Battery mating connector and discrete distribution connectors,,unresolved,Must be counted or replaced by a reviewed integrated printed feature; not assumed zero
+G002,Separate wire segments and factory harnesses or extensions,,unresolved,Must be counted or replaced by a reviewed integrated printed feature; not assumed zero
+G003,Motor-terminal and additional rail bulk capacitors,,unresolved,Must be counted or replaced by a reviewed integrated printed feature; not assumed zero
+G004,Resistor rework pieces for the selected controller,,unresolved,Must be counted or replaced by a reviewed integrated printed feature; not assumed zero
+G005,Shoulder bearing retainers and their mounting hardware,,unresolved,Must be counted or replaced by a reviewed integrated printed feature; not assumed zero
+G006,Inner-race spacers and thrust hardware,,unresolved,Must be counted or replaced by a reviewed integrated printed feature; not assumed zero
+G007,Foot and body cover attachment hardware,,unresolved,Must be counted or replaced by a reviewed integrated printed feature; not assumed zero
+G008,Lock receiver retention and servo alignment shims,,unresolved,Must be counted or replaced by a reviewed integrated printed feature; not assumed zero
+G009,Battery restraints and board or speaker retention hardware,,unresolved,Must be counted or replaced by a reviewed integrated printed feature; not assumed zero

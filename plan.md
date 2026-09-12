@@ -46,6 +46,10 @@ Unavailable required resources/credentials, a necessary unapproved irreversible 
 
 ### Execution log
 
+2026-09-12 controller decision: user approved "Use the integrated DFRobot controller". The earlier brand-approval question is resolved. Added bom/development-purchased.csv by expanding the researched148-piece ledger into separate motor/wheel, rail, rod-end-stack and controller/accessory rows, with9 explicitly unresolved count categories. Added `python scripts/verify.py --bom-only`; default full verification now enforces the same gate before expensive geometry/firmware checks. Current audit:148 known /99 maximum;9 unresolved;0 invalid. This rejects the candidate, not the user's requirement. No hardware or firmware migration is claimed yet.
+
+`python -m unittest discover -s tests -p test_purchased_bom.py -v` passed5 acceptance tests:99 versus100 physical pieces, unresolved quantities, invalid/negative/fractional counts, duplicate/missing identities and bypass statuses. A subprocess check confirmed default full verification returns1 at the148-piece gate and leaves docs/verification.json false for D-development. Counting validates the submitted ledger, not completeness against every CAD joint; that assembly review remains required. No controller approval needs to be requested again.
+
 2026-09-12: Read deploy.md and the actual kinematics, frame, firmware, mass budget and existing checks. Recorded both user decisions verbatim. Identified missing shoulder restraint and insufficient two-foot CG coverage. Requirements/documentation change only; no revision D CAD, firmware or physical verification is claimed.
 
 2026-09-12: New printed-frame/detail/BOM amendment started. Read the full exterior source and actual hardware/electronics CSVs:95+47=142 existing rows. Viewed reference front photograph and prior CAD rendering; feet are boxy, shoulder forms simplified and many body details shallow. Research skill delegates only bounded primary-source hardware reading to /root/printed_frame_research; root owns CAD and integration. Existing accepted revision C load figures will not be assigned to printed joints.

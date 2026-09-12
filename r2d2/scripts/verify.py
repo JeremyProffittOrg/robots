@@ -6,6 +6,39 @@ import numpy as np
 ROOT=Path(__file__).resolve().parents[1]
 sys.path.insert(0,str(ROOT/'scripts'))
 from export_cad import EXE,validate,PARTS
+
+def audit_purchased_pieces(rows):
+ """Count physical quantities; unknown rows cannot silently count as zero.
+ This checks the submitted ledger, not whether every CAD joint is represented.
+ """
+ total=0;seen=set();invalid=[];unresolved=[]
+ for row in rows:
+  key=row.get('id','').strip();item=row.get('item','').strip()
+  if not key or key in seen or not item:invalid.append(key or '(missing ID)')
+  seen.add(key)
+  status=row.get('count_status','').strip();quantity=str(row.get('quantity','')).strip()
+  if status=='unresolved':
+   unresolved.append(key)
+   if quantity:invalid.append(key+': unresolved row has a quantity')
+  elif status!='counted' or not re.fullmatch(r'[1-9][0-9]*',quantity):
+   invalid.append(key+': expected a positive whole-piece quantity')
+  else:total+=int(quantity)
+ if not rows:invalid.append('empty ledger')
+ return {'limit':99,'known_pieces':total,'excess_known_pieces':max(0,total-99),
+  'unresolved_rows':unresolved,'invalid_rows':invalid,
+  'passed':bool(rows) and not unresolved and not invalid and total<=99,
+  'scope':'Arithmetic and declared gaps only; CAD/wiring completeness needs separate review'}
+
+def check_purchased_bom():
+ source=ROOT/'bom/development-purchased.csv'
+ with source.open(encoding='utf-8-sig',newline='') as f:rows=list(csv.DictReader(f))
+ report=audit_purchased_pieces(rows)
+ report['source_sha256']=hashlib.sha256(source.read_bytes()).hexdigest()
+ (ROOT/'docs/purchased-piece-check.json').write_text(json.dumps(report,indent=2),encoding='utf-8')
+ print(f"Purchased-piece audit: {report['known_pieces']} known /99 maximum; "
+       f"{len(report['unresolved_rows'])} unresolved rows; {len(report['invalid_rows'])} invalid rows")
+ if not report['passed']:raise SystemExit('NOT READY: purchased-piece limit or ledger completeness failed')
+ print('PASS: submitted physical-piece ledger is complete and within99; assembly review is still required')
 def run(args,**kwargs):
  result=subprocess.run(args,cwd=ROOT,capture_output=True,text=True,timeout=180,**kwargs)
  if result.returncode:raise RuntimeError(str(args)+'\n'+result.stdout+'\n'+result.stderr)
@@ -77,7 +110,8 @@ def cad_checks():
  return results
 
 def main():
- (ROOT/'docs/verification.json').write_text(json.dumps({'all_pass':False,'revision':'C','status':'checks in progress','physical_validation':False},indent=2))
+ (ROOT/'docs/verification.json').write_text(json.dumps({'all_pass':False,'revision':'D-development','status':'checks in progress; complete purchased-piece ledger required','physical_validation':False},indent=2))
+ if '--cad-only' not in sys.argv:check_purchased_bom()
  inputs=sorted((ROOT/'cad').glob('*.scad'))+sorted((ROOT/'stl').glob('*.stl'))+sorted((ROOT/'firmware/include').glob('*.h'))+[ROOT/'firmware/src/main.cpp',ROOT/'firmware/data/app.js',ROOT/'electronics/wiring.csv',ROOT/'bom/fastener-stacks.csv']+[ROOT/'scripts'/n for n in ['verify.py','check_kinematics.py','export_cad.py','slice_structure.py']]
  initial_hashes={str(p.relative_to(ROOT)):hashlib.sha256(p.read_bytes()).hexdigest() for p in inputs}
  results=[];validate();results.append('STL geometry: all meshes closed, connected, positive and inside300mm; nonnegative bed Z')
@@ -144,4 +178,5 @@ def main():
  report={'all_pass':True,'revision':'C','checks':results,'source_sha256':initial_hashes,'physical_validation':False}
  (ROOT/'docs/verification.json').write_text(json.dumps(report,indent=2))
  print('\n'.join(results));print('PASS: all digital package checks; physical build tests remain unverified')
-if __name__=='__main__':main()
+if __name__=='__main__':
+ check_purchased_bom() if '--bom-only' in sys.argv else main()

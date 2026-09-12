@@ -60,11 +60,19 @@ unresolved wiring and mounting requirements. It is not a proof that every
 possible design needs148 pieces, but it rules out releasing that candidate
 as a99-piece robot.
 
-DFRobot Romeo DFR0994 is a candidate to consolidate the MCU and four motor
+The candidate is itemized in bom/development-purchased.csv. Run
+`python scripts/verify.py --bom-only` for the physical-quantity audit.
+The check counts quantities, rejects invalid or duplicate rows, and fails
+if quantities remain unresolved or the sum exceeds99. Its current result
+is148 known pieces and9 unresolved categories. The default verification
+command also stops at this gate. The checker cannot establish that every
+physical joint and wire is represented; that requires the assembly review.
+
+DFRobot Romeo DFR0994 was selected by the user on2026-09-12 to consolidate the MCU and four motor
 drivers. Its stock shared current setting, paired-motor protection and
 separate logic/motor supplies need deliberate design changes and checks.
-The controller-brand question is pending because the initial request named
-Adafruit. The specified Adafruit3777 motors and3766 wheels remain fixed.
+The controller-brand question is resolved. The specified Adafruit3777
+motors and3766 wheels remain fixed. Do not request that approval again.
 No electronics migration or component purchase has occurred.
 
 The remaining work is to close the counted purchase manifest, complete

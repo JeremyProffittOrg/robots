@@ -1,7 +1,6 @@
 {
-  "revision": "D-development",
   "all_pass": false,
-  "physical_validation": false,
-  "status": "Printed-frame and exterior development. Full assembly, controls, H2D slices and99-purchased-piece BOM are not verified.",
-  "previous_release_commit": "a4b7c9877614b0d8b829328f8a9624b06dbeb29d"
+  "revision": "D-development",
+  "status": "checks in progress; complete purchased-piece ledger required",
+  "physical_validation": false
 }
