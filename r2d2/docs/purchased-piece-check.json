@@ -1,7 +1,7 @@
 {
-  "limit": 99,
+  "limit": 199,
   "known_pieces": 148,
-  "excess_known_pieces": 49,
+  "excess_known_pieces": 0,
   "unresolved_rows": [
     "G001",
     "G002",

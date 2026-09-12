@@ -5,7 +5,7 @@ import trimesh
 import numpy as np
 ROOT=Path(__file__).resolve().parents[1]
 sys.path.insert(0,str(ROOT/'scripts'))
-from export_cad import EXE,validate,PARTS
+from export_cad import EXE,validate,PARTS,PURCHASED_PIECE_LIMIT
 
 def audit_purchased_pieces(rows):
  """Count physical quantities; unknown rows cannot silently count as zero.
@@ -24,9 +24,9 @@ def audit_purchased_pieces(rows):
    invalid.append(key+': expected a positive whole-piece quantity')
   else:total+=int(quantity)
  if not rows:invalid.append('empty ledger')
- return {'limit':99,'known_pieces':total,'excess_known_pieces':max(0,total-99),
+ return {'limit':PURCHASED_PIECE_LIMIT,'known_pieces':total,'excess_known_pieces':max(0,total-PURCHASED_PIECE_LIMIT),
   'unresolved_rows':unresolved,'invalid_rows':invalid,
-  'passed':bool(rows) and not unresolved and not invalid and total<=99,
+  'passed':bool(rows) and not unresolved and not invalid and total<=PURCHASED_PIECE_LIMIT,
   'scope':'Arithmetic and declared gaps only; CAD/wiring completeness needs separate review'}
 
 def check_purchased_bom():
@@ -35,10 +35,10 @@ def check_purchased_bom():
  report=audit_purchased_pieces(rows)
  report['source_sha256']=hashlib.sha256(source.read_bytes()).hexdigest()
  (ROOT/'docs/purchased-piece-check.json').write_text(json.dumps(report,indent=2),encoding='utf-8')
- print(f"Purchased-piece audit: {report['known_pieces']} known /99 maximum; "
+ print(f"Purchased-piece audit: {report['known_pieces']} known /{PURCHASED_PIECE_LIMIT} maximum; "
        f"{len(report['unresolved_rows'])} unresolved rows; {len(report['invalid_rows'])} invalid rows")
  if not report['passed']:raise SystemExit('NOT READY: purchased-piece limit or ledger completeness failed')
- print('PASS: submitted physical-piece ledger is complete and within99; assembly review is still required')
+ print(f'PASS: submitted physical-piece ledger is complete and within{PURCHASED_PIECE_LIMIT}; assembly review is still required')
 def run(args,**kwargs):
  result=subprocess.run(args,cwd=ROOT,capture_output=True,text=True,timeout=180,**kwargs)
  if result.returncode:raise RuntimeError(str(args)+'\n'+result.stdout+'\n'+result.stderr)

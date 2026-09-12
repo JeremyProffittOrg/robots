@@ -13,15 +13,17 @@ def part(key,quantity,status='counted'):
 
 class PurchasedPieceLimit(unittest.TestCase):
     def test_limit_counts_quantities_not_rows(self):
-        self.assertTrue(audit_purchased_pieces([part('motors',7),part('other',92)])['passed'])
-        result=audit_purchased_pieces([part('motors',7),part('other',93)])
+        self.assertTrue(audit_purchased_pieces([part('candidate',148)])['passed'])
+        self.assertTrue(audit_purchased_pieces([part('motors',7),part('other',192)])['passed'])
+        result=audit_purchased_pieces([part('motors',7),part('other',193)])
         self.assertFalse(result['passed'])
-        self.assertEqual(result['known_pieces'],100)
+        self.assertEqual(result['known_pieces'],200)
         self.assertEqual(result['excess_known_pieces'],1)
 
     def test_unresolved_hardware_cannot_pass(self):
-        result=audit_purchased_pieces([part('motors',7),part('wiring','','unresolved')])
+        result=audit_purchased_pieces([part('candidate',148),part('wiring','','unresolved')])
         self.assertFalse(result['passed'])
+        self.assertEqual(result['excess_known_pieces'],0)
         self.assertEqual(result['unresolved_rows'],['wiring'])
 
     def test_invalid_quantities_cannot_reduce_the_total(self):

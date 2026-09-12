@@ -1,8 +1,9 @@
 # Revision D development status
 
 This is an incomplete design revision, not a fabrication release. The
-strict requirement is no more than99 purchased physical pieces, excluding
-printed parts. The earlier interpretation of99 purchase types was wrong.
+current requirement is no more than199 purchased physical pieces, excluding
+printed parts. On2026-09-12 the user accepted148 pieces and raised the final
+limit to under200, superseding the previous99-piece ceiling.
 Every screw, nut, washer, cut rail, motor, wheel, bearing, board and cable
 assembly must be accounted for. Factory assemblies are identified as such;
 loose hardware cannot be hidden in a kit or allowance row.
@@ -52,18 +53,18 @@ the exact distinctions between dimensions, ratings and assumptions.
 
 ## Purchase count and controller decision
 
-No complete99-piece BOM has been verified. The original tables have95
+No complete final BOM has been verified. The original tables have95
 hardware rows and47 electronics rows, with mixed-unit quantity sums624
 and133; those sums are not valid physical-piece totals. The research note
 also records a conservative148-piece candidate subtotal with additional
 unresolved wiring and mounting requirements. It is not a proof that every
-possible design needs148 pieces, but it rules out releasing that candidate
-as a99-piece robot.
+possible design needs148 pieces. The user has now accepted that subtotal;
+51 pieces remain available for all additional hardware and wiring.
 
 The candidate is itemized in bom/development-purchased.csv. Run
 `python scripts/verify.py --bom-only` for the physical-quantity audit.
 The check counts quantities, rejects invalid or duplicate rows, and fails
-if quantities remain unresolved or the sum exceeds99. Its current result
+if quantities remain unresolved or the sum exceeds199. Its current result
 is148 known pieces and9 unresolved categories. The default verification
 command also stops at this gate. The checker cannot establish that every
 physical joint and wire is represented; that requires the assembly review.

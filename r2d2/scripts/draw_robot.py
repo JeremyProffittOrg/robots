@@ -4,7 +4,7 @@ No CAD/firmware changes. Purchased parts are explicitly schematic envelopes.
 from pathlib import Path
 import hashlib,json,zipfile,subprocess,io
 import fitz
-from export_cad import EXE,DEVELOPMENT_PARTS
+from export_cad import EXE,DEVELOPMENT_PARTS,PURCHASED_PIECE_LIMIT
 import numpy as np
 import trimesh
 import matplotlib
@@ -233,7 +233,7 @@ def development():
   fig.suptitle('REVISION D DEVELOPMENT | '+name.replace('_',' '),x=.035,ha='left',fontsize=21,fontweight='bold')
   fig.text(.04,.90,'Actual STL: '+' x '.join(f'{v:.1f}' for v in mesh.extents)+' mm',fontsize=12,color=INK)
   fig.subplots_adjust(top=.88,bottom=.12)
-  footer(fig,'Geometry study only. Full robot integration, load tests and the 99-purchased-piece budget are not complete.')
+  footer(fig,f'Geometry study only. Full robot integration, load tests and the {PURCHASED_PIECE_LIMIT}-purchased-piece budget are not complete.')
   save(fig,name)
  def relief(mesh,dome=False):
   c=mesh.triangles_center;r=np.linalg.norm(c[:,:2],axis=1)

@@ -2,7 +2,7 @@
 
 The confirmed requirements now include front deployment, full retraction
 for a two-foot stance, a printed frame with2020 reinforcement, richer exterior
-detail and no more than99 purchased physical pieces, counting every fastener.
+detail and no more than199 purchased physical pieces, counting every fastener.
 The approved controller is DFRobot Romeo ESP32-S3 DFR0994; the Adafruit
 motors and wheels remain specified. The wiring and firmware migration is
 pending the complete physical-piece audit.

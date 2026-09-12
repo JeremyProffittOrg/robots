@@ -4,6 +4,7 @@ from pathlib import Path
 from concurrent.futures import ThreadPoolExecutor, as_completed
 import trimesh
 ROOT = Path(__file__).resolve().parents[1]
+PURCHASED_PIECE_LIMIT = 199
 PARTS = {'body_lower':(1,'PETG'),'body_upper':(1,'PETG'),'dome':(1,'PLA'),
  'leg':(2,'PETG'),'outer_foot':(2,'PETG'),'rear_foot':(1,'PETG'),
  'drive_cassette':(3,'PETG'),'head_motor_mount':(1,'PETG'),
@@ -46,12 +47,12 @@ def validate_development():
    'positive_solids':int(solids),'dimensions_mm':[round(float(v),3) for v in mesh.extents],
    'bed_min_z_mm':round(float(mesh.bounds[0,2]),6),'sha256':hashlib.sha256(p.read_bytes()).hexdigest(),'passed':passed})
  report={'revision':'D-development','geometry_pass':all(r['passed'] for r in rows),'fabrication_release':False,
-  'full_robot_integration_verified':False,'physical_load_tested':False,'purchased_piece_limit':99,
+  'full_robot_integration_verified':False,'physical_load_tested':False,'purchased_piece_limit':PURCHASED_PIECE_LIMIT,
   'purchased_piece_limit_verified':False,'rows':rows}
  (ROOT/'cad/development-check.json').write_text(json.dumps(report,indent=2))
  assert report['geometry_pass'],[r['part'] for r in rows if not r['passed']]
  print(f'PASS: {len(rows)} development STL designs are closed single solids, on the bed and within300mm per axis')
- print('Not a fabrication release: assembly, H2D slicing, load and99-piece checks remain incomplete.')
+ print(f'Not a fabrication release: assembly, H2D slicing, load and{PURCHASED_PIECE_LIMIT}-piece checks remain incomplete.')
 if __name__=='__main__':
  p=argparse.ArgumentParser();p.add_argument('--check-only',action='store_true');p.add_argument('--check-development',action='store_true');p.add_argument('--views',action='store_true');p.add_argument('--part');a=p.parse_args()
  for d in ['stl','bom','cad']:(ROOT/d).mkdir(exist_ok=True)

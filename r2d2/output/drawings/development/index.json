@@ -17,27 +17,27 @@
   "pngs": [
     {
       "file": "frame_chassis.png",
-      "sha256": "158b1aee9351481e560e3211359aa9e7d146cb1e37c54889ee8bc491d5ed818e"
+      "sha256": "123e5d20c5c4924fc4ee3e7b71e5ddd463a788a1449d6b423ba350509d83f7b1"
     },
     {
       "file": "rail_key.png",
-      "sha256": "77797feb1e3738ccf394f617eed6e04fbfc73eaf6637e7c40cda660c1c17541d"
+      "sha256": "754cca39adc360f06cc124e8dd34654467afc10bfa1facc1149d4a07a1f3ec28"
     },
     {
       "file": "rail_key_pin.png",
-      "sha256": "637ba18e7bf72402db4d83da23f49cfb770ab9d37d5e56c778cf2a3b3c000f5e"
+      "sha256": "9bd5349bc772634a2717991b350a5c52a91f80aeb6f9707d9cd1fc1aaf02eb85"
     },
     {
       "file": "outer_foot_core.png",
-      "sha256": "c214bcaabd8ec23e2f0d13b48698b3de153dab4c4eef1c1b0cafd177a7af67d8"
+      "sha256": "1c4000e57d28bf00f81024d607ca0e28d095cb0f091497597e474774cb4a1168"
     },
     {
       "file": "center_foot_core.png",
-      "sha256": "5bb069eb2f5d02119606bc9ef4fd2249c5e025bdac82cd4f8f127eb482ffa65b"
+      "sha256": "28392a985ee3b5c305d1559568e74e9beeaa38ad6ddefa1d72e38de4a046f328"
     },
     {
       "file": "post_adapter.png",
-      "sha256": "01e8a98d404c9eea932407a778b9295f46399d61ef1d235c5d26b34acdacfaa7"
+      "sha256": "b448017ad2737f606b13610d0ec1b05c8330d06ff8324cdf5bcd2b83102f17a8"
     },
     {
       "file": "dome-detail.png",
