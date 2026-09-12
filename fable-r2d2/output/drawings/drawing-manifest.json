@@ -1,0 +1,223 @@
+{
+  "style": "MATLAB-style engineering drawings rendered with Matplotlib and a per-pixel depth buffer; white background, MATLAB colour order, millimetre axes",
+  "generated": "2026-09-12T16:52:37+00:00",
+  "units": "mm",
+  "dpi": 170,
+  "printed_designs": 9,
+  "printed_pieces": 12,
+  "purchased_parts": "nominal envelopes from cad/params.scad; not manufacturer CAD",
+  "missing_stl": [],
+  "sources": {
+    "stl/dome.stl": "3e9f78192f089c09851ddda57372694860e48db1eaefa648d9b2ab6aff0857f5",
+    "stl/body_upper.stl": "5dcdbe21aa3b45a993fa97cd7e9a8a31fb96f099fe57bb15a3b8983ef9e0645d",
+    "stl/body_lower.stl": "5a8c650546aac6efff07b148673336b566d284aac536649307bd1c8f358e86ed",
+    "stl/leg_upper.stl": "b09b795d23000666d6e552bd0e043ce82b50cd40146168a84273331390297f80",
+    "stl/leg_lower.stl": "988e404c8b275d17f85e247d55a8aa0a41c8a8b0e6f180d0e81d1a1d2857e60b",
+    "stl/leg_center.stl": "eea75b9fe20d051c40ded9dc54d371ba466616c6d9a4854f092bc20b6d636914",
+    "stl/foot_outer.stl": "172e3c3653a7c69e4f8834aecdf8aa0e287a5757755106eded939cda2e905f75",
+    "stl/foot_center.stl": "4dd301c211f0195377392eb0e92d7c63efa33dfbf8c05585e9e66387acac57d1",
+    "stl/head_drive.stl": "1753da501c331f486908725ab931ad5f5c65bc14655866734426b8bdf433bf8a"
+  },
+  "pngs": [
+    {
+      "file": "output/drawings/01_robot_assembled.png",
+      "pixels": [
+        2720,
+        2210
+      ],
+      "sha256": "eb0b80bf7cd37ee17aae6f757eaa47a165d0b347d03561c7b5f15c51ee4abff4"
+    },
+    {
+      "file": "output/drawings/02_robot_exploded.png",
+      "pixels": [
+        2890,
+        2210
+      ],
+      "sha256": "897b473d5ab5b118f70315836514a06f1bda538f69546eba07b297d9b7d993a7"
+    },
+    {
+      "file": "output/drawings/03_robot_orthographic.png",
+      "pixels": [
+        3230,
+        1785
+      ],
+      "sha256": "ec0af21ac712c47d81c0e413c6fab651184a2abd7b0e3a480bcea9d82e1d97fe"
+    },
+    {
+      "file": "output/drawings/04_printed_components.png",
+      "pixels": [
+        3230,
+        2210
+      ],
+      "sha256": "ef97434d82a69be87c28e05e92a9023b39bced443118f6d8633a68590bea79a9"
+    },
+    {
+      "file": "output/drawings/05_body_rings.png",
+      "pixels": [
+        2890,
+        2210
+      ],
+      "sha256": "97b5593e71c7a35fa9650cd4f99596c51d0ad06102fb9736368ca9e18183a525"
+    },
+    {
+      "file": "output/drawings/06_dome.png",
+      "pixels": [
+        2890,
+        2210
+      ],
+      "sha256": "34096d895b8f1e7bec5921021ef6cddb14c2faad3c23228eb2bdbc05879215c4"
+    },
+    {
+      "file": "output/drawings/07_legs.png",
+      "pixels": [
+        3060,
+        2125
+      ],
+      "sha256": "8d38b3ab6bf70f2c73f4b1821d6102cfe9667703055c817b1b3ae51ac516df26"
+    },
+    {
+      "file": "output/drawings/08_feet.png",
+      "pixels": [
+        2890,
+        2125
+      ],
+      "sha256": "6cbde29aadd8a469cc05eb7ab7613c85c4c859b1fd2e3d47d0ec1eac6efa0e55"
+    },
+    {
+      "file": "output/drawings/09_head_drive.png",
+      "pixels": [
+        2720,
+        1870
+      ],
+      "sha256": "239c005e054a280ad57016a541614eb66e1a6ef97682d0a418ec814d4c42bd5d"
+    },
+    {
+      "file": "output/drawings/10_exploded_feet.png",
+      "pixels": [
+        3060,
+        2040
+      ],
+      "sha256": "7c266513372c46e918cfb62d3968cada710d5b7845c30be9d482735574fd1f89"
+    },
+    {
+      "file": "output/drawings/11_exploded_leg.png",
+      "pixels": [
+        2720,
+        2210
+      ],
+      "sha256": "70bf71b628b6fc4acc006b3282e25e6406b8181f809018255ae0ad0a3c33ac4b"
+    },
+    {
+      "file": "output/drawings/12_exploded_center_leg.png",
+      "pixels": [
+        2720,
+        2125
+      ],
+      "sha256": "b067f1fd7daa3b1e8e693b18c1dc7e318aee51336786570c8ac638ecc4506327"
+    },
+    {
+      "file": "output/drawings/13_exploded_body.png",
+      "pixels": [
+        2805,
+        2210
+      ],
+      "sha256": "70ef8b7810a97e24da65d93bf978e9f881b015635d6b836a1fec4fc967663bb6"
+    },
+    {
+      "file": "output/drawings/14_exploded_head_drive.png",
+      "pixels": [
+        2805,
+        2040
+      ],
+      "sha256": "6eae41afaad15d5bc80c886cc64a283803446f53c7e22a07f77688538e6eaf8b"
+    },
+    {
+      "file": "output/drawings/15_exploded_dome.png",
+      "pixels": [
+        2890,
+        2125
+      ],
+      "sha256": "a9a2014a092292b3391d5275615e547123a953bac92447e45b4e9be679449b6e"
+    },
+    {
+      "file": "output/drawings/16_exploded_robot.png",
+      "pixels": [
+        3060,
+        2295
+      ],
+      "sha256": "8a2f46199d521025bf77f370d321120381da29b33d77d8087ef75fa13f96837e"
+    },
+    {
+      "file": "output/drawings/components/body_lower.png",
+      "pixels": [
+        2210,
+        1700
+      ],
+      "sha256": "3db62cbd4dbf375611a0b394058c9fc5586520d373cb1a22b11f4a3a5f1ffdd7"
+    },
+    {
+      "file": "output/drawings/components/body_upper.png",
+      "pixels": [
+        2210,
+        1700
+      ],
+      "sha256": "e3f933c382e3a48fdad6c3b54e59aa82a3d42b21708c322e2abf6add1bbdd4f8"
+    },
+    {
+      "file": "output/drawings/components/dome.png",
+      "pixels": [
+        2210,
+        1700
+      ],
+      "sha256": "2a003ed41617db28d85568cd1aea17aba16dfb0399037d14d84bc6cd20f58d6e"
+    },
+    {
+      "file": "output/drawings/components/foot_center.png",
+      "pixels": [
+        2210,
+        1700
+      ],
+      "sha256": "4403c7cf69eee669bad8a6ee9044437b1ea1f34206e372414da69e59ab737852"
+    },
+    {
+      "file": "output/drawings/components/foot_outer.png",
+      "pixels": [
+        2210,
+        1700
+      ],
+      "sha256": "d7c338c7517fbd220cbbceddfcbc470085de001d2f43aa5af3bc8ecdc12b2888"
+    },
+    {
+      "file": "output/drawings/components/head_drive.png",
+      "pixels": [
+        2210,
+        1700
+      ],
+      "sha256": "cbc440653c0f2bf4bee3a125b96f01401f9249a1415bf5bef14ad591453d8fda"
+    },
+    {
+      "file": "output/drawings/components/leg_center.png",
+      "pixels": [
+        2210,
+        1700
+      ],
+      "sha256": "c3d7cc918f30f39f85f434de766844ad7b19347d759c17f29a0336f29fdfdf45"
+    },
+    {
+      "file": "output/drawings/components/leg_lower.png",
+      "pixels": [
+        2210,
+        1700
+      ],
+      "sha256": "86e40bd617986cc9ee158ec05e6a02767281d58913aec62e2af16f57c27a0c61"
+    },
+    {
+      "file": "output/drawings/components/leg_upper.png",
+      "pixels": [
+        2210,
+        1700
+      ],
+      "sha256": "1cbf1c4f3f294596ec5444ec075caf3679ec6585cc479724e2aab039b34bc977"
+    }
+  ]
+}

@@ -21,8 +21,10 @@
 //    X across the foot, origin at the ankle slot centre (outer foot) or the foot centre
 //    (centre foot). Print frame = native frame.
 //  Centre leg native frame: Z up, origin on the caster pivot axis at the centre-foot top
-//    plane (foot_clear + foot_center_h above the floor). The flange top is the plane
-//    z = (skirt-bottom height above floor - that plane) - y*tan(body_tilt). leg_center() is the
+//    plane (foot_clear + foot_center_h above the floor). The axis sits at body-frame
+//    y = center_leg_y_in_body on the skirt floor. The flange top is the plane
+//    z = (floor plane height at the axis - that plane) - y*tan(body_tilt), where the floor
+//    plane height at the axis = skirt_bottom_z_three_leg + center_leg_y_in_body*sin(body_tilt). leg_center() is the
 //    print module (flange face down); leg_center_native() is used by the assembly.
 //  Head drive native frame: origin on the body axis at the top face of the body top plate,
 //    +Y front. head_drive() is the print module; head_drive_native() the assembly module.
@@ -39,6 +41,8 @@ part = "assembly";
 
 skirt_bottom_z_three_leg = shoulder_z_three_leg - shoulder_z * cos(body_tilt);   // 164.5
 skirt_bottom_y_three_leg = shoulder_z * sin(body_tilt);                          // 97.0
+center_leg_y_three_leg = skirt_bottom_y_three_leg + center_leg_y_in_body * cos(body_tilt);   // 54.2
+center_leg_plane_z_three_leg = skirt_bottom_z_three_leg + center_leg_y_in_body * sin(body_tilt);   // 150.6 floor plane height at the centre-leg axis
 ankle_y_three_leg = leg_len * sin(leg_lean);                                     // 116.2
 center_foot_top_z = foot_clear + foot_center_h;                                  // 98.9
 
@@ -51,8 +55,8 @@ module at_leg(side) {
         mirror([side < 0 ? 1 : 0, 0, 0]) children();
 }
 module at_foot(side) { translate([side * leg_offset_x, ankle_y_three_leg, foot_clear]) mirror([side < 0 ? 1 : 0, 0, 0]) children(); }
-module at_center_leg() { translate([0, skirt_bottom_y_three_leg, center_foot_top_z]) children(); }
-module at_center_foot() { translate([0, skirt_bottom_y_three_leg - caster_trail, foot_clear]) children(); }
+module at_center_leg() { translate([0, center_leg_y_three_leg, center_foot_top_z]) children(); }
+module at_center_foot() { translate([0, center_leg_y_three_leg - caster_trail, foot_clear]) children(); }
 module at_head_drive() { at_body() translate([0, 0, body_top_plate_z]) children(); }
 
 // ---------- purchased-part envelopes for renders ----------

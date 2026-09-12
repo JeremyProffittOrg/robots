@@ -57,7 +57,7 @@ tray_size = [230, 190, 4];
 // battery (12 V 7 Ah SLA on its side: 151 long X, 94 deep Y, 65 tall)
 battery = [151, 94, 65];
 battery_shelf_z = 45;            // body_lower local (above the centre-leg flange nuts)
-battery_y = 15;                  // shelf centre shifted toward the front for stance balance
+battery_y = 45;                  // shelf centre shifted toward the front for stance balance (stability screening 2026-09-12)
 battery_strap_w = 25;
 
 // ---------- dome ----------
@@ -126,7 +126,7 @@ leg_rod_d = 8; leg_rod_offset = 20;                   // two M8 rods at Y = +/- 
 leg_rod_top_z = 55; leg_rod_bottom_z = -370;
 leg_splice_bolt_m = 4; leg_splice_len = 40;           // lap joint at the split, 4 x M4
 leg_tongue_t = 17.4; leg_tongue_w = 100; leg_tongue_depth = 30;   // into the foot slot
-ankle_bolt_m = 8; ankle_bolt_spacing = 50;            // two M8 through foot block and tongue
+ankle_bolt_m = 8; ankle_bolt_spacing = 40;            // M8 pivot + M8 lock bolt 40 mm AHEAD of the pivot on the pivot plane (feet.scad ft_lock_r)
 leg_offset_x = body_r + shoulder_spacer + leg_strut_t/2;   // 181.7 leg centre plane from body axis
 leg_track = 2 * leg_offset_x;                         // 363.4 foot centre to centre
 booster_cover = [41.7, 78.2, 17.4];
@@ -138,7 +138,7 @@ leg_lean = 18;                   // outer legs lean 18 deg, feet forward of the 
 ankle_z = 105.5;                 // ankle pivot height above the floor (two-leg reference)
 shoulder_h = shoulder_z;         // body-frame height of the shoulder axis (alias)
 shoulder_y_in_body = 0;
-center_leg_y_in_body = 0;
+center_leg_y_in_body = -45;      // centre-leg axis on the body floor, rearward of the body axis (tip-back margin; stability.py)
 shoulder_z_three_leg = ankle_z + leg_len * cos(leg_lean);   // 463.0 above the floor
 
 // ---------- feet ----------
@@ -157,8 +157,8 @@ motor_pocket_clear = 0.4;
 wheel_x = 23.8;                  // wheel centre offset from the motor centre plane (each side)
 foot_slot_w = 17.6; foot_slot_depth = 30;            // ankle tongue slot (outer feet)
 battery_box = [119.4, 53.5, 84.7];                    // decorative boxes on the outer feet
-caster_bolt_m = 12; caster_bearing_od = 28; caster_bearing_t = 8; caster_bearing_gap = 20;
-caster_trail = 20;               // pivot axis ahead of the foot's axle midpoint
+caster_bolt_m = 12; caster_bearing_od = 28; caster_bearing_t = 8; caster_bearing_gap = 18;   // bearing centre spacing 18 (legs.scad lg_bearing_cc)
+caster_trail = 35;               // pivot axis ahead of the foot's axle midpoint (rear wheels further back for tip-back margin)
 caster_stop_deg = 60;            // swivel limit each way
 center_leg_section = [100.3, 71.7];                   // ankle ring size (X, Y)
 center_leg_flange = [140, 100, 8]; center_leg_bolt_m = 8; center_leg_bolts = [[-50, -32], [50, -32], [-50, 32], [50, 32]];

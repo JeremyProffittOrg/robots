@@ -1,0 +1,1240 @@
+{
+  "type": "CAD animation and simulated operation, not physical footage",
+  "seconds": 170,
+  "fps": 24,
+  "frames": 4080,
+  "resolution": [
+    1920,
+    1080
+  ],
+  "video_codec": "h264",
+  "audio_codec": "aac",
+  "printed_designs": 9,
+  "printed_instances": 12,
+  "overall_height_mm": 723.4,
+  "source_sha256": {
+    "stl/body_lower.stl": "5a8c650546aac6efff07b148673336b566d284aac536649307bd1c8f358e86ed",
+    "stl/body_upper.stl": "5dcdbe21aa3b45a993fa97cd7e9a8a31fb96f099fe57bb15a3b8983ef9e0645d",
+    "stl/dome.stl": "3e9f78192f089c09851ddda57372694860e48db1eaefa648d9b2ab6aff0857f5",
+    "stl/foot_center.stl": "4dd301c211f0195377392eb0e92d7c63efa33dfbf8c05585e9e66387acac57d1",
+    "stl/foot_outer.stl": "172e3c3653a7c69e4f8834aecdf8aa0e287a5757755106eded939cda2e905f75",
+    "stl/head_drive.stl": "1753da501c331f486908725ab931ad5f5c65bc14655866734426b8bdf433bf8a",
+    "stl/leg_center.stl": "eea75b9fe20d051c40ded9dc54d371ba466616c6d9a4854f092bc20b6d636914",
+    "stl/leg_lower.stl": "988e404c8b275d17f85e247d55a8aa0a41c8a8b0e6f180d0e81d1a1d2857e60b",
+    "stl/leg_upper.stl": "b09b795d23000666d6e552bd0e043ce82b50cd40146168a84273331390297f80",
+    "scripts/video_scene.js": "e68435ca6bc652ffd021d5f0b622cff2a2485d8615962c931cd17c465dc1ec7f",
+    "scripts/video_storyboard.json": "b799137d6a563f201642342ac6e865bc9e2d7eccc4a3e3009a98eac909ad0f0f"
+  },
+  "inputs_unchanged": true,
+  "video_sha256": "d57c776c0740bf5c663b2009554643d8590ff9ac4e41f0b2924f6d360a4cf563",
+  "video_bytes": 52963044,
+  "render_seconds": 161.84,
+  "renderer": "ANGLE (NVIDIA, NVIDIA Quadro M2000 (0x00001430) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+  "motion_keyframes": [
+    {
+      "time": -0.0,
+      "chapter": "title-card",
+      "simulation": true,
+      "printed_instances": [
+        "body_lower",
+        "body_upper",
+        "dome",
+        "foot_center",
+        "foot_outer_left",
+        "foot_outer_right",
+        "head_drive",
+        "leg_center",
+        "leg_lower_left",
+        "leg_lower_right",
+        "leg_upper_left",
+        "leg_upper_right"
+      ],
+      "drive": {
+        "action": "STOPPED",
+        "yaw_deg": 0,
+        "caster_deg": 0,
+        "right_mm": 0,
+        "left_mm": 0,
+        "centre_mm": 0,
+        "right_roll_rad": 0,
+        "left_roll_rad": 0,
+        "position_mm": [
+          0,
+          0
+        ]
+      },
+      "dome": {
+        "spin_deg": 0,
+        "spinning": false,
+        "nudge": false
+      },
+      "caster_demo": false,
+      "lights_on": false
+    },
+    {
+      "time": 4,
+      "chapter": "title-card",
+      "simulation": true,
+      "printed_instances": [
+        "body_lower",
+        "body_upper",
+        "dome",
+        "foot_center",
+        "foot_outer_left",
+        "foot_outer_right",
+        "head_drive",
+        "leg_center",
+        "leg_lower_left",
+        "leg_lower_right",
+        "leg_upper_left",
+        "leg_upper_right"
+      ],
+      "drive": {
+        "action": "STOPPED",
+        "yaw_deg": 0,
+        "caster_deg": 0,
+        "right_mm": 0,
+        "left_mm": 0,
+        "centre_mm": 0,
+        "right_roll_rad": 0,
+        "left_roll_rad": 0,
+        "position_mm": [
+          0,
+          0
+        ]
+      },
+      "dome": {
+        "spin_deg": 0,
+        "spinning": false,
+        "nudge": false
+      },
+      "caster_demo": false,
+      "lights_on": false
+    },
+    {
+      "time": 14,
+      "chapter": "feet",
+      "simulation": true,
+      "printed_instances": [
+        "foot_center",
+        "foot_outer_left",
+        "foot_outer_right"
+      ],
+      "drive": {
+        "action": "STOPPED",
+        "yaw_deg": 0,
+        "caster_deg": 0,
+        "right_mm": 0,
+        "left_mm": 0,
+        "centre_mm": 0,
+        "right_roll_rad": 0,
+        "left_roll_rad": 0,
+        "position_mm": [
+          0,
+          0
+        ]
+      },
+      "dome": {
+        "spin_deg": 0,
+        "spinning": false,
+        "nudge": false
+      },
+      "caster_demo": false,
+      "lights_on": false
+    },
+    {
+      "time": 20,
+      "chapter": "feet",
+      "simulation": true,
+      "printed_instances": [
+        "foot_center",
+        "foot_outer_left",
+        "foot_outer_right"
+      ],
+      "drive": {
+        "action": "STOPPED",
+        "yaw_deg": 0,
+        "caster_deg": 0,
+        "right_mm": 0,
+        "left_mm": 0,
+        "centre_mm": 0,
+        "right_roll_rad": 0,
+        "left_roll_rad": 0,
+        "position_mm": [
+          0,
+          0
+        ]
+      },
+      "dome": {
+        "spin_deg": 0,
+        "spinning": false,
+        "nudge": false
+      },
+      "caster_demo": false,
+      "lights_on": false
+    },
+    {
+      "time": 28,
+      "chapter": "outer-legs",
+      "simulation": true,
+      "printed_instances": [
+        "foot_center",
+        "foot_outer_left",
+        "foot_outer_right",
+        "leg_lower_left",
+        "leg_lower_right"
+      ],
+      "drive": {
+        "action": "STOPPED",
+        "yaw_deg": 0,
+        "caster_deg": 0,
+        "right_mm": 0,
+        "left_mm": 0,
+        "centre_mm": 0,
+        "right_roll_rad": 0,
+        "left_roll_rad": 0,
+        "position_mm": [
+          0,
+          0
+        ]
+      },
+      "dome": {
+        "spin_deg": 0,
+        "spinning": false,
+        "nudge": false
+      },
+      "caster_demo": false,
+      "lights_on": false
+    },
+    {
+      "time": 36,
+      "chapter": "outer-legs",
+      "simulation": true,
+      "printed_instances": [
+        "foot_center",
+        "foot_outer_left",
+        "foot_outer_right",
+        "leg_lower_left",
+        "leg_lower_right",
+        "leg_upper_left",
+        "leg_upper_right"
+      ],
+      "drive": {
+        "action": "STOPPED",
+        "yaw_deg": 0,
+        "caster_deg": 0,
+        "right_mm": 0,
+        "left_mm": 0,
+        "centre_mm": 0,
+        "right_roll_rad": 0,
+        "left_roll_rad": 0,
+        "position_mm": [
+          0,
+          0
+        ]
+      },
+      "dome": {
+        "spin_deg": 0,
+        "spinning": false,
+        "nudge": false
+      },
+      "caster_demo": false,
+      "lights_on": false
+    },
+    {
+      "time": 44,
+      "chapter": "centre-leg-caster",
+      "simulation": true,
+      "printed_instances": [
+        "foot_center",
+        "foot_outer_left",
+        "foot_outer_right",
+        "leg_lower_left",
+        "leg_lower_right",
+        "leg_upper_left",
+        "leg_upper_right"
+      ],
+      "drive": {
+        "action": "STOPPED",
+        "yaw_deg": 0,
+        "caster_deg": 0,
+        "right_mm": 0,
+        "left_mm": 0,
+        "centre_mm": 0,
+        "right_roll_rad": 0,
+        "left_roll_rad": 0,
+        "position_mm": [
+          0,
+          0
+        ]
+      },
+      "dome": {
+        "spin_deg": 0,
+        "spinning": false,
+        "nudge": false
+      },
+      "caster_demo": false,
+      "lights_on": false
+    },
+    {
+      "time": 50,
+      "chapter": "centre-leg-caster",
+      "simulation": true,
+      "printed_instances": [
+        "foot_center",
+        "foot_outer_left",
+        "foot_outer_right",
+        "leg_center",
+        "leg_lower_left",
+        "leg_lower_right",
+        "leg_upper_left",
+        "leg_upper_right"
+      ],
+      "drive": {
+        "action": "STOPPED",
+        "yaw_deg": 0,
+        "caster_deg": 0,
+        "right_mm": 0,
+        "left_mm": 0,
+        "centre_mm": 0,
+        "right_roll_rad": 0,
+        "left_roll_rad": 0,
+        "position_mm": [
+          0,
+          0
+        ]
+      },
+      "dome": {
+        "spin_deg": 0,
+        "spinning": false,
+        "nudge": false
+      },
+      "caster_demo": false,
+      "lights_on": false
+    },
+    {
+      "time": 53.5,
+      "chapter": "centre-leg-caster",
+      "simulation": true,
+      "printed_instances": [
+        "foot_center",
+        "foot_outer_left",
+        "foot_outer_right",
+        "leg_center",
+        "leg_lower_left",
+        "leg_lower_right",
+        "leg_upper_left",
+        "leg_upper_right"
+      ],
+      "drive": {
+        "action": "STOPPED",
+        "yaw_deg": 0,
+        "caster_deg": 0,
+        "right_mm": 0,
+        "left_mm": 0,
+        "centre_mm": 0,
+        "right_roll_rad": 0,
+        "left_roll_rad": 0,
+        "position_mm": [
+          0,
+          0
+        ]
+      },
+      "dome": {
+        "spin_deg": 0,
+        "spinning": false,
+        "nudge": false
+      },
+      "caster_demo": true,
+      "lights_on": false
+    },
+    {
+      "time": 58,
+      "chapter": "body-lower",
+      "simulation": true,
+      "printed_instances": [
+        "body_lower",
+        "foot_center",
+        "foot_outer_left",
+        "foot_outer_right",
+        "leg_center",
+        "leg_lower_left",
+        "leg_lower_right",
+        "leg_upper_left",
+        "leg_upper_right"
+      ],
+      "drive": {
+        "action": "STOPPED",
+        "yaw_deg": 0,
+        "caster_deg": 0,
+        "right_mm": 0,
+        "left_mm": 0,
+        "centre_mm": 0,
+        "right_roll_rad": 0,
+        "left_roll_rad": 0,
+        "position_mm": [
+          0,
+          0
+        ]
+      },
+      "dome": {
+        "spin_deg": 0,
+        "spinning": false,
+        "nudge": false
+      },
+      "caster_demo": false,
+      "lights_on": false
+    },
+    {
+      "time": 66,
+      "chapter": "body-lower",
+      "simulation": true,
+      "printed_instances": [
+        "body_lower",
+        "foot_center",
+        "foot_outer_left",
+        "foot_outer_right",
+        "leg_center",
+        "leg_lower_left",
+        "leg_lower_right",
+        "leg_upper_left",
+        "leg_upper_right"
+      ],
+      "drive": {
+        "action": "STOPPED",
+        "yaw_deg": 0,
+        "caster_deg": 0,
+        "right_mm": 0,
+        "left_mm": 0,
+        "centre_mm": 0,
+        "right_roll_rad": 0,
+        "left_roll_rad": 0,
+        "position_mm": [
+          0,
+          0
+        ]
+      },
+      "dome": {
+        "spin_deg": 0,
+        "spinning": false,
+        "nudge": false
+      },
+      "caster_demo": false,
+      "lights_on": false
+    },
+    {
+      "time": 72,
+      "chapter": "body-upper",
+      "simulation": true,
+      "printed_instances": [
+        "body_lower",
+        "body_upper",
+        "foot_center",
+        "foot_outer_left",
+        "foot_outer_right",
+        "leg_center",
+        "leg_lower_left",
+        "leg_lower_right",
+        "leg_upper_left",
+        "leg_upper_right"
+      ],
+      "drive": {
+        "action": "STOPPED",
+        "yaw_deg": 0,
+        "caster_deg": 0,
+        "right_mm": 0,
+        "left_mm": 0,
+        "centre_mm": 0,
+        "right_roll_rad": 0,
+        "left_roll_rad": 0,
+        "position_mm": [
+          0,
+          0
+        ]
+      },
+      "dome": {
+        "spin_deg": 0,
+        "spinning": false,
+        "nudge": false
+      },
+      "caster_demo": false,
+      "lights_on": false
+    },
+    {
+      "time": 79,
+      "chapter": "body-upper",
+      "simulation": true,
+      "printed_instances": [
+        "body_lower",
+        "body_upper",
+        "foot_center",
+        "foot_outer_left",
+        "foot_outer_right",
+        "leg_center",
+        "leg_lower_left",
+        "leg_lower_right",
+        "leg_upper_left",
+        "leg_upper_right"
+      ],
+      "drive": {
+        "action": "STOPPED",
+        "yaw_deg": 0,
+        "caster_deg": 0,
+        "right_mm": 0,
+        "left_mm": 0,
+        "centre_mm": 0,
+        "right_roll_rad": 0,
+        "left_roll_rad": 0,
+        "position_mm": [
+          0,
+          0
+        ]
+      },
+      "dome": {
+        "spin_deg": 0,
+        "spinning": false,
+        "nudge": false
+      },
+      "caster_demo": false,
+      "lights_on": false
+    },
+    {
+      "time": 86,
+      "chapter": "electronics-deck",
+      "simulation": true,
+      "printed_instances": [
+        "body_lower",
+        "body_upper",
+        "foot_center",
+        "foot_outer_left",
+        "foot_outer_right",
+        "leg_center",
+        "leg_lower_left",
+        "leg_lower_right",
+        "leg_upper_left",
+        "leg_upper_right"
+      ],
+      "drive": {
+        "action": "STOPPED",
+        "yaw_deg": 0,
+        "caster_deg": 0,
+        "right_mm": 0,
+        "left_mm": 0,
+        "centre_mm": 0,
+        "right_roll_rad": 0,
+        "left_roll_rad": 0,
+        "position_mm": [
+          0,
+          0
+        ]
+      },
+      "dome": {
+        "spin_deg": 0,
+        "spinning": false,
+        "nudge": false
+      },
+      "caster_demo": false,
+      "lights_on": false
+    },
+    {
+      "time": 92,
+      "chapter": "electronics-deck",
+      "simulation": true,
+      "printed_instances": [
+        "body_lower",
+        "body_upper",
+        "foot_center",
+        "foot_outer_left",
+        "foot_outer_right",
+        "leg_center",
+        "leg_lower_left",
+        "leg_lower_right",
+        "leg_upper_left",
+        "leg_upper_right"
+      ],
+      "drive": {
+        "action": "STOPPED",
+        "yaw_deg": 0,
+        "caster_deg": 0,
+        "right_mm": 0,
+        "left_mm": 0,
+        "centre_mm": 0,
+        "right_roll_rad": 0,
+        "left_roll_rad": 0,
+        "position_mm": [
+          0,
+          0
+        ]
+      },
+      "dome": {
+        "spin_deg": 0,
+        "spinning": false,
+        "nudge": false
+      },
+      "caster_demo": false,
+      "lights_on": false
+    },
+    {
+      "time": 99,
+      "chapter": "rings-joined",
+      "simulation": true,
+      "printed_instances": [
+        "body_lower",
+        "body_upper",
+        "foot_center",
+        "foot_outer_left",
+        "foot_outer_right",
+        "leg_center",
+        "leg_lower_left",
+        "leg_lower_right",
+        "leg_upper_left",
+        "leg_upper_right"
+      ],
+      "drive": {
+        "action": "STOPPED",
+        "yaw_deg": 0,
+        "caster_deg": 0,
+        "right_mm": 0,
+        "left_mm": 0,
+        "centre_mm": 0,
+        "right_roll_rad": 0,
+        "left_roll_rad": 0,
+        "position_mm": [
+          0,
+          0
+        ]
+      },
+      "dome": {
+        "spin_deg": 0,
+        "spinning": false,
+        "nudge": false
+      },
+      "caster_demo": false,
+      "lights_on": false
+    },
+    {
+      "time": 104,
+      "chapter": "rings-joined",
+      "simulation": true,
+      "printed_instances": [
+        "body_lower",
+        "body_upper",
+        "foot_center",
+        "foot_outer_left",
+        "foot_outer_right",
+        "leg_center",
+        "leg_lower_left",
+        "leg_lower_right",
+        "leg_upper_left",
+        "leg_upper_right"
+      ],
+      "drive": {
+        "action": "STOPPED",
+        "yaw_deg": 0,
+        "caster_deg": 0,
+        "right_mm": 0,
+        "left_mm": 0,
+        "centre_mm": 0,
+        "right_roll_rad": 0,
+        "left_roll_rad": 0,
+        "position_mm": [
+          0,
+          0
+        ]
+      },
+      "dome": {
+        "spin_deg": 0,
+        "spinning": false,
+        "nudge": false
+      },
+      "caster_demo": false,
+      "lights_on": false
+    },
+    {
+      "time": 110,
+      "chapter": "head-drive",
+      "simulation": true,
+      "printed_instances": [
+        "body_lower",
+        "body_upper",
+        "foot_center",
+        "foot_outer_left",
+        "foot_outer_right",
+        "head_drive",
+        "leg_center",
+        "leg_lower_left",
+        "leg_lower_right",
+        "leg_upper_left",
+        "leg_upper_right"
+      ],
+      "drive": {
+        "action": "STOPPED",
+        "yaw_deg": 0,
+        "caster_deg": 0,
+        "right_mm": 0,
+        "left_mm": 0,
+        "centre_mm": 0,
+        "right_roll_rad": 0,
+        "left_roll_rad": 0,
+        "position_mm": [
+          0,
+          0
+        ]
+      },
+      "dome": {
+        "spin_deg": 0,
+        "spinning": false,
+        "nudge": false
+      },
+      "caster_demo": false,
+      "lights_on": false
+    },
+    {
+      "time": 116,
+      "chapter": "head-drive",
+      "simulation": true,
+      "printed_instances": [
+        "body_lower",
+        "body_upper",
+        "foot_center",
+        "foot_outer_left",
+        "foot_outer_right",
+        "head_drive",
+        "leg_center",
+        "leg_lower_left",
+        "leg_lower_right",
+        "leg_upper_left",
+        "leg_upper_right"
+      ],
+      "drive": {
+        "action": "STOPPED",
+        "yaw_deg": 0,
+        "caster_deg": 0,
+        "right_mm": 0,
+        "left_mm": 0,
+        "centre_mm": 0,
+        "right_roll_rad": 0,
+        "left_roll_rad": 0,
+        "position_mm": [
+          0,
+          0
+        ]
+      },
+      "dome": {
+        "spin_deg": 0,
+        "spinning": false,
+        "nudge": false
+      },
+      "caster_demo": false,
+      "lights_on": false
+    },
+    {
+      "time": 120,
+      "chapter": "dome-electronics",
+      "simulation": true,
+      "printed_instances": [
+        "body_lower",
+        "body_upper",
+        "dome",
+        "foot_center",
+        "foot_outer_left",
+        "foot_outer_right",
+        "head_drive",
+        "leg_center",
+        "leg_lower_left",
+        "leg_lower_right",
+        "leg_upper_left",
+        "leg_upper_right"
+      ],
+      "drive": {
+        "action": "STOPPED",
+        "yaw_deg": 0,
+        "caster_deg": 0,
+        "right_mm": 0,
+        "left_mm": 0,
+        "centre_mm": 0,
+        "right_roll_rad": 0,
+        "left_roll_rad": 0,
+        "position_mm": [
+          0,
+          0
+        ]
+      },
+      "dome": {
+        "spin_deg": 0,
+        "spinning": false,
+        "nudge": false
+      },
+      "caster_demo": false,
+      "lights_on": false
+    },
+    {
+      "time": 126,
+      "chapter": "dome-electronics",
+      "simulation": true,
+      "printed_instances": [
+        "body_lower",
+        "body_upper",
+        "dome",
+        "foot_center",
+        "foot_outer_left",
+        "foot_outer_right",
+        "head_drive",
+        "leg_center",
+        "leg_lower_left",
+        "leg_lower_right",
+        "leg_upper_left",
+        "leg_upper_right"
+      ],
+      "drive": {
+        "action": "STOPPED",
+        "yaw_deg": 0,
+        "caster_deg": 0,
+        "right_mm": 0,
+        "left_mm": 0,
+        "centre_mm": 0,
+        "right_roll_rad": 0,
+        "left_roll_rad": 0,
+        "position_mm": [
+          0,
+          0
+        ]
+      },
+      "dome": {
+        "spin_deg": 0,
+        "spinning": false,
+        "nudge": false
+      },
+      "caster_demo": false,
+      "lights_on": false
+    },
+    {
+      "time": 133,
+      "chapter": "dome-seated",
+      "simulation": true,
+      "printed_instances": [
+        "body_lower",
+        "body_upper",
+        "dome",
+        "foot_center",
+        "foot_outer_left",
+        "foot_outer_right",
+        "head_drive",
+        "leg_center",
+        "leg_lower_left",
+        "leg_lower_right",
+        "leg_upper_left",
+        "leg_upper_right"
+      ],
+      "drive": {
+        "action": "STOPPED",
+        "yaw_deg": 0,
+        "caster_deg": 0,
+        "right_mm": 0,
+        "left_mm": 0,
+        "centre_mm": 0,
+        "right_roll_rad": 0,
+        "left_roll_rad": 0,
+        "position_mm": [
+          0,
+          0
+        ]
+      },
+      "dome": {
+        "spin_deg": 0,
+        "spinning": false,
+        "nudge": false
+      },
+      "caster_demo": false,
+      "lights_on": false
+    },
+    {
+      "time": 139,
+      "chapter": "dome-seated",
+      "simulation": true,
+      "printed_instances": [
+        "body_lower",
+        "body_upper",
+        "dome",
+        "foot_center",
+        "foot_outer_left",
+        "foot_outer_right",
+        "head_drive",
+        "leg_center",
+        "leg_lower_left",
+        "leg_lower_right",
+        "leg_upper_left",
+        "leg_upper_right"
+      ],
+      "drive": {
+        "action": "STOPPED",
+        "yaw_deg": 0,
+        "caster_deg": 0,
+        "right_mm": 0,
+        "left_mm": 0,
+        "centre_mm": 0,
+        "right_roll_rad": 0,
+        "left_roll_rad": 0,
+        "position_mm": [
+          0,
+          0
+        ]
+      },
+      "dome": {
+        "spin_deg": 0,
+        "spinning": false,
+        "nudge": false
+      },
+      "caster_demo": false,
+      "lights_on": false
+    },
+    {
+      "time": 145,
+      "chapter": "power-on",
+      "simulation": true,
+      "printed_instances": [
+        "body_lower",
+        "body_upper",
+        "dome",
+        "foot_center",
+        "foot_outer_left",
+        "foot_outer_right",
+        "head_drive",
+        "leg_center",
+        "leg_lower_left",
+        "leg_lower_right",
+        "leg_upper_left",
+        "leg_upper_right"
+      ],
+      "drive": {
+        "action": "STOPPED",
+        "yaw_deg": 0,
+        "caster_deg": 0,
+        "right_mm": 0,
+        "left_mm": 0,
+        "centre_mm": 0,
+        "right_roll_rad": 0,
+        "left_roll_rad": 0,
+        "position_mm": [
+          0,
+          0
+        ]
+      },
+      "dome": {
+        "spin_deg": 315,
+        "spinning": true,
+        "nudge": false
+      },
+      "caster_demo": false,
+      "lights_on": true
+    },
+    {
+      "time": 152,
+      "chapter": "drive-demo",
+      "simulation": true,
+      "printed_instances": [
+        "body_lower",
+        "body_upper",
+        "dome",
+        "foot_center",
+        "foot_outer_left",
+        "foot_outer_right",
+        "head_drive",
+        "leg_center",
+        "leg_lower_left",
+        "leg_lower_right",
+        "leg_upper_left",
+        "leg_upper_right"
+      ],
+      "drive": {
+        "action": "FORWARD",
+        "yaw_deg": 0,
+        "caster_deg": 0,
+        "right_mm": 259.2,
+        "left_mm": 259.2,
+        "centre_mm": 259.2,
+        "right_roll_rad": 8.229,
+        "left_roll_rad": 8.229,
+        "position_mm": [
+          0,
+          259.2
+        ]
+      },
+      "dome": {
+        "spin_deg": 1197,
+        "spinning": true,
+        "nudge": false
+      },
+      "caster_demo": false,
+      "lights_on": true
+    },
+    {
+      "time": 158,
+      "chapter": "drive-demo",
+      "simulation": true,
+      "printed_instances": [
+        "body_lower",
+        "body_upper",
+        "dome",
+        "foot_center",
+        "foot_outer_left",
+        "foot_outer_right",
+        "head_drive",
+        "leg_center",
+        "leg_lower_left",
+        "leg_lower_right",
+        "leg_upper_left",
+        "leg_upper_right"
+      ],
+      "drive": {
+        "action": "LEFT ARC",
+        "yaw_deg": 73.52,
+        "caster_deg": -7.2,
+        "right_mm": 1172.1,
+        "left_mm": 705.8,
+        "centre_mm": 943.4,
+        "right_roll_rad": 37.21,
+        "left_roll_rad": 22.406,
+        "position_mm": [
+          -189.5,
+          886
+        ]
+      },
+      "dome": {
+        "spin_deg": 1953,
+        "spinning": true,
+        "nudge": false
+      },
+      "caster_demo": false,
+      "lights_on": true
+    },
+    {
+      "time": 160,
+      "chapter": "drive-demo",
+      "simulation": true,
+      "printed_instances": [
+        "body_lower",
+        "body_upper",
+        "dome",
+        "foot_center",
+        "foot_outer_left",
+        "foot_outer_right",
+        "head_drive",
+        "leg_center",
+        "leg_lower_left",
+        "leg_lower_right",
+        "leg_upper_left",
+        "leg_upper_right"
+      ],
+      "drive": {
+        "action": "REVERSE",
+        "yaw_deg": 75,
+        "caster_deg": -3.67,
+        "right_mm": 1148.7,
+        "left_mm": 673,
+        "centre_mm": 915.4,
+        "right_roll_rad": 36.468,
+        "left_roll_rad": 21.367,
+        "position_mm": [
+          -161.5,
+          881.7
+        ]
+      },
+      "dome": {
+        "spin_deg": 2205,
+        "spinning": true,
+        "nudge": false
+      },
+      "caster_demo": false,
+      "lights_on": true
+    },
+    {
+      "time": 162,
+      "chapter": "drive-demo",
+      "simulation": true,
+      "printed_instances": [
+        "body_lower",
+        "body_upper",
+        "dome",
+        "foot_center",
+        "foot_outer_left",
+        "foot_outer_right",
+        "head_drive",
+        "leg_center",
+        "leg_lower_left",
+        "leg_lower_right",
+        "leg_upper_left",
+        "leg_upper_right"
+      ],
+      "drive": {
+        "action": "STOPPED",
+        "yaw_deg": 75,
+        "caster_deg": 0,
+        "right_mm": 1037.6,
+        "left_mm": 561.9,
+        "centre_mm": 804.3,
+        "right_roll_rad": 32.94,
+        "left_roll_rad": 17.839,
+        "position_mm": [
+          -54.2,
+          853
+        ]
+      },
+      "dome": {
+        "spin_deg": 2457,
+        "spinning": true,
+        "nudge": false
+      },
+      "caster_demo": false,
+      "lights_on": true
+    },
+    {
+      "time": 166,
+      "chapter": "closing-card",
+      "simulation": true,
+      "printed_instances": [
+        "body_lower",
+        "body_upper",
+        "dome",
+        "foot_center",
+        "foot_outer_left",
+        "foot_outer_right",
+        "head_drive",
+        "leg_center",
+        "leg_lower_left",
+        "leg_lower_right",
+        "leg_upper_left",
+        "leg_upper_right"
+      ],
+      "drive": {
+        "action": "STOPPED",
+        "yaw_deg": 75,
+        "caster_deg": 0,
+        "right_mm": 1037.6,
+        "left_mm": 561.9,
+        "centre_mm": 804.3,
+        "right_roll_rad": 32.94,
+        "left_roll_rad": 17.839,
+        "position_mm": [
+          -54.2,
+          853
+        ]
+      },
+      "dome": {
+        "spin_deg": 2482.2,
+        "spinning": false,
+        "nudge": false
+      },
+      "caster_demo": false,
+      "lights_on": true
+    },
+    {
+      "time": 169,
+      "chapter": "closing-card",
+      "simulation": true,
+      "printed_instances": [
+        "body_lower",
+        "body_upper",
+        "dome",
+        "foot_center",
+        "foot_outer_left",
+        "foot_outer_right",
+        "head_drive",
+        "leg_center",
+        "leg_lower_left",
+        "leg_lower_right",
+        "leg_upper_left",
+        "leg_upper_right"
+      ],
+      "drive": {
+        "action": "STOPPED",
+        "yaw_deg": 75,
+        "caster_deg": 0,
+        "right_mm": 1037.6,
+        "left_mm": 561.9,
+        "centre_mm": 804.3,
+        "right_roll_rad": 32.94,
+        "left_roll_rad": 17.839,
+        "position_mm": [
+          -54.2,
+          853
+        ]
+      },
+      "dome": {
+        "spin_deg": 2482.2,
+        "spinning": false,
+        "nudge": false
+      },
+      "caster_demo": false,
+      "lights_on": true
+    }
+  ],
+  "audio_source": {
+    "narration": "Windows System.Speech, voice chosen from video_storyboard.json narration_voice_candidates",
+    "robot_sounds": [
+      "acknowledge.wav",
+      "chirp-double.wav",
+      "happy.wav",
+      "power-on.wav",
+      "scan.wav",
+      "whistle-down.wav",
+      "whistle-up.wav"
+    ],
+    "sound_directory": "firmware/pi/sounds",
+    "cues": [
+      {
+        "start": 15.5,
+        "file": "chirp-double.wav",
+        "text": "Wheels seated."
+      },
+      {
+        "start": 34.0,
+        "file": "acknowledge.wav",
+        "text": "Leg splice complete."
+      },
+      {
+        "start": 91.0,
+        "file": "scan.wav",
+        "text": "Electronics deck populated."
+      },
+      {
+        "start": 141.05,
+        "file": "power-on.wav",
+        "text": "Power on."
+      },
+      {
+        "start": 155.4,
+        "file": "whistle-up.wav",
+        "text": "Left arc."
+      },
+      {
+        "start": 158.8,
+        "file": "chirp-double.wav",
+        "text": "Stop."
+      },
+      {
+        "start": 159.4,
+        "file": "whistle-down.wav",
+        "text": "Reverse."
+      },
+      {
+        "start": 162.4,
+        "file": "happy.wav",
+        "text": "Dome nudge."
+      }
+    ]
+  },
+  "wheel_roll_check": "12 wheels; the local spin sign of each was measured from its own mesh so the floor contact point travels backwards for forward travel (mirrored left-hand foot matrices flip both the axis and the handedness)",
+  "mirrored_pieces": [
+    "foot_outer_left",
+    "leg_lower_left",
+    "leg_upper_left"
+  ],
+  "verification": "ffprobe: 1920x1080, h264+aac, 4080 frames, 24/1, 170.000 s; full FFmpeg decode passed; every source hash unchanged during the render; final frame shows all printed pieces seated",
+  "limitations": [
+    "Purchased hardware (motors, wheels, battery, boards, bearings, lazy susan, slip ring) is drawn as a nominal envelope.",
+    "Assembly motions, speeds and light patterns are illustrative, not measured.",
+    "No physical print, fit, strength, thermal, battery or driving test is depicted.",
+    "Wiring is not routed in the animation; follow electronics/wiring.csv and the manual."
+  ]
+}

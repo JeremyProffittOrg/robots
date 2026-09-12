@@ -1,0 +1,40 @@
+<!-- Status email template. Subject line format:
+       <project> run status #<n> — <headline outcome, concrete>
+     e.g. "go-caps run status #2 — 13/15 lanes reported, all four W14 lanes done,
+           verification caught 2 real defects"
+     The subject must carry the outcome. Never "progress update" or "status report".
+
+     High contrast is not optional. Every element that sets a text colour also sets its own
+     background-color: a dark-mode mail client repaints an unset background and keeps the inline
+     colour, which turns dark text into dark-on-dark. Body text holds at least 7:1. No block
+     carries its meaning by colour alone — each one states its word as well. -->
+<div style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;font-size:14px;line-height:1.55;color:#0b0f19;background-color:#ffffff;max-width:760px;margin:0 auto;padding:12px">
+
+  <div style="border-left:4px solid #1d4ed8;background-color:#dbeafe;color:#0b0f19;padding:12px 16px;border-radius:0 6px 6px 0;margin-bottom:20px">
+    <div style="font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#1e3a8a;background-color:#dbeafe">Outcome</div>
+    <div style="margin-top:4px;font-size:15px;color:#0b0f19;background-color:#dbeafe">dry run</div>
+  </div>
+
+  <h2 style="font-size:13px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#1f2937;background-color:#ffffff;border-bottom:2px solid #9ca3af;padding-bottom:5px;margin:22px 0 10px">Landed</h2>
+  <table style="width:100%;border-collapse:collapse;font-size:13px;background-color:#ffffff;color:#0b0f19">
+    <tr><td style="padding:4px 10px 4px 0;font-family:ui-monospace,SFMono-Regular,Consolas,monospace;color:#4b5563;background-color:#ffffff;white-space:nowrap;vertical-align:top">44bf7780bd28</td><td style="padding:4px 0;color:#0b0f19;background-color:#ffffff">doorbot: freeze revision A mechanism and add the analysis that has to pass</td></tr>
+  </table>
+
+  <h2 style="font-size:13px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#1f2937;background-color:#ffffff;border-bottom:2px solid #9ca3af;padding-bottom:5px;margin:22px 0 10px">Evidence</h2>
+  <pre style="background-color:#0f172a;color:#e2e8f0;padding:12px 14px;border-radius:6px;font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-size:12px;line-height:1.5;overflow-x:auto;margin:0">python scripts/verify.py
+PASS images / firmware / audio / bom / wiring
+</pre>
+
+  <h2 style="font-size:13px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#1f2937;background-color:#ffffff;border-bottom:2px solid #9ca3af;padding-bottom:5px;margin:22px 0 10px">In flight</h2>
+  <ul style="margin:0;padding-left:20px;color:#0b0f19;background-color:#ffffff">
+    <li style="margin-bottom:6px;color:#0b0f19;background-color:#ffffff">Nothing; the package is complete.</li>
+  </ul>
+
+  
+  </div>
+
+  <h2 style="font-size:13px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#1f2937;background-color:#ffffff;border-bottom:2px solid #9ca3af;padding-bottom:5px;margin:22px 0 10px">Next</h2>
+  <p style="margin:0;color:#0b0f19;background-color:#ffffff">Physical build: print the fit coupons first, then the feet.<p style="margin:0 0 12px;color:#0b0f19;background-color:#ffffff">Video (S3, private, link valid 7 days): <a href="(dry run: no upload)" style="color:#1d4ed8;background-color:#ffffff">r2d2-assembly-and-operation.mp4</a> (53.0 MB, SHA-256 d57c776c0740bf5c...)</p><p style="margin:0 0 12px;color:#0b0f19;background-color:#ffffff">Assembly manual PDF: attached, and also on S3: <a href="(dry run: no upload)" style="color:#1d4ed8;background-color:#ffffff">r2d2-assembly-manual.pdf</a> (14.2 MB, SHA-256 a4436b34a3715a5e...)</p></p>
+
+  <p style="margin:22px 0 0;padding-top:10px;border-top:2px solid #9ca3af;font-size:12px;color:#4b5563;background-color:#ffffff">JeremyProffittOrg/robots (fable-r2d2) · main @ 44bf7780bd28 · 2026-09-12 20:28 UTC</p>
+</div>

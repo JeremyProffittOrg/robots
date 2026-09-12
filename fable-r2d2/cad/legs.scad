@@ -39,7 +39,8 @@
 //   from the ankle end, threaded through the captive nut, and the bottom nut + washer tightened
 //   with a 13 mm socket in a 22 mm counterbore in the ankle underside (ceiling lg_rod_bottom_z).
 //   NOTE leg_rod_bottom_z (-370) lies inside the outer foot's ankle block sweep at y = +/-20, so
-//   the rods end at about -346 (M8 x 400 threaded rod); reported to the integrator.
+//   the rods end at about -346. The bore run is 391 mm (leg_rod_top_z 55 down to
+//   lg_rod_bottom_z -336): CUT EACH M8 ROD TO 390 mm from M8 x 400 stock, two per leg.
 //  Split at leg_split_z: comb joint. leg_lower carries a centre tongue 2*lg_finger_hw wide,
 //   full thickness, leg_splice_len tall; leg_upper has the matching slot between two fingers
 //   that carry the rod bores. Four M4 x 80 bolts through the whole strut width (Y) at
@@ -55,37 +56,72 @@
 //  Tongue: leg_tongue_t x leg_tongue_w plate centred on x = leg_strut_t/2, from inside the
 //   ankle down to -leg_len - lg_pivot_up - leg_tongue_depth (36.3 below the pivot, the slot
 //   floor feet.scad expects), top corners cut back 3:1 above the block top and the front edge
-//   cut back 11..30 below the pivot so the 18 deg swing clears the slot ends; clearance_d(ankle_bolt_m) pivot bore at z = -leg_len and lock bore
-//   lg_lock_drop = 25 below it (feet.scad ft_lock_drop; params ankle_bolt_spacing = 50 is NOT
-//   what the foot drills - reported).
+//   cut back 11..30 below the pivot so the 18 deg swing clears the slot ends.
+//   Ankle bores (RESOLVED against feet.scad, which is the reference), all
+//   clearance_d(ankle_bolt_m) = 9.0 mm along X through the tongue:
+//    - pivot bore at (y 0, z -leg_len); it lands on the foot's pivot bore, which sits at
+//      z = foot_outer_h + ft_pivot_up = 93.5 in the foot frame. Both are 105.5 mm above the
+//      floor in the assembly frame (see the two numbers echoed by scripts/check_ankle tests).
+//    - lock hole A at (y +lg_lock_r, z -leg_len) for the two-leg stance;
+//    - lock hole B at (y +lg_lock_r*cos(leg_lean), z -leg_len - lg_lock_r*sin(leg_lean)) =
+//      (+38.04, -12.36) from the pivot, for the 18 deg three-leg lean.
+//   Both lie on the lg_lock_r = ankle_bolt_spacing = 40 mm arc about the pivot, so each in turn
+//   lines up with the foot's single lock bore at (Y +40, pivot plane) (feet.scad ft_lock_r).
+//   The old single bore 25 mm BELOW the pivot (lg_lock_drop) is gone.
+//   Chord A-B = 2*40*sin(9) = 12.51 mm, so the web between the two 9 mm bores is 3.51 mm; webs
+//   to the tongue front edge are 5.5 mm at A and 6.9 mm at B, so the plate needs no widening.
+//   The tongue (half width 50, 36.3 deep below the pivot) stays inside the foot's
+//   ft_tongue_sweep (half width 51, 38.8 deep) and inside the straight slot (ft_slot_hl 52.2,
+//   reached at 51.2 by the front top corner) at both 0 and 18 deg.
 //  Wires: 9 mm bore up the strut at (leg_strut_t/2, 0) from the ankle to z = -75, exiting the
 //   inboard face at (0, 0, -75) (outside the shoulder pad); entry from the ankle underside at
 //   (35, -38) above the outer foot's wire hole.
 //
 // FRAME (centre leg, native = leg_center_native()): Z up, origin on the caster axis at the
-//  centre-foot top plane. The body skirt-bottom plane passes lg_center_plane_z (65.6) above
-//  the origin, tilted body_tilt about X exactly as at_body() tilts it (front edge higher).
+//  centre-foot top plane. The caster axis sits at body-frame y = center_leg_y_in_body (-45),
+//  i.e. 45 mm BEHIND the body axis on the skirt floor, so the floor plane at the axis is
+//  -center_leg_y_in_body*sin(body_tilt) = 13.9 mm higher than the skirt-bottom centre and this
+//  leg is 13.9 mm taller than before. The body skirt-bottom plane passes lg_center_plane_z
+//  (79.5) above the origin, tilted body_tilt about X exactly as at_body() tilts it (front
+//  edge higher). y in THIS frame is measured from the leg axis, so the flange plane stays
+//  z = lg_center_plane_z - y*tan(body_tilt).
 //  The flange center_leg_flange is built in that tilted frame with its top face on the plane
 //  and four through_hole(center_leg_bolt_m) at center_leg_bolts (heads below in 19 mm socket
 //  notches cut through the collar corners; nuts inside the body). Collar center_leg_section x 14 under the flange,
 //  column 83.3 x 64 (club centre-ankle plate width) down to z = 26, 1 mm above the foot's
 //  stem block. Bearings: two caster_bearing_od x caster_bearing_t seats on the caster_bolt_m
 //  axis, lower one open to the bottom face (z 26..34.2), upper one open to the 28 mm head
-//  counterbore, centres lg_bearing_cc = 18 apart (12 x 28 x 8 = 6001-2RS; 9.8 mm spacer tube
-//  between the inner races). NOTE caster_bearing_gap (20) cannot fit: stem block 25 + 8 + 20 +
-//  8 + washer + head = 72 > 65.6 - 10.4 tan(18) = 62.2 available under the tilted plane at the
-//  head's rear edge. M12 x 70 hex bolt comes down from the leg (head in the counterbore,
+//  counterbore, centres lg_bearing_cc = caster_bearing_gap = 18 apart (12 x 28 x 8 = 6001-2RS;
+//  9.8 mm spacer tube between the inner races). params.scad now carries 18; the earlier 20 did
+//  not fit: at the old plane height 65.6 the head's rear edge had only 65.6 - 10.4 tan(18) =
+//  62.2 mm under the plane against a 72 mm stack. At 79.5 that clearance is 76.1 mm, so the
+//  stack fits with room; an assert() below still holds the two equal.
+//  M12 x 70 hex bolt comes down from the leg (head in the counterbore,
 //  tightened from above BEFORE the body is fitted; nut in the foot's slot).
-//  Swivel stop: arc groove in the bottom face, pin-centre radius lg_stop_r = 22, +/-
-//  caster_stop_deg about +Y, 7.6 wide, 8 deep, for a 6 mm x 8 pin ON THE STEM BLOCK TOP at
-//  (0, caster_trail + 22) in the foot frame. NOTE feet.scad currently puts the pin at radius
-//  35 on the top plane (z 0..8): no leg feature can reach it because the stem block corners
-//  sweep radius 39 - reported to the feet owner.
-//  Wires: arc slot r 16.5..22.5 from 168 to 340 deg (around -Y) in the bottom face, joined to a
-//  12 x 12.5 vertical channel at y -29.5..-17 that exits the flange top as a 12 x 13 opening
-//  centred near body-frame (0, -22); feet.scad's wire hole at (-18.5, caster_trail) is inside
-//  the slot only near zero swivel - it should move to (0, caster_trail - 18.5). The body skirt
-//  floor needs a matching wire hole (14 x 20 slot or 20 mm round) at body-frame (0, -22).
+//  Swivel stop (RESOLVED, the LEG groove is the reference): arc groove in the bottom face,
+//  pin-centre radius lg_stop_r = 22, +/- caster_stop_deg (60) about +Y, 7.6 wide, 8 deep
+//  (leg z 26..34). feet.scad now puts its 6 x 8 mm pin at ft_stop_r = 22 ON THE STEM BLOCK TOP
+//  at (0, caster_trail + 22) in the foot frame, z H+25..H+33, so it stands 1 mm proud of the
+//  leg's bottom face and engages 7 mm of the 8 mm groove. The groove was NOT moved out to
+//  radius 35: the bottom boss is lg_center_col = 83.3 x 64, so half its depth in Y is 32 mm and
+//  a groove at 35 would break out of the front face in the middle of its sweep. Moving the pin
+//  inboard also puts it on solid stem-block material (block Y -10..50), so feet.scad's 16 mm
+//  ledge fin is deleted and no 45 deg underside is needed: the pin now rises from a flat top
+//  face. Outside 30..150 deg the leg is solid at that radius and depth - those are the stops.
+//  Wires (RESOLVED, the LEG arc is the reference and the foot hole moved onto it): arc slot
+//  lg_wire_arc r 16.6..25.4 (centre lg_wire_r = 21) from 199 to 341 deg, i.e. centred on -Y and
+//  spanning +/- caster_stop_deg plus 11 deg (8 mm of hole width at r 21) each way, cut in the
+//  bottom face and joined to the 12 x 12.5 vertical channel at y -29.5..-17 that exits the
+//  flange top as a 12 x 13 opening centred at leg-frame (0, -22) = body-frame
+//  (0, center_leg_y_in_body - 22) = (0, -67). feet.scad's centre-foot
+//  wire hole moved from (-18.5, caster_trail) to (0, caster_trail - lg_wire_r) = (0, -1), which
+//  is leg-frame radius 21 at 270 deg, so it stays inside the slot through the whole +/-60 deg
+//  swivel. The arc sits BEHIND the axis and the stop groove AHEAD of it (30..150 deg), so the
+//  two never merge (49 deg of solid leg at each end) and the hard stops survive. Radius 21 also
+//  keeps a 2.5 mm web to the lower bearing seat (r 14.1), so the wire never passes through a
+//  bearing. The body skirt floor carries the matching wire slot (body.scad bd_wire_slot,
+//  14 x 20) at body-frame (0, center_leg_y_in_body - 22) = (0, -67), inside the flange
+//  footprint and between the two rows of flange bolts.
 //
 // PRINT ORIENTATION
 //  leg_upper(): inboard face on the bed (native rotate([0,-90,0])), leg length along print X:
@@ -98,12 +134,14 @@
 //   needed; everything else rises from the bed. The 22 mm rod counterbores are horizontal
 //   round holes.
 //  leg_center(): flange face down (native rotate([-body_tilt,0,0]) then rotate([180,0,0])),
-//   140 x 100 x 47.5 mm. No supports: the column leans 18 deg (its rear face is an 18 deg
+//   140 x 100 x 60.8 mm (13.9 taller than the old 47.5: the axis moved 45 mm rearward). No supports: the column leans 18 deg (its rear face is an 18 deg
 //   overhang), the bearing seat, groove and wire slot open upward, the head counterbore is a
 //   28 mm hole from the bed with a 2 mm ledge ring at 13 mm.
 // FASTENERS (per outer leg): M12 x 130 hex shoulder bolt (head in the hub), 1 x 6 mm dowel,
-//  2 x M8 x 400 threaded rod + 4 nuts + 2 washers, 4 x M4 x 80 + nuts, M8 x 80 pivot bolt and
-//  M8 x 90 lock bolt (supplied with the foot). Centre leg: M12 x 70 hex bolt + 2 washers + 1 mm
+//  2 x M8 threaded rod CUT TO 390 mm (from M8 x 400 stock) + 4 nuts + 2 washers, 4 x M4 x 80 +
+//  nuts, M8 x 80 pivot bolt and M8 x 90 lock bolt (supplied with the foot; the lock bolt goes
+//  through tongue hole A for the two-leg stance or hole B for the three-leg lean).
+//  Centre leg: M12 x 70 hex bolt + 2 washers + 1 mm
 //  thrust washer + 2 x 6001-2RS + 12 mm ID x 9.8 spacer tube, 4 x M8 x 30 + nuts to the body.
 
 // ---------- local parameters (not in params.scad) ----------
@@ -115,7 +153,9 @@ lg_hs_chamfer = [18, 23.9];                                    // arm outer corn
 lg_gap_top_z = -50;                                            // window widens to horseshoe_gap here
 lg_taper = 23.4;                                               // plate to strut taper length (club)
 lg_pivot_up = 6.3;                                             // feet.scad ft_pivot_up
-lg_lock_drop = 25;                                             // feet.scad ft_lock_drop (params ankle_bolt_spacing 50 is not drilled by the foot)
+lg_lock_r = ankle_bolt_spacing;                                // 40: lock-hole arc radius about the pivot (= feet.scad ft_lock_r)
+// [y, z] of each lock hole relative to the ankle pivot: A = two-leg stance, B = 18 deg lean
+lg_lock_holes = [[lg_lock_r, 0], [lg_lock_r*cos(leg_lean), -lg_lock_r*sin(leg_lean)]];
 lg_tongue_bottom_z = -leg_len - lg_pivot_up - leg_tongue_depth; // -412.2
 lg_tongue_x0 = leg_strut_t/2 - leg_tongue_t/2;                 // 6.5
 lg_block_top_z = -leg_len + 18 - lg_pivot_up;                  // -364.2 foot ankle block top (feet ft_block[2])
@@ -140,18 +180,25 @@ lg_strut_rod_d = 8; lg_strut_rod_y = 8;
 lg_upper_channel_bottom_z = -172;
 lg_bracelet_z = -300; lg_bracelet_h = 8.7; lg_bracelet_proud = 1.5;
 // centre leg
-lg_center_plane_z = (shoulder_z_three_leg - shoulder_z*cos(body_tilt)) - (foot_clear + foot_center_h);   // 65.6
+// NOTE keep this on ONE line: scripts/assembly_layout.py evaluates the assignment as written.
+lg_center_plane_z = (shoulder_z_three_leg - shoulder_z*cos(body_tilt) + center_leg_y_in_body*sin(body_tilt)) - (foot_clear + foot_center_h);   // 51.7: flange top plane above the centre-foot top plane
 lg_center_col = [83.3, 64];
 lg_center_bottom_z = 26;                                       // 1 mm above the 25 mm stem block
 lg_collar_h = 14;
 lg_bearing_fit = 0.2;
 lg_bearing1_z = lg_center_bottom_z;                            // lower bearing seat bottom
-lg_bearing_cc = 18;                                            // bearing centre spacing (params gap 20 does not fit, see header)
+lg_bearing_cc = caster_bearing_gap;                            // 18 bearing centre spacing (params.scad)
 lg_bearing2_z = lg_bearing1_z + lg_bearing_cc;                 // 44 upper bearing seat bottom
 lg_head_cbore_d = 28;
 lg_stop_r = 22; lg_stop_w = 7.6; lg_stop_deep = 8;
-lg_wire_arc = [16.5, 22.5]; lg_wire_arc_ang = [168, 340];
+lg_wire_r = 21;                                                // wire arc radius (= feet.scad ft_wire_r)
+lg_wire_arc = [lg_wire_r - 4.4, lg_wire_r + 4.4];              // 16.6 .. 25.4 (2.5 web to the bearing seat)
+lg_wire_arc_ang = [270 - caster_stop_deg - 11, 270 + caster_stop_deg + 11];   // 199 .. 341
 lg_wire_chan = [12, 12.5]; lg_wire_chan_y = -23.25;                // channel y -29.5..-17: 2.9 from the bearing seat, 2.5 from the rear face
+
+// ---------- interface asserts (a params change must not silently diverge) ----------
+assert(lg_lock_r == ankle_bolt_spacing, "legs/params: ankle lock arc radius != ankle_bolt_spacing");
+assert(lg_bearing_cc == caster_bearing_gap, "legs/params: bearing centre spacing != caster_bearing_gap");
 
 // ---------- helpers ----------
 // 2D shape in (y, z) extruded along +X from x0 for length t
@@ -295,8 +342,9 @@ module leg_lower_native() {
             translate([0, 0, lg_rod_bottom_z - 16]) cyl(lg_rod_cbore_d, 16, fn = 48);
         }
         lg_splice_holes();
-        // ankle pivot and lock bores through the tongue
-        for (z = [-leg_len, -leg_len - lg_lock_drop]) translate([0, 0, z]) lg_bore_x(-5, leg_ankle_t + 10, clearance_d(ankle_bolt_m), fn = 32);
+        // ankle pivot bore, then the two stance lock bores on the lg_lock_r arc about it
+        translate([0, 0, -leg_len]) lg_bore_x(-5, leg_ankle_t + 10, clearance_d(ankle_bolt_m), fn = 32);
+        for (h = lg_lock_holes) translate([0, h[0], -leg_len + h[1]]) lg_bore_x(-5, leg_ankle_t + 10, clearance_d(ankle_bolt_m), fn = 32);
         // wire route: up from the foot's wire hole, diagonal into the strut centre, up through the split
         translate([lg_wire_entry[0], lg_wire_entry[1], -340]) cyl(lg_wire_d, 42, fn = 32);
         hull() {
@@ -325,6 +373,10 @@ module lg_wedge2d(a0, a1, r = 200) { polygon([[0, 0], [r*cos(a0), r*sin(a0)], [r
 module leg_center_native() {
     fl = center_leg_flange;
     difference() {
+        // Nothing may dip below the bearing/stop face: the collar is a box in the TILTED
+        // frame, so its rear corners would otherwise reach into the foot's caster stem block.
+        intersection() {
+        translate([-200, -200, lg_center_bottom_z]) cube([400, 400, 400]);
         union() {
             // column from the bearing housing up past the plane, clipped to the plane below
             intersection() {
@@ -336,6 +388,7 @@ module leg_center_native() {
                 translate([0, 0, -fl[2] - lg_collar_h]) rbox([center_leg_section[0], center_leg_section[1], lg_collar_h + 1], 12);
                 translate([0, 0, -fl[2]]) rbox([fl[0], fl[1], fl[2]], 8);
             }
+        }
         }
         // flange bolts, wire hole and label on the flange top (against the body floor)
         lg_at_plane() {

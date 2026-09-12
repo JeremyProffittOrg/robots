@@ -25,11 +25,14 @@
 //  2*ft_slot_hl long through block and plate, widened for the 18 deg tongue swing; pivot bore
 //  clearance_d(ankle_bolt_m) along X at z = foot_outer_h + ft_pivot_up through both block
 //  cheeks with ankle_cyl_d bosses (4 mm proud) and an M8 nut pocket in the inboard boss; lock
-//  bore of the same size on the pivot plane ft_lock_r = 40 mm ahead of the pivot (Y = +40),
-//  also through both cheeks with bosses and an inboard nut pocket. The leg tongue carries two
-//  9 mm lock holes 40 mm from the pivot: A at (y +40, z 0) for the two-leg stance and B at
-//  (y +38.04, z -12.36) for the 18 deg three-leg lean (12.5 mm apart, 3.5 mm web). Tongue
-//  length is 48 mm from the block top (18 block + 30 below the plate). The interior tongue
+//  bore of the same size on the pivot plane ft_lock_r = ankle_bolt_spacing = 40 mm ahead of the
+//  pivot (Y = +40), also through both cheeks with bosses and an inboard nut pocket. The leg
+//  tongue carries two 9 mm lock holes 40 mm from the pivot: A at (y +40, z 0) for the two-leg
+//  stance and B at (y +38.04, z -12.36) for the 18 deg three-leg lean (12.5 mm apart, 3.5 mm
+//  web). RESOLVED: cad/legs.scad now cuts exactly those two holes (lg_lock_r, lg_lock_holes)
+//  and its old bore 25 mm below the pivot is gone; an assert() below ties ft_lock_r to
+//  ankle_bolt_spacing so a params change cannot move one part without the other.
+//  Tongue length is 48 mm from the block top (18 block + 30 below the plate). The interior tongue
 //  sweep (0 to +/-18 deg, 2.5 mm margin) is cut out of every internal rib.
 //  Drive: two Adafruit 3777 motors, shafts along X at z = wheel_axle_z, centre planes at
 //  Y = +/-foot_axle_y, four 3766 wheels at X = +/-wheel_x in 3 mm clearance cavities that are
@@ -47,25 +50,59 @@
 //  each gearbox up into its ceiling; the ties hold the motors when the foot is lifted.
 //  Internal ribs (outer): 12 mm centre rib, 12 mm spines, 8 mm can walls, 36 x 42 x 32 end blocks.
 //  Centre foot top: caster stem block ft_stem (50 x 60 x 25) centred on the caster axis
-//  (Y -10..50) with a 45 deg prow over the sloped front face, vertical clearance_d(caster_bolt_m)
-//  bore, M12 NUT slot (nut_slot, 19.4 AF x 8.4 deep) under the plate opening toward +X (slide
-//  the nut in from the open sole before the motors go in; the bolt comes down from the leg),
-//  and a 6 mm swivel-stop pin 8 mm tall at radius ft_stop_r = 35 ahead of the axis
-//  (Y = caster_trail + 35) on a 16 mm wide ledge fin at the top plane with a 45 deg underside.
+//  (caster_trail = 35, so the block is Y 5..65) with a prow over the sloped front face,
+//  vertical clearance_d(caster_bolt_m) bore on the axis, M12 NUT slot (nut_slot, 19.4 AF x
+//  8.4 deep) under the plate opening toward +X (the pocket's rear half is open to the shell
+//  interior, so the nut goes in from the open sole before the motors do; the bolt comes down
+//  from the leg), and a 6 mm swivel-stop pin ft_pin_h = 8 mm tall at radius ft_stop_r = 22
+//  ahead of the axis (Y = caster_trail + 22 = 57) standing ON THE STEM BLOCK TOP
+//  (z H+25 .. H+33), with 8 mm of block ahead of it.
+//  PROW (RESOLVED for caster_trail = 35): the centre foot's top face is only
+//  +/- foot_center_l_top/2 = 29.3 long and its end faces slope ft_end_ang_c = 35.0 deg, so the
+//  block front at Y 65 overhangs the sloped front face by ft_prow_over = 35.7 mm - nearly
+//  twice the 20.7 mm it overhung at caster_trail = 20. The prow therefore drops
+//  ft_prow_step = 5 mm vertically from the block front and then runs at exactly 45 deg for
+//  ft_prow_drop = 30 mm total, reaching the sloped face 24.0 mm below the top face (24.7 mm
+//  at the rounded front corners, still inside the 30 mm): the block is fully carried to the
+//  shell and no underside is steeper than 45 deg. The 5 mm vertical skirt is not cosmetic -
+//  it is what keeps 8.5 mm of wall between the M12 nut slot and the prow face; without it the
+//  45 deg face would pass 4.9 mm from the nut. The M12 bore keeps 23.5 mm of block wall in Y
+//  and 18.5 mm in X, and 12.4 mm to the prow face at its lowest point.
+//  RESOLVED, the leg groove is the reference: the pin moved in from radius 35 to 22 to meet
+//  cad/legs.scad lg_stop_r = 22. The leg groove was not moved out to 35 because the leg's
+//  bottom boss is only 83.3 x 64, so half its depth in Y is 32 mm and a radius-35 groove would
+//  break out of its front face mid-sweep. At radius 22 the pin sits on solid stem block
+//  (block Y -10..50, 5 mm of wall ahead of it), so the old 16 mm ledge fin is DELETED and no
+//  45 deg underside is needed - the pin now rises from a flat horizontal face. The pin top is
+//  1 mm below the groove floor and 7 mm of it is inside the 8 mm deep groove, which spans
+//  +/- caster_stop_deg (60) about forward with solid leg beyond: those are the hard stops.
 //  Centre foot details: tombstone half-moon (r 27.5) with slotted inner plate on both end
 //  faces, framed door recess with raised door and scribe on both sides, side trim strips,
 //  apron slots (4 per side, 2 per end).
-//  Wires: 8 mm hole through the top plate and ankle block at (X 20, Y -38) on the outer foot
-//  and through the plate and stem block at (X -18.5, Y caster_trail) on the centre foot, plus
-//  an 8 mm pass through the centre rib at z 70 so both motors reach it.
+//  Wires: 8 mm hole through the top plate and ankle block at (X 20, Y -38) on the outer foot.
+//  Centre foot, RESOLVED (the leg's arc slot is the reference and this hole moved onto it): the
+//  8 mm hole is at (X 0, Y caster_trail - ft_wire_r) = (0, 14), i.e. leg-frame radius 21 at
+//  270 deg, dead behind the caster axis; it runs down through the stem block, the top plate and
+//  the front spine to z 70, where a hulled 8 mm tunnel runs out to X -20. The Y tunnel that
+//  crosses the centre rib at X -20, z 70 is NOT hung on the wire hole any more: with
+//  caster_trail = 35 the wire hole sits 4 mm AHEAD of the rib (the rib spans Y -12..10), so
+//  the pass is centred on the rib mid-plane ft_rib_c_y = -1 and is ft_wire_pass = 36 long
+//  (Y -19..17). It still meets the hulled tunnel at Y 14 and still opens into the rear bay,
+//  so both motors reach the wire. It used to be at
+//  (X -18.5, Y caster_trail), which left the leg's arc as soon as the caster swivelled.
+//  cad/legs.scad now carries the matching arc slot at r 16.6..25.4, 199..341 deg: the wire stays
+//  covered through the whole +/-60 deg swivel, the arc never merges with the stop groove ahead
+//  of the axis, and a 2.5 mm web keeps the wire clear of the lower bearing seat.
 //
 // PRINT ORIENTATION: sole (open side) down on the bed, as modelled. No supports: the sloped
 //  walls are 19.7 / 34.6 deg from vertical (centre foot 22.3 / 35.0), every internal rib rises
 //  from the bed, gearbox pocket ceilings are 12 mm wide tilted bridges over a 19.4 mm pocket,
 //  can pockets are 21 mm round arches with 1 mm sag allowance, the centre-foot front pocket
 //  faces are 45 deg, the battery-box cavity roof is two 22-25 mm bridges plus a 45 deg wedge
-//  roof, hose bosses and fittings have 45 deg gussets, the caster prow and stop ledge have
-//  45 deg undersides. Top plate: the two 20 mm strips beside the ankle slot bridge 51 mm from
+//  roof, hose bosses and fittings have 45 deg gussets, the caster prow has a 5 mm vertical
+//  skirt and then a 45 deg underside all the way down to the sloped shell face, and the
+//  swivel-stop pin stands on the flat stem-block top (no ledge, no overhang). The
+//  centre-foot wire tunnel at z 70 is an 8 mm round bore inside the 22 mm centre rib. Top plate: the two 20 mm strips beside the ankle slot bridge 51 mm from
 //  the centre rib to the end column and the plate bridges the side walls (58 mm outer,
 //  45 mm centre) - use bridge settings with 100 % fan; if the slicer will not bridge that, add
 //  tree supports under the top plate only.
@@ -82,7 +119,7 @@ ft_wheel_clear = 3;              // clearance around every wheel
 ft_spine_hw = 6.0;               // half width of the central spine ribs (inside the 6.3 wheel gap)
 ft_block = [60, 120, 18];        // ankle block on the outer foot top (X, Y, Z)
 ft_pivot_up = 6.3;               // pivot bore above the shell top
-ft_lock_r = ankle_bolt_spacing * 0.8;   // 40: lock bore ahead of the pivot, on the pivot plane
+ft_lock_r = ankle_bolt_spacing;  // 40: lock bore ahead of the pivot, on the pivot plane
 ft_swing = 18;                   // tongue swing (deg)
 ft_boss_proud = 4;               // ankle cylinder bosses beyond the block faces
 ft_motor_tilt_o = 13;            // outer feet: can outward, this many deg below horizontal
@@ -92,13 +129,21 @@ ft_tie_w = 5; ft_tie_deep = 2.5; // cable tie groove
 ft_batt_y0 = 8;                  // battery box rear face
 ft_loaf_r = 26;                  // battery box end rounding (Y-Z plane)
 ft_stem = [50, 60, 25];          // caster stem block
-ft_stem_y0 = caster_trail - ft_stem[1]/2;   // -10: block centred on the caster axis
-ft_stop_r = 35;                  // swivel stop pin radius from the caster axis
+ft_stem_y0 = caster_trail - ft_stem[1]/2;   // 5: block centred on the caster axis (Y 5..65)
+ft_stop_r = 22;                  // swivel stop pin radius from the caster axis (= legs.scad lg_stop_r)
 ft_pin_d = 6; ft_pin_h = 8;
 ft_wire_d = 8;
+ft_wire_r = 21;                  // centre-foot wire hole radius behind the caster axis (= legs.scad lg_wire_r)
+ft_rib_c_y = -1;                 // centre rib mid-plane in Y (the rib spans Y -12..10)
+ft_wire_pass = 36;               // length of the Y tunnel at X -20 that crosses the centre rib
 ft_end_hw = 18;                  // outer foot end block half width (tab bolt cheeks)
 ft_rib_hw_o = 6;                 // outer foot centre rib half thickness
 ft_tab_nut_x = 11.6;             // M3 tab nut slot starts here (+X cheek)
+
+// ---------- interface asserts (a params or legs.scad change must not silently diverge) ----------
+assert(ft_lock_r == ankle_bolt_spacing, "feet/params: ankle lock bore radius != ankle_bolt_spacing");
+assert(ft_stop_r == lg_stop_r, "feet/legs: swivel stop pin radius != the leg groove radius lg_stop_r");
+assert(ft_wire_r == lg_wire_r, "feet/legs: centre-foot wire hole radius != the leg wire arc radius lg_wire_r");
 
 ft_pivot_z = foot_outer_h + ft_pivot_up;
 ft_slot_hl = leg_tongue_w/2 * cos(ft_swing) + (ft_block[2] - ft_pivot_up) * sin(ft_swing) + 1;   // 52.2
@@ -108,6 +153,17 @@ ft_side_ang_o = atan((foot_outer_w_bot - foot_outer_w_top) / 2 / foot_outer_h); 
 ft_end_ang_o = atan((foot_outer_l_bot - foot_outer_l_top) / 2 / foot_outer_h);    // 34.6
 ft_side_ang_c = atan((foot_center_w_bot - foot_center_w_top) / 2 / foot_center_h); // 22.3
 ft_end_ang_c = atan((foot_center_l_bot - foot_center_l_top) / 2 / foot_center_h);  // 35.0
+
+// Caster prow. caster_trail = 35 puts the stem block's front edge at Y 65 while the centre
+// foot's top face only reaches foot_center_l_top/2 = 29.3, so the block overhangs the sloped
+// front face by ft_prow_over = 35.7 mm. The prow drops ft_prow_step straight down from the
+// block front (this vertical skirt is what keeps 8.5 mm of wall between the M12 nut slot and
+// the prow face) and then runs at 45 deg until it meets the face, which happens
+// (ft_prow_over + ft_prow_step) / (1 + tan(ft_end_ang_c)) = 24.0 mm below the top; the extra
+// 6 mm buries the prow's bottom inside the shell so nothing is left unsupported.
+ft_prow_over = ft_stem_y0 + ft_stem[1] - foot_center_l_top/2;                    // 35.7
+ft_prow_step = 5;
+ft_prow_drop = (ft_prow_over + ft_prow_step) / (1 + tan(ft_end_ang_c)) + 6;      // 30.0
 
 // ---------- generic shell helpers ----------
 // half extent of the shell at height z (linear taper)
@@ -402,20 +458,15 @@ module foot_center() {
                     difference() {
                         hull() {
                             translate([-ft_stem[0]/2, ft_stem_y0, H - 0.1]) cube([ft_stem[0], ft_stem[1], 0.1]);
-                            translate([-ft_stem[0]/2, ft_stem_y0, H - 26]) cube([ft_stem[0], ft_stem[1] - 26, 0.1]);
+                            translate([-ft_stem[0]/2, ft_stem_y0, H - ft_prow_step]) cube([ft_stem[0], ft_stem[1], 0.1]);
+                            translate([-ft_stem[0]/2, ft_stem_y0, H - ft_prow_drop])
+                                cube([ft_stem[0], ft_stem[1] - ft_prow_drop + ft_prow_step, 0.1]);
                         }
                         ft_inner_c();
                     }
                     translate([-ft_stem[0]/2, ft_stem_y0, H]) linear_extrude(height = ft_stem[2]) offset(r = 3) offset(delta = -3) square([ft_stem[0], ft_stem[1]]);
-                    // stop-pin ledge fin at the top plane ahead of the block (45 deg underside) and the pin
-                    difference() {
-                        hull() {
-                            translate([-8, caster_trail + ft_stop_r - 9, H - 0.1]) cube([16, 14, 0.1]);
-                            translate([-8, caster_trail + ft_stop_r - 35, H - 26]) cube([16, 14, 0.1]);
-                        }
-                        ft_inner_c();
-                    }
-                    translate([0, caster_trail + ft_stop_r, H - eps]) cyl(ft_pin_d, ft_pin_h + eps, fn = 32);
+                    // swivel-stop pin on the flat stem-block top (r 22, no ledge fin needed)
+                    translate([0, caster_trail + ft_stop_r, H + ft_stem[2] - eps]) cyl(ft_pin_d, ft_pin_h + eps, fn = 32);
                     // side trim strips near the top of each side face
                     for (sx = [-1, 1]) ft_side_c(sx) ft_raise(0.8) translate([-30, ft_face_h_side_c - 14]) square([60, 6]);
                     // end faces: half-moon tombstone with a slotted inner plate
@@ -444,9 +495,11 @@ module foot_center() {
         ft_motor_cut(foot_axle_y, ft_phi_c_front, 55);
         ft_motor_cut(-foot_axle_y, ft_phi_c_rear, 38);
         for (sy = [-1, 1]) intersection() { ft_wheel_cut(sy*foot_axle_y); ft_inner_c(); }
-        // wire route: through the plate and stem block beside the bore, pass through the rib
-        translate([-18.5, caster_trail, H - ft_plate_t - 1]) cyl(ft_wire_d, ft_plate_t + ft_stem[2] + 2, fn = 32);
-        translate([-20, -1, 70]) rotate([90, 0, 0]) cyl(ft_wire_d, 30, center = true, fn = 32);
+        // wire route: behind the caster axis on the leg's arc, down through the stem block, the
+        // plate and the centre rib to a z 70 tunnel that meets the existing pass through the rib
+        translate([0, caster_trail - ft_wire_r, 70]) cyl(ft_wire_d, H + ft_stem[2] + 1 - 70, fn = 32);
+        hull() for (x = [0, -20]) translate([x, caster_trail - ft_wire_r, 70]) sphere(d = ft_wire_d, $fn = 24);
+        translate([-20, ft_rib_c_y, 70]) rotate([90, 0, 0]) cyl(ft_wire_d, ft_wire_pass, center = true, fn = 32);
         // label on the rear face of the central rib (inside the rear wheel bay)
         translate([-26, -12, 34]) rotate([90, 0, 0]) mirror([1, 0, 0]) label("FOOT CENTER", 2.5);
     }

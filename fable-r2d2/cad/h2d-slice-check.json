@@ -1,5 +1,5 @@
 {
-  "checked_at_utc": "2026-09-12T15:34:46.670514+00:00",
+  "checked_at_utc": "2026-09-12T17:10:26.553990+00:00",
   "test_type": "Local Bambu Studio CLI slicing of package meshes; no printer connection or physical print",
   "profiles": {
     "machine": "Bambu Lab H2D 0.4 nozzle",
@@ -25,9 +25,15 @@
       "sha256": "3e9f78192f089c09851ddda57372694860e48db1eaefa648d9b2ab6aff0857f5",
       "material": "PETG",
       "filament_profile": "Bambu PETG HF @BBL H2D 0.4 nozzle",
-      "return_code": -50,
-      "error_string": "One of the plate is empty or has no object fully inside it. Please check that the 3mf contains no empty plate in Bambu Studio before uploading.",
-      "pass": false
+      "return_code": 0,
+      "error_string": "Success.",
+      "gcode_present": true,
+      "warning": "",
+      "predicted_mass_g": 1243.903076171875,
+      "predicted_time_s": 127328.1171875,
+      "predicted_time_h": 35.37,
+      "bbox_mm": null,
+      "pass": true
     },
     {
       "part": "stl/foot_outer.stl",
@@ -38,17 +44,10 @@
       "error_string": "Success.",
       "gcode_present": true,
       "warning": "",
-      "predicted_mass_g": 679.8703002929688,
-      "predicted_time_s": 70663.7109375,
-      "predicted_time_h": 19.63,
-      "bbox_mm": {
-        "depth": 181.8000030517578,
-        "height": 105.19999694824219,
-        "width": 265.0,
-        "x": 42.499996185302734,
-        "y": 69.10000610351562,
-        "z": 0.0
-      },
+      "predicted_mass_g": 680.873046875,
+      "predicted_time_s": 70538.546875,
+      "predicted_time_h": 19.59,
+      "bbox_mm": null,
       "pass": true
     },
     {
@@ -82,17 +81,10 @@
       "error_string": "Success.",
       "gcode_present": true,
       "warning": "",
-      "predicted_mass_g": 81.26748657226562,
-      "predicted_time_s": 10788.5458984375,
+      "predicted_mass_g": 81.32125091552734,
+      "predicted_time_s": 10785.3046875,
       "predicted_time_h": 3.0,
-      "bbox_mm": {
-        "depth": 72.28294372558594,
-        "height": 39.91392517089844,
-        "width": 116.5,
-        "x": 116.7499771118164,
-        "y": 123.85852813720703,
-        "z": 0.0
-      },
+      "bbox_mm": null,
       "pass": true
     },
     {
@@ -104,39 +96,25 @@
       "error_string": "Success.",
       "gcode_present": true,
       "warning": "",
-      "predicted_mass_g": 615.000244140625,
-      "predicted_time_s": 72535.3515625,
-      "predicted_time_h": 20.15,
-      "bbox_mm": {
-        "depth": 289.70001220703125,
-        "height": 50.790000915527344,
-        "width": 139.39999389648438,
-        "x": 105.30000305175781,
-        "y": 15.149993896484375,
-        "z": 0.0
-      },
+      "predicted_mass_g": 612.4307250976562,
+      "predicted_time_s": 72127.3046875,
+      "predicted_time_h": 20.04,
+      "bbox_mm": null,
       "pass": true
     },
     {
       "part": "stl/leg_lower.stl",
-      "sha256": "c3033d0e4eda99ca0cf55e200a586dbf107b7eeccde81715cabd5d4dfca99956",
+      "sha256": "988e404c8b275d17f85e247d55a8aa0a41c8a8b0e6f180d0e81d1a1d2857e60b",
       "material": "PETG",
       "filament_profile": "Bambu PETG HF @BBL H2D 0.4 nozzle",
       "return_code": 0,
       "error_string": "Success.",
       "gcode_present": true,
       "warning": "",
-      "predicted_mass_g": 314.0927429199219,
-      "predicted_time_s": 40108.171875,
-      "predicted_time_h": 11.14,
-      "bbox_mm": {
-        "depth": 100.0,
-        "height": 58.25,
-        "width": 232.0,
-        "x": 58.999996185302734,
-        "y": 110.0,
-        "z": 0.0
-      },
+      "predicted_mass_g": 314.54278564453125,
+      "predicted_time_s": 40319.80078125,
+      "predicted_time_h": 11.2,
+      "bbox_mm": null,
       "pass": true
     },
     {
@@ -160,8 +138,17 @@
         "z": 0.0
       },
       "pass": true
+    },
+    {
+      "part": "stl/body_upper.stl",
+      "sha256": "5dcdbe21aa3b45a993fa97cd7e9a8a31fb96f099fe57bb15a3b8983ef9e0645d",
+      "material": "PETG",
+      "filament_profile": "Bambu PETG HF @BBL H2D 0.4 nozzle",
+      "return_code": -102,
+      "error_string": "Found G-code in unprintable area of multi-extruder printers after slicing. Please make sure the 3mf file can be successfully sliced in the latest Bambu Studio.",
+      "pass": false
     }
   ],
-  "total_predicted_mass_g": 3783.9,
-  "total_predicted_time_h": 119.4
+  "total_predicted_mass_g": 4540.9,
+  "total_predicted_time_h": 140.0
 }

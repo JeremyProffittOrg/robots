@@ -90,7 +90,7 @@ class Layout:
         self.ankle_y = p["leg_len"] * math.sin(math.radians(p["leg_lean"]))
         self.center_foot_top_z = p["foot_clear"] + p["foot_center_h"]
         self.center_leg_y = self.skirt_bottom_y + p["center_leg_y_in_body"] * math.cos(math.radians(p["body_tilt"]))
-        self.center_leg_plane_z = self.skirt_bottom_z - p["center_leg_y_in_body"] * math.sin(math.radians(p["body_tilt"]))
+        self.center_leg_plane_z = self.skirt_bottom_z + p["center_leg_y_in_body"] * math.sin(math.radians(p["body_tilt"]))
 
     # ---- placement helpers (native frames), mirroring r2d2.scad ----
     def at_body(self):

@@ -1,13 +1,13 @@
 {
   "method": "STL volumes x 1.27 g/cm3 x fill fraction; purchased parts as point masses; screening only",
   "fill_fraction": 0.45,
-  "total_mass_g": 11890.2,
-  "printed_mass_g": 6231.6,
+  "total_mass_g": 11818.7,
+  "printed_mass_g": 6160.1,
   "purchased_mass_g": 5658.6,
   "centre_of_gravity_mm": [
     0.0,
     55.2,
-    302.9
+    303.6
   ],
   "wheel_contact_y_range_mm": [
     -25.8,
@@ -22,9 +22,9 @@
   "center_foot_static_share": 0.628,
   "tip_back_margin_mm": 81.0,
   "tip_forward_margin_mm": 105.9,
-  "tip_back_angle_deg": 15.0,
-  "tip_forward_angle_deg": 19.3,
-  "tip_side_angle_deg": 34.2,
+  "tip_back_angle_deg": 14.9,
+  "tip_forward_angle_deg": 19.2,
+  "tip_side_angle_deg": 34.1,
   "items": [
     {
       "name": "body_lower",
@@ -38,10 +38,10 @@
     },
     {
       "name": "body_upper",
-      "mass_g": 1550.0,
+      "mass_g": 1550.4,
       "centre_mm": [
         0.1,
-        17.9,
+        17.8,
         429.4
       ],
       "kind": "printed"
@@ -128,11 +128,11 @@
     },
     {
       "name": "leg_center",
-      "mass_g": 182.9,
+      "mass_g": 111.1,
       "centre_mm": [
         -0.0,
-        58.0,
-        158.2
+        59.9,
+        141.9
       ],
       "kind": "printed"
     },

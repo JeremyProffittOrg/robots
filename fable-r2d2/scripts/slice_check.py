@@ -103,6 +103,10 @@ def slice_part(name, settings_cache):
         # Centre the mesh on the single-nozzle bed ourselves; the CLI arrange step rejects
         # parts that nearly fill the bed even though they fit.
         mesh = trimesh.load_mesh(stl, process=False)
+        if info.get("print_flip_x"):
+            # The STL is authored in the assembly frame; this part prints inverted, so the
+            # slice check must measure the orientation the builder actually uses.
+            mesh.apply_transform(trimesh.transformations.rotation_matrix(3.141592653589793, [1, 0, 0]))
         centred = tmp / f"{name}.stl"
         mesh.apply_translation([-mesh.bounds[0][0] - mesh.extents[0] / 2 + 162.5, -mesh.bounds[0][1] - mesh.extents[1] / 2 + 160, -mesh.bounds[0][2]])
         mesh.export(centred)
@@ -121,6 +125,7 @@ def slice_part(name, settings_cache):
         data = json.loads(report_path.read_text(encoding="utf-8"))
         row = {"part": f"stl/{name}.stl", "sha256": hashlib.sha256(stl.read_bytes()).hexdigest(),
                "material": material, "filament_profile": filament_profile(material),
+               "print_flip_x": bool(info.get("print_flip_x")),
                "return_code": data.get("return_code"), "error_string": data.get("error_string")}
         if data.get("return_code") == 0 and data.get("sliced_plates"):
             plate = data["sliced_plates"][0]
