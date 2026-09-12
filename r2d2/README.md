@@ -1,62 +1,69 @@
-# R2-24 fabrication package
+# R2-24 fabrication package — revision C
 
-A 609.6 mm (24 inch) R2-D2-inspired robot, designed for a Bambu Lab H2D.
-Six Adafruit 3777 motors drive twelve Adafruit 3766 wheels: two motors and
-four wheels per foot. The rear foot steers through gears. The head rotates
-continuously without wires crossing its bearing. Phone control uses the
-robot's local Wi-Fi access point. Sixteen original MP3 chirps are included.
+A detailed, nominally609.6mm/24inch R2-D2 robot design for the Bambu H2D.
+Ten STL designs make14 printed pieces around a metal load frame: two
+whole stackable body sections, one dome, one print per side leg and
+whole foot covers. The dome/body/leg details are modeled relief.
 
-This is a digital prototype package, not a physically validated robot.
-Complete the fit, rolling-load, electrical and stopping tests in the manual
-before printing every cosmetic part or operating the finished robot.
+Each foot has two Adafruit3777 motors and four3766 wheels: six ground
+motors and twelve ground wheels. A separate seventh motor and internal
+wheel rotate the head. A guided rear post changes body tilt while the
+side legs pivot relative to the torso and all three feet remain down.
+Phone control uses the robot's local Wi-Fi AP. Sixteen original MP3
+sounds are included.
 
-Revision B reduces the printed count from 148 to 83. The body is two
-complete stackable prints (260 x 260 x 148 mm and 260 x 260 x 162 mm),
-with frames, posts, adapters and battery tray built in. Each side arm and
-its shoulder is one 124 x 68 x 295 mm print. The head remains one dome.
-The 83-piece count includes 32 small PCB spacers and the moving mechanisms.
-Overall height stays 609.6 mm; no scaling of motor, wheel or bearing fits.
+This is a digital prototype, not a physically tested robot. The metal
+frame requires machining and welding. The early6kg assumption was not
+met; the current mass estimate is about8.95kg against a9kg build limit.
+There is little reserve. Actual mass, CG, frame strength and loaded
+driving with the specified TT motors must pass commissioning.
 
-## Start here
+## Deliverables
 
-- `output/pdf/r2d2-design-and-assembly.pdf`: illustrated design and build manual.
-- `docs/assembly.md`: detailed assembly and commissioning sequence.
-- `docs/mechanical.md`: dimensions, print settings, fits and load limits.
-- `docs/electrical.md`: power design and electrical assembly.
-- `cad/r2d2.scad`: editable source; `stl/` contains actual exported meshes.
-- `bom/`: purchased parts, fasteners and per-STL print quantities.
-- `electronics/`: circuit SVG sheets and a complete point-to-point wiring CSV.
-- `firmware/`: buildable ESP32 program, phone interface and MP3 filesystem.
-- `audio/catalog.csv`: names, durations and checksums of all sounds.
-- `docs/verification.md`: measured digital results and unverified physical tests.
+- [Design and assembly PDF](output/pdf/r2d2-design-and-assembly.pdf)
+- [CAD motion video](https://d1lftyhk9r30k1.cloudfront.net/r2d2/revision-c/motion.mp4)
+- [Hosted PDF](https://d1lftyhk9r30k1.cloudfront.net/r2d2/revision-c/design.pdf)
+- [18 MATLAB-style PNG drawings](output/drawings), including every printed component
+- [10 STL files](stl) and [print manifest](bom/printed-parts.csv)
+- [13 metal/G10 cutting profiles](cad/metal) and [fabrication worksheet](docs/fabrication.md)
+- [60 assembly steps](docs/assembly.md), [mechanical guide](docs/mechanical.md) and [electrical guide](docs/electrical.md)
+- [BOM, mass and fastener worksheets](bom), [circuit sheets and wiring](electronics)
+- [Firmware, phone UI and original MP3 files](firmware), [sound catalog](audio/catalog.csv)
+- [Verification methods and physical limits](docs/verification.md)
 
-Use the original Adafruit HUZZAH32 3405. Do not use a Feather V2 or S3 board
-without changing the pin map and build configuration. Wheels 3766 were
-listed out of stock during research; fit the specified wheels before the
-full print run. Other wheel diameters change the ground clearances.
+The video is a30second CAD simulation, with illustrative timing. S3
+stores the PDF/MP4 privately; CloudFront serves their stable HTTPS links.
+The robot itself does not need cloud connectivity.
+
+Use the original Adafruit HUZZAH32/3405. The exact wheels, servo, bearings
+and actuator must be fitted before the full print/finish run. Check the
+current BOM stock notes; no component purchase was made for this design.
 
 ## Rebuild
 
-Run commands from `C:/dev/robots/r2d2`:
+Run from `C:/dev/robots/r2d2`, using the installed OpenSCAD, Bambu Studio,
+Python, PlatformIO, FFmpeg and Node tools:
 
 ```powershell
 python scripts/export_cad.py
-python scripts/export_cad.py --views
 python scripts/slice_structure.py
-python scripts/generate_audio.py
 python scripts/electronics.py
 pio run -d firmware
 pio run -d firmware -t buildfs
+python scripts/draw_robot.py
+python scripts/render_video.py
 python scripts/verify.py
 python scripts/build_manual.py
+# Inspect output/pdf/rendered before sharing the regenerated manual.
+python scripts/package.py
 ```
 
-Existing tools used: OpenSCAD 2021.01 and its MCAD gear library, Python
-NumPy/trimesh/ReportLab/PyMuPDF, FFmpeg, PlatformIO and Node.js. The exporter
-accepts an `OPENSCAD` executable environment variable. The compiled motor
-control test uses MinGW g++. No cloud service or recurring job is required.
+Do not change CAD/STLs while a render or verification run is active.
+The scripts check hashes to prevent mixing revisions. The supplied
+audio is original; `scripts/generate_audio.py` reproduces it when needed.
+No recurring automation or printer connection is created by these scripts.
 
-This package includes no purchased parts and no factory credentials.
-The CAD and synthesized sounds were created for this build. The gear
-generator comes from OpenSCAD's MCAD library under LGPL-2.1; it is referenced
-by the source and is not copied into this repository.
+Publication runs only through `.github/workflows/publish-r2d2.yml` after
+a push to main. It checks the final manifest, uploads the two files,
+invalidates their cache entries and verifies anonymous byte-for-byte
+downloads plus MP4 range delivery. There is no local deployment path.

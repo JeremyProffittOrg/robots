@@ -1,0 +1,8 @@
+{
+  "estimated_total_g": 8952.5,
+  "design_limit_g": 9000.0,
+  "estimated_reserve_g": 47.5,
+  "physical_mass_measured": false,
+  "initial_6kg_assumption_met": false,
+  "method": "Current cut areas and model extrusion plus named stock/component allowances; no payload budget"
+}

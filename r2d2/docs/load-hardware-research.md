@@ -1,5 +1,6 @@
 # Load-bearing leg hardware research
 
+Research history only. Follow the revision C BOM and fabrication worksheet for selected parts and dimensions.
 Checked 2026-09-12. Research only; no purchases. The robot envelope is 609.6 mm high. The side “arms” are the two outer support legs. Printed shells should cover a metal load path, not form the main shoulder or telescoping joint.
 
 ## Selected actuator candidate

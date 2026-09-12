@@ -1,15 +1,15 @@
-"""MATLAB-style engineering PNGs from the current Revision B STL meshes.
+"""MATLAB-style engineering PNGs from the current revision C STL meshes.
 No CAD/firmware changes. Purchased parts are explicitly schematic envelopes.
 """
 from pathlib import Path
-import hashlib,json,zipfile
+import hashlib,json,zipfile,subprocess,io
+import fitz
+from export_cad import EXE
 import numpy as np
 import trimesh
 import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
-from matplotlib.collections import PolyCollection
-from matplotlib.patches import Patch
 from matplotlib.colors import to_rgba
 from PIL import Image
 
@@ -35,48 +35,21 @@ def item(name,xyz=(0,0,0),color=GRAY,**rot):return (transformed(MESH[name],xyz,*
 def box(size,xyz,color,name):
  m=trimesh.creation.box(size);m.apply_translation(np.asarray(xyz)+np.asarray(size)/2);return m,color,name
 def wheel(xyz):return transformed(trimesh.creation.cylinder(radius=31.5,height=29,sections=48),xyz,ry=90),ORANGE,'Wheel envelope'
-def bearing(xyz):return transformed(trimesh.creation.annulus(r_min=4,r_max=11,height=7,sections=40),(xyz[0],xyz[1],xyz[2]+3.5)),GOLD,'608 bearing'
-
-def foot(center=(0,0,0),exploded=False,cover=False):
- x,y,z=center;parts=[]
- parts.append(item('foot_deck',(x,y,z+65+(45 if exploded else 0)),GRAY))
- if cover:parts.append(item('foot_cover',(x,y,z+70+(85 if exploded else 0)),'#D9E4ED'))
- for dy in [-45,45]:
-  parts.append(item('motor_cradle',(x,y+dy,z+16),BLUE))
-  parts.append(box((18.6,70,22.44),(x-9.3,y+dy-57,z+20.3+(30 if exploded else 0)),GOLD,'3777 motor envelope'))
-  for dx in [-1,1]:parts.append(wheel((x+dx*(75 if exploded else 33),y+dy,z+31.5)))
- return parts
-
-def head(base=0,exploded=False):
- gap=14 if exploded else 0
- parts=[item('bearing_tower',(0,0,424+base),BLUE),bearing((0,0,424+base)),bearing((0,0,443+base)),
-  item('bearing_cap',(0,0,450+base+gap),GRAY),item('gear_hub',(0,0,451+base+gap*2),BLUE),
-  item('head_plate',(0,0,470+base+gap*3),GRAY),item('servo_mount',(45,0,416+base),BLUE),
-  box((20,40,37),(35,-30,419+base),INK,'Servo envelope'),
-  item('servo_pinion',(45,0,461+base+gap*2),GOLD,rz=9)]
- for a in [0,90,180,270]:
-  parts.append(item('dome_spacer',(119*np.cos(np.deg2rad(a)),119*np.sin(np.deg2rad(a)),473+base+gap*3),GRAY))
- parts.append(item('dome',(0,0,479.6+base+gap*4),'#BCCCDC'))
- parts.append(item('eye',(0,114,535+base+gap*4),BLUE,rx=-65))
- return parts
-
-def robot(exploded=False):
- parts=[];dx=100 if exploded else 0;upper_gap=95 if exploded else 0
- for sign,name in [(-1,'arm_left'),(1,'arm_right')]:
-  x=sign*(190+dx);parts+=foot((x,0,0),cover=True)
-  parts.append(item(name,(x,0,70+(35 if exploded else 0)),'#CAD9E8'))
-  parts.append(box((40,2,150),(x-20,30,120+(35 if exploded else 0)),BLUE,'Painted stripe'))
- parts+=foot((0,-180-(80 if exploded else 0),0))
- parts += [item('rear_bracket',(0,-180-(80 if exploded else 0),110),BLUE),item('rear_attach',(0,0,165),GRAY),
-  item('body_lower',(0,0,170),'#D5E1EB'),item('body_upper',(0,0,315+upper_gap),'#C3D6E7'),
-  box((112,66,71),(-56,-33,181),INK,'Battery envelope'),item('utility_deck',(0,0,329+upper_gap),GRAY)]
- for z in [240,290,350,397]:parts.append(item('detail_panel',(-36,130,z+(upper_gap if z>=320 else 0)),BLUE,rx=90))
- parts+=head(upper_gap+(65 if exploded else 0))
- # Rear steering positions match the CAD assembly.
- ry=-180-(80 if exploded else 0)
- parts += [item('bearing_tower',(0,ry,114),BLUE),item('bearing_cap',(0,ry,140),GRAY),
-  item('spindle_sleeve',(0,ry,75),GRAY),item('gear_hub',(0,ry,141),BLUE),
-  item('servo_mount',(45,ry,106),BLUE),item('servo_pinion',(45,ry,151),GOLD,rz=9)]
+def robot():
+ parts=[item('body_lower',(0,0,130),'#D5E1EB'),item('body_upper',(0,0,269.7),'#C3D6E7'),item('dome',(0,0,441.8),'#BCCCDC')]
+ for sign in [-1,1]:
+  leg=MESH['leg'].copy();leg.apply_translation([0,0,-20])
+  leg=transformed(leg,rz=-45);leg=transformed(leg,ry=90)
+  leg=transformed(leg,(sign*165,0,390),rz=180 if sign<0 else 0)
+  parts.append((leg,'#D5E1EB','leg'))
+ for x,y,name in [(-165,0,'outer_foot'),(165,0,'outer_foot'),(0,-128.93,'rear_foot')]:
+  shell=MESH[name].copy()
+  if x<0:shell.apply_transform(np.diag([-1,1,1,1]))
+  parts.append((transformed(shell,(x,y,5)),'#D5E1EB',name))
+  parts.append(item('drive_cassette',(x,y,16),BLUE))
+  for yy in [-37,37]:
+   parts.append(box((18.6,70,22.44),(x-9.3,y+yy-57,20.28),GOLD,'3777 envelope'))
+   for xx in [-29,29]:parts.append(wheel((x+xx,y+yy,31.5)))
  return parts
 
 def draw(ax,parts,edges=False):
@@ -134,79 +107,117 @@ def bounds(ax,parts,pad=.08,angles=(22,55)):
 
 def footer(fig,text):fig.text(.035,.025,text,fontsize=9,color='#526779')
 def save(fig,name):
- path=OUT/(name+'.png');raster_surfaces(fig);fig.savefig(path,dpi=170);plt.close(fig)
+ path=OUT/(name+'.png');path.parent.mkdir(parents=True,exist_ok=True);raster_surfaces(fig);fig.savefig(path,dpi=170);plt.close(fig)
  with Image.open(path) as im:assert im.width>=1800 and im.height>=1200;im.verify()
  ARTIFACTS.append(path);print('Rendered '+path.name,flush=True)
 
+METALS={
+ 'metal_carrier':(4,4,'6061-T6'), 'metal_chassis':(4,2,'6061-T6'),
+ 'metal_spine':(4,2,'6061-T6'), 'metal_base':(3,1,'6061-T6'),
+ 'metal_headfloor':(2,1,'6061-T6'), 'panel_front':(3,1,'G10 insulating sheet'),
+ 'panel_rear':(3,1,'G10 insulating sheet'), 'metal_yoke':(4,1,'steel'),
+ 'metal_limit_rail':(3,1,'6061-T6'), 'metal_ankle':(4,2,'steel'),
+ 'metal_fork':(4,2,'steel'), 'metal_sole':(4,3,'steel'), 'metal_bridge':(4,3,'steel')}
+
+def cad_views():
+ specs=[('assembly','assembly','850,1400,760,0,0,300'),('rear','assembly','850,-1400,760,0,0,300'),
+ ('section','section','850,-1400,760,0,0,300'),('exploded','exploded','1100,1600,1050,0,0,370'),
+ ('head-mechanism','head_mechanism','600,800,820,0,0,440'),('foot-mechanism','foot_mechanism','500,750,550,0,0,70')]
+ for name,part,camera in specs:
+  r=subprocess.run([EXE,'-o',str(ROOT/'cad'/f'{name}.png'),'--imgsize=1600,1600','--colorscheme=Tomorrow','--projection=o','--viewall','--autocenter',f'--camera={camera}','-D',f'part="{part}"',str(ROOT/'cad/r2d2.scad')],capture_output=True,text=True,timeout=90)
+  if r.returncode or 'ERROR:' in r.stderr or 'WARNING:' in r.stderr:raise RuntimeError(r.stderr)
+  print('CAD view '+name,flush=True)
+ (ROOT/'cad/metal').mkdir(exist_ok=True)
+ for name,(thickness,quantity,material) in METALS.items():
+  base=ROOT/'cad/metal'/name
+  r=subprocess.run([EXE,'-o',str(base.with_suffix('.dxf')),'-o',str(base.with_suffix('.svg')),'-D',f'part="{name}"',str(ROOT/'cad/r2d2.scad')],capture_output=True,text=True,timeout=90)
+  if r.returncode or 'ERROR:' in r.stderr:raise RuntimeError(name+': '+r.stderr)
+  assert 'EOF' in base.with_suffix('.dxf').read_text()
+ (ROOT/'cad/metal/manifest.json').write_text(json.dumps({n:{'thickness_mm':t,'quantity':q,'material':m,'dxf_sha256':hashlib.sha256((ROOT/'cad/metal'/f'{n}.dxf').read_bytes()).hexdigest()} for n,(t,q,m) in METALS.items()},indent=2))
+
 def overview():
- p=robot();fig=plt.figure(figsize=(13,10));ax=fig.add_axes([.02,.08,.74,.83],projection='3d');bounds(ax,p);draw(ax,p)
- fig.suptitle('R2-24  |  assembled robot',x=.05,ha='left',fontsize=21,fontweight='bold',y=.97)
- fig.text(.775,.79,'REVISION B',color=BLUE,fontsize=15,fontweight='bold')
- fig.text(.775,.755,'Nominal height: 609.6 mm\nBody diameter: 260 mm\nFoot cover span: 492 mm',linespacing=1.8,fontsize=11,va='top')
- fig.text(.775,.54,'2 stackable body prints\n1 complete print per arm\n6 drive motors / 12 wheels\nPowered rear steering\nContinuously rotating head',linespacing=1.9,fontsize=10.5,va='top')
- fig.legend(handles=[Patch(color='#C3D6E7',label='Printed shell / structure'),Patch(color=BLUE,label='Drive parts / blue trim'),Patch(color=ORANGE,label='Wheel envelopes'),Patch(color=GOLD,label='Motor / bearing envelopes')],loc='lower right',bbox_to_anchor=(.98,.19),frameon=False,fontsize=9)
- footer(fig,'STL-derived surfaces. Purchased parts are schematic envelopes. Dimensions in millimetres; hardware operation untested.');save(fig,'01-robot-isometric')
+ fig=plt.figure(figsize=(13,10));ax=fig.add_axes([.01,.06,.74,.86]);ax.imshow(Image.open(ROOT/'cad/assembly.png'));ax.axis('off')
+ fig.suptitle('R2-24 | detailed assembled robot',x=.04,ha='left',fontsize=21,fontweight='bold',y=.97)
+ fig.text(.76,.80,'REVISION C',color=BLUE,fontsize=15,fontweight='bold')
+ fig.text(.76,.75,'609.6 mm nominal height\n259.25 mm body diameter\n10 STL designs / 14 prints\nTwo whole body sections\nOne print per side leg',linespacing=1.8,fontsize=11,va='top')
+ fig.text(.76,.49,'Metal shoulder pivots\nGuided rear telescoping post\nSupported body tilt\nInternal head friction wheel\nSix ground motors / 12 wheels\nPhone control over Wi-Fi',linespacing=1.8,fontsize=10,va='top')
+ footer(fig,'Source CAD, with paint colors. Purchased parts are dimensional envelopes. Digital prototype; hardware untested.');save(fig,'01-robot-isometric')
 
 def ortho():
- p=robot();fig,axes=plt.subplots(1,3,figsize=(18,9),gridspec_kw={'width_ratios':[1,1,1.1]})
- for ax,(horizontal,vertical,depth,title) in zip(axes,[(0,2,1,'Front  |  looking along -Y'),(1,2,0,'Right side  |  looking along -X'),(0,1,2,'Top  |  looking down -Z')]):
-  polys=[];colors=[];depths=[]
-  for m,color,_ in p:
-   t=m.triangles;polys.extend(t[:,:,[horizontal,vertical]]);colors.extend([color]*len(t));depths.extend(t[:,:,depth].mean(1))
-  order=np.argsort(depths);ax.add_collection(PolyCollection(np.array(polys)[order],facecolors=np.array(colors)[order],edgecolors='none',rasterized=True))
-  ax.autoscale();ax.set_aspect('equal');ax.margins(.15);ax.grid(True);ax.set_axisbelow(True)
-  ax.set_xlabel('XYZ'[horizontal]+' (mm)');ax.set_ylabel('XYZ'[vertical]+' (mm)');ax.set_title(title,pad=16)
- axes[0].annotate('',xy=(-275,609.6),xytext=(-275,0),arrowprops={'arrowstyle':'<->','color':BLUE,'lw':1.4})
- axes[0].text(-290,305,'609.6 mm nominal',rotation=90,va='center',ha='right',color=BLUE)
- axes[0].annotate('',xy=(-130,650),xytext=(130,650),arrowprops={'arrowstyle':'<->','color':BLUE});axes[0].text(0,667,'260 mm body',ha='center',color=BLUE)
- axes[0].set_xlim(-330,280);axes[0].set_ylim(-50,700)
- fig.suptitle('R2-24  |  orthographic views',fontsize=22,fontweight='bold',x=.045,ha='left')
- fig.subplots_adjust(left=.05,right=.98,top=.89,bottom=.12,wspace=.27)
- footer(fig,'Revision B. Equal scale within each panel; panel scales differ. Purchased components use schematic envelopes.');save(fig,'02-robot-orthographic')
+ p=robot();fig=plt.figure(figsize=(18,10))
+ for i,(title,angle) in enumerate([('Front',(0,90)),('Right side',(0,0)),('Top',(90,-90))],1):
+  ax=fig.add_subplot(1,3,i,projection='3d');bounds(ax,p,angles=angle);draw(ax,p);ax.set_title(title,pad=18)
+ fig.suptitle('R2-24 | orthographic STL surfaces',x=.04,ha='left',fontsize=22,fontweight='bold')
+ fig.subplots_adjust(left=.025,right=.97,top=.88,bottom=.12,wspace=.05)
+ footer(fig,'Millimetres. Equal axis scale within each panel. Upright pose; exterior solids and wheel envelopes; paint omitted.');save(fig,'02-robot-orthographic')
 
 def exploded():
- p=robot(True);fig=plt.figure(figsize=(13,11));ax=fig.add_axes([.01,.07,.73,.85],projection='3d');bounds(ax,p,pad=.05);draw(ax,p)
- fig.suptitle('R2-24  |  exploded assembly',x=.04,ha='left',fontsize=22,fontweight='bold',y=.97)
- for i,(title,description) in enumerate([('01  Dome and head drive','One dome; separate bearing drive'),('02  Upper body','One print: frame, head deck and neck'),('03  Lower body','One print: base, posts and battery tray'),('04  Left / right arms','One print per arm; shoulder integrated'),('05  Three drive feet','Two motors and four wheels per foot')]):
-  y=.82-i*.135;fig.text(.755,y,title,fontsize=12,fontweight='bold',color=BLUE);fig.text(.755,y-.043,description,fontsize=9,color=INK,wrap=True)
- footer(fig,'Parts separated for identification. Exploded offsets are not assembly dimensions. Follow the Revision B manual for fastening.');save(fig,'03-robot-exploded')
+ fig,ax=plt.subplots(figsize=(13,10));ax.imshow(Image.open(ROOT/'cad/exploded.png'));ax.axis('off')
+ fig.suptitle('R2-24 | stackable covers separated',x=.04,ha='left',fontsize=22,fontweight='bold')
+ fig.subplots_adjust(top=.91,bottom=.07)
+ footer(fig,'Assembly offsets are illustrative. Two full body rings, one dome, two side legs and three foot covers.');save(fig,'03-robot-exploded')
 
 def mechanisms():
- fig=plt.figure(figsize=(16,10));p=foot(exploded=True,cover=True);ax=fig.add_subplot(121,projection='3d');bounds(ax,p,angles=(26,55));draw(ax,p,True);ax.set_title('Drive foot | exploded',pad=18)
- ax2=fig.add_subplot(122,projection='3d');p2=head(-400,True);p2=[x for x in p2 if x[2] not in ['dome','eye']];bounds(ax2,p2,angles=(25,55));draw(ax2,p2,True);ax2.set_title('Head rotation mechanism | dome removed',pad=18)
- fig.suptitle('R2-24  |  mechanisms broken out',x=.04,ha='left',fontsize=22,fontweight='bold')
- fig.text(.09,.13,'Foot: cover -> deck -> 2 motor envelopes -> 2 cradles\nFour wheel envelopes are moved outward for visibility.',fontsize=10,linespacing=1.7)
- fig.text(.55,.13,'Head: spacers -> plate -> driven gear -> cap -> bearings / tower\nServo envelope and 20-tooth pinion sit beside the 40-tooth hub.',fontsize=10,linespacing=1.7)
- fig.subplots_adjust(left=.03,right=.97,top=.9,bottom=.22,wspace=.05)
- footer(fig,'Coordinates are local drawing coordinates, not installation heights. Gold and orange purchased shapes are schematic.');save(fig,'04-mechanisms-exploded')
+ fig,axes=plt.subplots(1,2,figsize=(16,10))
+ for ax,name,title in zip(axes,['foot-mechanism','head-mechanism'],['Four-wheel foot | cover removed','Head drive | dome shell sectioned']):
+  ax.imshow(Image.open(ROOT/'cad'/f'{name}.png'));ax.axis('off');ax.set_title(title)
+ fig.suptitle('R2-24 | internal mechanisms',x=.04,ha='left',fontsize=22,fontweight='bold')
+ fig.subplots_adjust(top=.88,bottom=.12)
+ footer(fig,'Actual mounting geometry; purchased motors/wheels/bearings are envelopes. Metal frame carries the vertical load.');save(fig,'04-mechanisms-exploded')
+
+def component(ax,name,axes=False):
+ r=ROWS[name];m=MESH[name].copy();m.apply_translation(-m.bounds[0]);p=[(m,BLUE if r['material']=='PETG' else GRAY,name)]
+ bounds(ax,p,angles=(28,40));draw(ax,p,False)
+ ax.set_title(name.replace('_',' ')+f' | qty {r["quantity"]}',fontsize=12,fontweight='bold')
+ if not axes:
+  ax.set_xticks([]);ax.set_yticks([]);ax.set_zticks([]);ax.set_xlabel('');ax.set_ylabel('');ax.set_zlabel('')
+ ax.text2D(.5,-.03,f'{r["x_mm"]:g} x {r["y_mm"]:g} x {r["z_mm"]:g} mm | {r["material"]}',transform=ax.transAxes,ha='center',fontsize=9,color=INK)
 
 def catalog():
- groups=[('05-body-and-arm-components',['body_lower','body_upper','arm_left','arm_right','dome','eye']),
- ('06-foot-and-steering-components',['foot_deck','foot_cover','motor_cradle','rear_bracket','rear_attach','spindle_sleeve']),
- ('07-head-drive-components',['bearing_tower','bearing_cap','race_spacer','gear_hub','servo_pinion','servo_mount','head_plate','dome_spacer']),
- ('08-mounts-and-small-components',['utility_deck','speaker_mount','switch_plate','pcb_spacer','servo_shim_1','servo_shim_2','servo_shim_4','detail_panel','coupon'])]
- covered=[]
- for filename,names in groups:
-  count=len(names);cols=3 if count in [6,9] else 4;nr=(count+cols-1)//cols
-  fig=plt.figure(figsize=(18,11));fig.suptitle('R2-24  |  '+filename[3:].replace('-',' '),x=.035,ha='left',fontsize=22,fontweight='bold',y=.98)
-  for i,name in enumerate(names):
-   ax=fig.add_subplot(nr,cols,i+1,projection='3d');r=ROWS[name];mesh=MESH[name].copy();mesh.apply_translation(-mesh.bounds[0]);p=[(mesh,BLUE if r['material']=='PETG' else GRAY,name)]
-   bounds(ax,p,pad=.10,angles=(28,40));draw(ax,p,True);ax.set_title(name.replace('_',' ')+f'  |  qty {r["quantity"]}',fontsize=12,fontweight='bold',pad=3)
-   ax.set_xticks([]);ax.set_yticks([]);ax.set_zticks([]);ax.set_xlabel('');ax.set_ylabel('');ax.set_zlabel('')
-   ax.text2D(.5,-.03,f'{r["x_mm"]:g} x {r["y_mm"]:g} x {r["z_mm"]:g} mm  |  {r["material"]}',transform=ax.transAxes,ha='center',fontsize=9,color=INK)
-   covered.append(name)
-  fig.subplots_adjust(left=.035,right=.965,bottom=.10,top=.91,wspace=.12,hspace=.26)
-  footer(fig,'Actual STL geometry. Dimensions: X x Y x Z. Panels scaled independently. Quantities include fit coupon, shim options and spare spacers.');save(fig,filename)
- assert len(covered)==29 and set(covered)==set(ROWS)
+ fig=plt.figure(figsize=(20,11));fig.suptitle('R2-24 | all ten printable components',x=.035,ha='left',fontsize=22,fontweight='bold')
+ for i,name in enumerate(ROWS,1):component(fig.add_subplot(2,5,i,projection='3d'),name)
+ fig.subplots_adjust(left=.025,right=.975,bottom=.10,top=.89,wspace=.08,hspace=.28)
+ footer(fig,'Actual STL surfaces in their bed orientations; panels scaled independently. Print the outer foot once mirrored in X.');save(fig,'05-printed-components')
+ for i,name in enumerate(ROWS,1):
+  fig=plt.figure(figsize=(13,10));ax=fig.add_subplot(111,projection='3d');component(ax,name,True)
+  fig.suptitle('R2-24 | '+name.replace('_',' '),fontsize=22,fontweight='bold',x=.04,ha='left')
+  fig.subplots_adjust(top=.9,bottom=.13)
+  footer(fig,'Closed single-solid STL. Native bed orientation; dimensions in millimetres. See the print manifest for quantity.');save(fig,f'components/{i:02d}-{name}')
+
+def metal_drawings():
+ for page,names in enumerate([list(METALS)[:7],list(METALS)[7:]],1):
+  fig,axes=plt.subplots(2,4,figsize=(19,11));fig.suptitle(f'R2-24 | metal and insulating-sheet cut profiles {page}',x=.04,ha='left',fontsize=21,fontweight='bold')
+  for ax in axes.flat:ax.axis('off')
+  for ax,name in zip(axes.flat,names):
+   doc=fitz.open(str(ROOT/'cad/metal'/f'{name}.svg'));pix=doc[0].get_pixmap(matrix=fitz.Matrix(2,2),alpha=False)
+   ax.imshow(Image.open(io.BytesIO(pix.tobytes('png'))));doc.close();t,q,m=METALS[name]
+   ax.set_title(name.replace('metal_','').replace('_',' ')+f' | qty {q}\n{t} mm {m}',fontsize=11)
+  fig.subplots_adjust(top=.87,bottom=.1,wspace=.12,hspace=.35)
+  footer(fig,'Exact-size DXF/SVG profiles are in cad/metal. Images are not paper templates. Read fabrication.md for bores, threads and welds.');save(fig,f'0{5+page}-metal-profiles')
+
+def posture_plot():
+ data=json.loads((ROOT/'cad/kinematic-check.json').read_text());print('Kinematic report loaded',flush=True)
+ s=np.linspace(5.03832,72,101);a=40+(150+s)*np.sin(np.deg2rad(35));b=150+(150+s)*np.cos(np.deg2rad(35))
+ tilt=-(np.arctan2(a,b)-np.arccos(277/np.sqrt(a*a+b*b)))*180/np.pi;rear=-np.sqrt(a*a+b*b-277*277)
+ fig,ax=plt.subplots(1,2,figsize=(16,9));ax[0].plot(s,tilt,color=BLUE,lw=2);ax[0].set(xlabel='Actuator stroke (mm)',ylabel='Body tilt (degrees)',title='Supported posture geometry');ax[0].grid(True)
+ ax[1].plot(s,rear,color=ORANGE,lw=2);ax[1].set(xlabel='Actuator stroke (mm)',ylabel='Rear-foot Y (mm)',title='Rear pivot stays at Z = 113 mm');ax[1].grid(True)
+ fig.suptitle('R2-24 | rear post and body tilt',x=.045,ha='left',fontsize=22,fontweight='bold');fig.subplots_adjust(left=.09,right=.96,top=.86,bottom=.16,wspace=.25)
+ footer(fig,'Calculated kinematics only. Rear placement follows the requested layout; all three feet stay down. Not measured hardware motion.');save(fig,'08-posture-geometry')
 
 def main():
- OUT.mkdir(parents=True,exist_ok=True);overview();ortho();exploded();mechanisms();catalog()
- report={'style':'MATLAB-style Matplotlib surface drawings','revision':'B','printed_components':29,'geometry_changed':False,
+ sources=sorted((ROOT/'cad').glob('*.scad'))+[Path(__file__).resolve()]
+ source_hashes={str(p.relative_to(ROOT)):hashlib.sha256(p.read_bytes()).hexdigest() for p in sources}
+ OUT.mkdir(parents=True,exist_ok=True);cad_views();overview();ortho();exploded();mechanisms();catalog();metal_drawings();posture_plot()
+ for name in ['05-body-and-arm-components','06-foot-and-steering-components','07-head-drive-components','08-mounts-and-small-components']:
+  p=OUT/(name+'.png')
+  if p.exists():p.unlink()
+ assert all(hashlib.sha256(p.read_bytes()).hexdigest()==source_hashes[str(p.relative_to(ROOT))] for p in sources),'CAD changed during drawing render'
+ report={'style':'MATLAB-style Matplotlib engineering drawings','revision':'C','printed_components':10,'cad_sources':source_hashes,
  'sources':{n:hashlib.sha256((ROOT/'stl'/f'{n}.stl').read_bytes()).hexdigest() for n in ROWS},
- 'pngs':[{ 'file':p.name,'pixels':list(Image.open(p).size),'sha256':hashlib.sha256(p.read_bytes()).hexdigest()} for p in ARTIFACTS]}
+ 'pngs':[{'file':p.relative_to(OUT).as_posix(),'pixels':list(Image.open(p).size),'sha256':hashlib.sha256(p.read_bytes()).hexdigest()} for p in ARTIFACTS]}
  (OUT/'index.json').write_text(json.dumps(report,indent=2))
  with zipfile.ZipFile(OUT/'r2d2-matlab-style-drawings.zip','w',zipfile.ZIP_DEFLATED) as z:
-  for p in ARTIFACTS:z.write(p,p.name)
+  for p in ARTIFACTS:z.write(p,p.relative_to(OUT))
   z.write(OUT/'index.json','index.json')
- print('PASS: 8 PNG drawings; all 29 STL components included; source geometry unchanged')
+ print(f'PASS: {len(ARTIFACTS)} PNGs; all10 printable components and13 cut profiles; current STL hashes recorded')
 if __name__=='__main__':main()

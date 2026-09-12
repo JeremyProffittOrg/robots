@@ -1,31 +1,96 @@
 item,quantity,specification,use,unit_usd
-M3x12 bolt,12,Steel machine screw,Auxiliary board joints and spares; no shell seam bolts,0.08
-M3x60 bolt,18,Steel machine screw,Three per motor cradle through deck,0.25
-M3x35 bolt,8,Steel machine screw,Side foot covers,0.15
-M3x16 bolt,16,Steel machine screw,Bearing towers and speaker; includes spares,0.10
-M3x20 bolt,16,Steel machine screw,Servo cradle slots and switch faceplate,0.12
-M3x18 bolt,4,Steel machine screw,Head plate through gear hub; clear stationary cap,0.10
-M3x16 bolt,4,Steel machine screw,Dome spacers to captured dome nuts,0.10
-M3x8 thread forming screw,6,For 2.6mm plastic pilot holes,Bearing caps; only these thread into plastic,0.08
-M3 hex nut,90,DIN934 steel,Through joints; count includes spares,0.04
-M3 flat washer,160,Steel 3.2mm ID,Each bolt head and nut on plastic,0.02
-M4 threaded rod,4,4mm diameter x315mm steel,Body spine; cut and deburr,1.50
-M4 threaded rod,4,4mm diameter x280mm steel,Two through each side leg,1.25
-M4x20 bolt,8,Steel machine screw,Shoulder inner holes and rear attachment,0.14
-M4 hex nut,40,Steel regular plus jam nuts,Body and leg rods; attachment,0.05
-M4 washer,64,Steel 4.3mm ID,Spread load on plastic,0.03
-M8x120 fully threaded bolt,1,Steel with 13mm hex head,Rear steering spindle; verify useful thread length,1.75
-M8x65 fully threaded bolt,1,Steel with 13mm hex head,Head spindle,1.25
-M8 thin jam nut,8,Steel 13mm AF,Spindle lock pairs; no adhesive on bearings,0.15
-M8 bearing shim,8,8mm ID x12mm OD x1mm,Contact inner races only; not ordinary wide washers,0.15
-608-2RS bearing,4,8x22x7mm,Two rear and two head,1.50
-M2x8 bolt and nut set,8,Steel,Servo supplied horns to printed pinions; adjust to horn thickness,0.12
-M2.5x16 bolt and nut set,20,Steel,Boards on printed insulating spacers,0.12
-M3x20 bolt and nut set,4,Steel,Utility deck on6mm spacers,0.15
-Hook and loop strap,2,20x300mm,Battery retention through tray slots,1.50
-Cable tie,40,3.0mm width x200mm,Motor servo and PCB retention; plus wiring restraint,0.10
-Foam tape,1,1mm closed-cell x1m,Motor and board padding; never cover regulator surfaces,4.00
-Epoxy,1,Small two-part plastic-compatible adhesive,Non-load-bearing decorative eye and panels,6.00
-Paint and masking tape,1,Blue silver white black water-based,Decorative finish; keep mass low,20.00
-PLA filament,1,1kg white or silver,Dome and foot covers; includes support allowance,20.00
-PETG filament,5,1kg white or gray,Whole body and arm slices consume2.9kg including support; allowance for mechanisms and fit prints,22.00
+metal_carrier,4,4mm 6061-T6; exact DXF in cad/metal,Cut profile; secondary operations in fabrication.md,12
+metal_chassis,2,4mm 6061-T6; exact DXF in cad/metal,Cut profile; secondary operations in fabrication.md,12
+metal_spine,2,4mm 6061-T6; exact DXF in cad/metal,Cut profile; secondary operations in fabrication.md,12
+metal_base,1,3mm 6061-T6; exact DXF in cad/metal,Cut profile; secondary operations in fabrication.md,12
+metal_headfloor,1,2mm 6061-T6; exact DXF in cad/metal,Cut profile; secondary operations in fabrication.md,12
+panel_front,1,3mm G10 insulating sheet; exact DXF in cad/metal,Cut profile; secondary operations in fabrication.md,8
+panel_rear,1,3mm G10 insulating sheet; exact DXF in cad/metal,Cut profile; secondary operations in fabrication.md,8
+metal_yoke,1,4mm steel; exact DXF in cad/metal,Cut profile; secondary operations in fabrication.md,8
+metal_limit_rail,1,3mm 6061-T6; exact DXF in cad/metal,Cut profile; secondary operations in fabrication.md,12
+metal_ankle,2,4mm steel; exact DXF in cad/metal,Cut profile; secondary operations in fabrication.md,8
+metal_fork,2,4mm steel; exact DXF in cad/metal,Cut profile; secondary operations in fabrication.md,8
+metal_sole,3,4mm steel; exact DXF in cad/metal,Cut profile; secondary operations in fabrication.md,8
+metal_bridge,3,4mm steel; exact DXF in cad/metal,Cut profile; secondary operations in fabrication.md,8
+MISUMI bearing housing,4,BACA6001ZZ;52x36x13mm;12mm bore family,Shoulder carriers; retain original bearings as spares when fitting SKF replacements,38
+Shoulder bearing,4,SKF6001-2RSH;12x28x8mm,Replace housing bearings if using the SKF load figures,9
+Shoulder ground shaft,2,12h5 steel x90mm; certified yield>=350MPa,No printed shaft or threaded rod in shoulder bearings,14
+Split shoulder hub,2,6061-T6;Machined44OD x10;12H7 bore;fourM4 on32PCD;M4 clamp,Couple spine to shaft; fabrication worksheet,18
+Shaft collar,4,12mm split clamp;22OD x8 wide,Two per shoulder; no set screw against bearing surface,5
+Carrier spacer,8,6061-T610OD x4.5ID x53mm,Four per shoulder between carrier plates,2
+Inner carrier spacer,8,6061-T610OD x4.5ID x2.5mm,Core plate to inner carrier,0.5
+Head608 bearing,2,608-2RS;8x22x7mm,Head bearing tower,2
+Head inner spacer,1,Steel8.4ID x11.5OD x12mm,Between608 inner races,2
+Head inner race shim,4,8.4ID x12OD;0.2mm each,Nominal0.8mm above upper head bearing; adjust to actual fit,0.5
+Head spindle bolt,1,M8x60 button head steel;13.5mm head diameter,Rotating inner-race stack;clears16mm floor hole,1.5
+Head M8 nut,1,M8 steel full nut;13mm AF,Captured in integral dome rotor,0.3
+Head lower race washer,1,8.4ID x12OD x1.5mm steel,Under lower608 inner race,0.5
+Outer guide tube,1,6061-T6;31.75square x3.175wall x200mm,Stationary post guide,18
+Inner guide tube,1,6061-T6;19.05square x3.175wall x270mm,Moving post; do not drill stationary tube across its sliding path,16
+Acetal guide pads,8,Nominal3.175thick x18wide x20long; fit to measured tubes,Four faces at each of two guide stations,1
+Guide crossbar,2,6061-T6;190x30x10mm;blindM6 ends;two6.5mm U-bolt holes,Chassis stations t=-75 and0,14
+Square U-bolt,2,M6 steel;36mm inside width;75mm legs;four nuts/washers total,Clamp outer tube against crossbars; tighten without tube distortion,5
+Guide adapter block,1,6061-T6;34x34x65mm;19.2square socket;M12x1.75 tap,Moving tube to SKF rod end and yoke,25
+Guide crush sleeve,2,Steel8OD x5.5ID x12.7mm,Inside moving tube at twoM5 cross bolts,1
+Rear spherical rod end,1,SKFSA12E;12bore;M12 thread;10degree misalignment,Rear foot pitch and limited yaw; full shank engagement,22
+M12 jam nut,1,M12x1.75;6mm thick,Lock rod-end adjustment with21.5mm thread engagement,0.7
+Rear shoulder axle bolt,1,Norelem07534-12X25;12mm shoulder x25;M10x16 thread;18x9 head;steel12.9,Clamps spherical inner race through spacers;not a printed spindle,9
+Rear axle race spacer,2,12.1ID x16OD x3mm steel,Center10mm inner race in16mm fork gap,0.8
+Foot arch stanchion,6,Steel4x8x55mm,Two per foot;weld to T sole and bridge,2
+Rear servo platform,1,Steel34x60x4mm;21.7x42.7body opening;four3.4mm slots,Weld atZ66.1;slots support adjustable servo posts,5
+Rear servo step,1,Steel15x5x5mm,Join platform to rear foot bridge,1
+Rear servo standoff,4,SteelM3 female-female;20mm;5OD;through-threaded,Adjust with shims to horn top planeZ109.5,1.2
+Servo height shims,40,M3 steel;assorted0.5/1/2mm,Uniform0-10mm setup under servo ears;match horn plane,0.1
+Moving yoke clevis ear,2,Steel4x24x14mm;4.5mm pin bore,Weld to yoke atX29 and43;10mm inside gap,2
+Moving yoke steering ear,1,Steel4x24x14mm;3.2mm bore,Weld to yoke atX-37.5 to-33.5;shim to ball centerX-30,2
+Fixed actuator clevis,1,6061-T6 bracket;28x24x4base;two4mm ears;10mm gap,"Pins atX38,t3;twoM4 screws to t0 crossbar",15
+Actuator eye spacers,4,M4ID;two1mm and two2mm;steel,Center8mm rear eye and6mm fore eye in10mm clevis gaps,0.3
+Rail clamp block,1,6061-T6;12x13x10mm;M5 through;twoM3 blind,Attach stationary limit rail to t0 crossbar,3
+Rear steering horn,1,Metal25-spline horn;12mm link radius;MG-995 compatible,Use correct spline and supplied center screw,6
+Rear steering rod ends,2,IgusKBRM-03-MH;M3 female;3bore;B6.1+/-0.2;13mm head,Steel inner sleeve;400N catalog long-term along-link rating;no body-weight load,8
+M4x75 bolts,8,Steel8.8;socket head,Shoulder carriers through all spacers,0.4
+M5x16 bolts,8,Steel8.8;socket head,Bearing housings to carrier plates,0.2
+M4x10 bolts,12,Steel8.8;8 countersunk and4 socket head,Spine-to-hub8;moving-yoke4,0.15
+M4x20 bolts,4,Steel8.8;socket head,Hub clamps2;spares2,0.15
+M4x25 bolts,10,Steel8.8;socket head,Horizontal chassis block joints8;fixed actuator bracket2,0.18
+Chassis corner block,8,6061-T6;12x20x20;orthogonalM4 clearance bores,Base/head floor to side plates,3
+M4 cross rod,4,SteelM4 x206mm;deburr ends,Carry front/rear electronics panels atY+/-70 Z275/365,1.2
+M6x16 bolts,4,Steel8.8;socket head,Crossbar ends through chassis,0.2
+M6x20 bolts,4,Steel8.8;socket head,Two rigid ankle joints per side,0.2
+M5x45 bolts,2,Steel8.8;socket head,Adapter cross bolts through crush sleeves,0.2
+M5x30 bolt,1,Steel8.8;socket head,Limit-rail clamp block to crossbar,0.2
+Actuator clevis pin,2,4mm ground steel x24;1mm crossholes1.5mm from each end,Plain steel through both eyes;two retaining clips per pin,3
+M3x6 bolts,2,Steel machine screw,Limit rail to blind-tapped clamp block,0.1
+M2x14 switch bolts,4,Steel;washers;locking nuts,Two per limit switch;mount through actual6.4mm case thickness,0.12
+M3x14 bolts,13,Steel machine screw,Body seam4;motor cassettes9,0.12
+M3x12 bolts,11,Steel machine screw,Lower shell4;head tower4;spares3,0.1
+M3x40 bolts,12,Steel machine screw,Four cover-to-metal-bridge screws per foot,0.18
+M3x20 bolts,4,Steel machine screw,Head motor mount through floor;washer adjustment,0.12
+M3x8 bolts,4,Steel machine screw,Servo standoffs to platform,0.1
+M3x8 thread-forming screw,3,For2.6mm plastic pilots,Head bearing cap only,0.1
+Guide steering stud screw,1,M3x20 button head;M3 locking nut;small washers,Head faces bearing;nut and excess thread face away from rear axle,0.12
+M2.5 nylon standoff set,60,6mm female standoff;two bolts and nut each,Insulating electronics mounting;includes spare sets,0.3
+M2 nut and washer set,4,Steel,Limit-switch mounting,0.06
+M3 nuts and washers,80,Steel;include12 locking nuts;two washers per set,Body/foot/head mounts;spares included,0.09
+M4 nuts and washers,40,Steel;include12 locking nuts;two washers per set,Carriers;panel rods;actuator pivots;spares,0.12
+M5 nuts and washers,16,Steel;two washers per set,Bearing/guide/clamp joints;spares,0.15
+M6 nuts and washers,12,Steel;two washers per set,U-bolts and ankles;spares,0.18
+Battery straps,2,20x300mm hook-and-loop,Two independent straps through base slots,1.5
+Cable ties,80,3mm x200mm nylon;minimum80N rated loop tensile,Two per motor;panel loops;speaker;harness;spares,0.1
+Foam tape,1,1mm closed cell x1m,Motor setup and battery padding;do not cover regulators,4
+Threadlocker,1,Removable medium strength;metal only,Shaft hubs and metal fasteners;not plastic or bearing races,6
+Paint and masking tape,1,White silver blue black;thin compatible coats,Integral exterior relief;keep paint off fit surfaces,20
+PLA filament,2,1kg silver or white;allowance,Dome slice uses883g including support;spare material,20
+PETG filament,4,1kg white/gray;allowance,Other whole prints plus support and setup waste,22
+Machining and welding allowance,1,Local shop quote required;no purchase made,Secondary machining;welded steel feet/yoke;surface finishing,250
+Rear axle head shims,1,12.2ID x18OD;1.3mm total steel,Prevents shoulder from bottoming before inner-race clamping,1
+Rear axle washer and nut,1,M10 DIN985 locking nut;10.5ID x20OD x2mm washer,Outer fork retention;at least two threads visible,1
+Clevis-pin retaining clip,4,1mm wire R-clip;4mm pin compatible,Positive retention at both ends of each actuator pin,0.3
+Clevis-pin outer washer,4,4.2ID x8OD x0.8mm steel,Outside actuator clevis ears,0.15
+Guide-pad retaining screws,16,M2x5 countersunk;two per pad;check tip clearance,Retain acetal pads at T=-90/+30;minimum0.5mm from sliding face,0.08
+M3x25 skin screws,6,Steel machine screw,13mm printed boss plus4mm spine;lower screw atZ165 clears ankle,0.15
+M4x30 floor screws,8,Steel8.8;socket head,Base/headfloor through20mm corner blocks,0.2
+Steering threaded link,1,M3 steel rod;40mm blank;cut after checking thread depth,Nominal34.188mm rod gives61.188mm centers at5mm insertion each,1
+Steering thin nuts and shims,1,TwoM3 thin link jam nuts;3.2IDx6OD shims0.05/0.1/0.2mm;threadlocker,Nominal0.45mm sleeve-face offset;check free articulation,4
+M3 servo ear screws,4,SteelM3x20;trim for5mm actual engagement,Measure ear+shim+washer grip;do not bottom against the other screw,0.1
+Horn steering stud screw,1,M3x16 button head;M3 locking nut;small washer,From beneath horn through sleeve;check servo-case clearance,0.15

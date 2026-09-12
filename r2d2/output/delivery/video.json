@@ -1,0 +1,17 @@
+{
+  "simulation": true,
+  "physical_test": false,
+  "duration_s": 30,
+  "width": 1920,
+  "height": 1080,
+  "fps": 24,
+  "rendered_frames": 360,
+  "sha256": "d1fc448eada115beff02fba91838d8b1a777718063af1071bd711ca7b9563844",
+  "source_sha256": {
+    "cad\\exterior.scad": "6e2de698479a51c74317072460105b570dc327faa48a1528879cbc10925773db",
+    "cad\\kinematics.scad": "4f0394720eb9fab74ed8aa3f901b561347819a21c9d44dde2fe87e7c1a4a6d8f",
+    "cad\\loadframe.scad": "08c179f04982a31a25f7042d13f9e4ccaa6c5c6935ab642d9446c53b544f46fd",
+    "cad\\r2d2.scad": "23e0e18bd68845c2d0b0dbdde37c360fb81bacf40a1370f1472a7b855fe72c0d",
+    "scripts\\render_video.py": "abbdf83f4bfd27933b909c43625a69d474a831dcfb2da553ca4823c3b2663194"
+  }
+}

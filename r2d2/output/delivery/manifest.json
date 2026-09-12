@@ -1,0 +1,10 @@
+{
+  "revision": "C",
+  "files": {
+    "motion.mp4": "d1fc448eada115beff02fba91838d8b1a777718063af1071bd711ca7b9563844",
+    "design.pdf": "7d0aea209b468f9a6dd2193c18e49f7b062b0f3e240a1ea6fe520940c5247c0f"
+  },
+  "pdf_pages": 71,
+  "video_simulation": true,
+  "physical_tested": false
+}

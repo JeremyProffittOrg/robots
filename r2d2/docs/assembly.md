@@ -1,265 +1,336 @@
 # Assembly and commissioning
 
-## Tools and first checks
+## Tools and build order
 
-Use a Bambu H2D, 0.4 mm nozzle, dry PETG and PLA, calipers, a flat reference
-surface, small square, protractor, M2/M3/M4 drivers, 7 mm and 13 mm spanners,
-side cutters, wire stripper, soldering iron, heatshrink, multimeter and a
-current-limited bench supply. A small luggage scale helps measure pulling
-force. A thermocouple or infrared thermometer helps check motor/regulator
-temperature. Eye protection is needed when drilling or cutting rods.
+Use a Bambu H2D with 0.4 mm nozzle, dry PETG/PLA, calipers, square, flat
+reference surface, protractor, metric drivers/spanners, torque tools,
+multimeter, soldering equipment, ferrules, heatshrink and a current-limited
+12 V bench supply. Metal fabrication also needs the machining/welding
+capability specified in fabrication.md. A spring/luggage scale measures
+rolling drag. Three platform scales help check balance. Use a temperature
+probe for the loaded motor test.
 
-Read the mechanical height stack and electrical chapter before assembling.
-Inspect purchased items against the BOM. Print and test the fit parts first.
-Keep the battery disconnected until the electrical checks reach the
-specified connection step. Do not start with the complete shell installed;
-the first chassis test determines whether the chosen motors can move the
-actual weight on your floor.
+Build and test the metal structure before committing to finish work.
+The STL covers are not a substitute for the metal spines, shafts or foot
+frames. Keep a build log with actual part masses, measured clearances,
+calibration values, current, temperature and each acceptance result.
 
-## Stage 1 - feet and motors
+## Stage 1 - inspect and fabricate
 
-1. Label foot plates L, R and B. Mark their forward Y direction. Both
-   motors on each plate use the same orientation, with the motor cans
-   toward negative Y and shafts at local Y=-45 and +45.
-2. Smooth the six cradle floors and remove support from the slots. Put
-   thin foam under each motor. Feed two 3 mm cable ties through the slots
-   at local Y=-40 and -15. Leave them loose.
-3. Fit one wheel on each motor shaft. Support the opposite axle while
-   pressing by hand. Do not hammer or grip the gearbox with pliers. Keep
-   equal insertion depth on the two sides and leave clearance to the case.
-4. Place each cradle at Z=16 with wheels on a flat reference plane. Adjust
-   the thin padding so both axle centers are about 31.5 mm above that plane.
-   Rotate both wheels by hand; they must clear rails, ties and the case.
-5. Fasten each cradle under its foot deck with three M3x60 bolts, washers
-   and nuts. Pillar holes are at X=-18/+18,Y=-50 and X=0,Y=+20 relative to
-   each shaft. Pillar tops meet the deck underside at Z=65. Do not crush
-   the pillars; tighten until the washers stop moving.
-6. Tighten the case ties only enough to prevent motion. Check shaft and
-   wheel clearance again. Motor M1/M2 belong to L, M3/M4 to R, M5/M6 to B.
-   Solder each suppression capacitor across its motor tabs and label leads.
-7. Fit the two side foot covers. Their four integral posts land on the
-   deck. Use four M3x35 bolts per cover at X=+/-46,Y=+/-90 with washers
-   and nuts. Leave the center leg openings clear. The rear foot has no
-   cover so the steering spindle and harness remain accessible.
+1. Read the mechanical, fabrication and electrical chapters together.
+   Inventory the actual motors, wheels, bearings, P16 and servo against
+   the BOM. Check stock and dimensions before placing any order. All
+   prices in the hardware list are allowances, not a fabrication quote.
 
-## Stage 2 - stackable body and one-piece arms
+2. Open the main CAD and the 18 PNG drawings. Mark forward Y on all three
+   foot assemblies. Side-foot centers are X+/-165; rear placement is
+   behind the body. The back foot must not be built as a forward foot.
 
-8. Print `body_lower`, `body_upper`, `arm_left` and `arm_right` in PETG,
-   one copy each. Clear internal supports from the decks, rod bores,
-   locating lip/socket and shoulder windows. These four parts replace
-   the separate body quarters, frames, posts, splices and arm segments.
-9. Support `body_lower` with its bottom at Z=170. Put `rear_attach` under
-   its rear edge at Z=165..170. The battery tray and adapter are already
-   part of the lower print. Check the two rear rod holes line up.
-10. Cut four M4 body rods to315 mm and deburr them. Feed them through the
-    lower body's four integral sleeve bores, X=+/-75,Y=+/-75. Fit washers
-    and nuts below the base, including the rear attachment on the rear pair.
-11. Dry-fit the upper body down over the rods and locating lip. Its bottom
-    seats at Z=315, its top frame at465 and neck at477. Fit top washers and
-    jam nuts without crushing the printed sleeves. The lip must enter by
-    hand; correct local fit before tightening. Lift it off again before
-    attaching the arms, so their inner nuts are accessible from below.
-    Mount internal boards and head hardware while this section is off.
-12. Cut four M4 arm rods to280 mm. Two pass through each foot at local
-    X=0,Y=+/-20. Prepare the left/right one-piece arms; do not mirror them.
-    Keep the feet supported at their specified centers. Thread the battery
-    straps before covering the lower body. Leave all eight rod top nuts off.
-13. Bolt each integral arm bridge to the upper body's matching base holes
-    at X=+/-105,Y=+/-20 with M4x20 hardware while the upper body is off the
-    lower body. Hold the inner nuts through the open underside. Then lower
-    the upper-body/arms unit over all eight rods; a second person should
-    guide the feet and rods. Seat the body lip and both arm bases together.
-    Fit the four body top nuts and use the shoulder windows for the four
-    arm top nuts. There are no mid-arm joints or separate shoulder caps.
-14. Thread two battery straps through the integral tray slots. Leave the
-    battery out until the electrical checks. Confirm the connector exit
-    and regulator mounting space remain open after support removal.
+3. Import the 13 cutting profiles in millimetres. Verify one known span
+   with CAD measurement before cutting. Use the manifest's material,
+   thickness and quantity. Apply the secondary operations in the
+   fabrication worksheet rather than treating pilot holes as threads.
 
-## Stage 3 - rear steering and bearings
+4. Make the two paired shoulder carriers, spines, guide crossbars,
+   adapter and foot frames. Keep matching sets together. Check carrier
+   hole alignment with a straight 12 mm reference shaft before coating.
 
-15. Fit the `rear_bracket` under `rear_attach` using the four M4x20 joints
-    at X=+/-35,global Y=-103/-82. The rear bracket origin is (0,-180,110).
-    Its 5 mm top flange ends at Z=165. Check the bracket is square to the
-    body and the spindle center is exactly 180 mm behind the main feet.
-16. Press two 608 bearings into a `bearing_tower`, one from each end.
-    Insert the 12 mm `race_spacer` between their inner races. Mount the
-    tower on the rear bracket at Z=114 using four M3x16 bolts through
-    radius-24 holes. Add the cap with three M3x8 thread-forming screws in
-    the 2.6 mm pilot holes. Do not use machine screws in these pilots.
-17. Insert the M8x120 rear spindle bolt from below the rear foot, seating
-    its head in the hex recess. Fit the 38 mm `spindle_sleeve` on top of
-    the foot's 10 mm central boss, then one 1 mm inner-race shim. Feed
-    the shaft through the lower bearing, internal spacer and upper bearing.
-18. Add a 1 mm inner-race shim above the upper bearing, then `gear_hub`.
-    Seat one thin M8 nut in its hex pocket and add a second jam nut.
-    Snug the stack until axial play disappears while the foot turns freely.
-    Hold the inner nut and lock the outer one. Do not tighten against the
-    bearing outer rings or seals. Trim excess bolt projection if needed,
-    keeping at least two full threads beyond the final nut.
-19. Power the steering servo alone with a suitable 5 V bench supply and
-    a 1500 microsecond test pulse, or use the firmware with all drive
-    motor plugs disconnected. Center the servo before attaching its horn.
-    Do not move the servo by forcing the horn against the gearbox.
-20. Bolt its supplied horn to a `servo_pinion` with M2 bolts/nuts through
-    the radial slots. Use the supplied spline center screw. Place the
-    servo in its dropped cradle and set the pinion base to Z=151 with
-    the 1/2/4 mm shims. Secure two ties and foam pads without crushing it.
-21. Bolt the cradle into the rear bracket slots. Align the rear foot
-    straight ahead before meshing the gears. Slide the cradle to obtain
-    free mesh with slight backlash and no tooth bottoming. Nominal center
-    distance is 45 mm. Tighten the four mounting bolts only after checking
-    the full intended steering range.
-22. With motors still unplugged, command rear steering slowly in each
-    direction. At phone +100/-100 the actual foot must reach +25/-25
-    degrees, within about two degrees. Adjust STEER_CENTER_US and
-    STEER_US_PER_DEGREE in config.h to the measured horn/servo response.
-    Gear inversion is already accounted for by the negative pulse slope.
-    If the foot binds or stalls, stop and fix the geometry before travel.
-23. Route rear motor wires through a restrained service loop that permits
-    plus/minus 30 degrees without touching the gears. The loop must not
-    tighten at the command limits. Do not route wires through the spindle.
+5. Weld the steel T soles, stanchions, bridges and ankle/fork pieces in
+   a square fixture. Keep weld beads out of the wheel envelopes. Check
+   that both side uprights are square and the rear fork's gap is 16 mm.
+   Correct metal distortion before installing plastic or bearings.
 
-## Stage 4 - rotating head
+6. Finish the adapter socket, threads, crush sleeves, plain actuator pins
+   and shaft hubs. Check all blind-hole depths and screw projection.
+   Trial-fit the rod end to 21.5 mm engagement, then mark that position.
 
-24. Assemble the second tower and bearing spacer as in step 16. Mount it
-    on `head_deck` at Z=424. Its cap ends at Z=453. Keep cap screw ends
-    away from the bearing shields.
-25. Insert the M8x65 bolt from below the lower bearing, with a 1 mm
-    inner-race shim under its head. Add the upper shim and gear hub. Fit
-    the captured nut and jam nut. The hub starts at Z=451 and ends at
-    470. It must rotate freely without rocking; adjust preload by hand.
-26. Fit the FS5103R continuous servo in its cradle with its supplied horn
-    and pinion. Set the pinion base to Z=461 with shims and align the teeth.
-    Adjust the servo's neutral trim so 1500 microseconds produces no
-    movement. Record any remaining neutral correction in config.h.
-27. Attach `head_plate` to the hub's four radius-12 holes with M3x18 bolts,
-    washers and nuts. Its central opening clears the spindle nuts. Check
-    that no screw head contacts the cap during a full rotation.
-28. The fixed neck is already integral to the upper body; no neck screws
-    are needed. Fit the dome's four M3 captured nuts. Put four 6.6 mm spacers between
-    head plate and dome, centered at radius 119. Use four M3x16 bolts
-    from below into the dome nuts. The dome starts at Z=479.6.
-29. Turn the head manually through 360 degrees with power off. Require
-    at least 2 mm clearance around the fixed neck and no contact between
-    rods, screw ends and rotating parts. Then run the head at low speed
-    in both directions. No wire belongs inside the dome. The eye and
-    blue markings are decorative and unpowered.
+7. Dry-assemble the chassis base, side plates, corner blocks and head
+   floor. Align all eight corner blocks before tightening. The head
+   floor has separate motor and wheel clearances. Pass the actual head
+   wheel through its intended swept space by hand.
 
-## Stage 5 - boards, wiring and inspection
+8. Fit the two guide crossbars and square U-bolts. Install guide pads,
+   then slide the inner tube by hand over the full intended range.
+   There must be no hard spot or visible tube crushing. Retain each pad
+   without any screw touching the sliding tube.
 
-30. Mount the utility deck on four 6 mm spacers above the middle adapter.
-    Use four M3x20 through bolts. Place the HUZZAH32 near the service
-    opening, with its USB socket accessible. Use M2.5 bolts in board holes
-    where provided, and foam plus cable ties on slots where a board has
-    no usable hole. No exposed solder joint touches a metal rod or deck.
-31. Mount the three driver boards along the utility deck edge, keeping
-    each motor plug labeled. Put the buffer/prototype board and amplifier
-    away from driver output wires. Keep I2S leads short. Mount the speaker
-    in its printed plate using a soft rim pad and two ties through the
-    side slots; do not press on the cone. Fasten or tie the speaker plate
-    to unused utility-deck slots, cone up, clear of the head mechanism.
-32. Place the four UBECs on the lower adapter in pairs near Y=+/-58,
-    outside the battery tray. Restrain them with ties through the adapter
-    openings. Keep exposed cases apart and allow air around their surfaces.
-    The logic buck and fuse holders can use the remaining lower deck edge.
-33. Locate the switches on the rear wall of the full upper body.
-    Use `switch_plate` as the drilling template: two 12.5 mm openings
-    centered 30 mm apart, and four M3 attachment holes on a 60 x 32 mm
-    rectangle. Place the panel center near global Z=365 and away from a
-    rod. Drill the shell only after checking the switch-body and
-    wire clearances inside. Use the switch plate as a flat backing face
-    with small foam pads at the curved-shell edges. Label MAIN and RUN.
-34. Wire every connection in wiring.csv, marking rows complete. Work
-    through power first, driver signals next, buffer/servos, sense and
-    audio last. Check resistor values with the meter before installation.
-    Keep battery positive disconnected and fuses removed during soldering.
-35. Inspect every joint, ferrule and capacitor polarity. Check that none
-    of the four 5 V UBEC outputs is connected to another positive output.
-    Verify all grounds connect. Verify speaker leads are isolated from
-    ground. Inspect the AHCT notch and all fourteen pins against the map.
-36. With boards and motors unplugged, test power converters using a
-    current-limited 12 V bench supply. Measure each 5 V rail, MAIN and RUN
-    switch behavior and both divider outputs. Pack-sense ratio is 22/122;
-    RUN-sense ratio is 15/25. Disconnect power before attaching boards.
-37. Restore the boards, keep motors and servos unplugged, and test again
-    at a low current limit. Confirm 3.3 V on the Feather and a high FLT
-    input. Correct unexpected current or heating before moving on.
+## Stage 2 - first-fit prints and feet
 
-## Stage 6 - firmware and first drive
+9. Print one drive cassette, head bearing tower/cap and head motor holder
+   using the recorded H2D settings. Clear their supports and holes. Seat
+   the actual components by hand. Correct a tight hole locally rather
+   than scaling the whole part.
 
-38. With robot battery disconnected and J_USB removed, connect the
-    HUZZAH32 to the computer. Run `pio run -d firmware -t upload`, followed
-    by `pio run -d firmware -t uploadfs`. Use `--upload-port COMx` for the
-    actual controller port if automatic detection is ambiguous. Do not
-    upload to another device connected to the computer.
-39. Open `pio device monitor -b 115200`, reset the board and privately
-    save its generated Wi-Fi password. Join network R2-24 from the phone
-    and open http://192.168.4.1. This is a local access point; it needs no
-    router or Internet account. The initial screen must be disarmed.
-40. Disconnect USB, restore J_USB and reconnect robot power with RUN off.
-    Strap the battery down with both straps. Compare displayed voltage to
-    a meter, then calibrate PACK_CORRECTION if needed. Arming must fail
-    while RUN is off. Turn RUN on only with all wheels lifted and clear.
-41. Connect one motor pair at a time. Arm, hold forward at minimum speed
-    and check that both wheels on each motor move forward at the ground.
-    Reverse motor plug polarity if one motor differs within its pair.
-    Change the group's DIRECTION in config.h if the complete pair is
-    reversed. Disconnect power before changing wiring.
-42. Test reverse, release-to-stop, STOP, loss of phone Wi-Fi, page hide,
-    browser close and RUN-off. Motion commands expire within 500 ms of
-    the last accepted heartbeat. No old command or power restoration may
-    restart motion without a new Arm press. Check actual wheel stopping
-    time as well as command timeout. Physical RUN-off must always work.
-43. Reconnect servos and verify the steering and head calibration from
-    stages 3-4. Head motion stops at release and at STOP. The rear foot
-    holds its current angle after STOP; it does not snap to center.
-    Use Center steering while armed and stopped to align it for handling.
-44. Play all sixteen sound clips at low volume. Confirm no controller
-    resets when audio starts or motors accelerate. A reset means power
-    integrity needs repair, not a reason to disable the fault checks.
-45. Place the bare chassis on the intended floor, with a person beside
-    the physical RUN switch. Test short straight travel, reverse and large
-    arcs at low speed. The rear wheels must follow the curve without
-    skidding sideways. Do not test stairs, carpet, slopes or thresholds.
-46. Secure temporary ballast low in the tray area to reach the predicted
-    completed mass, at most 4.5 kg. Measure current and temperatures during
-    several gentle arcs and a ten-minute run. Require no stalls, no driver
-    faults, no supply resets, no loose shafts and no continuous motor
-    current above 0.5 A during gentle travel. Stop if cases exceed 50 C,
-    wiring heats or gears grind. These are conservative build acceptance
-    gates, not published component operating ratings.
+10. Set a steel foot frame on blocks with its wheel locations accessible.
+    Bolt the cassette to the T sole with three M3x14 screws, washers and
+    nuts. Keep the cable-tie slots open through both metal and plastic.
 
-## Stage 7 - skins and final acceptance
+11. Put both TT motor cans toward negative Y, with axles at Y=-37/+37.
+    Add thin foam beneath each case. Fit two cable ties per motor, away
+    from rotating shafts and electrical terminals. Leave the ties loose
+    until axle height has been set.
 
-47. After the loaded chassis passes, inspect the two-body stack and all
-    eight M4 body/arm rods. The structural skins are already integral;
-    there are no seam bolts to add. Check full nut engagement and no rod
-    tip touching a rotating part. Test service access by supporting the
-    lower body and feet on a work stand, unplugging the harness and removing
-    all eight body/arm rod top nuts. Lift the upper body and attached arms
-    together off the rods; use two people. The four inner bridge bolts
-    remain assembled. Reassemble and recheck. Use this same access method
-    when inserting or removing the battery.
-48. Complete the light paint finish and attach the eye with a small epoxy
-    fillet after fitting it to the dome curvature. Use the printed panel
-    as a paint stencil or apply with compliant pads. Do not add thick
-    resin coatings or filler. Do not glue service screws, bearings or gears.
-49. Weigh the completed robot and measure height. Target 609.6 mm, always
-    below 914.4 mm. Confirm the measured mass does not exceed the load used
-    in the successful chassis test or the 4.5 kg commissioning limit.
-50. Repeat the stop, disconnect, steering, sound and ten-minute temperature
-    checks with all skins installed. Record current, temperatures, mass,
-    stopping distance, steering limits and runtime in a build log. Mark
-    the machine ready only after all tests pass. Keep it supervised.
+12. Press one specified wheel onto each shaft end while supporting the
+    opposite end. Do not hammer the gearbox. Keep equal hub engagement
+    and clearance to the case. The drawing uses nominal X+/-29 wheel
+    centers; record the actual seating depth.
 
-## Fault finding
+13. Place all four wheels on a flat reference surface. Adjust foam
+    compression until both axles are at 31.5 mm. Tighten the ties without
+    deforming the motor case. Turn every wheel and check the complete
+    tire envelope, including the stanchion gap and power-cell cover.
 
-If the controller will not arm, check RUN sense, pack voltage, the common
-ground and open-drain FLT wiring. If it resets under load, inspect power
-distribution and USB-source isolation. If a foot turns opposite the others,
-check motor polarity before changing the mixer. If the rear foot scrubs,
-check its mechanical neutral and servo slope. If the dome drifts at rest,
-trim the continuous servo neutral. If a bearing binds, remove oversized
-washers or reduce preload. If the robot cannot move the test mass, do not
-raise current limits to hide it; revise weight or gearing and repeat the
-chassis gate before closing the shell.
+14. Repeat for the other two feet. Mark motors M1/M2 left, M3/M4 right,
+    M5/M6 rear. Each motor will have its own driver output pair, even
+    though two motors on one foot share a direction command.
+
+15. Bolt each metal side spine to its ankle upright with two M6 screws.
+    Check the datum holes are at Z119/139. Tighten these as rigid joints.
+    The shoulder, not the ankle, is the side-leg pivot.
+
+16. Fit the rear servo to its four steel standoffs. Use uniform shims
+    and the platform slots to center the shaft at X=-30,Y=-60. Set the
+    installed horn top face to Z109.5 and ball-center plane to Z113.
+    Keep the horn off until electrical neutral is set.
+    Check servo, standoffs and mounting screws clear the tires.
+
+## Stage 3 - shoulders and rear post
+
+17. Fit the specified bearings in the metal shoulder housings. Bolt each
+    housing to its carrier separately. Slide the ground shafts through
+    the aligned bearing pairs; they must move without being forced.
+
+18. Fit the inner/outer split collars in the stated locations. Put the
+    split hubs and spine pads on the shafts. Check flush pad-screw heads,
+    collar clearance and at least 1 mm from moving metal to each shell.
+    Tighten clamps and apply witness marks across shaft/hub interfaces.
+
+19. With the chassis supported independently, connect the inner guide
+    tube to the adapter using its crush sleeves and two M5 cross bolts.
+    Tighten against the sleeves, not the hollow tube walls.
+
+20. Bolt on the moving yoke. Its plate sits behind the actuator's case.
+    Fit the SA12E rod end and jam nut, preserving the marked engagement.
+    Check both threaded and square sockets remain clear internally.
+
+21. Put the spherical inner ring between the rear fork ears with its
+    two 3 mm spacers. Install the specified shoulder axle bolt,1.3 mm head
+    shim, outer washer and locking nut. The shoulder must not bottom
+    before the spacer/inner-ring stack is clamped.
+
+22. Move the supported frame through the allowed pitch and yaw by hand.
+    The spherical joint must turn freely without the bolt, nut or rod-end
+    shank striking the yoke. Keep at least two exposed threads beyond the
+    nut and 1 mm minimum measured clearance to the neighboring actuator ear.
+
+23. Install the detached P16 between its fixed and moving clevises with
+    the stated 1 mm/2 mm eye spacers, plain 4 mm pins, outer washers and four
+    retaining clips. Its case is outside the sliding guide. Do not use
+    the actuator rod to correct a crooked guide or bracket.
+
+24. Install the stationary limit rail and two SS-01GL switches in their
+    actual mounting orientation. Check the 30 mm cam passes their levers
+    without hitting the switch cases or fasteners. Leave adjustment
+    screws accessible for the bench calibration stage.
+
+25. Do not install the rear steering link yet. The body remains supported
+    while the post is calibrated. The factory-retracted actuator is not
+    a valid powered operating posture in the installed robot.
+
+## Stage 4 - wire with power disconnected
+
+26. Solder one 100nF capacitor directly across each of the seven motor
+    terminals. Extend and twist the short motor leads, add strain relief,
+    and fit separately labeled plugs. Insulate every exposed joint.
+
+27. Build the main fuse and MAIN/RUN switch harness. Put F1 close to the
+    discharge connector. Check the fuse values and wire gauge. Keep the
+    factory battery connector intact and the pack unplugged.
+
+28. Wire the five separate 5 V UBEC branches, logic converter and regulated
+    12 V actuator branch. Fit the listed capacitors with correct polarity.
+    Use a common ground distribution point. Verify no two positive
+    converter outputs have been joined.
+
+29. Wire D1-D4 from the circuit schedule. Keep the factory DRV8833 current
+    limits. Connect each ground motor to its own channel and M7 only to
+    D4 channel A. Ground unused D4 B inputs and insulate unused outputs.
+
+30. On D5 only, remove factory R1/30k and fit 71.5k1 percent. Inspect and
+    measure the replacement before attaching the actuator. A parallel
+    resistor would set the wrong current limit.
+
+31. Build U7 on the solderable board. Check DIP orientation, decoupling,
+    all output enables and the unused channel. Follow the post NC-limit
+    paths exactly, with 4.7k pull-downs at D5 after the switches.
+
+32. Wire ADS1115 and INA219 at 3.3 V logic, addresses 0x48/0x40. Check the
+    P16 orange/yellow/purple feedback wires separately from red/black
+    motor wires. Measure continuity to each named terminal; do not rely
+    on color alone.
+
+33. Wire pack/RUN dividers, the amplifier and speaker. Neither speaker
+    wire is ground. Keep the Feather BAT/JST empty. Fit and label the
+    removable J_USB power link. Check all GPIOs against config.h.
+
+34. Mount boards on nylon standoffs and the insulating panels. Use actual
+    board holes as drilling templates where the general grid does not
+    align. Retain UBECs, fuses and speaker independently. Add service
+    loops, but keep every conductor away from shafts, wheels and the guide.
+
+## Stage 5 - controller and detached actuator calibration
+
+35. Unplug the pack and remove J_USB before connecting computer USB.
+    Build with pio run -d firmware, then upload firmware and filesystem
+    using pio run -d firmware -t upload and pio run -d firmware -t uploadfs.
+    Use the actual controller's port if auto-detection is ambiguous.
+
+36. Read the private 16-character AP password from the physical serial
+    console at 115200 baud. Save it privately. Connect the phone to R2-24
+    and open http://192.168.4.1. Test the STOP button. Do not expect
+    arming while required sensors or valid actuator position are absent.
+
+37. Remove USB, restore J_USB and use a current-limited 12 V bench supply
+    in place of the pack for initial rail checks. Keep all ground motors,
+    M7 and the steering servo unplugged. Confirm 5 V rails are 4.75-5.25 V,
+    P6 near 12 V and sensor logic near 3.3 V before connecting their loads.
+
+38. Keep the actuator/guide assembly detached from the robot and secured
+    on the bench. Record its factory-retracted eye spacing and measure
+    voltage at ADS1115 AIN0. Compute the initial zero count as round(V*8000).
+    The firmware may latch an expected out-of-range fault at this position;
+    do not bypass that installed-motion interlock.
+
+39. For temporary bench control, unplug GPIO4/16 from U7 inputs 5/9.
+    Leave their 10k pull-downs, both NC limits and all D5 pull-downs fitted.
+    Use two normally-open momentary buttons from 3.3 V to U7 pin 5 or pin 9.
+    Pressing one supplies extend or retract through the existing hardware
+    limit. Release stops it. Insulate the disconnected ESP32 signal ends.
+    Only the detached actuator is connected as a motor load for this test.
+
+40. At low bench current, verify which button extends the rod. If wrong,
+    correct the complete motor/direction/limit assignment before continuing.
+    Do not merely relabel a reversed switch. Adjust LS_RET to open near 2 mm
+    extension and LS_EXT near 80 mm, measured from the factory eye spacing.
+
+41. Hold each limit open by hand and press its blocked-direction button.
+    The motor must remain stopped. The opposite button must move away.
+    Repeat for both switches. Verify the cam holds the switch open through
+    the remaining mechanical travel, without bottoming the lever.
+
+42. Stop at the measured 80 mm point and record AIN0 voltage/count. Set
+    POST_ADC_ZERO to the recorded zero count and POST_ADC_FULL to
+    ZERO+(COUNT80-ZERO)*100/80. This two-point extrapolation avoids driving
+    into the 100 mm mechanical endpoint. Check intermediate 10/40/70 mm
+    positions with a ruler; require position error within 1 mm.
+
+43. Return the detached actuator to approximately 5 mm. Remove the temporary
+    buttons and restore GPIO4/16 wiring. Disconnect power and reflash the
+    calibrated firmware with the USB isolation procedure. Restart at 5 mm
+    and verify a healthy status before installing the mechanism under load.
+
+44. Reconnect the steering servo alone, center it electrically, and install
+    the metal horn with its supplied center screw. Set the 12 mm crank and
+    61.188 mm link length with the rear foot straight. Put the guide-end
+    stud along X and horn-end stud along Z. Tighten both link jam nuts.
+
+45. Check actual+/-8 degree rear yaw with a protractor. Adjust STEER_CENTER_US
+    and STEER_US_PER_DEGREE to the measured servo, then rebuild if needed.
+    Do not enlarge the yaw limit. Check link articulation and cover/harness
+    clearance over all permitted body postures.
+
+## Stage 6 - supported structure and motion tests
+
+46. Support the three metal foot bridges on a suitable fixture with all
+    TT wheels unloaded. The rear support must be positioned for the
+    selected post length. Check the bare metal structure first with a
+    small load, then with the intended 9 kg total design load.
+
+47. Have the fabricator check the load path and fixture before a staged
+    static proof up to the 27 kg equivalent 3x-gravity load. Apply the load
+    through the stated body CG region and keep it supported against a
+    tip. Do not apply this proof load through the TT gearboxes. Inspect
+    for cracks, slipped witness marks and residual deformation after
+    unloading; any such change fails the test.
+
+48. With normal load and independent support available, test short held
+    posture commands. Release must stop movement. Check upright, middle
+    and maximum commanded tilt. Verify guide overlap, rod-end clearance,
+    stable support and the measured current. Do not increase the current
+    thresholds to overcome a jam.
+
+49. Measure on-time and cooldown. A two-second move must reserve at least
+    eight seconds off before a fresh press can move again. A target change
+    during motion must stop and require release. Verify the phone's
+    position/tilt display against measured geometry; tilt is calculated,
+    not read from a physical angle sensor.
+
+50. Test STOP, button release, phone focus loss and Wi-Fi disconnect during
+    a short supported move. Check no motion resumes after reconnection.
+    Disconnect feedback during a supported test and confirm a latched
+    stop. Restore it only with power off and correct the cause before
+    restarting. Measure actual stopping delay and displacement.
+
+51. Remove proof load and lower only the intended normal robot weight onto
+    its wheels. Reconnect ground motors. Lift the wheels for first polarity
+    tests. Each pair must propel its foot forward on a forward command;
+    correct calibration::DIRECTION or matched motor connections as needed.
+
+52. Test straight motion and gentle turns on a level hard floor at the
+    lowest useful speed. Measure each ground motor's steady current and
+    temperature. Require no stalls and no more than 0.5 A steady per motor.
+    Stop for rapid heat rise, binding, tire rub or abnormal gear noise.
+
+53. Measure rear-foot rolling drag with a spring scale and normal load.
+    Require 10 N or less. Check the robot can start repeatedly at the
+    intended final mass. Weigh all remaining covers and electronics before
+    claiming the final load test is complete.
+
+## Stage 7 - final prints, head and finish
+
+54. Print the remaining quantities in the manifest. Mirror only one outer
+    foot in native X. Clean all supports and test each closed mesh's actual
+    fastener access. Do not enlarge or cut away load-bearing metal to make
+    a poorly cleaned plastic cover fit.
+
+55. Fit the lower shell to the metal base and its captured seam nuts.
+    Fit the complete upper shell before the shoulder carriers. Use the
+    closed shoulder openings and the correct rear switch orientation.
+    Tighten the four seam screws evenly, without crushing the locating lip.
+
+56. Fit both complete leg skins over their metal spines and secure the
+    six skin screws. Check the shoulder can swing without rubbing. Fit
+    each whole foot cover to its four bridge bosses. Check screw tips,
+    the power-cell housing, all tires and the rear linkage again.
+
+57. Install the head bearing tower, both 608 bearings and 12 mm inner spacer.
+    Add the nominal 0.8 mm upper inner-race shim stack and bearing cap.
+    Fit the M8 bolt, lower inner-race washer and integrated dome rotor's
+    captured nut. Adjust for free rotation without vertical play.
+
+58. Fit M7 to its holder with foam and two ties. Fit its internal wheel.
+    Bolt the holder to the metal floor, with the front screws beyond the
+    wheel at Y45. Adjust tire compression to about 0.5-1 mm against the
+    underside track. Turn the head by hand through a complete revolution
+    before applying power; no metal plate or screw may enter the tire path.
+
+59. Power M7 at low duty. Test both directions, release, STOP and lost Wi-Fi.
+    Check drive traction and current without tightening the tire harder
+    than needed. No wire may cross into the rotating dome. The decorative
+    eye and display relief stay part of the single dome print.
+
+60. Paint and label the covers, keeping fits and tire/track surfaces clean.
+    Play all 16 original MP3s at low volume and check the speaker mount.
+    Reweigh the finished robot, verify CG, repeat loaded driving/posture
+    and stopping tests, and record runtime and temperatures. Keep the
+    completed test log with the PDF. The design files alone do not prove
+    that a built robot has passed these physical tests.
+
+## Regular checks
+
+Before each session, check both physical switches, battery straps, wheel
+retention, shaft-clamp witness marks, pins, guide pads and harness loops.
+Stop and investigate any new play or noise. Disconnect and remove the pack
+for charging with its matched charger. Support the body before removing a
+shoulder or actuator. Keep the calibrated firmware and recorded mechanical
+measurements with the actual unit so replacement parts can be checked.

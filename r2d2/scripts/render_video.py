@@ -46,6 +46,8 @@ def frame(index,tmp):
 def main():
     p=argparse.ArgumentParser();p.add_argument('--preview',action='store_true');a=p.parse_args()
     OUT.mkdir(parents=True,exist_ok=True)
+    sources=sorted((ROOT/'cad').glob('*.scad'))+[Path(__file__).resolve()]
+    source_hashes={str(p.relative_to(ROOT)):hashlib.sha256(p.read_bytes()).hexdigest() for p in sources}
     with tempfile.TemporaryDirectory(prefix='r2-video-') as name:
         tmp=Path(name);indices=[0,120,210,285] if a.preview else list(range(FPS*SECONDS))
         with ThreadPoolExecutor(max_workers=4) as pool:
@@ -57,6 +59,7 @@ def main():
             for n,i in enumerate(indices):
                 with Image.open(tmp/f'frame-{i:04}.png') as im:sheet.paste(im.resize((960,540)),((n%2)*960,(n//2)*540))
             sheet.save(ROOT/'tmp/reference/video-preview.png');return
+        assert all(hashlib.sha256(p.read_bytes()).hexdigest()==source_hashes[str(p.relative_to(ROOT))] for p in sources),'CAD changed during video rendering'
         result=subprocess.run(['ffmpeg','-y','-v','error','-framerate',str(FPS),'-i',str(tmp/'frame-%04d.png'),
                                '-c:v','libx264','-preset','medium','-crf','19','-pix_fmt','yuv420p','-r','24','-movflags','+faststart',str(OUT/'motion.mp4')],capture_output=True,text=True,timeout=180)
         if result.returncode:raise RuntimeError(result.stderr)
@@ -66,7 +69,7 @@ def main():
     subprocess.run(['ffmpeg','-v','error','-i',str(OUT/'motion.mp4'),'-f','null','-'],check=True,timeout=120)
     report={'simulation':True,'physical_test':False,'duration_s':SECONDS,'width':1920,'height':1080,'fps':24,
             'rendered_frames':FPS*SECONDS,'sha256':hashlib.sha256((OUT/'motion.mp4').read_bytes()).hexdigest(),
-            'source_sha256':{str(p.relative_to(ROOT)):hashlib.sha256(p.read_bytes()).hexdigest() for p in sorted((ROOT/'cad').glob('*.scad'))}}
+            'source_sha256':source_hashes}
     (OUT/'video.json').write_text(json.dumps(report,indent=2))
     print(f'PASS: {SECONDS}s 1920x1080 MP4; full decode; current CAD source hashes recorded')
 

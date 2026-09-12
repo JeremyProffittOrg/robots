@@ -1,9 +1,9 @@
 {
-  "pages": 35,
-  "bytes": 1765970,
-  "text_characters": 60015,
+  "pages": 71,
+  "bytes": 7029340,
+  "text_characters": 108404,
   "all_pages_rendered": true,
-  "budget_usd": 594.49,
+  "budget_usd": 1896.56,
   "outline_entries": [
     [
       "Design and assembly manual",
@@ -22,156 +22,276 @@
       3
     ],
     [
-      "Design envelope",
+      "Shape, size and printed parts",
       3
     ],
     [
-      "Load and drive limits",
+      "How the moving structure works",
       3
     ],
     [
-      "Purchased fits and adjustable mounts",
+      "Load basis and acceptance limits",
       3
     ],
     [
-      "Height stack and mating surfaces",
+      "Body and head stack",
       4
     ],
     [
-      "Print order and settings",
+      "Print order and H2D settings",
       4
     ],
     [
-      "Finish and maintenance",
+      "Finish and service",
       5
     ],
     [
-      "Integrated body structure",
+      "Metal load frame",
       6
     ],
     [
-      "Stackable body sections",
+      "Whole stackable covers",
       7
     ],
     [
-      "Rear foot and service access",
+      "Rear post and foot",
       8
     ],
     [
-      "Electrical design and wiring",
+      "Metal fabrication worksheet",
       9
     ],
     [
-      "Architecture",
+      "Drawing conventions and stock",
       9
     ],
     [
-      "Power path",
+      "Shoulder carriers and leg spines",
       9
     ],
     [
-      "Pin map",
-      9
-    ],
-    [
-      "Servo and sense circuits",
+      "Base, top floor and electronics panels",
       10
     ],
     [
-      "Audio and USB",
+      "Welded four-wheel foot frames",
       10
     ],
     [
-      "Harness and charging",
-      10
-    ],
-    [
-      "Sources",
+      "Telescoping guide, adapter and actuator",
       11
     ],
     [
+      "Limit rail and rear steering link",
+      12
+    ],
+    [
+      "Inspection before powered assembly",
+      12
+    ],
+    [
+      "Electrical design and wiring",
+      13
+    ],
+    [
+      "Architecture and power",
+      13
+    ],
+    [
+      "GPIO and named nets",
+      13
+    ],
+    [
+      "Rear steering and independent post end limits",
+      14
+    ],
+    [
+      "Actuator driver, feedback and fault response",
+      14
+    ],
+    [
+      "Pack sensing, audio, USB and harness",
+      15
+    ],
+    [
+      "Primary references",
+      15
+    ],
+    [
       "Assembly and commissioning",
-      12
-    ],
-    [
-      "Tools and first checks",
-      12
-    ],
-    [
-      "Stage 1 - feet and motors",
-      12
-    ],
-    [
-      "Stage 2 - stackable body and one-piece arms",
-      12
-    ],
-    [
-      "Stage 3 - rear steering and bearings",
-      13
-    ],
-    [
-      "Stage 4 - rotating head",
-      13
-    ],
-    [
-      "Stage 5 - boards, wiring and inspection",
-      14
-    ],
-    [
-      "Stage 6 - firmware and first drive",
-      14
-    ],
-    [
-      "Stage 7 - skins and final acceptance",
-      15
-    ],
-    [
-      "Fault finding",
-      15
-    ],
-    [
-      "Original robot voice collection",
       16
     ],
     [
-      "Digital verification and physical limits",
+      "Tools and build order",
+      16
+    ],
+    [
+      "Stage 1 - inspect and fabricate",
+      16
+    ],
+    [
+      "Stage 2 - first-fit prints and feet",
+      16
+    ],
+    [
+      "Stage 3 - shoulders and rear post",
       17
     ],
     [
-      "CAD",
+      "Stage 4 - wire with power disconnected",
       17
     ],
     [
-      "Firmware and sounds",
-      17
-    ],
-    [
-      "Electrical consistency",
-      17
-    ],
-    [
-      "Physical acceptance still required",
-      17
-    ],
-    [
-      "Electrical bill of materials",
+      "Stage 5 - controller and detached actuator calibration",
       18
     ],
     [
-      "Mechanical hardware and consumables",
+      "Stage 6 - supported structure and motion tests",
+      19
+    ],
+    [
+      "Stage 7 - final prints, head and finish",
+      19
+    ],
+    [
+      "Regular checks",
       20
     ],
     [
-      "Print manifest",
+      "Original robot voice collection",
       21
     ],
     [
-      "Point-to-point wiring schedule",
+      "Digital verification and physical limits",
       22
     ],
     [
+      "Geometry and fabrication checks",
+      22
+    ],
+    [
+      "Actual slicer output",
+      22
+    ],
+    [
+      "Firmware, wiring and sounds",
+      22
+    ],
+    [
+      "Drawings, video and publication",
+      23
+    ],
+    [
+      "Physical acceptance",
+      23
+    ],
+    [
+      "Electrical bill of materials",
+      24
+    ],
+    [
+      "Mechanical hardware and consumables",
+      26
+    ],
+    [
+      "Mass budget",
+      30
+    ],
+    [
+      "Fastener grip worksheet",
+      32
+    ],
+    [
+      "Print manifest",
+      33
+    ],
+    [
+      "H2D slice worksheet",
+      34
+    ],
+    [
+      "Point-to-point wiring schedule",
+      35
+    ],
+    [
       "Circuit sheets",
-      27
+      41
+    ],
+    [
+      "Engineering drawing: 01 robot isometric",
+      54
+    ],
+    [
+      "Engineering drawing: 02 robot orthographic",
+      55
+    ],
+    [
+      "Engineering drawing: 03 robot exploded",
+      56
+    ],
+    [
+      "Engineering drawing: 04 mechanisms exploded",
+      57
+    ],
+    [
+      "Engineering drawing: 05 printed components",
+      58
+    ],
+    [
+      "Engineering drawing: 01 body lower",
+      59
+    ],
+    [
+      "Engineering drawing: 02 body upper",
+      60
+    ],
+    [
+      "Engineering drawing: 03 dome",
+      61
+    ],
+    [
+      "Engineering drawing: 04 leg",
+      62
+    ],
+    [
+      "Engineering drawing: 05 outer foot",
+      63
+    ],
+    [
+      "Engineering drawing: 06 rear foot",
+      64
+    ],
+    [
+      "Engineering drawing: 07 drive cassette",
+      65
+    ],
+    [
+      "Engineering drawing: 08 head motor mount",
+      66
+    ],
+    [
+      "Engineering drawing: 09 bearing tower",
+      67
+    ],
+    [
+      "Engineering drawing: 10 bearing cap",
+      68
+    ],
+    [
+      "Engineering drawing: 06 metal profiles",
+      69
+    ],
+    [
+      "Engineering drawing: 07 metal profiles",
+      70
+    ],
+    [
+      "Engineering drawing: 08 posture geometry",
+      71
     ]
-  ]
+  ],
+  "visual_reviewed": true,
+  "sha256": "7d0aea209b468f9a6dd2193c18e49f7b062b0f3e240a1ea6fe520940c5247c0f",
+  "text_boundary_outliers": [],
+  "review": "All71 pages rendered and inspected in six contact sheets; CAD/video/PNG layouts inspected; physical testing not performed"
 }

@@ -1,16 +1,26 @@
 {
   "configuration": "rear deployment, all three feet down; side ankle joints rigid; shoulders pivot",
-  "assumed_max_mass_kg": 6.0,
+  "assumed_max_mass_kg": 9.0,
   "dynamic_factor": 3,
   "additional_alignment_friction_factor": 1.25,
   "post_min_mm": 5.038372772704918,
   "post_max_mm": 72.0,
-  "max_calculated_actuator_force_N": 171.65205343264017,
+  "max_calculated_actuator_force_N": 213.7242887819611,
   "actuator_dynamic_rating_N": 300,
   "actuator_static_rating_N": 500,
   "min_support_margin_mm": 17.000000000000018,
-  "shaft_nominal_von_mises_MPa": 62.45239966925973,
-  "guide_nominal_combined_stress_MPa": 32.91505844065594,
+  "pad_centers_mm": [
+    -90,
+    30
+  ],
+  "pad_length_mm": 20,
+  "all_pads_fully_engaged": true,
+  "max_steering_link_skew_deg": 18.838409514640123,
+  "steering_rod_end_limit_deg": 30,
+  "wheel_half_track_checked_mm": 26,
+  "wheel_half_track_nominal_mm": 29,
+  "shaft_nominal_von_mises_MPa": 93.67859950388959,
+  "guide_nominal_combined_stress_MPa": 68.81860367233756,
   "rows": [
     {
       "stroke_mm": 5.038,

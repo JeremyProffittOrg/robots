@@ -7,6 +7,38 @@ def wire(net,source,target,gauge='26',note=''):
  rows.append(dict(net=net,source=source,target=target,awg=gauge,note=note))
 def write_csv(path,items):
  with path.open('w',newline='',encoding='utf-8') as f:w=csv.DictWriter(f,fieldnames=items[0]);w.writeheader();w.writerows(items)
+
+def power_overview():
+ svg=['<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="880" viewBox="0 0 1400 880"><rect width="1400" height="880" fill="#ffffff"/>']
+ def label(x,y,value,size=18,anchor='middle'):
+  svg.append(f'<text x="{x}" y="{y}" font-family="sans-serif" font-size="{size}" text-anchor="{anchor}" fill="#142337">{html.escape(value)}</text>')
+ def path(d):svg.append(f'<path d="{d}" fill="none" stroke="#173e73" stroke-width="3"/>')
+ def box(x,y,w,h,lines):
+  svg.append(f'<rect x="{x}" y="{y}" width="{w}" height="{h}" rx="5" fill="#e5effb" stroke="#173e73" stroke-width="2"/>')
+  for i,line in enumerate(lines):label(x+w/2,y+23+i*24,line)
+ label(30,38,'R2-24 | revision C power distribution',28,'start')
+ label(30,70,'Architecture view. Follow wiring.csv and the connection sheets for exact pins, returns and capacitor polarity.',17,'start')
+ path('M190 150 H240 M340 150 H390 M490 150 H600 M700 150 H740 V710 M520 150 V105 H760 V230 H790')
+ box(20,105,170,90,['Protected B1','12 V / 6 Ah','LiFePO4'])
+ box(240,115,100,70,['F1','7.5 A']);box(390,115,100,70,['S1','MAIN']);box(600,115,100,70,['S2','RUN'])
+ branches=[
+  (230,['F6 1 A + U6','5 V / 1.2 A logic'],['HUZZAH32 + audio + sensors','Removable J_USB power link']),
+  (310,['F2 2 A + P1','5 V / 3 A LEFT'],['D1 DRV8833','M1 / M2 separate outputs']),
+  (390,['F3 2 A + P2','5 V / 3 A RIGHT'],['D2 DRV8833','M3 / M4 separate outputs']),
+  (470,['F4 2 A + P3','5 V / 3 A REAR'],['D3 DRV8833','M5 / M6 separate outputs']),
+  (550,['F5 2 A + P4','5 V / 3 A steering'],['SV1 rear steering','U7 AHCT125 signal buffer']),
+  (630,['F7 2 A + P5','5 V / 3 A HEAD'],['D4 DRV8833 channel A','M7 internal friction wheel']),
+  (710,['F8 2 A + P6','Regulated 12 V post'],['INA219 > D5 DRV8871','P16 feedback actuator'])]
+ for y,reg,load in branches:
+  if y!=230:
+   path(f'M740 {y} H790');svg.append(f'<circle cx="740" cy="{y}" r="4" fill="#173e73"/>')
+  path(f'M1010 {y} H1080');box(790,y-30,220,60,reg);box(1080,y-30,300,60,load)
+ svg.append('<circle cx="520" cy="150" r="4" fill="#173e73"/>')
+ for i,line in enumerate(['Five UBEC positive outputs remain separate.','TT motors never connect to the 12 V post rail.','Seven DRV8833 channels retain nominal 1 A limits.','D5 uses replacement R1 = 71.5k.','NC limits independently gate post direction inputs.','Ground drive and head stop during posture changes.','Unplug the pack before charging or USB service.','Remove J_USB before connecting computer USB.']):label(35,295+i*49,line,18,'start')
+ path('M105 195 V810 H1360')
+ label(160,793,'GND: common battery, regulator, driver, controller and servo returns.',18,'start')
+ label(30,858,'Fuses are on converter inputs. MAIN off removes all supply power. RUN off removes every motor and servo branch.',17,'start')
+ svg.append('</svg>');(ROOT/'electronics/00-power-overview.svg').write_text('\n'.join(svg))
 def main():
  for d in ['electronics','bom']:(ROOT/d).mkdir(exist_ok=True)
  wire('PACK+', 'B1 PP30 +','F1 7.5A input','18','Fuse within 100mm of pack plug')
@@ -105,5 +137,6 @@ def main():
     y=100+i*38;escape=html.escape
     svg += [f'<text x="30" y="{y}" font-family="monospace" font-size="14" fill="#142337">{escape(r["source"])}</text>',f'<path d="M 365 {y-5} H 725" stroke="#163d72" stroke-width="2" fill="none"/>',f'<circle cx="365" cy="{y-5}" r="3" fill="#163d72"/><circle cx="725" cy="{y-5}" r="3" fill="#163d72"/>',f'<rect x="420" y="{y-17}" width="260" height="22" fill="white"/>',f'<text x="550" y="{y}" text-anchor="middle" font-family="monospace" font-size="13" fill="#163d72">{escape(r["net"])} ({r["awg"]} AWG)</text>',f'<text x="744" y="{y}" font-family="monospace" font-size="14" fill="#142337">{escape(r["target"])}</text>']
    svg.append('</svg>');(ROOT/'electronics'/f'{name}-{start//22+1}.svg').write_text('\n'.join(svg))
- print(f'PASS: {len(rows)} wire connections and {sum((len(rs)+21)//22 for _,rs in groups)} circuit sheets written')
+ power_overview()
+ print(f'PASS: {len(rows)} wire connections; {sum((len(rs)+21)//22 for _,rs in groups)} connection sheets and one power overview')
 if __name__=='__main__':main()

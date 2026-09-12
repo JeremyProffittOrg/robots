@@ -1,6 +1,6 @@
 """Build, render and text-check the self-contained design PDF."""
 from pathlib import Path
-import csv, html, json, re
+import csv, html, json, re, hashlib
 import fitz
 from reportlab.lib import colors
 from reportlab.lib.pagesizes import letter
@@ -44,7 +44,7 @@ class Manual(BaseDocTemplate):
    self.canv.bookmarkPage(key);self.canv.addOutlineEntry(title,key,level=level,closed=bool(level));self.bookmarks.append((title,self.page))
 def footer(c,d):
  w,h=c._pagesize;c.setStrokeColor(colors.HexColor('#c7d0da'));c.line(38,34,w-38,34);c.setFont('Text',7.5);c.setFillColor(colors.HexColor('#405166'))
- c.drawString(38,22,'R2-24 | Digital prototype - physical commissioning required');c.drawRightString(w-38,22,str(d.page))
+ c.drawString(38,22,'R2-24 revision C | Digital prototype - physical commissioning required');c.drawRightString(w-38,22,str(d.page))
 def table(headers,rows,widths):
  data=[[para(s,'Small') for s in headers]]+[[para(s,'Small') for s in row] for row in rows]
  t=Table(data,colWidths=widths,repeatRows=1,hAlign='LEFT');t.setStyle(TableStyle([('BACKGROUND',(0,0),(-1,0),colors.HexColor('#dfeaf7')),('VALIGN',(0,0),(-1,-1),'TOP'),('LINEBELOW',(0,0),(-1,0),1,colors.HexColor('#52769d')),('ROWBACKGROUNDS',(0,1),(-1,-1),[colors.white,colors.HexColor('#f5f7fa')]),('LEFTPADDING',(0,0),(-1,-1),5),('RIGHTPADDING',(0,0),(-1,-1),5),('TOPPADDING',(0,0),(-1,-1),4),('BOTTOMPADDING',(0,0),(-1,-1),4)]));return t
@@ -56,39 +56,55 @@ def main():
  doc=Manual(str(OUT),pagesize=letter,leftMargin=38,rightMargin=38,topMargin=40,bottomMargin=45,title='R2-24 design and assembly manual',author='Jeremy Proffitt robot project');doc.bookmarks=[]
  doc.addPageTemplates([PageTemplate(id='portrait',frames=[Frame(38,45,536,707,id='p',leftPadding=0,rightPadding=0,topPadding=0,bottomPadding=0)],onPage=footer),PageTemplate(id='circuit',pagesize=(1224,792),frames=[Frame(38,45,1148,707,id='c',leftPadding=0,rightPadding=0,topPadding=0,bottomPadding=0)],onPage=footer)])
  report=json.loads((ROOT/'cad/validation.json').read_text());assert report['all_pass']
- checks=json.loads((ROOT/'docs/verification.json').read_text());assert checks['all_pass']
+ checks=json.loads((ROOT/'docs/verification.json').read_text());assert checks['all_pass'] and checks['revision']=='C'
+ for name,sha in checks['source_sha256'].items():assert hashlib.sha256((ROOT/name).read_bytes()).hexdigest()==sha,name+' changed after verification'
+ mass=json.loads((ROOT/'cad/mass-budget.json').read_text());slices=json.loads((ROOT/'cad/h2d-structure-check.json').read_text())
  electronics=readcsv(ROOT/'bom/electronics.csv');hardware=readcsv(ROOT/'bom/hardware.csv')
  total=sum(float(r['quantity'])*float(r['unit_usd']) for r in electronics+hardware)
- story=[para('R2-24','TitleR2'),para('Design and assembly manual','Chapter'),para('Two stackable body prints • One print per arm • 24 inches tall'),picture(ROOT/'cad/assembly.png',530,450),para('September 11, 2026 | Revision B | Fewer printed pieces','Small'),para('Digital checks passed. Physical fit, motor load, temperature, stopping distance and runtime still require the commissioning tests. This PDF is not proof of a built or tested robot.')]
- story += [PageBreak(),para('Package and reading order','Chapter'),para(f'{report["parts"]} distinct STL files; {report["pieces"]} printed pieces including fit parts and shim options; 16 original MP3 clips; 154 point-to-point wire connections.'),para(f'Budget estimate: USD {total:.2f}, including the listed hardware, consumables and six 1 kg filament spools. This mixes researched component prices with explicit allowances. It excludes shipping, tax, tools and printer. Unused fasteners and filament are expected.'),para('Start with the mechanical and electrical chapters. Complete the 50 assembly steps in order. Stop at the loaded-chassis gate before printing all cosmetic skins. Use the final BOM, print manifest and circuit sheets during construction.'),para('Contents','Section')]
- for title in ['Mechanical design and print guide','Electrical design and wiring','Assembly and commissioning','Original robot voice collection','Digital verification and physical limits','Electrical BOM, hardware BOM and print manifest','Full wiring schedule','Circuit sheets']:
+ story=[para('R2-24','TitleR2'),para('Design and assembly manual','Chapter'),para('Two whole body prints • One print per side leg • 24 inches tall'),picture(ROOT/'cad/assembly.png',530,435),para('September 12, 2026 | Revision C | Detailed exterior and metal moving frame','Small'),para('This is a digital prototype. Physical fit, frame strength, loaded driving, temperature, stopping distance and runtime require the commissioning tests. The video is a CAD simulation.')]
+ story += [PageBreak(),para('Package and reading order','Chapter'),para(f'{report["parts"]} STL designs; {report["pieces"]} installed printed pieces; 13 cutting profiles; 18 PNG drawings; 16 original MP3s; 220 wiring connections; a 30-second CAD video.'),para(f'Budget estimate: USD {total:.2f}, including hardware, consumables, machining/welding allowances and six 1 kg filament spools. Listed prices and allowances are distinguished in the BOM. Tax, shipping, tools and printer are excluded. No parts were purchased.'),para(f'Assembled mass estimate: {mass["estimated_total_g"]/1000:.2f} kg against the 9 kg design limit. The initial 6 kg assumption was not met. There is little mass reserve; weigh the actual parts and do not add payload. Drive performance with the specified TT motors is not physically verified.'),para('Read the mechanical, fabrication and electrical chapters first. Follow all 60 assembly steps. The metal frame and loaded rolling tests are gates before final finish. Use the exact print manifest and hardware worksheet, not older revision files.'),para('[Watch the CAD video](https://d1lftyhk9r30k1.cloudfront.net/r2d2/revision-c/motion.mp4) • [Download this PDF](https://d1lftyhk9r30k1.cloudfront.net/r2d2/revision-c/design.pdf)'),para('Contents','Section')]
+ for title in ['Mechanical design and print guide','Metal fabrication worksheet','Electrical design and wiring','Assembly and commissioning','Original robot voice collection','Digital verification and physical limits','BOM, mass, fastener and print worksheets','Full wiring schedule','Circuit sheets and engineering drawings']:
   story.append(para(title))
- for path in ['docs/mechanical.md','docs/electrical.md','docs/assembly.md','audio/README.md','docs/verification.md']:
+ for path in ['docs/mechanical.md','docs/fabrication.md','docs/electrical.md','docs/assembly.md','audio/README.md','docs/verification.md']:
   story+=[PageBreak()]+markdown(ROOT/path)
   if path=='docs/mechanical.md':
-   for file,title,caption in [('section.png','Integrated body structure','The frames, rod sleeves, adapters, head deck, neck and battery tray are features of the two full body prints.'),('exploded.png','Stackable body sections','The two complete body prints are separated vertically. Use the height stack for actual positions.'),('rear.png','Rear foot and service access','The rear foot stays open for gear service. Remove the complete upper body for internal service; its rear wall carries the switch plate.')]:
+   for file,title,caption in [('section.png','Metal load frame','Metal shafts, spines, guide and foot frames carry body load. Electronics panels are omitted for this view; purchased hardware is shown as envelopes.'),('exploded.png','Whole stackable covers','Offsets identify the complete covers and are not assembly dimensions. The upper shell is installed before the shoulder carriers.'),('rear.png','Rear post and foot','The rear post changes supported body posture. The rear foot has a separate steering link and a load-bearing spherical joint.')]:
     story += [PageBreak(),para(title,'Section'),picture(ROOT/'cad'/file),para(caption,'Small')]
- story += [PageBreak(),para('Electrical bill of materials','Chapter'),para('USD prices are per item. Listed prices were researched on September 11, 2026; allowances are estimates. Follow the exact rating and part notes.')]
+ story += [PageBreak(),para('Electrical bill of materials','Chapter'),para('USD prices are per item or stated pack. Research dates: September 11-12, 2026. Allowances are estimates. Follow exact part/rating notes and check current availability before ordering.')]
  erows=[]
  for r in electronics:erows.append([r['quantity'],r['reference']+'\n'+r['item']+'\n'+r['part'],f"${r['unit_usd']} ({r['basis']})",r['notes']+(f" [Source]({r['url']})" if r['url'] else '')])
  story.append(table(['Qty','Component','Unit USD','Fit / rating / source'],erows,[28,180,80,248]))
  story += [PageBreak(),para('Mechanical hardware and consumables','Chapter'),para('Metal bolts, bearings and rods are purchased, not printed. STL mounts and adapters are in the print manifest. Quantities include stated spares and consumables.')]
  story.append(table(['Qty','Item','Specification','Use'],[[r['quantity'],r['item'],r['specification'],r['use']] for r in hardware],[28,135,160,213]))
+ story += [PageBreak(),para('Mass budget','Chapter'),para(f'Estimated total {mass["estimated_total_g"]:.1f} g; limit {mass["design_limit_g"]:.0f} g; estimated reserve {mass["estimated_reserve_g"]:.1f} g. These figures combine calculation and allowances, not weighing. Use only installed quantities when measuring; unused stock and spares do not ride on the robot.')]
+ story.append(table(['Component group','Estimated g','Basis'],[[r['component'],r['estimated_g'],r['basis']] for r in readcsv(ROOT/'bom/mass-budget.csv')],[195,65,276]))
+ story += [PageBreak(),para('Fastener grip worksheet','Chapter'),para('Nominal stack checks complement the fabrication dimensions. Through joints include grip, washers and nut height. Tapped joints must have sufficient engagement and tip clearance. Measure actual hardware and never force a bottomed screw.')]
+ stackrows=[]
+ for r in readcsv(ROOT/'bom/fastener-stacks.csv'):
+  remaining=float(r['length_mm'])-float(r['grip_mm'])-float(r['washer_mm'])
+  result=f'{remaining-float(r["nut_mm"]):.2f} mm beyond full nut' if r['kind']=='through' else f'{remaining:.2f} mm in {r["usable_thread_mm"]} mm usable thread'
+  stackrows.append([r['joint'],r['fastener'],f'{r["grip_mm"]} + {r["washer_mm"]} mm',result])
+ story.append(table(['Joint','Fastener','Grip + washers','Nominal result'],stackrows,[175,110,95,156]))
  story += [PageBreak(),para('Print manifest','Chapter'),para(f'Solid material bound {report["solid_material_bound_g"]:.1f} g, before infill savings and without supports or purchased parts. Do not use this number as measured print or assembled mass. All dimensions below are millimetres. Use the native STL orientation and the reflection instructions in the mechanical chapter.')]
  story.append(table(['Part','Qty','Material','X x Y x Z','Solid g each'],[[r['part'],str(r['quantity']),r['material'],f"{r['x_mm']} x {r['y_mm']} x {r['z_mm']}",str(r['solid_mass_g'])] for r in report['rows']],[180,30,65,186,75]))
- story += [PageBreak(),para('Point-to-point wiring schedule','Chapter'),para('One row is one connection. Join identical net names. AWG identifies wire gauge; read the complete electrical chapter before energizing. Unused AHCT125 outputs pin8 and pin11 remain open.')]
+ story += [PageBreak(),para('H2D slice worksheet','Chapter'),para('Per-copy predictions from current G-code. Total filament includes discarded support and brim. Multiply by the quantity column for the complete set. These are not physical print measurements.')]
+ story.append(table(['Part','Qty','Model g','Total filament g','Hours'],[[Path(r['part']).stem,str(r['quantity']),f'{r["installed_model_g"]:.1f}',f'{r["predicted_mass_with_support_g"]:.1f}',f'{r["predicted_time_s"]/3600:.2f}'] for r in slices['rows']],[200,35,100,120,81]))
+ story += [PageBreak(),para('Point-to-point wiring schedule','Chapter'),para('One row is one connection. Identical named nets join across sheets. AWG identifies wire gauge. U7 output pin11 and unused D4 B outputs stay open. Read the complete electrical chapter before energizing.')]
  story.append(table(['Net','From','To','AWG'],[[r['net'],r['source'],r['target'],r['awg']] for r in readcsv(ROOT/'electronics/wiring.csv')],[110,185,206,35]))
  story += [NextPageTemplate('circuit'),PageBreak(),para('Circuit sheets','Chapter')]
  for i,svg in enumerate(sorted((ROOT/'electronics').glob('*.svg'))):
   if i:story.append(PageBreak())
   s=fitz.open(str(svg));png=qa/(svg.stem+'.png');s[0].get_pixmap(matrix=fitz.Matrix(1.5,1.5),alpha=False).save(str(png));s.close()
   story += [picture(png,1140,640),para(svg.name+' | Named nets connect across sheets. Full return wiring is in the schedule.','Small')]
+ drawings=json.loads((ROOT/'output/drawings/index.json').read_text())
+ for row in drawings['pngs']:
+  story += [PageBreak(),para('Engineering drawing: '+Path(row['file']).stem.replace('_',' ').replace('-',' '),'Section'),picture(ROOT/'output/drawings'/row['file'],1140,640),para(row['file']+' | Original PNG is included in the drawing collection. Cut-profile images are not paper templates.','Small')]
  doc.build(story)
  pdf=fitz.open(str(OUT));text='\n'.join(p.get_text() for p in pdf)
- for required in ['Assembly and commissioning','Point-to-point wiring schedule','609.6','DRV8833','physical']:assert required in text
+ for required in ['Assembly and commissioning','Metal fabrication worksheet','Point-to-point wiring schedule','609.6','DRV8833','KBRM-03-MH','Revision C','physical']:assert required in text
  assert len(text)>25000 and len(pdf)>20
  for i,p in enumerate(pdf):
   assert p.get_text().strip();p.get_pixmap(matrix=fitz.Matrix(1,1),alpha=False).save(str(qa/f'page-{i+1:02d}.png'))
- (ROOT/'docs/pdf-check.json').write_text(json.dumps({'pages':len(pdf),'bytes':OUT.stat().st_size,'text_characters':len(text),'all_pages_rendered':True,'budget_usd':round(total,2),'outline_entries':doc.bookmarks},indent=2))
+ (ROOT/'docs/pdf-check.json').write_text(json.dumps({'pages':len(pdf),'bytes':OUT.stat().st_size,'sha256':hashlib.sha256(OUT.read_bytes()).hexdigest(),'text_characters':len(text),'all_pages_rendered':True,'budget_usd':round(total,2),'outline_entries':doc.bookmarks},indent=2))
  print(f'PASS: {len(pdf)} pages, {OUT.stat().st_size} bytes; required chapters, text and full-page rendering passed');pdf.close()
 if __name__=='__main__':main()

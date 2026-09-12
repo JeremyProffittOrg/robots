@@ -45,3 +45,4 @@ R_LIMIT,2,4.7kohm1percent0.25W resistor,Metal film,0.1,allowance,,D5 IN1/IN2 toG
 R_POT,1,1kohm1percent0.25W resistor,Metal film,0.1,allowance,,Actuator ADC series filter
 R_POT_FAIL,1,470kohm1percent0.25W resistor,Metal film,0.1,allowance,,ADC pulldown for disconnected wiper
 CO6,1,470uF25V electrolytic,105C low ESR,0.9,allowance,,Actuator12V rail;observe polarity
+CAL_BUTTONS,1,Normally-open momentary buttons;20pack,Adafruit367,2.5,listed,https://www.adafruit.com/product/367,Two used only for detached actuator commissioning; remove before operation

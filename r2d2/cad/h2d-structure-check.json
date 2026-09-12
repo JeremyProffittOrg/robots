@@ -1,5 +1,5 @@
 {
-  "profile": "H2D 0.4mm / 0.20mm / per-part Generic material / Textured PEI",
+  "profile": "H2D0.4mm /0.20mm / per-part Generic material / Textured PEI",
   "overrides": {
     "wall_loops": "4",
     "top_shell_layers": "5",
@@ -17,12 +17,12 @@
       "part": "stl/body_lower.stl",
       "quantity": 1,
       "material": "PETG",
-      "sha256": "697f8917cdd5ed32658ee0b464a2918b8b53034481246cf2b787cfa0e95491a5",
+      "sha256": "83aa04f364cac652e308f6e9426331fe611b1d0ce2dc196d7290e3bfec2b59bd",
       "return_code": 0,
       "error_string": "Success.",
       "warning": "",
-      "predicted_mass_with_support_g": 519.38916015625,
-      "predicted_time_s": 68296.6171875,
+      "predicted_mass_with_support_g": 524.289306640625,
+      "predicted_time_s": 70303.3671875,
       "bbox": {
         "depth": 372.6557312011719,
         "height": 142.6999969482422,
@@ -30,18 +30,24 @@
         "x": -11.509878158569336,
         "y": -26.145849227905273,
         "z": 0.0
-      }
+      },
+      "installed_model_g": 221.003,
+      "support_g": 301.976,
+      "brim_g": 1.28,
+      "gcode_sha256": "a24a71c17143b4757493033fc8dc23d76d24dff9df0ecc1962d8d24211a6a3cf",
+      "method": "Positive filament on XY-moving labelled paths; excludes machine Custom/Flush and stationary unretraction; profile density; not a physical mass measurement",
+      "profile_sha256": "9139315fac25f69af606b8e5cf5c682a6a4d357567e10ee0b1ff4260679185d8"
     },
     {
       "part": "stl/body_upper.stl",
       "quantity": 1,
       "material": "PETG",
-      "sha256": "02d89b4637d7bf6182a9dc5d0c68e6f5c91f1cc6cc03f74c8fbd8ae26ba6dcf9",
+      "sha256": "de08c6d958eb720e6d6a9bd7deca6b3e9fb425e52fe4871095fabbb9ef34f973",
       "return_code": 0,
       "error_string": "Success.",
       "warning": "",
-      "predicted_mass_with_support_g": 608.1682739257812,
-      "predicted_time_s": 74025.9921875,
+      "predicted_mass_with_support_g": 609.1004638671875,
+      "predicted_time_s": 74597.640625,
       "bbox": {
         "depth": 262.25,
         "height": 184.60000610351562,
@@ -49,18 +55,24 @@
         "x": 45.3749885559082,
         "y": 28.875003814697266,
         "z": 0.0
-      }
+      },
+      "installed_model_g": 276.258,
+      "support_g": 331.883,
+      "brim_g": 0.929,
+      "gcode_sha256": "9ec53df97086a3a9e2970294b8099d8d65be2fa5f71385ddcfa22dff9b7eae39",
+      "method": "Positive filament on XY-moving labelled paths; excludes machine Custom/Flush and stationary unretraction; profile density; not a physical mass measurement",
+      "profile_sha256": "9139315fac25f69af606b8e5cf5c682a6a4d357567e10ee0b1ff4260679185d8"
     },
     {
       "part": "stl/dome.stl",
       "quantity": 1,
       "material": "PLA",
-      "sha256": "18e50733e8d094d0c31d0760d4a557902b0a63613d94ab7d9781f8b284199430",
+      "sha256": "f76cf7bebf2c59b6645f1ce60e818c48dc0d69ee0db4749ffb73cdc099514733",
       "return_code": 0,
       "error_string": "Success.",
       "warning": "",
-      "predicted_mass_with_support_g": 883.2328491210938,
-      "predicted_time_s": 94803.8203125,
+      "predicted_mass_with_support_g": 883.31298828125,
+      "predicted_time_s": 94789.6171875,
       "bbox": {
         "depth": 365.74090576171875,
         "height": 167.79762268066406,
@@ -68,18 +80,24 @@
         "x": -8.924874305725098,
         "y": -20.809293746948242,
         "z": 0.0
-      }
+      },
+      "installed_model_g": 381.146,
+      "support_g": 502.137,
+      "brim_g": 0,
+      "gcode_sha256": "256d7272ffa4885e94056ae9a6041e89e8a8367084b739451337214bead7445a",
+      "method": "Positive filament on XY-moving labelled paths; excludes machine Custom/Flush and stationary unretraction; profile density; not a physical mass measurement",
+      "profile_sha256": "32dca60f9a62c86497b4b8458c014fdf32d22dc59136a360cb51b60294724df0"
     },
     {
       "part": "stl/leg.stl",
       "quantity": 2,
       "material": "PETG",
-      "sha256": "83a22c8be862b07c32a9662a321dd7c297063c838f2e49c2ad7adb87f7a65412",
+      "sha256": "02d9be63ee4a397a20959e36021a0b640b7069553b1ddc3c2b54081ebb12ecc4",
       "return_code": 0,
       "error_string": "Success.",
       "warning": "",
-      "predicted_mass_with_support_g": 273.89910888671875,
-      "predicted_time_s": 25374.1953125,
+      "predicted_mass_with_support_g": 273.9027099609375,
+      "predicted_time_s": 25348.12109375,
       "bbox": {
         "depth": 267.47515869140625,
         "height": 51.0,
@@ -87,37 +105,49 @@
         "x": 41.26241683959961,
         "y": 26.262426376342773,
         "z": 0.0
-      }
+      },
+      "installed_model_g": 147.601,
+      "support_g": 125.456,
+      "brim_g": 0.815,
+      "gcode_sha256": "9b00360f417711aee75b923ef6f91d2ab95b580c7a026417ba4c9dcb50465cb7",
+      "method": "Positive filament on XY-moving labelled paths; excludes machine Custom/Flush and stationary unretraction; profile density; not a physical mass measurement",
+      "profile_sha256": "9139315fac25f69af606b8e5cf5c682a6a4d357567e10ee0b1ff4260679185d8"
     },
     {
       "part": "stl/outer_foot.stl",
       "quantity": 2,
       "material": "PETG",
-      "sha256": "1711236dc0820f4100d2a166e0c5285e0ac1167b47f177f52fd2f19e39389d90",
+      "sha256": "5d3a66dc287b03338bc3644ff151d1115697e644d8f27719b264c11064936ccf",
       "return_code": 0,
       "error_string": "Success.",
       "warning": "",
-      "predicted_mass_with_support_g": 257.8193359375,
-      "predicted_time_s": 28352.171875,
+      "predicted_mass_with_support_g": 254.52491760253906,
+      "predicted_time_s": 28257.66796875,
       "bbox": {
         "depth": 197.21865844726562,
         "height": 130.0,
-        "width": 118.0,
-        "x": 115.9999771118164,
+        "width": 131.0,
+        "x": 109.49999237060547,
         "y": 61.39067840576172,
         "z": 0.0
-      }
+      },
+      "installed_model_g": 157.918,
+      "support_g": 95.936,
+      "brim_g": 0.641,
+      "gcode_sha256": "1e2abcc2c5de920fff3c47e7ad77f9b06780aa8b28a4a5cc3ffef08bc542c164",
+      "method": "Positive filament on XY-moving labelled paths; excludes machine Custom/Flush and stationary unretraction; profile density; not a physical mass measurement",
+      "profile_sha256": "9139315fac25f69af606b8e5cf5c682a6a4d357567e10ee0b1ff4260679185d8"
     },
     {
       "part": "stl/rear_foot.stl",
       "quantity": 1,
       "material": "PETG",
-      "sha256": "5fe8a13ef76481907cba7f1205a09b6312f84da42f97e5b325102fd414b753e3",
+      "sha256": "3d00884ae78e1979a926e208d46b0071b98827f3753172a336f4bbb5db07c77f",
       "return_code": 0,
       "error_string": "Success.",
       "warning": "",
-      "predicted_mass_with_support_g": 243.74095153808594,
-      "predicted_time_s": 25448.55078125,
+      "predicted_mass_with_support_g": 236.1042022705078,
+      "predicted_time_s": 24730.96484375,
       "bbox": {
         "depth": 197.21865844726562,
         "height": 109.0,
@@ -125,7 +155,13 @@
         "x": 120.99999237060547,
         "y": 61.39067840576172,
         "z": 0.0
-      }
+      },
+      "installed_model_g": 144.508,
+      "support_g": 90.879,
+      "brim_g": 0.687,
+      "gcode_sha256": "cf5bed85a6046419673288c0b43ae3db049e840b68ad730a56743dfffc216f19",
+      "method": "Positive filament on XY-moving labelled paths; excludes machine Custom/Flush and stationary unretraction; profile density; not a physical mass measurement",
+      "profile_sha256": "9139315fac25f69af606b8e5cf5c682a6a4d357567e10ee0b1ff4260679185d8"
     },
     {
       "part": "stl/drive_cassette.stl",
@@ -144,26 +180,38 @@
         "x": 163.6999969482422,
         "y": 84.49999237060547,
         "z": 0.0
-      }
+      },
+      "installed_model_g": 14.108,
+      "support_g": 0,
+      "brim_g": 0.399,
+      "gcode_sha256": "539c5fa451716f1f9a9cfa27d34d0a4eafd35447db7d2a4bdecbb5bbbe27e98c",
+      "method": "Positive filament on XY-moving labelled paths; excludes machine Custom/Flush and stationary unretraction; profile density; not a physical mass measurement",
+      "profile_sha256": "9139315fac25f69af606b8e5cf5c682a6a4d357567e10ee0b1ff4260679185d8"
     },
     {
       "part": "stl/head_motor_mount.stl",
       "quantity": 1,
       "material": "PETG",
-      "sha256": "4ce1a0e7642ec55aafd3ed5318c6dee6041cf5b583302f246a35cda6b32ec90f",
+      "sha256": "58e0078cddf5493820ecbaf72280aefb2cee313a5db601caa6a93a6ee3f35882",
       "return_code": 0,
       "error_string": "Success.",
       "warning": "",
-      "predicted_mass_with_support_g": 16.683652877807617,
-      "predicted_time_s": 2652.78759765625,
+      "predicted_mass_with_support_g": 21.373498916625977,
+      "predicted_time_s": 3032.947021484375,
       "bbox": {
-        "depth": 79.0,
+        "depth": 110.0,
         "height": 12.899999618530273,
         "width": 58.000003814697266,
         "x": 145.99998474121094,
-        "y": 120.49999237060547,
+        "y": 104.99999237060547,
         "z": 0.0
-      }
+      },
+      "installed_model_g": 18.743,
+      "support_g": 2.361,
+      "brim_g": 0.24,
+      "gcode_sha256": "203ed55be527d568e3d4f4d307867d3d6ad8da68790f9b4ef0ecef9450942e7b",
+      "method": "Positive filament on XY-moving labelled paths; excludes machine Custom/Flush and stationary unretraction; profile density; not a physical mass measurement",
+      "profile_sha256": "9139315fac25f69af606b8e5cf5c682a6a4d357567e10ee0b1ff4260679185d8"
     },
     {
       "part": "stl/bearing_tower.stl",
@@ -182,7 +230,13 @@
         "x": 143.29705810546875,
         "y": 128.29705810546875,
         "z": 0.0
-      }
+      },
+      "installed_model_g": 17.646,
+      "support_g": 0.647,
+      "brim_g": 0.217,
+      "gcode_sha256": "f8ea4f0c84cf223abf87366a1203f18a0a3a3ac85dbea1bbb4f5e128b5797ffe",
+      "method": "Positive filament on XY-moving labelled paths; excludes machine Custom/Flush and stationary unretraction; profile density; not a physical mass measurement",
+      "profile_sha256": "9139315fac25f69af606b8e5cf5c682a6a4d357567e10ee0b1ff4260679185d8"
     },
     {
       "part": "stl/bearing_cap.stl",
@@ -201,7 +255,13 @@
         "x": 151.07412719726562,
         "y": 136.07412719726562,
         "z": 0.0
-      }
+      },
+      "installed_model_g": 2.153,
+      "support_g": 0,
+      "brim_g": 0.134,
+      "gcode_sha256": "c780a756a7d1df9f390011698e8e114dd87af2762b694750d5bc619a12ceb148",
+      "method": "Positive filament on XY-moving labelled paths; excludes machine Custom/Flush and stationary unretraction; profile density; not a physical mass measurement",
+      "profile_sha256": "9139315fac25f69af606b8e5cf5c682a6a4d357567e10ee0b1ff4260679185d8"
     }
   ],
   "physical_print": false

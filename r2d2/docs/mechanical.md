@@ -1,195 +1,201 @@
 # Mechanical design and print guide
 
-## Design envelope
+## Shape, size and printed parts
 
-Overall nominal height is 609.6 mm / 24 in, measured from the wheel contact
-plane to the dome crown. The body is 260 mm diameter. The side foot plates
-span 490 mm across X; covers increase this to 492 mm. The straight rear
-foot extends to Y=-290 mm and the body front reaches Y=+132 mm with trim.
-Allow about 500 x 430 mm floor space, plus turning clearance. Each exported
-part is smaller than 300 mm on every axis. The dome prints as one 260 mm
-diameter hemisphere. Revision B uses two complete stackable body prints,
-`body_lower` (260 x 260 x 148 mm including the locating lip) and `body_upper`
-(260 x 260 x 162 mm including the fixed neck). Each complete side arm is
-124 x 68 x 295 mm. The arms include the shoulder bridge and cap. Main body
-and arm construction therefore requires four prints, plus the dome.
-Total printed quantity is 83 instead of 148; 32 are small PCB spacers.
+Revision C is nominally 609.6 mm high, with a259.25 mm main body diameter.
+It has two whole stackable body prints, one complete dome and one print
+per side leg. There are 10 STL designs and 14 installed printed pieces.
+Small PCB spacers, structural shafts, bearings and strong brackets are
+purchased or fabricated in metal. No body quarters or leg segments are
+needed. The 13 DXF/SVG profiles are metal or insulating-sheet cutting
+files, not additional STLs.
 
-Coordinates in CAD: X right, Y forward, Z up. Floor is Z=0. Main foot
-centers are X=-190/+190, Y=0. Rear steering center is X=0, Y=-180. Wheel
-axles are at local Y=-45/+45 and Z=31.5. All wheel axes start parallel to X.
-The nominal wheel centers are local X=-33/+33; actual hub insertion depth
-must be checked using the purchased wheels. Do not force a wheel against
-the yellow gearbox. Motor bodies face the same way within each foot.
+The exterior follows the reference ellipse, radar-eye and body-skin
+drawings listed in appearance-research.md. The dome has an elliptical
+rise, six crown panels, a top disk, angular eye housing, convex lens,
+three projector cups, PSI disks and front/rear logic-display relief.
+The body includes utility-arm shapes, louvers, doors, coin slots,
+octagonal ports, couplers and a ribbed skirt. The side legs include
+horseshoes, hubs, boosters, struts, ankle bracelets and cylinders.
+These details are actual mesh relief and paint guides. They are not
+functioning display lamps, utility arms or projectors.
 
-## Load and drive limits
+This is a scaled, adapted rear-foot robot. It is not a claim of exact
+current club-plan compliance. Feature placements without dimensioned
+references are image-derived. The rear-foot placement follows the user's
+wording; the familiar forward third-foot arrangement is not used here.
 
-Use only a dry, level, hard indoor floor. The design uses low-cost plastic
-gearboxes, not load-rated wheelchair drive units. Two wheels on one motor
-share its torque. A 63 mm wheel and the specified 0.8 kg.cm stall torque
-give about 2.49 N per motor at 6 V stall. Six motors would give 14.94 N at
-that unusable operating point. This build runs near 5 V with a 1 A driver
-limit, so available force is lower. There is no rated continuous torque
-curve or shaft radial-load rating in the product data.
+Coordinates are X across the shoulders, Y forward and Z up. Floor Z is 0.
+Side-foot centers are X+/-165,Y0. Ground axles are local Y+/-37,Z31.5.
+Wheel centers are nominally local X+/-29. Check actual hub insertion on
+the purchased wheels; the stability calculation conservatively uses+/-26.
+The side-foot exterior span is about 438 mm. Allow at least 500x600 mm clear
+floor area plus the turning radius. The rear-foot center moves from
+Y=-128.926 to-247.785 as posture changes. The front/back footprint also
+changes with body tilt and head rotation.
 
-Target a completed mass no greater than 4.5 kg. This is a commissioning
-limit to test, not a manufacturer-approved motor load. Read the actual
-sliced mass, then add the 0.7 kg battery, 0.456 kg wheels, 0.184 kg motors,
-bearings, metal hardware, wiring and boards. The geometry-only solid
-plastic bound in `cad/validation.json` is conservative for infilled parts
-but excludes support material. Do not add payload, thick filler or ballast.
+## How the moving structure works
 
-At 4.5 kg, an assumed rolling resistance coefficient of 0.03 gives about
-1.32 N straight-line resistance. Turning also scrubs the tandem wheels.
-That coefficient is only an engineering assumption. First test the rolling
-frame with securely attached temporary ballast up to the intended final
-mass. Require steady motion without stalls and no continuous current above
-0.5 A per motor during gentle level travel. Stop a stuck motor promptly.
-If the frame cannot pass, reduce mass or revise the transmission before
-painting or fitting the decorative parts. The integrated body and arms
-are required for the chassis test. Digital geometry cannot certify it.
+Two metal bearings support each 12 mm shoulder shaft. The aluminum leg
+spine clamps to that shaft through a split metal hub. Each side ankle is
+a rigid two-bolt metal joint. Extending the rear post therefore turns the
+body about the shoulder axis while the side legs remain supported on the
+floor. The legs swing relative to the torso. They are not independently
+powered walking limbs. All three feet stay down; there is no two-foot
+balancing mode.
 
-The rear foot is steered up to 25 degrees each way. The side drive ratio
-and rear speed follow the same circular path. Firmware does not request a
-zero-radius pivot. The drive ceiling is 110/255 duty and the phone starts
-at 35 percent of that ceiling. No encoder is fitted, so commanded speed
-and angle are not measured speed or angle. Calibrate steering with a
-protractor and observe actual path tracking.
+The rear post has a separate square-tube sliding guide and a pin-ended
+P16 actuator. The guide carries sideways bending. The actuator changes
+length. A steel rod end and 12 mm transverse axle carry the rear-foot load.
+The steering servo operates a separate link and does not carry body weight.
+Its 8 degree yaw limit stays inside the rod end's10 degree misalignment
+limit on a level floor. Pitch rotates about the axle rather than consuming
+that yaw allowance. Use gentle arcs; do not command a pivot turn.
 
-## Purchased fits and adjustable mounts
+Normal actuator stroke is 5.03832-72 mm. This produces approximately 0-15.054
+degrees of body tilt. Both rear joint and side ankles keep their selected
+height. The fixed guide overlaps the inner tube by at least 160.5 mm across
+that range. Physical NC limits lie outside normal travel, near 2 and 80 mm.
+The software also checks position, current, progress, time and duty.
 
-Motor 3777 uses the manufacturer drawing in the research file. Its gearbox
-thickness is about 18.6 mm and axle-tip span about 36.6 mm. The printed
-cradle supports the motor case with thin foam and two cable ties. It does
-not depend on uncertain case screw positions. The yellow case stays above
-the 3 mm floor. Set the axle center at 31.5 mm with the wheels touching a
-flat reference surface before tightening the ties. The cradle floor is at
-Z=16 and its deck support pillars end at Z=65. Keep all ties off both axles.
+## Load basis and acceptance limits
 
-Bearings are 608-2RS, 8 x 22 x 7 mm. Tower pockets are 22.2 mm diameter.
-Print the fit coupon and one tower first. Seat bearings with hand pressure;
-ream uniformly if necessary. Do not drive a tight bearing into a printed
-tower with a hammer. Bearing shims are 8 mm ID, 12 mm OD, 1 mm thick so they
-contact only the inner race. Ordinary large M8 washers can bind the seals.
+The design mass ceiling is 9 kg, including battery, finishes and fasteners.
+The initial 6 kg assumption was not met. The current estimate is about 8.95 kg,
+so there is little reserve and no payload allowance.
+This is a prototype commissioning limit, not a motor manufacturer's
+payload rating. Shaft calculations use 3x gravity, and actuator demand
+also includes a1.25 allowance for alignment/friction. The calculation
+evaluates 101 positions and the stated center-of-gravity envelope.
+It finds 213.7 N maximum actuator demand versus the selected 300 N lifting
+rating,93.7MPa nominal shoulder-shaft equivalent stress and 68.8MPa nominal
+inner-guide combined stress. These are screening calculations; they do
+not include every weld, surface defect, stress concentration or fatigue
+cycle. They do not certify the completed assembly.
 
-Both gear sets use module 1.5, 20 degree pressure angle, 20/40 teeth, 6 mm
-face width, and nominal 45 mm center distance. MCAD supplies an involute
-tooth profile. The servo mounting slots permit mesh adjustment. The 20
-tooth pinion attaches to the supplied servo horn with M2 hardware; no
-printed spline is used. The 40 tooth hub has an M8 nut pocket to transmit
-torque to the spindle. Use two jam nuts to lock the shaft after preload.
+Use shaft stock with a material certificate supporting at least 350MPa
+yield strength, and 6061-T6 guide/frame stock. Do not substitute a soft
+threaded rod for a precision shoulder shaft. If quoting SKF6001 bearing
+ratings, fit the actual SKF bearings; the supplied housing bearings were
+not assigned those ratings. SKF SA12E data applies to that rod end, not
+to the surrounding clevis, welds or printed shell.
 
-The servo mount drops its floor 8 mm below the deck. Set the horn/pinion
-height with the included 1, 2 and 4 mm shims. Keep the two gear faces aligned
-within 0.5 mm. The head pinion base is Z=461; rear pinion base Z=151. Servo
-case and horn revisions vary; check the actual height before final wiring.
-The rear bracket and head deck have clearance openings for the dropped
-cradle. Use 1 mm side foam to prevent movement, then tighten two ties.
+The loaded center of gravity used by the check is X+/-35 mm, body-relative
+Y=-60 to+20 mm, and 80-170 mm below the shoulder axis. Weigh component groups
+and calculate their weighted coordinates. Verify horizontal balance with
+one scale under each foot. For level scales, Xcg=165*(right-left)/total
+and Ycg=rearY*rear/total, with reactions in the same units. Check upright,
+mid travel and maximum tilt. Use the component mass/height calculation
+for vertical CG; three level scales alone do not measure CG height.
 
-## Height stack and mating surfaces
+The requested TT motors remain the limiting drive components. Each has
+a plastic gearbox and press-fit output wheels. Two wheels on one motor
+share its torque. No continuous torque curve or shaft radial-load rating
+was supplied with the cited product data. Strong metal legs do not remove
+that limitation. Test the rolling chassis at the actual intended final
+mass on a dry, level, hard floor. Require reliable starts, no gearbox
+stall and no more than 0.5 A steady current per ground motor during gentle
+travel. Measure rear-foot rolling drag and keep it at or below 10 N, the
+calculation's acceptance ceiling. Reduce mass or revise the transmission
+if those tests fail; do not raise the current limits to force movement.
 
-The side foot deck is Z=65..70. Each one-piece arm starts at Z=70, with a
-250 mm stem, integral bridge at Z=320..325, ribs to338 and a40 mm shoulder
-cap ending at365. The shoulder cap was shortened15 mm so the entire arm
-fits below300 mm print height. Two M4 rods still carry each arm's load.
-The front/back shoulder windows admit a wrench to the upper rod nuts.
-Inner bridge holes at X=+/-105,Y=+/-20 attach to the upper body's base frame.
-The complete left/right arm STLs are supplied; do not mirror them again.
+Ground PWM is capped at 90/255. Head PWM is capped at 70/255. These are
+duty commands, not measured speed. The rear-foot steering limit is 8 degrees.
+The smallest commanded turn radius is roughly 0.92m in the upright stance
+and increases as the rear foot extends. Tires still scrub in a tandem
+four-wheel foot. Test path tracking and stopping distance at low speed.
 
-Body frame lower faces are Z=170,315,460; each frame is 5 mm thick.
-Battery adapter is Z=175..178. Its 137 mm posts reach the middle frame at
-315. The second adapter is Z=320..323. Four 97 mm posts reach the head deck
-at 420. Head deck is Z=420..424. Four 36 mm posts reach the upper frame at
-460. The body rods at X=+/-75,Y=+/-75 pass through this complete stack.
-The utility deck sits on four 6 mm spacers at Z=329..332. All listed body
-frames, rod sleeves, adapters, the head deck, neck and battery tray are
-integral features of the two body prints. They are not separate print jobs.
+## Body and head stack
 
-The lower body sits at Z=170 and carries a full-circumference locating lip
-up to Z=318. The upper body sits at Z=315; its socket clears that lip by
-0.3 mm radially and vertically. The load-bearing faces meet at Z=315.
-Four M4 body rods clamp the stack. No vertical seams, splice plates or
-perimeter shell screws are needed. The upper body retains its side slots
-for the integral arm bridges. Align the rear switch location before
-lowering the upper body onto the lip; do not force a tight printed fit.
+The lower body mesh includes the skirt and starts at world Z130. Its
+main cylindrical wall starts at 165. The body seam is Z269.7. The upper
+body starts there and includes the fixed neck, ending at 454.3. The nominal
+dome datum is 456.8, leaving 2.5 mm fixed-neck clearance. The integrated
+raised crown reaches approximately 609.6 mm overall.
 
-Rear attachment plate is Z=165..170, under the bottom frame. It picks up
-the two rear body rods. The bracket is centered at (0,-180,110); its upper
-flange ends at Z=165 and bolts under that attachment plate. Bearing tower
-starts at Z=114 and ends at 140; cap ends at 143. A 38 mm spindle sleeve
-starts on the rear foot boss at Z=75 and ends at 113. Add one 1 mm inner
-race shim before the lower bearing. Bearing-to-bearing sleeve is 12 mm.
-The upper bearing ends at 140, followed by one 1 mm inner shim and the hub
-at 141..160. Its teeth occupy Z=151..157. Adjust jam nuts for free rotation
-without axial play. The stationary cap clears the 12 mm rotating hub neck.
+The lower seam has a3 mm locating lip, with 0.3 mm radial clearance in the
+upper socket. Four M3x14 screws on radius 119 clamp the seam into captured
+nuts in the lower flange. The lower shell's four tabs sit on the metal
+base at Z173. Fit the upper body BEFORE the shoulder carriers, because
+its shoulder openings are closed circles rather than long service slots.
+Removing the upper body later requires releasing the shoulder assembly.
+Routine electronics access is through the removable dome and top plate.
 
-Head bearing tower is Z=424..450. The same inner race stack and upper shim
-put its hub at 451..470. Head plate sits at 470..473. Four 6.6 mm spacers
-at radius 119 mm carry the dome bottom at 479.6. The fixed neck ring is
-Z=465..477; it has 2.6 mm clearance below the dome. Head plate tips stay
-inside radius 124 mm. No light, speaker or wire is mounted on the spinning
-dome. Keep loose wiring below Z=420 and away from both gear pairs.
+The head floor is Z413-415. The printed bearing tower starts at 415 and
+holds 608 bearings at 415-422 and 434-441. A12 mm metal spacer contacts their
+inner races. Nominally 0.8 mm of inner-race shims above the upper bearing
+places the integrated dome stem at 441.8. The cap surrounds this stem
+without touching it. The M8x60 bolt and captured nut connect the dome
+rotor through the inner-race stack. Set free rotation without axial play;
+do not squeeze the bearing seals with an oversized washer.
 
-## Print order and settings
+The dome underside includes its support spokes and a friction track at
+65-88 mm radius. M7's wheel runs near radius 76.5. The holder bolts to the
+metal floor and has an open, dropped motor pocket. Its nominal shaft
+height is 426.3, giving approximately 1 mm tire compression against the
+track. Adjust with thin shims and the actual tire, aiming for 0.5-1 mm
+compression and reliable traction. Excess preload bends the shaft and
+increases current. Head weight is supported by the bearings, not M7.
 
-1. Obtain the actual motors, wheels, servos and bearings. Print `coupon`,
-   one `motor_cradle`, one `bearing_tower`, `bearing_cap`, `race_spacer`,
-   `servo_mount`, `servo_pinion`, `gear_hub`, and all shim thicknesses first.
-2. Check M3 clearance, M4 rod clearance, M8 shaft clearance, the 22.2 mm
-   bearing pocket and the actual dual-wheel fit. Never scale an entire part
-   to correct a hole; edit the relevant dimension and re-export that part.
-3. Print both body sections, both arms and other structural PETG at 0.20 mm layers, four wall lines, five top/bottom
-   layers and 20 percent gyroid as the starting settings. Load-bearing
-   flanges, towers and gear teeth must contain continuous perimeters. Use
-   dry filament. Check that the thin leg skins are fully filled by walls.
-4. Print the dome and separate cosmetic parts in PLA at0.20 mm layers
-   with a0.4 mm nozzle and two walls. Integrated body skins remain0.8 mm
-   PETG, while arm skins are1.2 mm PETG. The slicer fits the requested wall
-   count to these thin features. Do not use vase mode or scale whole parts.
-5. Print both body sections base-down and arms standing on their lower
-   flanges. Use automatic normal support, including internal support, under
-   the integral decks, tall arm bridge overhangs and shoulder caps. Remove
-   support through the large frame openings and shoulder access windows.
-   Inspect every opening before inserting rods or boards. Fewer assembled
-   pieces mean longer prints and more support removal inside each piece.
-   The verified normal-support H2D slices predict608 g/18.5 h for the
-   lower body,1310 g/37.8 h for the upper body, and481 g/about13.5 h for
-   each arm. These figures include discarded support and are not the
-   installed robot mass. Allow five1 kg PETG spools for these prints,
-   remaining mechanisms, first-fit prints and waste; one PLA spool covers
-   the dome and separate cosmetic parts. Re-slice for your filament.
-6. The left and right arm files already have the correct orientation.
-   No shell quarters, separate frames, body posts, splices or arm segments
-   remain in the package. Test the lip/socket fit before tightening rods.
-7. Print all quantities from `bom/printed-parts.csv`, including small
-   spacers and the two side foot covers. Rear foot remains open for gear
-   service; keep fingers away from its steering mechanism during operation.
-8. Leave at least 5 mm around each part for brims. The H2D has a nominal
-   300 x 320 x 325 mm dual-nozzle volume; verify excluded regions in Bambu
-   Studio. Do not send jobs to the printer until the first-fit checks pass.
-9. Slice the full quantity list and record mass before printing all skins.
-   Add real purchased-part mass and keep the completed robot below the
-   4.5 kg commissioning limit. The full plate layout was not physically
-   printed or validated during this design run.
+Use the metal-fabrication worksheet for all shafts, plates, guides,
+clevises, secondary holes and fastener stacks. The CAD renders show
+purchased component envelopes; the worksheet defines machining details
+not visible in those simplified envelopes.
 
-## Finish and maintenance
+## Print order and H2D settings
 
-Paint the body white, dome silver and trim blue. Mask eight blue dome
-panels separated by about 10 mm silver strips, plus a 12 mm blue band near
-the dome base. Paint the eye recess black. Use `detail_panel.stl` as a
-stencil for the body markings, or glue it with small conforming foam pads;
-its flat back needs about 5 mm edge compensation on the cylindrical shell.
-Paint the leg strips directly. These cosmetic parts are not structural.
+1. Obtain the actual motors, wheels, bearings and servo. Print one
+   drive_cassette, bearing_tower, bearing_cap and head_motor_mount first.
+   Check fits on the real components. These are installed parts, not
+   extra disposable coupon designs.
+2. Keep the native STL orientation. Body sections are base-down. The
+   dome is supported under its integrated rotor/stem. The leg lies
+   diagonally with its open inboard face toward the bed. Remove internal
+   supports before inserting the spine. Print two identical leg copies;
+   the symmetric leg is turned 180 degrees about world Z for the other side.
+3. Print outer_foot twice: one as supplied and one mirrored in native X.
+   Keep both toes forward. Rear_foot is a separate whole print. The three
+   drive cassettes are identical. Do not mirror or rescale bearing fits.
+4. Use the installed H2D0.4 mm profile,0.20 mm layers, four walls, five
+   top/bottom layers,20 percent gyroid, automatic normal supports including
+   internal supports, and a5 mm outer brim. Dome material is PLA; the
+   remaining parts are PETG. The 1.2 mm body skin limits actual perimeter
+   count locally. Never use vase mode. Inspect previewed thin relief.
+5. All 10 current STL files sliced with those settings without a reported
+   warning. The slice report includes exact STL hashes, predicted masses
+   and times. Typical single-part predictions including discarded support
+   are 519 g lower body,608 g upper body,883 g dome,274 g leg and 258 g outer foot.
+   These are software predictions, not physical print measurements.
+6. Remove supports with the part fully cooled. Clear every bearing seat,
+   lip, screw hole, motor slot and cable-tie slot. Ream a tight hole locally;
+   do not scale an entire part to fix it. A bearing must seat by hand
+   pressure without splitting its tower. Dry-fit the complete body seam.
+7. Each STL fits within 300 mm per axis before brim. The checked H2D slices
+   also account for the actual printer profile. Do not move a part into a
+   nozzle exclusion area when rearranging a plate. No job was sent to a
+   physical printer during this design run.
+8. Weigh installed prints after removing supports. The solid-geometry
+   plastic bound is recorded in cad/validation.json; it excludes purchased parts and supports.
+   Final assembled mass and motor performance remain acceptance gates.
 
-For service, isolate both switches and unplug the battery. Support the
-lower body and feet on a work stand. Remove the dome, unplug the labeled
-lower-to-upper harness and remove all eight body/arm rod top nuts. Lift
-the upper body with its attached arms vertically off the rods with a
-second person. Keep the four inner arm bridge bolts assembled; their nuts
-are reached from below only when the upper body is off. This also gives
-battery access. The dome lifts after its four retaining
-screws are removed. Recheck rod nuts, gear mesh, wheel
-press fits, cable ties and bearing play after the first hour, then before
-each session. Replace worn gearbox units rather than forcing a slipping
-wheel onto a cracked shaft. Do not lubricate belts or wheel treads; there
-are no drive belts in this design.
+## Finish and service
+
+Paint the relief using the colored CAD sheets: white body and legs,
+silver dome and mechanical details, blue panel fields, dark recesses and
+the eye lens. There are six crown wedges, not eight generic stripes.
+Keep paint off bearings, threads, shaft clamps, wheel sockets, the body
+lip and the head friction track. Use thin coats rather than heavy filler.
+
+Switch both supplies off and unplug the battery before service. Support
+the metal frame. Remove the dome's captured-nut connection while holding
+the lower bolt; then lift the dome. Remove the head-floor fasteners and
+unplug M7 to reach the electronics panels. Label each removable harness.
+Release panel ties only after supporting the panel. Removing a shoulder
+shaft or the rear actuator requires supporting the body independently;
+the post is part of its load path.
+
+Before each use, inspect the wheel press fits, gearbox cases, shaft
+collars, clamp witness marks, clevis retention, guide pads, welds, wires
+and battery straps. Recheck after the first hour. Replace a worn gearbox
+or slipping wheel rather than forcing a cracked hub onto the shaft.
+Keep lubricant off tire treads, the head track and electronics.

@@ -1,0 +1,23 @@
+joint,fastener,kind,length_mm,grip_mm,washer_mm,nut_mm,min_extra_mm,min_thread_mm,usable_thread_mm
+Body seam,M3x14,through,14,8,1,2.4,1,0,0
+Shoulder carrier stack,M4x75,through,75,67.5,1.6,3.2,1,0,0
+Chassis horizontal blocks,M4x25,through,25,16,1.6,3.2,1,0,0
+Base through corner block,M4x30,through,30,23,1.6,3.2,1,0,0
+Head floor through corner block,M4x30,through,30,22,1.6,3.2,1,0,0
+Rigid side ankle,M6x20,through,20,8,3.2,6,2,0,0
+Moving adapter cross bolt,M5x45,through,45,34,2,5,2,0,0
+Head bearing tower,M3x12,through,12,5,1,2.4,1,0,0
+Foot cover worst boss,M3x40,through,40,30,1,2.4,1,0,0
+Motor cassette,M3x14,through,14,7.8,1,2.4,1,0,0
+Leg skin with raised blue face,M3x25,through,25,20,1,2.4,1,0,0
+Guide steering stud reversed head,M3x20 button,through,20,10.85,1,4,1,0,0
+Horn steering stud,M3x16 button,through,16,8.85,0.5,4,1,0,0
+Dome inner-race stack,M8x60 button,through,60,46.3,0,6.5,2.5,0,0
+BACA housing,M5x16,tapped,16,4,1,0,0,7.5,13
+Spine to split hub,M4x10 countersunk,tapped,10,4,0,0,0,6,10
+Moving yoke to adapter,M4x10,tapped,10,4,0,0,0,6,6.5
+Guide crossbar ends,M6x16,tapped,16,4,1.6,0,0,9,12
+Fixed actuator bracket,M4x25,tapped,25,4,0.8,0,0,6,22
+Limit rail short screws no washer,M3x6,tapped,6,3,0,0,0,3,3.5
+Servo standoff base,M3x8,tapped,8,4,0.5,0,0,3,20
+Acetal pad retention,M2x5 countersunk,tapped,5,3.175,0,0,0,1.5,2.675

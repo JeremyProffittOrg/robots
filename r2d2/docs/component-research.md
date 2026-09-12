@@ -1,5 +1,6 @@
 # R2-D2 component research
 
+Research history only. Follow the revision C BOM and fabrication worksheet for selected parts and dimensions.
 Research date: 2026-09-11. Design target: 609.6 mm / 24 in overall height.
 This is a digital design task. No hardware has been built or tested.
 

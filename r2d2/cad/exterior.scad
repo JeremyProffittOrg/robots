@@ -167,8 +167,10 @@ module exterior_foot(center=false){
  color(SILVER)translate([-4,13,34.8])rotate([-atan(7/24),0,0])cube([8,25,1.5]);
  color(SILVER)translate([-4,37,27.8])rotate([-atan(85/61),0,0])cube([8,sqrt(85*85+61*61),1.5]);
  if(!center){
-  color(WHITE)hull(){translate([-49,-48,-5])rotate([90,0,0])cylinder(d=30,h=32);translate([-49,-48,55])rotate([90,0,0])cylinder(d=30,h=32);}
-  color(SILVER)translate([-49,-80,49])rotate([90,0,0])ring(14,12.7,1.8);
+  color(WHITE)difference(){hull(){translate([-62,-48,-5])rotate([90,0,0])cylinder(d=30,h=32);translate([-62,-48,55])rotate([90,0,0])cylinder(d=30,h=32);}
+   hull(){translate([-62,-49.8,-5])rotate([90,0,0])cylinder(d=26.4,h=28.4);translate([-62,-49.8,55])rotate([90,0,0])cylinder(d=26.4,h=28.4);}
+   translate([-72,-74,-25])cube([20,20,30]);}
+  color(SILVER)translate([-62,-80,49])rotate([90,0,0])ring(14,12.7,1.8);
   for(k=[0:11])let(t=k/11,t2=(k+1)/11){
    a=[-35+25*t,40+15*sin(180*t),15+25*sin(180*t)];b=[-35+25*t2,40+15*sin(180*t2),15+25*sin(180*t2)];
    color(SILVER)pipe_segment(a,b,3.3);color(DARK)translate(a)sphere(r=3.6,$fn=12);

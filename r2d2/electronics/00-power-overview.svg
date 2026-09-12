@@ -1,75 +1,91 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="880" viewBox="0 0 1400 880">
-  <rect width="1400" height="880" fill="#ffffff" />
-  <text x="35" y="40" font-family="sans-serif" font-size="28" fill="#142337">R2-24 power distribution</text>
-  <text x="35" y="70" font-family="sans-serif" font-size="17" fill="#405166">Architecture sheet. Detailed pin connections and capacitor polarities are on the following sheets and in wiring.csv.</text>
-  <g stroke="#173e73" stroke-width="3" fill="none">
-    <path d="M190 150 H240 M340 150 H390 M490 150 H600 M700 150 H770 V695 M545 150 V255 H835" fill="none" stroke="#173e73" stroke-width="3" />
-    <path d="M770 365 H835 M770 475 H835 M770 585 H835 M770 695 H835 M1045 255 H1110 M1045 365 H1110 M1045 475 H1110 M1045 585 H1110 M1045 695 H1110" fill="none" stroke="#173e73" stroke-width="3" />
-    <path d="M105 195 V800 H1320" fill="none" stroke="#173e73" stroke-width="3" />
-  </g>
-  <g fill="#173e73">
-    <circle cx="545" cy="150" r="5" fill="#173e73" />
-    <circle cx="770" cy="365" r="5" fill="#173e73" />
-    <circle cx="770" cy="475" r="5" fill="#173e73" />
-    <circle cx="770" cy="585" r="5" fill="#173e73" />
-  </g>
-  <g fill="#e5effb" stroke="#173e73" stroke-width="2">
-    <rect x="20" y="105" width="170" height="90" rx="5" fill="#e5effb" stroke="#173e73" stroke-width="2" />
-    <rect x="240" y="115" width="100" height="70" rx="5" fill="#e5effb" stroke="#173e73" stroke-width="2" />
-    <rect x="390" y="115" width="100" height="70" rx="5" fill="#e5effb" stroke="#173e73" stroke-width="2" />
-    <rect x="600" y="115" width="100" height="70" rx="5" fill="#e5effb" stroke="#173e73" stroke-width="2" />
-    <rect x="835" y="215" width="210" height="80" rx="5" fill="#e5effb" stroke="#173e73" stroke-width="2" />
-    <rect x="1110" y="215" width="250" height="80" rx="5" fill="#e5effb" stroke="#173e73" stroke-width="2" />
-    <rect x="835" y="325" width="210" height="80" rx="5" fill="#e5effb" stroke="#173e73" stroke-width="2" />
-    <rect x="1110" y="325" width="250" height="80" rx="5" fill="#e5effb" stroke="#173e73" stroke-width="2" />
-    <rect x="835" y="435" width="210" height="80" rx="5" fill="#e5effb" stroke="#173e73" stroke-width="2" />
-    <rect x="1110" y="435" width="250" height="80" rx="5" fill="#e5effb" stroke="#173e73" stroke-width="2" />
-    <rect x="835" y="545" width="210" height="80" rx="5" fill="#e5effb" stroke="#173e73" stroke-width="2" />
-    <rect x="1110" y="545" width="250" height="80" rx="5" fill="#e5effb" stroke="#173e73" stroke-width="2" />
-    <rect x="835" y="655" width="210" height="80" rx="5" fill="#e5effb" stroke="#173e73" stroke-width="2" />
-    <rect x="1110" y="655" width="250" height="80" rx="5" fill="#e5effb" stroke="#173e73" stroke-width="2" />
-  </g>
-  <g font-family="sans-serif" font-size="18" fill="#142337" text-anchor="middle">
-    <text x="105" y="133" font-family="sans-serif" font-size="18" fill="#142337" text-anchor="middle">B1 protected pack</text>
-    <text x="105" y="158" font-family="sans-serif" font-size="18" fill="#142337" text-anchor="middle">12 V / 6 Ah</text>
-    <text x="105" y="181" font-family="sans-serif" font-size="18" fill="#142337" text-anchor="middle">LiFePO4</text>
-    <text x="290" y="144" font-family="sans-serif" font-size="18" fill="#142337" text-anchor="middle">F1</text>
-    <text x="290" y="169" font-family="sans-serif" font-size="18" fill="#142337" text-anchor="middle">7.5 A</text>
-    <text x="440" y="144" font-family="sans-serif" font-size="18" fill="#142337" text-anchor="middle">S1</text>
-    <text x="440" y="169" font-family="sans-serif" font-size="18" fill="#142337" text-anchor="middle">MAIN</text>
-    <text x="650" y="144" font-family="sans-serif" font-size="18" fill="#142337" text-anchor="middle">S2</text>
-    <text x="650" y="169" font-family="sans-serif" font-size="18" fill="#142337" text-anchor="middle">RUN</text>
-    <text x="940" y="242" font-family="sans-serif" font-size="18" fill="#142337" text-anchor="middle">F6 1 A + U6</text>
-    <text x="940" y="268" font-family="sans-serif" font-size="18" fill="#142337" text-anchor="middle">5 V / 1.2 A logic</text>
-    <text x="1235" y="242" font-family="sans-serif" font-size="18" fill="#142337" text-anchor="middle">HUZZAH32 + amplifier</text>
-    <text x="1235" y="269" font-family="sans-serif" font-size="18" fill="#142337" text-anchor="middle">Removable USB power link</text>
-    <text x="940" y="352" font-family="sans-serif" font-size="18" fill="#142337" text-anchor="middle">F2 2 A + P1 UBEC</text>
-    <text x="940" y="379" font-family="sans-serif" font-size="18" fill="#142337" text-anchor="middle">5 V / 3 A LEFT</text>
-    <text x="1235" y="352" font-family="sans-serif" font-size="18" fill="#142337" text-anchor="middle">D1 DRV8833</text>
-    <text x="1235" y="379" font-family="sans-serif" font-size="18" fill="#142337" text-anchor="middle">M1 and M2, separate outputs</text>
-    <text x="940" y="462" font-family="sans-serif" font-size="18" fill="#142337" text-anchor="middle">F3 2 A + P2 UBEC</text>
-    <text x="940" y="489" font-family="sans-serif" font-size="18" fill="#142337" text-anchor="middle">5 V / 3 A RIGHT</text>
-    <text x="1235" y="462" font-family="sans-serif" font-size="18" fill="#142337" text-anchor="middle">D2 DRV8833</text>
-    <text x="1235" y="489" font-family="sans-serif" font-size="18" fill="#142337" text-anchor="middle">M3 and M4, separate outputs</text>
-    <text x="940" y="572" font-family="sans-serif" font-size="18" fill="#142337" text-anchor="middle">F4 2 A + P3 UBEC</text>
-    <text x="940" y="599" font-family="sans-serif" font-size="18" fill="#142337" text-anchor="middle">5 V / 3 A REAR</text>
-    <text x="1235" y="572" font-family="sans-serif" font-size="18" fill="#142337" text-anchor="middle">D3 DRV8833</text>
-    <text x="1235" y="599" font-family="sans-serif" font-size="18" fill="#142337" text-anchor="middle">M5 and M6, separate outputs</text>
-    <text x="940" y="682" font-family="sans-serif" font-size="18" fill="#142337" text-anchor="middle">F5 2 A + P4 UBEC</text>
-    <text x="940" y="709" font-family="sans-serif" font-size="18" fill="#142337" text-anchor="middle">5 V / 3 A SERVO</text>
-    <text x="1235" y="682" font-family="sans-serif" font-size="18" fill="#142337" text-anchor="middle">SV1 steering + SV2 head</text>
-    <text x="1235" y="709" font-family="sans-serif" font-size="18" fill="#142337" text-anchor="middle">U7 5 V signal buffer</text>
-  </g>
-  <g font-family="sans-serif" font-size="19" fill="#142337">
-    <text x="150" y="340" font-family="sans-serif" font-size="19" fill="#142337">Each motor bridge retains its factory 1 A limit.</text>
-    <text x="150" y="380" font-family="sans-serif" font-size="19" fill="#142337">Six bridges drive six motors, not paired motor outputs.</text>
-    <text x="150" y="440" font-family="sans-serif" font-size="19" fill="#142337">Keep all four UBEC positive outputs separate.</text>
-    <text x="150" y="480" font-family="sans-serif" font-size="19" fill="#142337">MAIN off removes all robot supply power.</text>
-    <text x="150" y="520" font-family="sans-serif" font-size="19" fill="#142337">RUN off removes motor and servo supply power.</text>
-    <text x="150" y="580" font-family="sans-serif" font-size="19" fill="#142337">Unplug the pack and remove it for charging.</text>
-    <text x="150" y="620" font-family="sans-serif" font-size="19" fill="#142337">Only the matched 14.6 V LiFePO4 charger is used.</text>
-    <text x="150" y="660" font-family="sans-serif" font-size="19" fill="#142337">Remove J_USB before connecting computer USB.</text>
-    <text x="150" y="774" font-family="sans-serif" font-size="19" fill="#142337">GND: battery negative and every regulator, driver, controller and servo return join here.</text>
-    <text x="35" y="850" font-size="16" font-family="sans-serif" fill="#142337">Fuses are on converter inputs. Fit the specified input/output capacitors. This is not a layout drawing; use the exact wiring schedule.</text>
-  </g>
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="880" viewBox="0 0 1400 880"><rect width="1400" height="880" fill="#ffffff"/>
+<text x="30" y="38" font-family="sans-serif" font-size="28" text-anchor="start" fill="#142337">R2-24 | revision C power distribution</text>
+<text x="30" y="70" font-family="sans-serif" font-size="17" text-anchor="start" fill="#142337">Architecture view. Follow wiring.csv and the connection sheets for exact pins, returns and capacitor polarity.</text>
+<path d="M190 150 H240 M340 150 H390 M490 150 H600 M700 150 H740 V710 M520 150 V105 H760 V230 H790" fill="none" stroke="#173e73" stroke-width="3"/>
+<rect x="20" y="105" width="170" height="90" rx="5" fill="#e5effb" stroke="#173e73" stroke-width="2"/>
+<text x="105.0" y="128" font-family="sans-serif" font-size="18" text-anchor="middle" fill="#142337">Protected B1</text>
+<text x="105.0" y="152" font-family="sans-serif" font-size="18" text-anchor="middle" fill="#142337">12 V / 6 Ah</text>
+<text x="105.0" y="176" font-family="sans-serif" font-size="18" text-anchor="middle" fill="#142337">LiFePO4</text>
+<rect x="240" y="115" width="100" height="70" rx="5" fill="#e5effb" stroke="#173e73" stroke-width="2"/>
+<text x="290.0" y="138" font-family="sans-serif" font-size="18" text-anchor="middle" fill="#142337">F1</text>
+<text x="290.0" y="162" font-family="sans-serif" font-size="18" text-anchor="middle" fill="#142337">7.5 A</text>
+<rect x="390" y="115" width="100" height="70" rx="5" fill="#e5effb" stroke="#173e73" stroke-width="2"/>
+<text x="440.0" y="138" font-family="sans-serif" font-size="18" text-anchor="middle" fill="#142337">S1</text>
+<text x="440.0" y="162" font-family="sans-serif" font-size="18" text-anchor="middle" fill="#142337">MAIN</text>
+<rect x="600" y="115" width="100" height="70" rx="5" fill="#e5effb" stroke="#173e73" stroke-width="2"/>
+<text x="650.0" y="138" font-family="sans-serif" font-size="18" text-anchor="middle" fill="#142337">S2</text>
+<text x="650.0" y="162" font-family="sans-serif" font-size="18" text-anchor="middle" fill="#142337">RUN</text>
+<path d="M1010 230 H1080" fill="none" stroke="#173e73" stroke-width="3"/>
+<rect x="790" y="200" width="220" height="60" rx="5" fill="#e5effb" stroke="#173e73" stroke-width="2"/>
+<text x="900.0" y="223" font-family="sans-serif" font-size="18" text-anchor="middle" fill="#142337">F6 1 A + U6</text>
+<text x="900.0" y="247" font-family="sans-serif" font-size="18" text-anchor="middle" fill="#142337">5 V / 1.2 A logic</text>
+<rect x="1080" y="200" width="300" height="60" rx="5" fill="#e5effb" stroke="#173e73" stroke-width="2"/>
+<text x="1230.0" y="223" font-family="sans-serif" font-size="18" text-anchor="middle" fill="#142337">HUZZAH32 + audio + sensors</text>
+<text x="1230.0" y="247" font-family="sans-serif" font-size="18" text-anchor="middle" fill="#142337">Removable J_USB power link</text>
+<path d="M740 310 H790" fill="none" stroke="#173e73" stroke-width="3"/>
+<circle cx="740" cy="310" r="4" fill="#173e73"/>
+<path d="M1010 310 H1080" fill="none" stroke="#173e73" stroke-width="3"/>
+<rect x="790" y="280" width="220" height="60" rx="5" fill="#e5effb" stroke="#173e73" stroke-width="2"/>
+<text x="900.0" y="303" font-family="sans-serif" font-size="18" text-anchor="middle" fill="#142337">F2 2 A + P1</text>
+<text x="900.0" y="327" font-family="sans-serif" font-size="18" text-anchor="middle" fill="#142337">5 V / 3 A LEFT</text>
+<rect x="1080" y="280" width="300" height="60" rx="5" fill="#e5effb" stroke="#173e73" stroke-width="2"/>
+<text x="1230.0" y="303" font-family="sans-serif" font-size="18" text-anchor="middle" fill="#142337">D1 DRV8833</text>
+<text x="1230.0" y="327" font-family="sans-serif" font-size="18" text-anchor="middle" fill="#142337">M1 / M2 separate outputs</text>
+<path d="M740 390 H790" fill="none" stroke="#173e73" stroke-width="3"/>
+<circle cx="740" cy="390" r="4" fill="#173e73"/>
+<path d="M1010 390 H1080" fill="none" stroke="#173e73" stroke-width="3"/>
+<rect x="790" y="360" width="220" height="60" rx="5" fill="#e5effb" stroke="#173e73" stroke-width="2"/>
+<text x="900.0" y="383" font-family="sans-serif" font-size="18" text-anchor="middle" fill="#142337">F3 2 A + P2</text>
+<text x="900.0" y="407" font-family="sans-serif" font-size="18" text-anchor="middle" fill="#142337">5 V / 3 A RIGHT</text>
+<rect x="1080" y="360" width="300" height="60" rx="5" fill="#e5effb" stroke="#173e73" stroke-width="2"/>
+<text x="1230.0" y="383" font-family="sans-serif" font-size="18" text-anchor="middle" fill="#142337">D2 DRV8833</text>
+<text x="1230.0" y="407" font-family="sans-serif" font-size="18" text-anchor="middle" fill="#142337">M3 / M4 separate outputs</text>
+<path d="M740 470 H790" fill="none" stroke="#173e73" stroke-width="3"/>
+<circle cx="740" cy="470" r="4" fill="#173e73"/>
+<path d="M1010 470 H1080" fill="none" stroke="#173e73" stroke-width="3"/>
+<rect x="790" y="440" width="220" height="60" rx="5" fill="#e5effb" stroke="#173e73" stroke-width="2"/>
+<text x="900.0" y="463" font-family="sans-serif" font-size="18" text-anchor="middle" fill="#142337">F4 2 A + P3</text>
+<text x="900.0" y="487" font-family="sans-serif" font-size="18" text-anchor="middle" fill="#142337">5 V / 3 A REAR</text>
+<rect x="1080" y="440" width="300" height="60" rx="5" fill="#e5effb" stroke="#173e73" stroke-width="2"/>
+<text x="1230.0" y="463" font-family="sans-serif" font-size="18" text-anchor="middle" fill="#142337">D3 DRV8833</text>
+<text x="1230.0" y="487" font-family="sans-serif" font-size="18" text-anchor="middle" fill="#142337">M5 / M6 separate outputs</text>
+<path d="M740 550 H790" fill="none" stroke="#173e73" stroke-width="3"/>
+<circle cx="740" cy="550" r="4" fill="#173e73"/>
+<path d="M1010 550 H1080" fill="none" stroke="#173e73" stroke-width="3"/>
+<rect x="790" y="520" width="220" height="60" rx="5" fill="#e5effb" stroke="#173e73" stroke-width="2"/>
+<text x="900.0" y="543" font-family="sans-serif" font-size="18" text-anchor="middle" fill="#142337">F5 2 A + P4</text>
+<text x="900.0" y="567" font-family="sans-serif" font-size="18" text-anchor="middle" fill="#142337">5 V / 3 A steering</text>
+<rect x="1080" y="520" width="300" height="60" rx="5" fill="#e5effb" stroke="#173e73" stroke-width="2"/>
+<text x="1230.0" y="543" font-family="sans-serif" font-size="18" text-anchor="middle" fill="#142337">SV1 rear steering</text>
+<text x="1230.0" y="567" font-family="sans-serif" font-size="18" text-anchor="middle" fill="#142337">U7 AHCT125 signal buffer</text>
+<path d="M740 630 H790" fill="none" stroke="#173e73" stroke-width="3"/>
+<circle cx="740" cy="630" r="4" fill="#173e73"/>
+<path d="M1010 630 H1080" fill="none" stroke="#173e73" stroke-width="3"/>
+<rect x="790" y="600" width="220" height="60" rx="5" fill="#e5effb" stroke="#173e73" stroke-width="2"/>
+<text x="900.0" y="623" font-family="sans-serif" font-size="18" text-anchor="middle" fill="#142337">F7 2 A + P5</text>
+<text x="900.0" y="647" font-family="sans-serif" font-size="18" text-anchor="middle" fill="#142337">5 V / 3 A HEAD</text>
+<rect x="1080" y="600" width="300" height="60" rx="5" fill="#e5effb" stroke="#173e73" stroke-width="2"/>
+<text x="1230.0" y="623" font-family="sans-serif" font-size="18" text-anchor="middle" fill="#142337">D4 DRV8833 channel A</text>
+<text x="1230.0" y="647" font-family="sans-serif" font-size="18" text-anchor="middle" fill="#142337">M7 internal friction wheel</text>
+<path d="M740 710 H790" fill="none" stroke="#173e73" stroke-width="3"/>
+<circle cx="740" cy="710" r="4" fill="#173e73"/>
+<path d="M1010 710 H1080" fill="none" stroke="#173e73" stroke-width="3"/>
+<rect x="790" y="680" width="220" height="60" rx="5" fill="#e5effb" stroke="#173e73" stroke-width="2"/>
+<text x="900.0" y="703" font-family="sans-serif" font-size="18" text-anchor="middle" fill="#142337">F8 2 A + P6</text>
+<text x="900.0" y="727" font-family="sans-serif" font-size="18" text-anchor="middle" fill="#142337">Regulated 12 V post</text>
+<rect x="1080" y="680" width="300" height="60" rx="5" fill="#e5effb" stroke="#173e73" stroke-width="2"/>
+<text x="1230.0" y="703" font-family="sans-serif" font-size="18" text-anchor="middle" fill="#142337">INA219 &gt; D5 DRV8871</text>
+<text x="1230.0" y="727" font-family="sans-serif" font-size="18" text-anchor="middle" fill="#142337">P16 feedback actuator</text>
+<circle cx="520" cy="150" r="4" fill="#173e73"/>
+<text x="35" y="295" font-family="sans-serif" font-size="18" text-anchor="start" fill="#142337">Five UBEC positive outputs remain separate.</text>
+<text x="35" y="344" font-family="sans-serif" font-size="18" text-anchor="start" fill="#142337">TT motors never connect to the 12 V post rail.</text>
+<text x="35" y="393" font-family="sans-serif" font-size="18" text-anchor="start" fill="#142337">Seven DRV8833 channels retain nominal 1 A limits.</text>
+<text x="35" y="442" font-family="sans-serif" font-size="18" text-anchor="start" fill="#142337">D5 uses replacement R1 = 71.5k.</text>
+<text x="35" y="491" font-family="sans-serif" font-size="18" text-anchor="start" fill="#142337">NC limits independently gate post direction inputs.</text>
+<text x="35" y="540" font-family="sans-serif" font-size="18" text-anchor="start" fill="#142337">Ground drive and head stop during posture changes.</text>
+<text x="35" y="589" font-family="sans-serif" font-size="18" text-anchor="start" fill="#142337">Unplug the pack before charging or USB service.</text>
+<text x="35" y="638" font-family="sans-serif" font-size="18" text-anchor="start" fill="#142337">Remove J_USB before connecting computer USB.</text>
+<path d="M105 195 V810 H1360" fill="none" stroke="#173e73" stroke-width="3"/>
+<text x="160" y="793" font-family="sans-serif" font-size="18" text-anchor="start" fill="#142337">GND: common battery, regulator, driver, controller and servo returns.</text>
+<text x="30" y="858" font-family="sans-serif" font-size="17" text-anchor="start" fill="#142337">Fuses are on converter inputs. MAIN off removes all supply power. RUN off removes every motor and servo branch.</text>
 </svg>

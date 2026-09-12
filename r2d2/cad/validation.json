@@ -2,7 +2,7 @@
   "parts": 10,
   "pieces": 14,
   "all_pass": true,
-  "solid_material_bound_g": 2232.4,
+  "solid_material_bound_g": 2079.0,
   "rows": [
     {
       "part": "body_lower",
@@ -11,7 +11,7 @@
       "x_mm": 259.76,
       "y_mm": 267.25,
       "z_mm": 142.7,
-      "solid_mass_g": 257.68,
+      "solid_mass_g": 253.91,
       "watertight": true,
       "components": 1,
       "passed": true
@@ -23,7 +23,7 @@
       "x_mm": 259.25,
       "y_mm": 262.25,
       "z_mm": 184.6,
-      "solid_mass_g": 319.33,
+      "solid_mass_g": 318.93,
       "watertight": true,
       "components": 1,
       "passed": true
@@ -35,7 +35,7 @@
       "x_mm": 259.55,
       "y_mm": 282.24,
       "z_mm": 167.8,
-      "solid_mass_g": 519.59,
+      "solid_mass_g": 519.31,
       "watertight": true,
       "components": 1,
       "passed": true
@@ -47,7 +47,7 @@
       "x_mm": 267.48,
       "y_mm": 267.48,
       "z_mm": 51.0,
-      "solid_mass_g": 192.54,
+      "solid_mass_g": 192.61,
       "watertight": true,
       "components": 1,
       "passed": true
@@ -56,10 +56,10 @@
       "part": "outer_foot",
       "quantity": 2,
       "material": "PETG",
-      "x_mm": 118.0,
+      "x_mm": 131.0,
       "y_mm": 197.22,
       "z_mm": 130.0,
-      "solid_mass_g": 242.11,
+      "solid_mass_g": 167.73,
       "watertight": true,
       "components": 1,
       "passed": true
@@ -71,7 +71,7 @@
       "x_mm": 108.0,
       "y_mm": 197.22,
       "z_mm": 109.0,
-      "solid_mass_g": 159.8,
+      "solid_mass_g": 153.74,
       "watertight": true,
       "components": 1,
       "passed": true
@@ -93,9 +93,9 @@
       "quantity": 1,
       "material": "PETG",
       "x_mm": 58.0,
-      "y_mm": 79.0,
+      "y_mm": 110.0,
       "z_mm": 12.9,
-      "solid_mass_g": 19.6,
+      "solid_mass_g": 25.26,
       "watertight": true,
       "components": 1,
       "passed": true
