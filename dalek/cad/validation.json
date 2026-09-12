@@ -1,15 +1,16 @@
 {
-  "design": "ROUND-10",
-  "mesh_count": 10,
+  "design": "ROUND-9",
+  "mesh_count": 9,
   "maximum_stl_files": 10,
   "all_pass": true,
-  "printed_piece_count": 11,
-  "solid_material_upper_bound_g": 3157.3,
+  "printed_piece_count": 10,
+  "solid_material_upper_bound_g": 2995.9,
   "bed_envelope_mm": [
     325,
     320,
     325
   ],
+  "body_height_limit_with_5mm_margin_mm": 320,
   "base_brim_envelope_mm": [
     316,
     316
@@ -39,14 +40,14 @@
       "notes": "Diameter300 circular unibody;6mm floor;4mm wall/ribs;6walls6top/bottom40%gyroid;8mmbrim;normal auto supports below wheel-well roofs;remove through bottom wells"
     },
     {
-      "part": "02_lower_skirt",
+      "part": "02_skirt",
       "quantity": 1,
       "material": "PLA",
       "x_mm": 300.332,
       "y_mm": 300.332,
-      "z_mm": 113.0,
-      "volume_mm3": 356587.16,
-      "solid_mass_g": 442.17,
+      "z_mm": 213.0,
+      "volume_mm3": 518836.51,
+      "solid_mass_g": 643.36,
       "watertight": true,
       "connected_components": 1,
       "enclosed_void_surfaces": 0,
@@ -55,26 +56,7 @@
       "h2d_single_nozzle_with_brim": true,
       "pass_check": true,
       "orientation": "Large opening down",
-      "notes": "Complete circular ring; integral hemisphere bezels and panel ribs;3mm registry above110mm body;4walls15%infill;normal auto supports under bumps"
-    },
-    {
-      "part": "03_upper_skirt",
-      "quantity": 1,
-      "material": "PLA",
-      "x_mm": 250.332,
-      "y_mm": 250.332,
-      "z_mm": 103.0,
-      "volume_mm3": 292389.17,
-      "solid_mass_g": 362.56,
-      "watertight": true,
-      "connected_components": 1,
-      "enclosed_void_surfaces": 0,
-      "brim_mm_per_side": 5,
-      "print_rotation_z_degrees": 0,
-      "h2d_single_nozzle_with_brim": true,
-      "pass_check": true,
-      "orientation": "Large opening down",
-      "notes": "Complete360degree ring; integral bumps;3mm registry above100mm body;4walls15%infill;normal auto supports under bumps"
+      "notes": "One complete210mm two-slope body plus3mm registry; four hemisphere rows and integral tapered middle rib; no middle bolted joint;4walls15%infill;normal auto supports"
     },
     {
       "part": "04_shoulder",

@@ -24,7 +24,7 @@ The photographed bronze props generally have faceted fenders and skirt panels. A
 
 For this robot, the circular base must be a real geometric boundary in the STL and plan view. Rounded corners on a rectangular base do not meet the requirement. Wheel openings should face downward and inward so they do not create four large exterior notches. The base must still provide independent motor saddles, a continuous structural floor and a clear load path to the stack fasteners. Decorative roundness does not establish strength; the base still needs the mechanical checks and physical commissioning specified elsewhere.
 
-The skirt may use shallow panel grooves to organize the hemisphere columns without requiring a polygonal footprint. Its stack joints should follow intentional horizontal trim lines. Align the columns across the lower and upper skirt pieces. Avoid rotating one printed ring by half a column during assembly. A keyed joint or a clear alignment mark is preferable to correcting the mismatch with paint.
+The skirt uses shallow panel relief to organize the hemisphere columns without requiring a polygonal footprint. The combined skirt keeps all four rows aligned within one print. Its remaining stack joints follow the base and shoulder trim lines. Align the front seam with the shoulder before tightening those joints.
 
 ## Arms and concealed servos
 

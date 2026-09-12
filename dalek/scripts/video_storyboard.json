@@ -6,9 +6,9 @@
     {
       "start": 0,
       "end": 5,
-      "title": "Ten STL designs. Eleven printed parts.",
+      "title": "Nine STL designs. Ten printed parts.",
       "instruction": "Bronze Dalek | Original TTGO T-Display ESP32 | CAD assembly preview",
-      "narration": "Simulated assembly. Eleven printed parts."
+      "narration": "Simulated assembly. Ten printed parts."
     },
     {
       "start": 5,
@@ -27,23 +27,23 @@
     {
       "start": 19,
       "end": 25,
-      "title": "03 | Lower skirt first",
-      "instruction": "Fasten the lower ring to the base before fitting electronics; seat its locating joint.",
-      "narration": "Fit the lower skirt before adding the electronics."
+      "title": "03 | One-piece skirt",
+      "instruction": "Seat the full 213 mm skirt on the base. Secure it with four M4 screws before fitting electronics, using the specified long tools.",
+      "narration": "Fit the one piece skirt before adding the electronics."
     },
     {
       "start": 25,
       "end": 36,
       "title": "04 | Electronics and battery",
-      "instruction": "Fit two FR4 plates, nylon spacers and boards; secure the disconnected 12 V, 6 Ah battery with two straps.",
-      "narration": "Mount the insulating plates, spacers, and boards. Secure the battery with two straps."
+      "instruction": "Retain PCB nuts below each plate and keep its upper face clear. Lower it through the centre and move below the flange. Fit boards, then the battery.",
+      "narration": "Retain the nuts below each plate. Fit the plates, boards, and battery."
     },
     {
       "start": 36,
       "end": 41,
-      "title": "05 | Stack the upper skirt",
-      "instruction": "Seat the complete upper skirt and fasten its four M4 joints.",
-      "narration": "Seat and fasten the upper skirt."
+      "title": "05 | Check the taller shell",
+      "instruction": "The two skirt sections are now one continuous print. Check wiring and clearance before fitting the removable shoulder.",
+      "narration": "Check clearances inside the one piece skirt."
     },
     {
       "start": 41,

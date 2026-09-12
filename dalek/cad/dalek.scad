@@ -1,5 +1,5 @@
-// DALEK ROUND-10. Millimetres; +Y rear, +X right, Z up.
-// Ten connected STL designs; pitch carrier is printed twice.
+// DALEK ROUND-9. Millimetres; +Y rear, +X right, Z up.
+// Nine connected STL designs; pitch carrier is printed twice.
 part="assembly";
 $fn=64;
 wall=1.8; M3=3.4; M4=4.4;
@@ -46,14 +46,29 @@ module base(){difference(){
 module bump(a,b,h,z,ang){rr=a+(b-a)*z/h;rotate([0,0,ang])translate([rr-3,0,z])rotate([0,90,0]){
  cylinder(d=23,h=3,$fn=32);translate([0,0,1.8])scale([1,1,.72])sphere(r=10,$fn=32);
  }}
-module skirt(a=150,b=125,h=110){difference(){union(){
+module skirt_skin(a,b,h){union(){
  difference(){cylinder(r1=a,r2=b,h=h);conical_inner(a,b,h);}
- ring(a,a-18,6);translate([0,0,h-6])ring(b,b-18,6);tongue(b,h);
  difference(){union(){
   for(z=[26,76])for(ang=[15:30:345])bump(a,b,h,z,ang);
   for(ang=[0:30:330])rotate([0,0,ang])hull(){translate([a-.8,0,8])sphere(r=1,$fn=12);translate([b-.8,0,h-8])sphere(r=1,$fn=12);}
  }conical_inner(a,b,h);}
- }groove(a);joint_holes(a,3);joint_holes(b,h-3);}}
+ }}
+module skirt_rib(){rotate_extrude()polygon([
+ [125.9090909,106],[125,110],[124.4,114],
+ [123.6,114],[120,110],[124.1,106]
+]);}
+module skirt_lower(){difference(){union(){
+ skirt_skin(150,125,110);ring(150,132,6);
+ }groove(150);joint_holes(150,3);}}
+module skirt_upper(){difference(){union(){
+ translate([0,0,110])skirt_skin(125,110,100);
+ // Preserve the former upper flange's visible6mm outer band as thin skin.
+ translate([0,0,110])ring(125,123.2,6);
+ translate([0,0,204])ring(110,92,6);tongue(110,210);
+ // Integral tapered rib replaces the two middle flanges and four bolts.
+ // Its inside radius is120mm; tapered undersides avoid a wide support ledge.
+ }joint_holes(110,207);}}
+module skirt(){union(){skirt_lower();skirt_upper();skirt_rib();}}
 module horn_pattern(){hole(5,18);for(a=[0:90:270])rotate([0,0,a])translate([8,0,0])slot(3,2.2,18);}
 module rounded_box(size,r=5){hull()for(x=[r,size[0]-r])for(y=[r,size[1]-r])for(z=[r,size[2]-r])translate([x,y,z])sphere(r=r,$fn=24);}
 module gunbox_shell(cx){difference(){
@@ -183,7 +198,7 @@ module assembly(explode=0){union(){
   color("#f0b72b")translate([sx*70.5,sy*58,base_z+6])scale([sx,sy,1])motor_envelope();
  }
  color("#273443")translate([-35,-57,base_z+6])cube([70,114,76]);
- for(p=[["02_lower_skirt",54,"#947042"],["03_upper_skirt",164,"#aa8350"],["04_shoulder",264,"#957044"],["05_neck",neck_z,"#484641"],["06_head",neck_z+52,"#b48c51"]])color(p[2])translate([0,0,base_z+p[1]+explode*(p[1]/100)])print_mesh(p[0]);
+ for(p=[["02_skirt",54,"#947042"],["04_shoulder",264,"#957044"],["05_neck",neck_z,"#484641"],["06_head",neck_z+52,"#b48c51"]])color(p[2])translate([0,0,base_z+p[1]+explode*(p[1]/100)])print_mesh(p[0]);
  color("#79766a")translate([64.5,0,base_z+neck_z+29.2])print_mesh("10_head_motor_carriage");
  color("#d49820")translate([64.5,0,base_z+neck_z+71])cylinder(d=63,h=29,center=true);
  for(x=[-47,53]){
@@ -191,10 +206,9 @@ module assembly(explode=0){union(){
   color("#a9a7a0")translate([x-3,-94,base_z+264+77])rotate([90,0,-90])translate([0,0,-28])print_mesh(x<0?"08_plunger_arm":"09_emitter_arm");
  }
  }}
-module mesh_section(){for(p=[["01_base",0],["02_lower_skirt",54],["03_upper_skirt",164],["04_shoulder",264],["05_neck",neck_z],["06_head",neck_z+52]])color("#947042")difference(){translate([0,0,base_z+p[1]])print_mesh(p[0]);translate([0,-400,-10])cube([450,800,1300]);}}
+module mesh_section(){for(p=[["01_base",0],["02_skirt",54],["04_shoulder",264],["05_neck",neck_z],["06_head",neck_z+52]])color("#947042")difference(){translate([0,0,base_z+p[1]])print_mesh(p[0]);translate([0,-400,-10])cube([450,800,1300]);}}
 if(part=="01_base")base();
-else if(part=="02_lower_skirt")skirt(150,125,110);
-else if(part=="03_upper_skirt")skirt(125,110,100);
+else if(part=="02_skirt")skirt();
 else if(part=="04_shoulder")shoulder();
 else if(part=="05_neck")neck();
 else if(part=="06_head")head();

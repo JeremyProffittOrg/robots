@@ -1,0 +1,410 @@
+{
+  "design": "ROUND-9",
+  "all_pass": true,
+  "method": "Deterministic finite envelope samples; mesh ray batches capped at150 points",
+  "coordinates": "Base-local millimetres; merged skirt originZ54; physical strength untested",
+  "mesh_sha256": {
+    "01_base": "cf36cb9b05210b71e6b5aa08be183e24be2719aa8f4e286b0cb74617b87d6041",
+    "02_skirt": "ff1baa0536e36c0730d69f5cf8004e069f4fe4e430026d6f3e6bc734a125146e"
+  },
+  "sources": [
+    "https://www.bahco.com/int_en/1-4--square-drive-crowfoot-open-end-wrench-7-mm-677-7.html",
+    "https://pimdatacdn.bahco.com/media/sub139/16a81bc02e23f83f.png",
+    "https://www.bahco.com/int_en/1-4--square-drive-universal-joint-35-mm-6966.html",
+    "https://www.bahco.com/gb_en/1-4--square-drive-extension-bars-pb_6960---6962l_.html"
+  ],
+  "checks": [
+    {
+      "check": "bare-plate--1-lower-slide-seat-against-01_base",
+      "samples": 3400,
+      "interior_hits": 0,
+      "passed": true
+    },
+    {
+      "check": "bare-plate--1-lower-slide-seat-against-02_skirt",
+      "samples": 3400,
+      "interior_hits": 0,
+      "passed": true
+    },
+    {
+      "check": "bare-plate--1-preinstalled-spacers",
+      "samples": 3400,
+      "interior_hits": 0,
+      "passed": true
+    },
+    {
+      "check": "bare-plate--1-preinstalled-screw-tips",
+      "samples": 3000,
+      "interior_hits": 0,
+      "passed": true
+    },
+    {
+      "check": "bare-plate--1-other-installed-plate",
+      "samples": 3400,
+      "interior_hits": 0,
+      "passed": true
+    },
+    {
+      "check": "bare-plate--1-retained-hardware-against-01_base",
+      "samples": 14484,
+      "interior_hits": 0,
+      "passed": true
+    },
+    {
+      "check": "bare-plate--1-retained-hardware-against-02_skirt",
+      "samples": 14484,
+      "interior_hits": 0,
+      "passed": true
+    },
+    {
+      "check": "bare-plate--1-retained-hardware-spacers",
+      "samples": 14484,
+      "interior_hits": 0,
+      "passed": true
+    },
+    {
+      "check": "bare-plate--1-retained-hardware-screw-tips",
+      "samples": 14484,
+      "interior_hits": 0,
+      "passed": true
+    },
+    {
+      "check": "bare-plate--1-retained-hardware-other-plate",
+      "samples": 14484,
+      "interior_hits": 0,
+      "passed": true
+    },
+    {
+      "check": "bare-plate-1-lower-slide-seat-against-01_base",
+      "samples": 3400,
+      "interior_hits": 0,
+      "passed": true
+    },
+    {
+      "check": "bare-plate-1-lower-slide-seat-against-02_skirt",
+      "samples": 3400,
+      "interior_hits": 0,
+      "passed": true
+    },
+    {
+      "check": "bare-plate-1-preinstalled-spacers",
+      "samples": 3400,
+      "interior_hits": 0,
+      "passed": true
+    },
+    {
+      "check": "bare-plate-1-preinstalled-screw-tips",
+      "samples": 3000,
+      "interior_hits": 0,
+      "passed": true
+    },
+    {
+      "check": "bare-plate-1-other-installed-plate",
+      "samples": 3400,
+      "interior_hits": 0,
+      "passed": true
+    },
+    {
+      "check": "bare-plate-1-retained-hardware-against-01_base",
+      "samples": 14484,
+      "interior_hits": 0,
+      "passed": true
+    },
+    {
+      "check": "bare-plate-1-retained-hardware-against-02_skirt",
+      "samples": 14484,
+      "interior_hits": 0,
+      "passed": true
+    },
+    {
+      "check": "bare-plate-1-retained-hardware-spacers",
+      "samples": 14484,
+      "interior_hits": 0,
+      "passed": true
+    },
+    {
+      "check": "bare-plate-1-retained-hardware-screw-tips",
+      "samples": 14484,
+      "interior_hits": 0,
+      "passed": true
+    },
+    {
+      "check": "bare-plate-1-retained-hardware-other-plate",
+      "samples": 14484,
+      "interior_hits": 0,
+      "passed": true
+    },
+    {
+      "check": "battery-after-plates-against-01_base",
+      "samples": 4375,
+      "interior_hits": 0,
+      "passed": true
+    },
+    {
+      "check": "battery-after-plates-against-02_skirt",
+      "samples": 4375,
+      "interior_hits": 0,
+      "passed": true
+    },
+    {
+      "check": "battery-against-installed-plate--1",
+      "samples": 4375,
+      "interior_hits": 0,
+      "passed": true
+    },
+    {
+      "check": "battery-against-installed-plate-1",
+      "samples": 4375,
+      "interior_hits": 0,
+      "passed": true
+    },
+    {
+      "check": "battery-against-preinstalled-spacers",
+      "samples": 4375,
+      "interior_hits": 0,
+      "passed": true
+    },
+    {
+      "check": "crowfoot-0-top-insertion-against-01_base",
+      "samples": 20178,
+      "interior_hits": 0,
+      "passed": true
+    },
+    {
+      "check": "crowfoot-0-top-insertion-against-02_skirt",
+      "samples": 20178,
+      "interior_hits": 0,
+      "passed": true
+    },
+    {
+      "check": "crowfoot-0-radial-slide-against-01_base",
+      "samples": 13452,
+      "interior_hits": 0,
+      "passed": true
+    },
+    {
+      "check": "crowfoot-0-radial-slide-against-02_skirt",
+      "samples": 13452,
+      "interior_hits": 0,
+      "passed": true
+    },
+    {
+      "check": "crowfoot-0-preinstalled-screw-tips",
+      "samples": 13452,
+      "interior_hits": 0,
+      "passed": true
+    },
+    {
+      "check": "crowfoot-90-top-insertion-against-01_base",
+      "samples": 20178,
+      "interior_hits": 0,
+      "passed": true
+    },
+    {
+      "check": "crowfoot-90-top-insertion-against-02_skirt",
+      "samples": 20178,
+      "interior_hits": 0,
+      "passed": true
+    },
+    {
+      "check": "crowfoot-90-radial-slide-against-01_base",
+      "samples": 13452,
+      "interior_hits": 0,
+      "passed": true
+    },
+    {
+      "check": "crowfoot-90-radial-slide-against-02_skirt",
+      "samples": 13452,
+      "interior_hits": 0,
+      "passed": true
+    },
+    {
+      "check": "crowfoot-90-preinstalled-screw-tips",
+      "samples": 13452,
+      "interior_hits": 0,
+      "passed": true
+    },
+    {
+      "check": "crowfoot-180-top-insertion-against-01_base",
+      "samples": 20178,
+      "interior_hits": 0,
+      "passed": true
+    },
+    {
+      "check": "crowfoot-180-top-insertion-against-02_skirt",
+      "samples": 20178,
+      "interior_hits": 0,
+      "passed": true
+    },
+    {
+      "check": "crowfoot-180-radial-slide-against-01_base",
+      "samples": 13452,
+      "interior_hits": 0,
+      "passed": true
+    },
+    {
+      "check": "crowfoot-180-radial-slide-against-02_skirt",
+      "samples": 13452,
+      "interior_hits": 0,
+      "passed": true
+    },
+    {
+      "check": "crowfoot-180-preinstalled-screw-tips",
+      "samples": 13452,
+      "interior_hits": 0,
+      "passed": true
+    },
+    {
+      "check": "crowfoot-270-top-insertion-against-01_base",
+      "samples": 20178,
+      "interior_hits": 0,
+      "passed": true
+    },
+    {
+      "check": "crowfoot-270-top-insertion-against-02_skirt",
+      "samples": 20178,
+      "interior_hits": 0,
+      "passed": true
+    },
+    {
+      "check": "crowfoot-270-radial-slide-against-01_base",
+      "samples": 13452,
+      "interior_hits": 0,
+      "passed": true
+    },
+    {
+      "check": "crowfoot-270-radial-slide-against-02_skirt",
+      "samples": 13452,
+      "interior_hits": 0,
+      "passed": true
+    },
+    {
+      "check": "crowfoot-270-preinstalled-screw-tips",
+      "samples": 13452,
+      "interior_hits": 0,
+      "passed": true
+    },
+    {
+      "check": "plate-nut-tool--54--93-insert-shift-seat-against-01_base",
+      "samples": 21600,
+      "interior_hits": 0,
+      "passed": true
+    },
+    {
+      "check": "plate-nut-tool--54--93-insert-shift-seat-against-02_skirt",
+      "samples": 21600,
+      "interior_hits": 0,
+      "passed": true
+    },
+    {
+      "check": "plate-nut-tool--54--69-insert-shift-seat-against-01_base",
+      "samples": 21600,
+      "interior_hits": 0,
+      "passed": true
+    },
+    {
+      "check": "plate-nut-tool--54--69-insert-shift-seat-against-02_skirt",
+      "samples": 21600,
+      "interior_hits": 0,
+      "passed": true
+    },
+    {
+      "check": "plate-nut-tool--54-69-insert-shift-seat-against-01_base",
+      "samples": 21600,
+      "interior_hits": 0,
+      "passed": true
+    },
+    {
+      "check": "plate-nut-tool--54-69-insert-shift-seat-against-02_skirt",
+      "samples": 21600,
+      "interior_hits": 0,
+      "passed": true
+    },
+    {
+      "check": "plate-nut-tool--54-93-insert-shift-seat-against-01_base",
+      "samples": 21600,
+      "interior_hits": 0,
+      "passed": true
+    },
+    {
+      "check": "plate-nut-tool--54-93-insert-shift-seat-against-02_skirt",
+      "samples": 21600,
+      "interior_hits": 0,
+      "passed": true
+    },
+    {
+      "check": "plate-nut-tool-54--93-insert-shift-seat-against-01_base",
+      "samples": 21600,
+      "interior_hits": 0,
+      "passed": true
+    },
+    {
+      "check": "plate-nut-tool-54--93-insert-shift-seat-against-02_skirt",
+      "samples": 21600,
+      "interior_hits": 0,
+      "passed": true
+    },
+    {
+      "check": "plate-nut-tool-54--69-insert-shift-seat-against-01_base",
+      "samples": 21600,
+      "interior_hits": 0,
+      "passed": true
+    },
+    {
+      "check": "plate-nut-tool-54--69-insert-shift-seat-against-02_skirt",
+      "samples": 21600,
+      "interior_hits": 0,
+      "passed": true
+    },
+    {
+      "check": "plate-nut-tool-54-69-insert-shift-seat-against-01_base",
+      "samples": 21600,
+      "interior_hits": 0,
+      "passed": true
+    },
+    {
+      "check": "plate-nut-tool-54-69-insert-shift-seat-against-02_skirt",
+      "samples": 21600,
+      "interior_hits": 0,
+      "passed": true
+    },
+    {
+      "check": "plate-nut-tool-54-93-insert-shift-seat-against-01_base",
+      "samples": 21600,
+      "interior_hits": 0,
+      "passed": true
+    },
+    {
+      "check": "plate-nut-tool-54-93-insert-shift-seat-against-02_skirt",
+      "samples": 21600,
+      "interior_hits": 0,
+      "passed": true
+    }
+  ],
+  "limits": [
+    "Finite surface/interior samples do not prove every continuous path is clear.",
+    "Bareplates precede PCBs and battery; reverse that order for service.",
+    "Predrill plate holes using actual base mounts; screw shafts intentionally enter those holes at seating.",
+    "Crowfoot boss height and jaw projection are measured tool-fit gates; only labelled vendor dimensions are sourced.",
+    "Universal joint and extension couplers must remain inside the14mm envelope at the required bend.",
+    "Sockets enter with their axes at radius75, shift outward with their bottoms aboveZ45, then descend onto the nuts.",
+    "Real joints, hands, cables and PCB connectors need physical checks.",
+    "These tests establish no material strength, layer-bond quality or load rating.",
+    "Keep every underside nut/washer/adhesive wholly within the plate outline and outside8mm mount keepouts; check actual PCB hole templates before assembly."
+  ],
+  "plate_assembly": {
+    "slide_underside_z_mm": 44,
+    "seated_underside_z_mm": 34,
+    "maximum_retained_nut_washer_adhesive_projection_mm": 3,
+    "underside_hardware_keepout_radius_about_base_mount_axes_mm": 8,
+    "pcb_installation": "Retain thin M2.5 nuts (maximum1.6mm) with0.5mm underside washers; Pololu4091 uses M2 nuts (maximum1.6mm) and0.3mm washers. Fit no upper spacers or PCBs until the plate is seated.",
+    "pcb_screw_stack": "M2.5x14 from above with two0.5mm head washers. Pololu4091 uses M2 screws trimmed to the measured stack with two0.3mm head washers (nominal13.5mm working length). Verify two complete threads and at least2mm actual motor-case clearance.",
+    "physical_gate": "Keep every underside nut/washer/adhesive wholly within the plate outline and outside8mm mount keepouts; check actual PCB hole templates before assembly."
+  },
+  "focused_refresh": {
+    "command": "C:/Python314/python.exe scripts/check_skirt_access.py --plates-only",
+    "rerun_checks": 20,
+    "retained_unchanged_checks": 41,
+    "basis": "Only plate preparation/path changed; both exact source meshes and all tool/battery paths are unchanged."
+  }
+}

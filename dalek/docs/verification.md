@@ -1,10 +1,12 @@
 # Digital verification and physical limits
 
-The ROUND-10 package is a design for a first physical prototype. Mesh, slicer, firmware, wiring and media checks establish digital consistency. They do not establish real print strength, traction, stopping distance or battery runtime. The builder must complete the physical gates in `assembly.md`.
+ROUND-9 combines the lower and upper skirts into one 213 mm print. The robot remains nominally 563.8 mm tall. The revision removes one printed piece and one bolted interface; it does not establish a measured increase in strength. Physical fit, adhesion, base strength, loaded driving and stopping still require the commissioning gates in `assembly.md`.
 
-## Reference review
+## Reference review and preserved behavior
 
-`docs/reference-image-review.csv` contains 100 distinct visually reviewed images, each with its original URL, dimensions, byte and decoded-pixel hashes, observation and design implication. Duplicate crops and unrelated images were excluded after visual inspection. The source inventory has 100 unique image URLs, file hashes, pixel hashes and individual observations. The appearance report cites 18 exact images. Reference images remain outside the repository and deliverables.
+The existing 100-image reference inventory and appearance review remain applicable. Each source has its original URL, dimensions, file/pixel hashes, observation and design implication. No reference image has been redistributed with the package.
+
+Eight other STL designs are byte-identical to ROUND-10. They account for nine physical prints because the pitch carrier is used twice. Firmware, circuits, original MP3s, the four ground drives, rear T-Display, concealed arm mechanisms and adjustable head friction drive are unchanged. PCB mounting hardware and access instructions are updated for the deeper shell.
 
 ## Printable geometry
 
@@ -14,73 +16,64 @@ Command:
 python scripts/export_cad.py --check-only
 ```
 
-Result: ten watertight, consistently wound STL designs, one connected positive solid per design, eleven printed pieces and a 3157.3 g solid-material upper bound. The shared pitch carrier is printed twice. The circular base is 300 mm in diameter, with a 6 mm floor and a continuous bumper. Nominal assembled height is 563.8 mm. All parts fit the checked H2D envelope upright with their requested brim allowance.
+Result: nine watertight, consistently wound STL designs, each one connected positive solid, for ten printed pieces. The total solid-material upper bound is 2995.9 g. This is a mesh-volume calculation, not measured or sliced print mass.
 
-The solid-material bound comes from closed mesh volume and assumed material density. It is not a slicer estimate or a measured robot mass. The exact released dimensions and source hashes are in `cad/validation.json` and `bom/printed-parts.csv`.
+The new `02_skirt.stl` is 300.331848 x 300.331848 x 213 mm. Its SHA256 is `ff1baa0536e36c0730d69f5cf8004e069f4fe4e430026d6f3e6bc734a125146e`. All 39,728 faces are nondegenerate and every edge has two adjacent faces. The final mesh replaced a rejected export with a microscopic internal surface at the old rib-cone junction. A single revolved polygon now forms the reinforcing rib.
 
-## Mechanical checks
+The old lower and upper skirt STLs are removed. The new part retains both outer slopes, all four hemisphere rows, trim and the visible middle band. It retains the base and shoulder interfaces but replaces the middle bolted flanges with an integral tapered rib. Comparison of 8,496 exterior rays against the former pair differed by at most 0.000004554 mm. The other eight STL hashes are unchanged.
 
-Command:
+The 213 mm part is below the 320 mm maximum-minus-5 mm height target. Its requested 5 mm brim allowance also fits the H2D footprint. The full printer envelope is not stretched or scaled to obtain this result. See `cad/validation.json` and `bom/printed-parts.csv`.
+
+## Mechanical and assembly access checks
+
+Commands:
 
 ```powershell
 python scripts/check_mechanical.py
+python scripts/check_skirt_access.py
 ```
 
-All 101 checks passed across 507,950 samples against the final ten STL hashes. The repeatable check samples wheel seating, motor envelopes, the rotated battery, electronics plates, bumper continuity, arm motion, insertion paths, head-wheel contact, carriage travel and tool access. This includes 4,800 exterior sight rays with no visible servo targets through the modelled opaque liners. Its mesh-specific results are in `cad/mechanical-checks.json`; the method and resolved findings are in `docs/revision-review.md`. These are finite samples and mesh-vertex checks, not exact continuous collision proofs.
+The complete current mechanical run passed 118 checks across 554,129 samples against the nine current STL hashes. This includes merged-skirt height, interfaces, bore and long-driver checks, unchanged mechanisms and 4,800 current-body sight rays with no visible servo targets. These finite samples are not an exact continuous collision proof. Results and limits are in `cad/mechanical-checks.json` and `docs/revision-review.md`.
 
-An independent carrier-insertion review checked 87 poses and 26,100 vertices per side against the final shoulder, with zero interior hits. The earlier diagonal route intersected the gunbox. The corrected route lowers the carrier through the central opening at Y-44, shifts sideways, moves forward and then seats on the horn. A separate check sampled 7,200 driver-shaft points for each of the lower skirt, upper skirt and shoulder; all four joint approaches in each part had zero interior hits.
+The focused access report passes 61 checks across 868,363 sample evaluations. Twenty affected plate/retained-hardware checks were rerun after the final insertion-height change; 41 unchanged tool and battery checks were retained only after their mesh hashes matched. The final incremental command was `python scripts/check_skirt_access.py --plates-only`. A full run remains available. See `cad/skirt-access-checks.json`.
 
-The PDF review also caught an assembly-order error: an already installed pitch servo blocked the arm-feed path. The instructions now feed and support the arms first, then insert the pitch-servo carriers. `python scripts/check_arm_assembly.py` passes eight additional checks across 187,920 samples, including both actual supported arm meshes and the shoulder as obstacles. Its result is `cad/arm-assembly-checks.json`. This correction changes the instructions; it does not change the STL geometry.
+Access relies on the specified 250 mm driver, crowfoot, universal joint and extension. The crowfoot holds the M4 nut while the screw turns. The M2.5 plate nuts require a 5 mm socket. Actual tool profiles must fit the documented conservative envelopes; a tool name alone does not prove clearance.
 
-The final arm limit is 8 degrees in the interface and firmware. Opaque flexible socket liners complete concealment around the spherical roots. The friction carriage uses an M3 jackscrew for contact adjustment and four accessible guide clamps with nyloc nuts for locking. There is no inaccessible separate jam nut. Real fabric folds, horn dimensions, pads, print shrinkage and loaded tire deformation require physical checks.
+Retained PCB nuts, washers and adhesive must project no more than 3 mm below the FR4. The plate underside travels at base-local Z44 before moving outward, then lowers to Z34. All underside fittings must remain within the plate outline and wholly outside the 8 mm-radius keepouts around the eight plate-to-base mounting axes. Actual PCB hole locations are a physical template-fit gate. The checker does not invent mounting-hole coordinates from board outlines or certify arbitrary populated plates.
+
+Boards are fitted from above after the plates are seated, with the battery absent. Fasteners must match the actual board holes. The Pololu 4091 regulators have three M2 mounting holes per board. Pre-retained nuts and measured screw lengths avoid inaccessible underside work. Verify the specified motor-case clearance, thread engagement, absence of trace contact and service access before final assembly.
+
+The separate eight arm-order checks across 187,920 samples are retained from ROUND-10. Their four relevant STL hashes are unchanged. `cad/arm-assembly-checks.json` preserves that provenance. The required order still feeds and supports the arms before installing pitch-servo carriers; horns and opaque fabric liners follow.
 
 ## Actual H2D slicing
 
 Command:
 
 ```powershell
-python scripts/slice_h2d.py
+python scripts/slice_h2d.py --parts 02_skirt
 ```
 
-All ten final mesh hashes and all eleven print instances passed actual Bambu Studio 02.08.02.61 slicing. The runner uses installed H2D 0.4 mm machine settings in an isolated temporary profile. Its supported assembly-list input places the full object at X162.5,Y160. It does not change the machine or nozzle geometry, access a user profile, connect to a printer or start a print.
+The merged skirt passed an actual Bambu Studio 02.08.02.61 slice using the installed H2D 0.4 mm machine profile in isolated temporary state. Supported assembly-list input places it at X162.5,Y160 without changing the printer/nozzle geometry. Exact triangle count, rigid transform, full 213 mm deposited height, material, process settings and all deposited model/support/brim paths were checked.
 
-The checks verify the original triangle count, rigid transforms, complete bounding box and printed height, material, process settings, selected left nozzle and every deposited model/support/generated-brim path. Those paths fit the left X0..325 by Y0..320 mm area. The 350 mm combined machine width is not used as an individual-nozzle allowance.
+The new skirt's bead bounds are X7.7093..317.2917 and Y5.2093..314.7917 mm, within the left 325 x 320 mm area. It predicts 527.879 g of installed model and about 1033.87 g total PLA including supports and brim, with a 23 hour 45 minute 40 second print time. One 1 kg spool is insufficient; allow at least 1.14 kg for this job with reserve and plan filament capacity or a compatible change procedure.
 
-The final report predicts:
+The release report combines this new slice with eight unchanged slice records whose exact STL hashes were checked. It covers nine designs and ten physical prints:
 
-- Installed printed model: 2429.20 g.
-- Total filament including removable support and brim: 4073.06 g.
-- Sequential printing time: 418622.09 seconds, or about 116.28 hours.
-- PETG filament: 2176.60 g; PLA filament: 1896.46 g.
+- Installed printed model: 2345.25 g.
+- Total filament including support and brim: 3951.62 g.
+- Sequential print time: 406685.32 seconds, about 112.97 hours.
+- Compared with ROUND-10: 83.95 g less installed plastic, 121.44 g less filament and 3 hours 18 minutes 57 seconds less predicted print time.
 
-The hardware BOM allows three 1 kg spools of each material. This rounds the material-specific estimate plus 10% allowance to complete spools. Actual waste, failed prints and finishing are not measured.
+The BOM keeps 3 kg each of PETG and PLA as supply allowances, including reserve for the long skirt print. These quantities are not claimed deposited mass. Bambu omitted a separate Brim feature on some retained supported parts despite the requested brim setting; that behavior remains explicitly recorded. All actual generated deposition fits. Inspect adhesion paths before printing.
 
-Bambu omitted a separate Brim feature on the base, shoulder, plunger and emitter despite the recorded requested brim settings. This is explicitly recorded per part. Generated support and all remaining deposition still fit the nozzle area. Inspect the actual adhesion preview before printing; a configured brim width alone is not proof that a brim was generated.
+## Controls, wiring and media
 
-The base's complete 57 mm printed height and 10,340 source triangles were preserved. It predicts 737.780 g of installed plastic and 886.285 g total filament. Its actual deposited footprint, including bead width, is X7.7445..317.2565 and Y5.2445..314.7565 mm. These are software results. No physical adhesion or strength test has been performed.
+The unchanged firmware and filesystem builds retain their prior passing results: RAM 45,416 bytes, application flash 995,025 bytes and a 2,097,152-byte LittleFS image. Native controls and browser tests already cover the 8-degree arm limit, head PWM cap, reversal delay, fault stop, command leases and no automatic restart. These checks were not needlessly rerun for an unchanged electrical design. All 24 original MP3 hashes remain unchanged. The wiring schedule remains 185 rows with four SVG circuit sheets.
 
-## Controls, wiring and audio
+The drawing package now has 15 PNGs: six overview/mechanism sheets and nine component drawings. Five additional CAD previews serve the PDF. Their manifest verifies current source hashes and ZIP contents. The video shows one skirt installation and the plate-first, battery-last sequence, with nine designs and ten prints. Full FFmpeg decoding and FFprobe validate 120 seconds, 2880 frames, 1920 x 1080, 24 fps and AAC audio. Operation is labelled as simulation.
 
-Commands:
+The PDF is rendered and visually reviewed before delivery. The existing GitHub Actions/OIDC workflow publishes the committed PDF and video to private S3 storage and verifies downloaded file hashes. The final email contains the PDF and a signed video link with an explicit expiry. Workflow and SES acceptance identifiers are recorded in the execution plan.
 
-```powershell
-pio run -d firmware
-pio run -d firmware -t buildfs
-node firmware/test/test_ui.js
-```
+## Physical limits
 
-Firmware and filesystem builds pass. RAM is 45,416 bytes and application flash is 995,025 bytes. The original LilyGO T-Display board definition and pinned Arduino-ESP32 platform remain in use. The 2,097,152-byte LittleFS image contains the local interface and all 24 original MP3 files. No firmware has been flashed to a physical board during this revision.
-
-The existing native C++ control test passes with compiler warnings treated as errors. It covers boot lockout, lease replay, timeout, faults, rollover and wheel ramps, plus the new head PWM cap, immediate stop, 100 ms reversal coast through zero/re-arm/rollover, and acceptance of 8-degree arm motion with rejection above that limit. The browser test covers fresh commands, release/cancel, blur, connection loss, late replies and no automatic restart.
-
-`python electronics/generate.py` produces 185 point-to-point wiring rows and four SVG circuit sheets. An independent audit checked the GPIO2/U9/PCA9685 direction routing, powered-off inputs, pull-downs and reset/fault states. Startup now writes and reads back PCA MODE2=0x06 so global output disable makes both head gates inactive. Each of the five motors has its own used current-limited bridge; one bridge on the third DRV8833 remains unused. Estimated peak output allowance is 50 W including rail bleeders.
-
-All 24 original MP3 hashes remain unchanged. The assembly video adds local speech narration and reuses six original robot cues. The soundtrack is 120 seconds, 48 kHz mono and has no overlapping clips. The video is labelled as CAD animation and simulated operation throughout.
-
-## Delivery checks and remaining physical work
-
-The drawing manifest records the current STL/source hashes, 16 engineering PNGs, their ZIP and five PDF preview PNGs. The video manifest records its exact input hashes, frame evidence and media checks. The delivered MP4 must pass full FFmpeg decoding and FFprobe checks for 1920 x 1080, 24 fps, 2880 frames, 120 seconds and AAC audio.
-
-The PDF is rendered and visually checked before delivery. GitHub Actions uses OIDC to upload the exact committed video and PDF to private S3 storage, downloads both objects and compares their SHA256 hashes. The final HTML email includes a signed video link with an explicit expiry and the PDF attachment. The delivery log records the workflow result and SES MessageId; acceptance by SES does not prove the recipient opened the message.
-
-No physical robot was printed, wired, powered, flashed or driven. The 2.429 kg installed-plastic prediction excludes the battery, all motors/wheels, servos, boards, bearings, fasteners, wiring, fabric and finish. Weigh the finished robot. Test fit, base strength, loaded driving, head contact and locking, fabric clearance, supply sag, noise, temperatures, Wi-Fi loss and every stop case before use.
+No robot was printed, wired, powered or driven during this revision. The predicted 2.345 kg of installed plastic excludes the battery, motors, wheels, servos, electronics, fasteners, fabric and finish. Weigh the finished robot and complete the physical checks. A continuous printed skirt and fewer joints do not by themselves prove higher strength, reliable traction or a payload rating.

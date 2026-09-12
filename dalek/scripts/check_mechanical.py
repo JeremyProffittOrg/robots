@@ -1,4 +1,4 @@
-"""Sample released ROUND-10 component, motion and assembly-path clearances.
+"""Sample released ROUND-9 component, motion and assembly-path clearances.
 
 These are nominal digital envelope checks, not a print-strength or hardware test.
 """
@@ -11,6 +11,10 @@ import trimesh
 ROOT = Path(__file__).resolve().parents[1]
 rng = np.random.default_rng(37773766)
 meshes = {p.stem: trimesh.load_mesh(p, process=True) for p in (ROOT / "stl").glob("*.stl")}
+mesh_hashes = {n:hashlib.sha256((ROOT/"stl"/(n+".stl")).read_bytes()).hexdigest() for n in sorted(meshes)}
+for name,mesh in meshes.items():
+    if not mesh.is_watertight or not mesh.is_winding_consistent or mesh.volume<=0:
+        raise SystemExit(f"Refusing mechanical samples against invalid solid: {name}")
 results = []
 
 def record(name, points, hits, expected=0):
@@ -50,6 +54,33 @@ for y in (-93,93):
 a=np.linspace(0,2*np.pi,720,endpoint=False)
 q=np.concatenate([np.column_stack([149*np.cos(a),149*np.sin(a),np.full(len(a),z)]) for z in (5,15,28,42)])
 record("continuous-bumper-missing-material",len(q),len(q)-base.contains(q).sum())
+
+skirt=meshes["02_skirt"]
+record("merged-skirt-213mm-height",1,int(abs(skirt.extents[2]-213)>.001))
+record("merged-skirt-320mm-height-limit",1,int(skirt.extents[2]>320))
+# Four remaining lower bolts use a250mm shaft with an inward16degree tilt.
+# The3mm hex shaft has a1.733mm corner radius. Its ball engages at localZ10.
+tool_angles=np.linspace(0,2*np.pi,24,endpoint=False)
+for azimuth in (0,90,180,270):
+    turn=rot(azimuth,[0,0,1]);tilt=rot(-16,[0,1,0])
+    section=np.column_stack([1.74*np.cos(tool_angles),1.74*np.sin(tool_angles),np.zeros(24)])@tilt.T
+    direction=tilt@np.array([0,0,1])
+    q=np.concatenate([section+[137,0,10]+direction*t for t in np.linspace(0,250,150)])@turn.T
+    record(f"merged-skirt-250mm-ball-driver-{azimuth}",len(q),skirt.contains(q).sum())
+    record(f"merged-skirt-driver-base-{azimuth}",len(q),base.contains(q+[0,0,54]).sum())
+    center=np.array([137*np.cos(np.radians(azimuth)),137*np.sin(np.radians(azimuth)),0])
+    q=np.concatenate([np.column_stack([1.7*np.cos(tool_angles),1.7*np.sin(tool_angles),np.full(24,z)])+center for z in np.linspace(.05,5.95,30)])
+    record(f"merged-skirt-bottom-M4-hole-{azimuth}",len(q),skirt.contains(q).sum())
+for label,rr,zz,target in [("bottom-tongue-groove",(143.51,145.49),(.01,2.99),skirt),
+                            ("top-tongue-groove",(103.51,105.49),(.01,2.99),meshes["04_shoulder"])]:
+    a=rng.uniform(0,2*np.pi,5000);radius=rng.uniform(*rr,5000)
+    q=np.column_stack([radius*np.cos(a),radius*np.sin(a),rng.uniform(*zz,5000)])
+    record("merged-skirt-"+label,len(q),target.contains(q).sum())
+# The former middle flanges occupied inward radii down to107mm. Only a
+# tapered integral rib remains, with120mm minimum internal radius.
+a=np.linspace(0,2*np.pi,180,endpoint=False)
+q=np.concatenate([np.column_stack([119.75*np.cos(a),119.75*np.sin(a),np.full(len(a),z)]) for z in np.linspace(104,116,25)])
+record("merged-skirt-middle-nominal240mm-bore",len(q),skirt.contains(q).sum())
 
 shoulder=meshes["04_shoulder"]
 carrier=meshes["07_pitch_carrier"]
@@ -128,7 +159,7 @@ for i in range(96):
 arm_rotation=rot(-90,[0,0,1])@rot(90,[1,0,0])
 for yaw,pitch in [(-8,-8),(-8,8),(0,0),(8,-8),(8,8)]:
     rz=rot(yaw,[0,0,1]);rp=rot(pitch,[1,0,0]);chunks=[shoulder]
-    for name,z in [("05_neck",120),("06_head",172),("03_upper_skirt",-100)]:
+    for name,z in [("05_neck",120),("06_head",172),("02_skirt",-210)]:
         m=meshes[name].copy();m.apply_translation([0,0,z]);chunks.append(m)
     targets=[]
     for x,name in [(-47,"08_plunger_arm"),(53,"09_emitter_arm")]:
@@ -149,6 +180,7 @@ for yaw,pitch in [(-8,-8),(-8,8),(0,0),(8,-8),(8,8)]:
             visible+=int((~blocked).sum());total+=len(targets)
     record(f"opaque-liner-visible-servo-rays-{yaw}-{pitch}",total,visible)
 
-report={"design":"ROUND-10","method":"Deterministic nominal interior sampling and mesh-vertex paths; no physical test","seed":37773766,"all_pass":all(r["passed"] for r in results),"mesh_sha256":{n:hashlib.sha256((ROOT/"stl"/(n+".stl")).read_bytes()).hexdigest() for n in sorted(meshes)},"checks":results,"limits":["Finite sampling is not an exact collision proof.","Paint, tire runout, real horns, cable ties, fabric folds and print strength require builder checks.","Fabric liners must be opaque and remain attached throughout the permitted eight-degree motion."]}
+assert mesh_hashes=={n:hashlib.sha256((ROOT/"stl"/(n+".stl")).read_bytes()).hexdigest() for n in sorted(meshes)},"Mesh changed during mechanical checks"
+report={"design":"ROUND-9","method":"Deterministic nominal interior sampling and mesh-vertex paths; no physical test","seed":37773766,"all_pass":all(r["passed"] for r in results),"mesh_sha256":mesh_hashes,"checks":results,"limits":["Finite sampling is not an exact collision proof.","Paint, tire runout, real horns, cable ties, fabric folds and print strength require builder checks.","Fabric liners must be opaque and remain attached throughout the permitted eight-degree motion."]}
 (ROOT/"cad/mechanical-checks.json").write_text(json.dumps(report,indent=2)+"\n",encoding="utf-8")
 raise SystemExit(0 if report["all_pass"] else "Mechanical sampling failed; see cad/mechanical-checks.json")

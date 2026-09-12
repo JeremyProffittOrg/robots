@@ -1,12 +1,11 @@
 {
-  "design": "ROUND-10",
+  "design": "ROUND-9",
   "method": "Deterministic nominal interior sampling and mesh-vertex paths; no physical test",
   "seed": 37773766,
   "all_pass": true,
   "mesh_sha256": {
     "01_base": "cf36cb9b05210b71e6b5aa08be183e24be2719aa8f4e286b0cb74617b87d6041",
-    "02_lower_skirt": "30a9a0222a9f510e0ad9b0626304af6bc984692c774a416f7bc29c34128d9b02",
-    "03_upper_skirt": "bfc0adb2fbafab84a9b2226a4b319cdcc46c9ec52efd894a0fbd1076f5678745",
+    "02_skirt": "ff1baa0536e36c0730d69f5cf8004e069f4fe4e430026d6f3e6bc734a125146e",
     "04_shoulder": "790aabbaea81385830751e0644091a6d3a3bdaf4328a83420313284df890ec16",
     "05_neck": "ac2f5c6f659673cbda8bae3be9ee448ca490d1970dc9f33793cf4e94567ea36b",
     "06_head": "2d8d105a7e19b090c0c3eb6a285659584b7bae359712a2be3dce0b2ab521371a",
@@ -75,6 +74,125 @@
     {
       "check": "continuous-bumper-missing-material",
       "samples": 2880,
+      "interior_hits": 0,
+      "expected_hits": 0,
+      "passed": true
+    },
+    {
+      "check": "merged-skirt-213mm-height",
+      "samples": 1,
+      "interior_hits": 0,
+      "expected_hits": 0,
+      "passed": true
+    },
+    {
+      "check": "merged-skirt-320mm-height-limit",
+      "samples": 1,
+      "interior_hits": 0,
+      "expected_hits": 0,
+      "passed": true
+    },
+    {
+      "check": "merged-skirt-250mm-ball-driver-0",
+      "samples": 3600,
+      "interior_hits": 0,
+      "expected_hits": 0,
+      "passed": true
+    },
+    {
+      "check": "merged-skirt-driver-base-0",
+      "samples": 3600,
+      "interior_hits": 0,
+      "expected_hits": 0,
+      "passed": true
+    },
+    {
+      "check": "merged-skirt-bottom-M4-hole-0",
+      "samples": 720,
+      "interior_hits": 0,
+      "expected_hits": 0,
+      "passed": true
+    },
+    {
+      "check": "merged-skirt-250mm-ball-driver-90",
+      "samples": 3600,
+      "interior_hits": 0,
+      "expected_hits": 0,
+      "passed": true
+    },
+    {
+      "check": "merged-skirt-driver-base-90",
+      "samples": 3600,
+      "interior_hits": 0,
+      "expected_hits": 0,
+      "passed": true
+    },
+    {
+      "check": "merged-skirt-bottom-M4-hole-90",
+      "samples": 720,
+      "interior_hits": 0,
+      "expected_hits": 0,
+      "passed": true
+    },
+    {
+      "check": "merged-skirt-250mm-ball-driver-180",
+      "samples": 3600,
+      "interior_hits": 0,
+      "expected_hits": 0,
+      "passed": true
+    },
+    {
+      "check": "merged-skirt-driver-base-180",
+      "samples": 3600,
+      "interior_hits": 0,
+      "expected_hits": 0,
+      "passed": true
+    },
+    {
+      "check": "merged-skirt-bottom-M4-hole-180",
+      "samples": 720,
+      "interior_hits": 0,
+      "expected_hits": 0,
+      "passed": true
+    },
+    {
+      "check": "merged-skirt-250mm-ball-driver-270",
+      "samples": 3600,
+      "interior_hits": 0,
+      "expected_hits": 0,
+      "passed": true
+    },
+    {
+      "check": "merged-skirt-driver-base-270",
+      "samples": 3600,
+      "interior_hits": 0,
+      "expected_hits": 0,
+      "passed": true
+    },
+    {
+      "check": "merged-skirt-bottom-M4-hole-270",
+      "samples": 720,
+      "interior_hits": 0,
+      "expected_hits": 0,
+      "passed": true
+    },
+    {
+      "check": "merged-skirt-bottom-tongue-groove",
+      "samples": 5000,
+      "interior_hits": 0,
+      "expected_hits": 0,
+      "passed": true
+    },
+    {
+      "check": "merged-skirt-top-tongue-groove",
+      "samples": 5000,
+      "interior_hits": 0,
+      "expected_hits": 0,
+      "passed": true
+    },
+    {
+      "check": "merged-skirt-middle-nominal240mm-bore",
+      "samples": 4500,
       "interior_hits": 0,
       "expected_hits": 0,
       "passed": true
@@ -599,7 +717,7 @@
     },
     {
       "check": "outward-contact-outside-intended-track",
-      "samples": 15,
+      "samples": 12,
       "interior_hits": 0,
       "expected_hits": 0,
       "passed": true

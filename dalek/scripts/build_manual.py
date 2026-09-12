@@ -165,7 +165,7 @@ def main():
                                                  DRAWING_PAGE[1]-88,id='l')],
                      onPage=page_footer, pagesize=DRAWING_PAGE)])
     story = [para('Dalek round-body design and assembly', 'Chapter'),
-             para('Ten STL designs form a reinforced circular motor base, complete body sections that stack '
+             para('Nine STL designs form a reinforced circular motor base, a one-piece taller skirt, body sections that stack '
                   'vertically, concealed arm mechanisms and an adjustable head friction drive. '
                   'The base fits the Bambu Lab H2D in one print.'),
              para('The robot keeps four TT drive motors, a rear ESP32 display, Wi-Fi access point and network controls, '

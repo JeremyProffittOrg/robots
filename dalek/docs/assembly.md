@@ -4,7 +4,7 @@ Build and test one subsystem at a time. The mechanical chapter gives the exact p
 
 ## 1. Inventory before printing
 
-Read the whole manual and open the CAD preview. Inventory `bom/electronics.csv`, `bom/hardware.csv`, and `bom/printed-parts.csv`. This revision has ten STL files. Print the shared pitch carrier twice, giving eleven printed pieces. All body sections are complete upright prints. Their decorative bumps and mounts are integrated. Keep purchased screws, bearings, retainers and spacers in labelled bags.
+Read the whole manual and open the CAD preview. Inventory `bom/electronics.csv`, `bom/hardware.csv`, and `bom/printed-parts.csv`. This revision has nine STL files. Print the shared pitch carrier twice, giving ten printed pieces. The lower and upper skirts are now one 213 mm print. All body sections remain complete upright prints with integral decoration and mounts. Keep purchased screws, bearings, retainers and spacers in labelled bags.
 
 Check the actual board: it must be the original TTGO T-Display ESP32 with the1.14-inch screen. Inventory four MG92B servos, five TT3777 motors, five3766 wheels, three DRV8833 boards and the specified battery. Four motor/wheel pairs propel the base; the fifth turns the head by friction. Obtain the exact wheels before accepting either fit. Check board and servo part numbers against the drawings.
 
@@ -14,7 +14,7 @@ Done when every required purchased item is present or its absence is recorded, t
 
 ## 2. Prove fit with small prints
 
-Print `07_pitch_carrier.stl` and `10_head_motor_carriage.stl` first. These are functional parts of the ten-file set. Use them to check the servo horn, TT case, sliding slots and small screw fits with the intended material and slicer profile. Then print `01_base.stl` and check the actual motors and wheels in its integrated pockets before continuing with the body. Check each subsequent part's screw holes, bearing seats and board channels as it comes off the printer. Clean the first-layer edge before concluding that a dimension is wrong. Do not force a bearing or crush a board into a tight print.
+Print `07_pitch_carrier.stl` and `10_head_motor_carriage.stl` first. These are functional parts of the nine-file set. Use them to check the servo horn, TT case, sliding slots and small screw fits with the intended material and slicer profile. Then print `01_base.stl` and check the actual motors and wheels in its integrated pockets before continuing with the body. Check each subsequent part's screw holes, bearing seats and board channels as it comes off the printer. Clean the first-layer edge before concluding that a dimension is wrong. Do not force a bearing or crush a board into a tight print.
 
 If a fit needs adjustment, change the relevant clearance parameter in the OpenSCAD source, export that part again, and test it again. Do not scale the whole model in the slicer. Record the material, nozzle, layer height and clearance that passed. A printer-specific compensation may be needed, but it must preserve the joint centres and part lengths.
 
@@ -22,9 +22,11 @@ Done when fasteners pass without splitting the part, nuts retain their flats, th
 
 ## 3. Print and label the remaining parts
 
-Follow the orientation and quantity fields in `printed-parts.csv`. The body order is `01_base`, `02_lower_skirt`, `03_upper_skirt`, `04_shoulder`, `05_neck`, and `06_head`. Print each complete body section upright in its supplied orientation. Use the settings in the mechanical chapter. Keep every model at 100% scale. The base, motor pockets, battery support and structural walls are one continuous print.
+Follow the orientation and quantity fields in `printed-parts.csv`. The body order is `01_base`, `02_skirt`, `04_shoulder`, `05_neck`, and `06_head`. The number 03 is retired; other component IDs stay unchanged. Print each complete section upright at 100% scale. The 213 mm skirt uses more of the build height while preserving the robot's overall height. The base, motor pockets, battery support and structural walls remain one continuous print.
 
 Use the H2D single-nozzle 0.4 mm profile for the circular base. Keep its floor flat on the bed. The 300 mm diameter plus an 8 mm brim allowance needs 316 x 316 mm. Use the verified left-nozzle placement at X162.5,Y160, within X0..325 and Y0..320. The package's `scripts/slice_h2d.py` uses an isolated copy of the installed settings and records the actual model, support and generated brim bounds. Do not use the combined 350 mm bed width as a single-nozzle limit. Use the specified PETG profile for the base and structural parts. Enable the recorded automatic supports and inspect the sliced adhesion paths before printing; a requested brim width does not prove that the slicer generated a brim around a supported feature. Remove supports fully from nut traps, screw holes, grooves and bearing seats. Keep paint out of the stacking registers and moving fits.
+
+The one-piece skirt's checked job uses about 1033.87 g of PLA including support and brim. One 1 kg spool is insufficient. Have at least 1.14 kg available for that job including a 10% reserve, and arrange a compatible filament change or sufficient spool capacity before starting. The BOM's 3 kg PLA supply allowance covers this job and the other cosmetic parts.
 
 Weigh each group after support removal. Record total printed mass and the eventual fully assembled mass. Do not use slicer infill percentage as a direct mass estimate for thin shells: most of a thin shell may already be walls. The validation report's solid mesh volume is a useful conservative bound for fully filled material, not a slicer timing estimate.
 
@@ -36,7 +38,7 @@ Follow the base and motor-retention steps in `mechanical.md`. Inspect the contin
 
 Seat all four motors in the specified direction. Give their thin motor leads strain relief. Press each wheel onto its TT output shaft while supporting the gearbox body. The wheel's hub fit provides retention; do not drill the motor shaft. Check that tires cannot rub the bumper, a bolt, or a motor cable at any rotation. Check that the assembled chassis does not rock on a flat surface.
 
-Fit straps through the base's integrated battery supports. The disconnected pack is oriented 70 mm across X and 114 mm along Y, with its 76 mm height upright. Keep it low and centred, clear of screw points and sharp layer edges. Seat and fasten the lower skirt before installing the two electronics plates, so access to the first stack fasteners stays clear. Mount the boards with the purchased insulating standoffs and hardware listed in the mechanical chapter. Keep upper sections accessible during commissioning.
+Thread the battery straps but leave the battery out. Seat and fasten the complete skirt on the bare base using the specified long driver and offset nut tool before fitting electronics. Prepare the FR4 plates using the actual PCB hole templates and the mechanical chapter's hardware keepouts. Retain the PCB nuts and washers below each plate, projecting no more than 3 mm; keep boards and upper spacers off during insertion. Lower the plate while centred at X0,Y0, slide it at base-local underside Z44, then lower it onto its spacers. Fit boards from above using the specified fasteners and measured screw-tip clearance, then lower the disconnected 70 x 114 x 76 mm battery into its pocket. Keep upper sections removable during commissioning.
 
 Done when all wheels rotate by hand without body contact, motors cannot slide, the chassis rests evenly, and the battery can be removed without cutting wires. The mechanical chapter defines the exact floor and wheel clearances.
 
@@ -126,7 +128,7 @@ Done only when every stop case passes. Record the measured time and test setup. 
 
 ## 14. Close the shell and run a short floor test
 
-Lower each complete body section onto the section below it, using the mechanical chapter's assembly sequence. The register locates the joint; the fasteners retain it. Check that each register seats fully before tightening. Install the lower skirt, upper skirt, shoulder, neck and head. Check the rear screen opening, switch access and service access. Route fixed cables clear of wheels, arms, neck rotation and fastener tips. Leave service loops so the stack can be lifted apart after removing its fasteners. Tighten the battery straps and confirm the pack cannot shift.
+Lower each complete body section onto the section below it, using the mechanical chapter's assembly sequence. The register locates the joint; fasteners retain it. Check that each register seats fully before tightening. The five body pieces are the base, combined skirt, shoulder, neck and head. Check rear-screen, switch and service access. Route fixed cables clear of wheels, arms, the head track and fastener tips. Leave service loops so complete sections can be lifted apart. Tighten the battery straps and confirm the pack cannot shift.
 
 Weigh the complete robot. Begin on a clear, level hard floor with an operator beside the physical stop switch. Use low speed and broad forward arcs. Do not begin with a stationary pivot, carpet, ramp or threshold. The specified tires can create more steering resistance than these small motors can overcome. Stop immediately if a wheel stops turning while commanded.
 

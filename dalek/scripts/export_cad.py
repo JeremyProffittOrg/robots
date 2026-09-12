@@ -1,4 +1,4 @@
-"""Export and validate the ten connected ROUND-10 designs. Existing OpenSCAD/trimesh only."""
+"""Export and validate the nine connected ROUND-9 designs. Existing OpenSCAD/trimesh only."""
 import argparse
 import csv
 import json
@@ -11,8 +11,7 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 ROOT = Path(__file__).resolve().parents[1]
 PARTS = {
     "01_base": (1, "PETG", "Floor down; single nozzle", "Diameter300 circular unibody;6mm floor;4mm wall/ribs;6walls6top/bottom40%gyroid;8mmbrim;normal auto supports below wheel-well roofs;remove through bottom wells"),
-    "02_lower_skirt": (1, "PLA", "Large opening down", "Complete circular ring; integral hemisphere bezels and panel ribs;3mm registry above110mm body;4walls15%infill;normal auto supports under bumps"),
-    "03_upper_skirt": (1, "PLA", "Large opening down", "Complete360degree ring; integral bumps;3mm registry above100mm body;4walls15%infill;normal auto supports under bumps"),
+    "02_skirt": (1, "PLA", "Large opening down", "One complete210mm two-slope body plus3mm registry; four hemisphere rows and integral tapered middle rib; no middle bolted joint;4walls15%infill;normal auto supports"),
     "04_shoulder": (1, "PETG", "Bottom flange down", "Concealed servo gunboxes spherical sockets slats rear display frame; normal auto supports inside gunboxes;4walls25%infill"),
     "05_neck": (1, "PETG", "Bottom flange down", "Integrated three rings grille bearing tower radial slide deck jackscrew lug; support deck underside;4walls30%infill"),
     "06_head": (1, "PLA", "Drum rim down", "Dome eye discs tilted lamps hub friction drum spokes integrated; normal auto supports inside dome under eye and hub;4walls15%infill"),
@@ -31,9 +30,15 @@ def export_one(name, executable):
     startup=None
     if os.name=="nt":
         startup=subprocess.STARTUPINFO();startup.dwFlags|=subprocess.STARTF_USESHOWWINDOW
-    result = subprocess.run([executable, "--export-format", "binstl", "-o", str(target), "-D", f'part="{name}"', str(ROOT / "cad/dalek.scad")], capture_output=True, text=True, timeout=240, startupinfo=startup)
-    if result.returncode or not target.exists() or "ERROR:" in result.stderr:
-        raise RuntimeError(f"{name}: {result.stderr}")
+    command=[executable,"--export-format","binstl","-o",str(target),"-D",f'part="{name}"',str(ROOT/"cad/dalek.scad")]
+    process=subprocess.Popen(command,stdout=subprocess.PIPE,stderr=subprocess.PIPE,text=True,startupinfo=startup)
+    timeout=600 if name=="02_skirt" else 240
+    print(f"START {target.name}: PID {process.pid}; {timeout}s timeout",flush=True)
+    try:stdout,stderr=process.communicate(timeout=timeout)
+    except subprocess.TimeoutExpired:
+        process.kill();process.communicate();raise
+    if process.returncode or not target.exists() or "ERROR:" in stderr:
+        raise RuntimeError(f"{target.name}: {stderr}")
     return name
 
 def validate():
@@ -54,7 +59,7 @@ def validate():
         rows.append(dict(part=name,quantity=qty,material=material,x_mm=round(float(size[0]),3),y_mm=round(float(size[1]),3),z_mm=round(float(size[2]),3),volume_mm3=round(float(mesh.volume),2),solid_mass_g=round(float(mesh.volume)/1000*(1.27 if material=="PETG" else 1.24),2),watertight=bool(mesh.is_watertight),connected_components=components,enclosed_void_surfaces=int(sum(m.volume<0 for m in surfaces)),brim_mm_per_side=brim,print_rotation_z_degrees=rotation,h2d_single_nozzle_with_brim=fit,pass_check=okay,orientation=orientation,notes=notes))
     with (ROOT/"bom/printed-parts.csv").open("w",newline="",encoding="utf-8") as f:
         writer=csv.DictWriter(f,fieldnames=rows[0].keys());writer.writeheader();writer.writerows(rows)
-    report={"design":"ROUND-10","mesh_count":len(rows),"maximum_stl_files":10,"all_pass":all(r["pass_check"] for r in rows),"printed_piece_count":sum(r["quantity"] for r in rows),"solid_material_upper_bound_g":round(sum(r["quantity"]*r["solid_mass_g"] for r in rows),1),"bed_envelope_mm":[325,320,325],"base_brim_envelope_mm":[316,316],"base_print_rotation_z_degrees":0,"nozzle_mode":"single","physical_fit_verified":False,"physical_strength_verified":False,"parts":rows}
+    report={"design":"ROUND-9","mesh_count":len(rows),"maximum_stl_files":10,"all_pass":all(r["pass_check"] for r in rows),"printed_piece_count":sum(r["quantity"] for r in rows),"solid_material_upper_bound_g":round(sum(r["quantity"]*r["solid_mass_g"] for r in rows),1),"bed_envelope_mm":[325,320,325],"body_height_limit_with_5mm_margin_mm":320,"base_brim_envelope_mm":[316,316],"base_print_rotation_z_degrees":0,"nozzle_mode":"single","physical_fit_verified":False,"physical_strength_verified":False,"parts":rows}
     (ROOT/"cad/validation.json").write_text(json.dumps(report,indent=2)+"\n",encoding="utf-8")
     print(json.dumps({k:v for k,v in report.items() if k!="parts"},indent=2),flush=True)
     bad=[r["part"] for r in rows if not r["pass_check"]]

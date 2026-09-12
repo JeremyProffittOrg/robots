@@ -1,13 +1,13 @@
 # Printable Wi-Fi Dalek
 
-A digital design package for a bronze Dalek robot under three feet tall, with a circular reinforced base, complete vertically stackable body sections and concealed arm servos. ROUND-10 has ten STL files and eleven printed pieces. Four Adafruit 3777 TT motors and 3766 wheels drive the base; a fifth motor and wheel turn the head through an adjustable friction drive. The original rear TTGO T-Display ESP32, circular arm motion, Wi-Fi network/access-point controls and 24 original MP3 voices remain.
+A digital design package for a bronze Dalek robot under three feet tall, with a circular reinforced base, a one-piece taller skirt and concealed arm servos. ROUND-9 has nine STL files and ten printed pieces. Four Adafruit 3777 TT motors and 3766 wheels drive the base; a fifth motor and wheel turn the head through an adjustable friction drive. The original rear TTGO T-Display ESP32, circular arm motion, Wi-Fi network/access-point controls and 24 original MP3 voices remain.
 
 Start with [the design and assembly PDF](output/pdf/dalek-design-and-assembly.pdf). This is a design for a first physical prototype. Digital verification is recorded in [verification.md](docs/verification.md); actual fit, traction, current, temperature and stopping tests remain part of commissioning.
 
 ## Files to use
 
 - [Assembly and operation video (MP4)](output/video/dalek-assembly-and-operation.mp4): two minutes at 1080p with narration, concealed arm assembly, adjustable head-wheel contact, original robot sounds and simulated operation. [Captions](output/video/assembly-captions.srt) and [video verification](output/video/video-manifest.json) are included. Cutaways expose internal parts during assembly. This is CAD animation, not physical test footage.
-- [MATLAB-style PNG set (ZIP)](output/drawings/dalek-matlab-style-pngs.zip), with [assembled robot](output/drawings/01_robot_assembled.png), [exploded assembly](output/drawings/02_robot_exploded.png), [orthographic views](output/drawings/03_robot_orthographic.png), [component sheet](output/drawings/04_printed_components.png), [base hardware breakout](output/drawings/05_base_drive_breakout.png), and [ten individual component drawings](output/drawings/components/).
+- [MATLAB-style PNG set (ZIP)](output/drawings/dalek-matlab-style-pngs.zip), with [assembled robot](output/drawings/01_robot_assembled.png), [exploded assembly](output/drawings/02_robot_exploded.png), [orthographic views](output/drawings/03_robot_orthographic.png), [component sheet](output/drawings/04_printed_components.png), [base hardware breakout](output/drawings/05_base_drive_breakout.png), and [nine individual component drawings](output/drawings/components/).
 - [Assembly sequence and physical tests](docs/assembly.md).
 - [Exact mechanical assembly, dimensions, fasteners and print settings](docs/mechanical.md).
 - [STL files](stl/) and [print quantities/orientations](bom/printed-parts.csv). Print at 100% scale.
@@ -28,9 +28,9 @@ Four MG92B positional servos sit inside the shoulder behind spherical arm roots.
 
 The required Adafruit 3766 wheels were out of stock when checked on 2026-09-11. Five are required, including the head drive wheel. Obtain the exact parts before accepting their printed fits. The former head servo, belt and printed pulley have been removed.
 
-The ten STL designs produce eleven pieces because the same pitch carrier is printed twice. The six body pieces are the base, lower skirt, upper skirt, shoulder, neck and head. Each is one connected print. The base is 300 mm in diameter, with a 6 mm floor, reinforced perimeter and integrated motor pockets. Its 8 mm brim requires a 316 x 316 mm envelope in the H2D single-nozzle area. The body has hemisphere bezels, panel ribs, shoulder slats, neck grille, eye discs, lamp ribs and positive stacking registers.
+The nine STL designs produce ten pieces because the same pitch carrier is printed twice. The five body pieces are the base, combined skirt, shoulder, neck and head. The skirt is 213 mm tall including its register, below the 320 mm maximum-minus-5 mm target. It replaces two prints and removes one bolted joint while keeping the overall 563.8 mm height. An integral middle rib supports the shell. The base remains 300 mm in diameter, with a 6 mm floor and reinforced perimeter. Its 8 mm brim allowance needs 316 x 316 mm in the H2D single-nozzle area. Long tools and a centred plate-insertion route are specified in the assembly guide.
 
-The [mesh validation](cad/validation.json), [H2D slice record](cad/h2d-slice-check.json) and [verification notes](docs/verification.md) record current dimensions, hashes, settings and measured digital checks. Use their ROUND-10 results; earlier rectangular-body mass estimates do not describe this revision. Base strength, completed mass, friction adjustment and loaded driving require the physical tests in the manual. Current prices and allowances are in the BOM files.
+The [mesh validation](cad/validation.json), [H2D slice record](cad/h2d-slice-check.json) and [verification notes](docs/verification.md) record current dimensions, hashes, settings and measured digital checks. Use their ROUND-9 results. Removing a joint does not establish a physical strength rating; base strength, completed mass, friction adjustment and loaded driving require the tests in the manual. Current prices and allowances are in the BOM files.
 
 ## Rebuild the deliverables
 

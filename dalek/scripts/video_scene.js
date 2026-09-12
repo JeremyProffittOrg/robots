@@ -73,7 +73,8 @@ function movement(t){
 }
 function camera(t,pose){
   let focus=270,height=760,az=-55,elev=23;
-  if(t>=5&&t<25){focus=95;height=465;az=-48;elev=33;}
+  if(t>=5&&t<19){focus=95;height=465;az=-48;elev=33;}
+  else if(t>=19&&t<25){focus=210;height=610;az=-48;elev=33;}
   else if(t>=25&&t<36){focus=125;height=455;az=-38;elev=42;}
   else if(t>=36&&t<41){focus=260;height=690;elev=27;}
   else if(t>=41&&t<51){focus=395;height=735;az=lerp(-55,112,smooth(t,42,49));elev=21;}
@@ -110,7 +111,7 @@ function wheel(t,sx,sy,step,roll){
 function stackBolts(t,start,end,kind,z){
   if(!visible(t,start))return;
   for(let j=0;j<4;j++){
-    const a=j*Math.PI/2,r=kind===0?137:kind===1?112:97,x=r*Math.cos(a),y=r*Math.sin(a);
+    const a=j*Math.PI/2,r=kind===0?137:97,x=r*Math.cos(a),y=r*Math.sin(a);
     const m=placed(t,start+j*.14,end+j*.14,[x,y,z],[0,0,48]);
     draw('bolt4',chain(m,RZ((1-smooth(t,start,end))*Math.PI*6)),steel);
     draw('washer4',mul(m,T(0,0,-.6)),steel);
@@ -130,13 +131,18 @@ function assemble(t,pose,motion){
       draw('nut3',placed(t,15.2,18,[sx*xx,sy*yy,11.5],[0,0,-6]),gray);
     }
   }
-  if(visible(t,19))draw('02_lower_skirt',placed(t,19,22.4,[0,0,67.8],[0,0,160]),bronze[1],!hero&&t>=25&&t<36?1:0);
+  if(visible(t,19))draw('02_skirt',placed(t,19,22.4,[0,0,67.8],[0,0,160]),bronze[1],!hero&&t>=25&&t<36?1:0);
   stackBolts(t,22.4,24.5,0,74.4);
   if(visible(t,25)){
     for(const [ys,ye] of [[-93,-69],[69,93]])for(const x of [-54,54])for(const y of [ys,ye])
       draw('spacer25',placed(t,25,26.5,[x,y,35.3],[0,0,75]),gray);
     for(const [y,step] of [[-93,0],[93,.3]]){
-      const plate=placed(t,26+step,28+step,[0,y,48.8],[0,0,100]);draw('cube',chain(plate,S(160,56,2)),[.37,.44,.45]);
+      let plate;
+      if(hero||t>=28+step)plate=T(0,y,48.8);
+      else if(t<27+step)plate=placed(t,26+step,27+step,[0,0,58.8],[0,0,285]);
+      else if(t<27.7+step)plate=T(0,y*smooth(t,27+step,27.7+step),58.8);
+      else plate=T(0,y,lerp(58.8,48.8,smooth(t,27.7+step,28+step)));
+      draw('cube',chain(plate,S(160,56,2)),[.37,.44,.45]);
     }
     if(visible(t,28)){
       const d=T(...arrival(t,28,30,[0,0,100]));
@@ -153,8 +159,6 @@ function assemble(t,pose,motion){
       draw('power_wires',T(0,0,0),[.75,.13,.10]);draw('ground_wires',T(0,0,0),black);
     }
   }
-  if(visible(t,36))draw('03_upper_skirt',placed(t,36,38.8,[0,0,177.8],[0,0,185]),bronze[2]);
-  stackBolts(t,38.8,40.5,1,184.4);
   const shoulderOffset=hero?0:160*(1-smooth(t,57,60.5));
   const shoulder=T(0,0,277.8+shoulderOffset);
   if(visible(t,41))draw('04_shoulder',shoulder,bronze[3],!hero&&t>=51&&t<57?1:0);
@@ -284,7 +288,7 @@ function overlay(t,pose){
   ctx.clearRect(0,0,W,H);ctx.drawImage(canvas,0,0);
   ctx.fillStyle='rgba(255,255,255,.96)';ctx.fillRect(0,0,W,112);ctx.fillRect(1415,112,505,910);
   text('DALEK / ASSEMBLY + OPERATION',52,51,30,'#243541');
-  text('ROUND-10   |   Original 1.14-inch T-Display   |   Bronze finish',54,87,20,'#586976');
+  text('ROUND-9   |   Original 1.14-inch T-Display   |   Bronze finish',54,87,20,'#586976');
   ctx.fillStyle='#243541';ctx.fillRect(1485,24,382,62);
   text('CAD ANIMATION',1502,49,21,'#ffffff');text('SIMULATED OPERATION',1502,74,18,'#a9d6e8');
   const index=story.chapters.findIndex(c=>t>=c.start&&t<c.end),chapter=story.chapters[index<0?story.chapters.length-1:index];
@@ -292,12 +296,12 @@ function overlay(t,pose){
   const last=wrap(chapter.title,1460,203,390,35,'27px Arial','#20303d');
   wrap(chapter.instruction,1460,last+24,390,29,'21px Arial','#435768');
   const count=printedDraws.length;
-  text(`${count} / 11 printed pieces shown`,1460,446,20,'#2d607c');
-  text('10 STL designs / carrier printed twice',1460,476,17,'#657480');
+  text(`${count} / 10 printed pieces shown`,1460,446,20,'#2d607c');
+  text('9 STL designs / carrier printed twice',1460,476,17,'#657480');
   if(t>=25&&t<36){
     ctx.fillStyle='#dceef5';ctx.fillRect(1460,526,385,120);
     wrap('CUTAWAY VIEW',1475,555,355,27,'21px Arial','#234c65');
-    wrap('The lower skirt is a complete print. It is cut away here to show the electronics.',1475,590,350,24,'17px Arial','#31556b');
+    wrap('The 213 mm skirt is one print. Install the plates before the battery. Cut away here for visibility.',1475,590,350,24,'17px Arial','#31556b');
   }
   if(t>=51&&t<57){
     ctx.fillStyle='#dceef5';ctx.fillRect(1460,526,385,155);

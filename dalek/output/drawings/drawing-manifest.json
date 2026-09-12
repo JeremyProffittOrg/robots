@@ -2,10 +2,9 @@
   "style": "MATLAB-style engineering figures, rendered with Matplotlib",
   "inputs_unchanged": true,
   "input_sha256": {
-    "cad\\dalek.scad": "2166521e01e224fa69c71358cdab25758ef2a851232aec13f5fb7f103904e071",
+    "cad\\dalek.scad": "0450d8d0175f1196323726690eee00759e0c98606972ef1bc45e9eb5981b23d9",
     "stl\\01_base.stl": "cf36cb9b05210b71e6b5aa08be183e24be2719aa8f4e286b0cb74617b87d6041",
-    "stl\\02_lower_skirt.stl": "30a9a0222a9f510e0ad9b0626304af6bc984692c774a416f7bc29c34128d9b02",
-    "stl\\03_upper_skirt.stl": "bfc0adb2fbafab84a9b2226a4b319cdcc46c9ec52efd894a0fbd1076f5678745",
+    "stl\\02_skirt.stl": "ff1baa0536e36c0730d69f5cf8004e069f4fe4e430026d6f3e6bc734a125146e",
     "stl\\04_shoulder.stl": "790aabbaea81385830751e0644091a6d3a3bdaf4328a83420313284df890ec16",
     "stl\\05_neck.stl": "ac2f5c6f659673cbda8bae3be9ee448ca490d1970dc9f33793cf4e94567ea36b",
     "stl\\06_head.stl": "2d8d105a7e19b090c0c3eb6a285659584b7bae359712a2be3dce0b2ab521371a",
@@ -15,9 +14,9 @@
     "stl\\10_head_motor_carriage.stl": "6a42e0e7136ffcfee13577ed593dbe0c7ba94347412b02ffb829b14c3ea1b590"
   },
   "units": "mm",
-  "printed_designs": 10,
-  "printed_piece_quantity": 11,
-  "png_count": 16,
+  "printed_designs": 9,
+  "printed_piece_quantity": 10,
+  "png_count": 15,
   "hardware": "Nominal envelopes; not detailed manufacturer CAD",
   "board_envelopes": [
     {
@@ -154,23 +153,23 @@
   "pdf_cad_previews": [
     {
       "file": "cad/assembly.png",
-      "sha256": "7e79355ed755ff8b7f1fce2f9dcab39a840985403850794375e17610932ea3ef"
+      "sha256": "f0834ec8b79322a509a1bfc0492ff62f7afc7e41df4be79d00ef3529d9d302b7"
     },
     {
       "file": "cad/base.png",
-      "sha256": "f80ca19df9579320fa41d669041d24c2b59bb347e2f4b00d2dd10643f8911b2a"
+      "sha256": "e39b0b17e859bf2a742e9909202d387ffb17c91cce4912d16470504fbf0e51dd"
     },
     {
       "file": "cad/section.png",
-      "sha256": "4a9d4b3bab4ca08491f85bf92d2b92ce6201739eeb0c29d543cb272d334b307a"
+      "sha256": "a31f414eddbe5f01d25180b0364626e003f4db5974468a715d9e5d824264fc1f"
     },
     {
       "file": "cad/exploded.png",
-      "sha256": "5468f1ba9b7d3f565221bf6e37958b0d7e366bf5c952cf67b4d8d0db47d81f87"
+      "sha256": "6e03c78cc4fa3b74216fb66401951185a7f22f2fcceb9de00369fcfdbd134d41"
     },
     {
       "file": "cad/rear.png",
-      "sha256": "d5e1f5114b78f9fb2569ee8c8ffce70bca9e0b3d7668301f94ccd3c039ecfa78"
+      "sha256": "dc783d7cd4ef80534107f7eb25a3388e24211b551caaf3e419d07c235d466c86"
     }
   ],
   "outputs": [
@@ -180,7 +179,7 @@
         2520,
         2160
       ],
-      "sha256": "e5769705d34323a64e029d35f4ea268dbe4ab1787d42b556a91059cbf3ca8566"
+      "sha256": "c5bc19c94ab07fadd5c429910a89e75058f0adfa365931cad0b74e640de75584"
     },
     {
       "file": "02_robot_exploded.png",
@@ -188,7 +187,7 @@
         2520,
         2160
       ],
-      "sha256": "71c668febce943be19d9950d9ae88abb081a4c6ba1a957799205964a89426d46"
+      "sha256": "a9609c54cb727dad2ba2e5edcb84598665bb15f3141988bb74ba8da6b7a2cdae"
     },
     {
       "file": "03_robot_orthographic.png",
@@ -196,7 +195,7 @@
         2700,
         2340
       ],
-      "sha256": "a9f7ff66c1331d09a26becea122c8f9f0adf688becec3546f66e951f9dccdcee"
+      "sha256": "c1f050cc48fe773a0443f8279671d2c5e33db6d1fe93b953897d353f0cb7d80b"
     },
     {
       "file": "04_printed_components.png",
@@ -204,7 +203,7 @@
         3240,
         2340
       ],
-      "sha256": "90a5308d5b278dff9100cd7f1c0e503889b7429a2b67e9d26d6428df6c182c55"
+      "sha256": "9c008d580c32aa3d9675b45b501d24601b9d45a09211feb91bafd6799bfb32ee"
     },
     {
       "file": "05_base_drive_breakout.png",
@@ -212,7 +211,7 @@
         2520,
         1980
       ],
-      "sha256": "0f542ed69c0c47ca94207fc59b8f4bfd5ed39dfb4798c85a981408a29c04b62c"
+      "sha256": "ad56a670bc2e0a7438d96574da3c4893f933610c036c8362f6896b1c2107d5fe"
     },
     {
       "file": "06_head_friction_drive.png",
@@ -220,7 +219,7 @@
         2880,
         1800
       ],
-      "sha256": "519a5b62348e1de1b0d7e7bb6111e46f65a6d2fb1dd3615fff7a6395fbaea79f"
+      "sha256": "915be0d2a289febb5a7cf563b0ce04a4fd9b089174d9ea0368699d342bdae0cd"
     },
     {
       "file": "components\\01_base.png",
@@ -231,20 +230,12 @@
       "sha256": "ccc51d92fdfc4639d0c99ffb90ac11c4f9bde4eb8cb3e869f38bf190e3ebbd03"
     },
     {
-      "file": "components\\02_lower_skirt.png",
+      "file": "components\\02_skirt.png",
       "pixels": [
         2160,
         1620
       ],
-      "sha256": "26c79cafa943e123030ed443d0c9071b845bedd2bcd317a1812a577fae026543"
-    },
-    {
-      "file": "components\\03_upper_skirt.png",
-      "pixels": [
-        2160,
-        1620
-      ],
-      "sha256": "ed0a5065a3cebe6d5fe2f7bde55415ea299a9b92292f1a1ce78d74bb0bea2b3e"
+      "sha256": "24880dbb95ce0d2af7716f6f2deca5c10c5b1a027ad717a46319b087802e08e0"
     },
     {
       "file": "components\\04_shoulder.png",

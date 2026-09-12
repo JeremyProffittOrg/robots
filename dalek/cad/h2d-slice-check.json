@@ -1,6 +1,6 @@
 {
-  "design": "ROUND-10",
-  "checked_at_utc": "2026-09-12T08:55:51.916261+00:00",
+  "design": "ROUND-9",
+  "checked_at_utc": "2026-09-12T16:30:01.652405+00:00",
   "status": "pass",
   "test_type": "Actual isolated Bambu Studio H2D CLI slices; no printer connection or physical print",
   "profiles": {
@@ -267,9 +267,9 @@
       "adhesion_note": "No Brim feature was generated despite the requested brim setting. The measured model/support footprint fits; inspect adhesion in the actual print preparation."
     },
     {
-      "part": "02_lower_skirt",
-      "path": "stl/02_lower_skirt.stl",
-      "sha256": "30a9a0222a9f510e0ad9b0626304af6bc984692c774a416f7bc29c34128d9b02",
+      "part": "02_skirt",
+      "path": "stl/02_skirt.stl",
+      "sha256": "ff1baa0536e36c0730d69f5cf8004e069f4fe4e430026d6f3e6bc734a125146e",
       "quantity": 1,
       "material": "PLA",
       "process_overrides": {
@@ -288,21 +288,26 @@
       "mesh_bounds_mm": [
         300.33184814453125,
         300.33184814453125,
-        113.0
+        213.0
       ],
-      "checked_at_utc": "2026-09-12T08:25:22.323947+00:00",
+      "checked_at_utc": "2026-09-12T16:29:15.132799+00:00",
       "pass_check": true,
+      "flattened_profile_sha256": {
+        "machine": "4b6df1bb49551f697a9ade537fcff4a296a490ea5989fa8456e4d1ee71c56e66",
+        "process": "feb115ccd0d78c238cb7e3df278d18c161c8b992bf6b8efd7bb826a42576f866",
+        "filament": "5aa0360ee5883a0935bb42d1131ba3380c549c9aa1406a225072679d0c1c62c2"
+      },
       "placement_input": {
         "plates": [
           {
-            "plate_name": "02_lower_skirt",
+            "plate_name": "02_skirt",
             "need_arrange": false,
             "plate_params": {
               "curr_bed_type": "Textured PEI Plate"
             },
             "objects": [
               {
-                "path": "C:\\dev\\robots\\dalek\\stl\\02_lower_skirt.stl",
+                "path": "C:\\dev\\robots\\dalek\\stl\\02_skirt.stl",
                 "count": 1,
                 "filaments": [
                   1
@@ -324,17 +329,17 @@
       "argv": [
         "C:\\Program Files\\Bambu Studio\\bambu-studio.exe",
         "--datadir",
-        "C:\\Users\\Jeremy\\AppData\\Local\\Temp\\dalek-round-h2d-cz7071t7\\state",
+        "C:\\Users\\Jeremy\\AppData\\Local\\Temp\\dalek-round-h2d-hsafx1dx\\state",
         "--load-settings",
-        "C:\\Users\\Jeremy\\AppData\\Local\\Temp\\dalek-round-h2d-cz7071t7\\machine.json;C:\\Users\\Jeremy\\AppData\\Local\\Temp\\dalek-round-h2d-cz7071t7\\process.json",
+        "C:\\Users\\Jeremy\\AppData\\Local\\Temp\\dalek-round-h2d-hsafx1dx\\machine.json;C:\\Users\\Jeremy\\AppData\\Local\\Temp\\dalek-round-h2d-hsafx1dx\\process.json",
         "--load-filaments",
-        "C:\\Users\\Jeremy\\AppData\\Local\\Temp\\dalek-round-h2d-cz7071t7\\filament.json",
+        "C:\\Users\\Jeremy\\AppData\\Local\\Temp\\dalek-round-h2d-hsafx1dx\\filament.json",
         "--curr-bed-type",
         "Textured PEI Plate",
         "--debug",
         "2",
         "--load-assemble-list",
-        "C:\\Users\\Jeremy\\AppData\\Local\\Temp\\dalek-round-h2d-cz7071t7\\assemble.json",
+        "C:\\Users\\Jeremy\\AppData\\Local\\Temp\\dalek-round-h2d-hsafx1dx\\assemble.json",
         "--ensure-on-bed",
         "--allow-rotations=0",
         "--arrange",
@@ -342,24 +347,24 @@
         "--slice",
         "0",
         "--export-3mf",
-        "C:\\Users\\Jeremy\\AppData\\Local\\Temp\\dalek-round-h2d-cz7071t7\\part.3mf"
+        "C:\\Users\\Jeremy\\AppData\\Local\\Temp\\dalek-round-h2d-hsafx1dx\\part.3mf"
       ],
-      "process_id": 233332,
+      "process_id": 279088,
       "process_exit_code": 0,
-      "elapsed_seconds": 12.61,
+      "elapsed_seconds": 34.81,
       "slicer_stdout_tail": "",
       "slicer_stderr_tail": "",
       "result_code": 0,
       "error_string": "Success.",
       "loaded_bbox": {
         "depth": 300.33184814453125,
-        "height": 113.0,
+        "height": 213.0,
         "width": 300.33184814453125,
         "x": 12.334075927734375,
         "y": 9.834075927734375,
         "z": 0.0
       },
-      "loaded_triangle_count": 20720,
+      "loaded_triangle_count": 39728,
       "rigid_model_transforms": [
         [
           1.0,
@@ -373,7 +378,7 @@
           1.0,
           162.5,
           160.0,
-          56.5
+          106.5
         ],
         [
           1.0,
@@ -393,7 +398,7 @@
       "selected_nozzle": "left: logical filament T0 -> filament_map1 -> physical_extruder_map[0]=1",
       "gcode_extrusion_bounds": {
         "verified": true,
-        "extruding_move_count": 902124,
+        "extruding_move_count": 1486408,
         "features": [
           "Bottom surface",
           "Bridge",
@@ -425,11 +430,11 @@
         ],
         "deposition_z_range_mm": [
           0.2,
-          113.0
+          213.0
         ],
         "model_deposition_z_range_mm": [
           0.2,
-          113.0
+          213.0
         ],
         "maximum_bead_width_used_mm": 0.735414,
         "conservative_bead_bounds_xy_mm": [
@@ -447,40 +452,40 @@
           "filament_diameter_mm": 1.75,
           "filament_length_mm_by_feature": {
             "Bottom surface": 499.106,
-            "Bridge": 4114.463,
+            "Bridge": 3796.011,
             "Brim": 312.528,
-            "Floating vertical shell": 1383.554,
-            "Gap infill": 6318.861,
-            "Inner wall": 47059.586,
-            "Internal solid infill": 11205.802,
-            "Outer wall": 31114.831,
-            "Overhang wall": 99.662,
-            "Sparse infill": 7357.342,
-            "Support": 99484.24,
-            "Support interface": 1571.558,
-            "Support transition": 784.654,
-            "Top surface": 2387.284
+            "Floating vertical shell": 1937.099,
+            "Gap infill": 11304.284,
+            "Inner wall": 80353.659,
+            "Internal solid infill": 11339.038,
+            "Outer wall": 54055.035,
+            "Overhang wall": 87.476,
+            "Sparse infill": 8382.27,
+            "Support": 164485.791,
+            "Support interface": 1437.904,
+            "Support transition": 709.87,
+            "Top surface": 2426.006
           },
           "filament_mass_g_by_feature": {
             "Bottom surface": 1.513,
-            "Bridge": 12.47,
+            "Bridge": 11.504,
             "Brim": 0.947,
-            "Floating vertical shell": 4.193,
-            "Gap infill": 19.15,
-            "Inner wall": 142.621,
-            "Internal solid infill": 33.961,
-            "Outer wall": 94.298,
-            "Overhang wall": 0.302,
-            "Sparse infill": 22.298,
-            "Support": 301.502,
-            "Support interface": 4.763,
-            "Support transition": 2.378,
-            "Top surface": 7.235
+            "Floating vertical shell": 5.871,
+            "Gap infill": 34.259,
+            "Inner wall": 243.524,
+            "Internal solid infill": 34.365,
+            "Outer wall": 163.822,
+            "Overhang wall": 0.265,
+            "Sparse infill": 25.404,
+            "Support": 498.5,
+            "Support interface": 4.358,
+            "Support transition": 2.151,
+            "Top surface": 7.352
           },
-          "estimated_installed_printed_model_mass_g": 338.041,
-          "support_mass_g": 308.643,
+          "estimated_installed_printed_model_mass_g": 527.879,
+          "support_mass_g": 505.009,
           "brim_and_skirt_mass_g": 0.947,
-          "all_labelled_moving_extrusion_mass_g": 647.631,
+          "all_labelled_moving_extrusion_mass_g": 1033.836,
           "method": "Sum positive filament extrusion on XY-moving G0/G1/G2/G3 paths labelled after CHANGE_LAYER; exclude Custom/Flush machine commands and stationary unretraction; convert1.75mmfilament length with G-code profile density. Support labels and Brim/Skirt are separated from model labels. This is a G-code prediction, not measured installed mass."
         },
         "excluded_features": [
@@ -489,7 +494,7 @@
         ],
         "limitation": "Bounds include sliced model, support and brim paths with half the maximum bead width added. Machine purge/cleaning moves are excluded. Z ranges are actual moving deposition endpoints, separate from slicer header metadata."
       },
-      "gcode_sha256": "3e86b5ed529cdc5c26aab631d2e5b65a7ea7b7edd40d74ce839d47af54bc8566",
+      "gcode_sha256": "95adfbe53995c0248238f6e258d045bc99afe6877ed594585efca28b50456a57",
       "gcode_verified_config": {
         "bottom_shell_layers": "4",
         "brim_type": "outer_only",
@@ -512,263 +517,12 @@
         "wall_loops": "4"
       },
       "complete_printed_height_verified": true,
-      "filament_mass_g": 647.6615600585938,
-      "total_time_seconds": 53331.10546875,
-      "estimated_installed_printed_model_mass_g": 338.041,
+      "filament_mass_g": 1033.8658447265625,
+      "total_time_seconds": 85539.859375,
+      "estimated_installed_printed_model_mass_g": 527.879,
+      "temporary_slice_archive": "C:\\Users\\Jeremy\\AppData\\Local\\Temp\\dalek-round-h2d-02_skirt-3xwn1s6h.3mf",
+      "temporary_slice_archive_sha256": "757e2ed8341937ae0de5cb9ac9298e2f07717c1b509ed7a2ed179326669d5c8f",
       "generated_brim_and_skirt_mass_g": 0.947,
-      "adhesion_note": "Slicer generated a brim; the complete model/support/brim deposition footprint is checked."
-    },
-    {
-      "part": "03_upper_skirt",
-      "path": "stl/03_upper_skirt.stl",
-      "sha256": "bfc0adb2fbafab84a9b2226a4b319cdcc46c9ec52efd894a0fbd1076f5678745",
-      "quantity": 1,
-      "material": "PLA",
-      "process_overrides": {
-        "wall_loops": "4",
-        "top_shell_layers": "5",
-        "bottom_shell_layers": "4",
-        "sparse_infill_density": "15%",
-        "sparse_infill_pattern": "gyroid",
-        "enable_support": "1",
-        "support_type": "normal(auto)",
-        "support_on_build_plate_only": "0",
-        "brim_type": "outer_only",
-        "brim_width": "5",
-        "skirt_loops": "0"
-      },
-      "mesh_bounds_mm": [
-        250.33184814453125,
-        250.33184814453125,
-        103.0
-      ],
-      "checked_at_utc": "2026-09-12T08:25:40.219141+00:00",
-      "pass_check": true,
-      "placement_input": {
-        "plates": [
-          {
-            "plate_name": "03_upper_skirt",
-            "need_arrange": false,
-            "plate_params": {
-              "curr_bed_type": "Textured PEI Plate"
-            },
-            "objects": [
-              {
-                "path": "C:\\dev\\robots\\dalek\\stl\\03_upper_skirt.stl",
-                "count": 1,
-                "filaments": [
-                  1
-                ],
-                "pos_x": [
-                  162.5
-                ],
-                "pos_y": [
-                  160.0
-                ],
-                "pos_z": [
-                  -0.0
-                ]
-              }
-            ]
-          }
-        ]
-      },
-      "argv": [
-        "C:\\Program Files\\Bambu Studio\\bambu-studio.exe",
-        "--datadir",
-        "C:\\Users\\Jeremy\\AppData\\Local\\Temp\\dalek-round-h2d-3huxdxdx\\state",
-        "--load-settings",
-        "C:\\Users\\Jeremy\\AppData\\Local\\Temp\\dalek-round-h2d-3huxdxdx\\machine.json;C:\\Users\\Jeremy\\AppData\\Local\\Temp\\dalek-round-h2d-3huxdxdx\\process.json",
-        "--load-filaments",
-        "C:\\Users\\Jeremy\\AppData\\Local\\Temp\\dalek-round-h2d-3huxdxdx\\filament.json",
-        "--curr-bed-type",
-        "Textured PEI Plate",
-        "--debug",
-        "2",
-        "--load-assemble-list",
-        "C:\\Users\\Jeremy\\AppData\\Local\\Temp\\dalek-round-h2d-3huxdxdx\\assemble.json",
-        "--ensure-on-bed",
-        "--allow-rotations=0",
-        "--arrange",
-        "0",
-        "--slice",
-        "0",
-        "--export-3mf",
-        "C:\\Users\\Jeremy\\AppData\\Local\\Temp\\dalek-round-h2d-3huxdxdx\\part.3mf"
-      ],
-      "process_id": 243636,
-      "process_exit_code": 0,
-      "elapsed_seconds": 10.46,
-      "slicer_stdout_tail": "",
-      "slicer_stderr_tail": "",
-      "result_code": 0,
-      "error_string": "Success.",
-      "loaded_bbox": {
-        "depth": 250.33184814453125,
-        "height": 103.0,
-        "width": 250.33184814453125,
-        "x": 37.334075927734375,
-        "y": 34.834075927734375,
-        "z": 0.0
-      },
-      "loaded_triangle_count": 21072,
-      "rigid_model_transforms": [
-        [
-          1.0,
-          0.0,
-          0.0,
-          0.0,
-          1.0,
-          0.0,
-          0.0,
-          0.0,
-          1.0,
-          162.5,
-          160.0,
-          51.5
-        ],
-        [
-          1.0,
-          0.0,
-          0.0,
-          0.0,
-          1.0,
-          0.0,
-          0.0,
-          0.0,
-          1.0,
-          0.0,
-          0.0,
-          0.0
-        ]
-      ],
-      "selected_nozzle": "left: logical filament T0 -> filament_map1 -> physical_extruder_map[0]=1",
-      "gcode_extrusion_bounds": {
-        "verified": true,
-        "extruding_move_count": 800150,
-        "features": [
-          "Bottom surface",
-          "Bridge",
-          "Brim",
-          "Floating vertical shell",
-          "Gap infill",
-          "Inner wall",
-          "Internal solid infill",
-          "Outer wall",
-          "Overhang wall",
-          "Sparse infill",
-          "Support",
-          "Support interface",
-          "Support transition",
-          "Top surface"
-        ],
-        "tools_in_sliced_features": [
-          "T0"
-        ],
-        "extrusion_centerline_bounds_xy_mm": [
-          33.063,
-          30.564,
-          291.937,
-          289.437
-        ],
-        "extrusion_centerline_size_xy_mm": [
-          258.874,
-          258.873
-        ],
-        "deposition_z_range_mm": [
-          0.2,
-          103.0
-        ],
-        "model_deposition_z_range_mm": [
-          0.2,
-          103.0
-        ],
-        "maximum_bead_width_used_mm": 0.7233,
-        "conservative_bead_bounds_xy_mm": [
-          32.7014,
-          30.2023,
-          292.2987,
-          289.7987
-        ],
-        "single_nozzle_areas_containing_all_paths": [
-          "left",
-          "right"
-        ],
-        "within_one_325x320_nozzle_area": true,
-        "feature_extrusion_estimates": {
-          "density_g_cm3": 1.26,
-          "filament_diameter_mm": 1.75,
-          "filament_length_mm_by_feature": {
-            "Bottom surface": 405.477,
-            "Bridge": 3426.69,
-            "Brim": 252.594,
-            "Floating vertical shell": 1175.938,
-            "Gap infill": 4784.256,
-            "Inner wall": 38426.428,
-            "Internal solid infill": 9399.507,
-            "Outer wall": 24244.428,
-            "Overhang wall": 87.117,
-            "Sparse infill": 6374.672,
-            "Support": 74504.3,
-            "Support interface": 1720.48,
-            "Support transition": 677.174,
-            "Top surface": 2016.035
-          },
-          "filament_mass_g_by_feature": {
-            "Bottom surface": 1.229,
-            "Bridge": 10.385,
-            "Brim": 0.766,
-            "Floating vertical shell": 3.564,
-            "Gap infill": 14.499,
-            "Inner wall": 116.457,
-            "Internal solid infill": 28.487,
-            "Outer wall": 73.477,
-            "Overhang wall": 0.264,
-            "Sparse infill": 19.319,
-            "Support": 225.797,
-            "Support interface": 5.214,
-            "Support transition": 2.052,
-            "Top surface": 6.11
-          },
-          "estimated_installed_printed_model_mass_g": 273.791,
-          "support_mass_g": 233.063,
-          "brim_and_skirt_mass_g": 0.766,
-          "all_labelled_moving_extrusion_mass_g": 507.62,
-          "method": "Sum positive filament extrusion on XY-moving G0/G1/G2/G3 paths labelled after CHANGE_LAYER; exclude Custom/Flush machine commands and stationary unretraction; convert1.75mmfilament length with G-code profile density. Support labels and Brim/Skirt are separated from model labels. This is a G-code prediction, not measured installed mass."
-        },
-        "excluded_features": [
-          "Custom",
-          "Flush"
-        ],
-        "limitation": "Bounds include sliced model, support and brim paths with half the maximum bead width added. Machine purge/cleaning moves are excluded. Z ranges are actual moving deposition endpoints, separate from slicer header metadata."
-      },
-      "gcode_sha256": "f6878f209e754ffbdee5418ead3d6a6a658703f56eff3fbfeba955a8441131ac",
-      "gcode_verified_config": {
-        "bottom_shell_layers": "4",
-        "brim_type": "outer_only",
-        "brim_width": "5",
-        "enable_support": "1",
-        "extruder_printable_area": "0x0,325x0,325x320,0x320#25x0,350x0,350x320,25x320",
-        "filament_map": "1",
-        "filament_type": "PLA",
-        "master_extruder_id": "2",
-        "physical_extruder_map": "1,0",
-        "print_extruder_id": "1,2",
-        "printable_area": "0x0,350x0,350x320,0x320",
-        "printer_model": "Bambu Lab H2D",
-        "skirt_loops": "0",
-        "sparse_infill_density": "15%",
-        "sparse_infill_pattern": "gyroid",
-        "support_on_build_plate_only": "0",
-        "support_type": "normal(auto)",
-        "top_shell_layers": "5",
-        "wall_loops": "4"
-      },
-      "complete_printed_height_verified": true,
-      "filament_mass_g": 507.65020751953125,
-      "total_time_seconds": 44145.52734375,
-      "estimated_installed_printed_model_mass_g": 273.791,
-      "generated_brim_and_skirt_mass_g": 0.766,
       "adhesion_note": "Slicer generated a brim; the complete model/support/brim deposition footprint is checked."
     },
     {
@@ -2574,10 +2328,10 @@
       "adhesion_note": "Slicer generated a brim; the complete model/support/brim deposition footprint is checked."
     }
   ],
-  "unique_designs_sliced": 10,
-  "printed_piece_quantity": 11,
-  "total_predicted_filament_mass_g": 4073.06,
-  "total_predicted_installed_model_mass_g": 2429.2,
-  "total_predicted_time_seconds": 418622.09,
+  "unique_designs_sliced": 9,
+  "printed_piece_quantity": 10,
+  "total_predicted_filament_mass_g": 3951.62,
+  "total_predicted_installed_model_mass_g": 2345.25,
+  "total_predicted_time_seconds": 406685.32,
   "physical_verified": false
 }
