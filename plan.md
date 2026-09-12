@@ -59,6 +59,51 @@ Track OpenSCAD, PlatformIO and email tool session/agent IDs. Observe exit codes 
 
 # Dalek fabrication package
 
+## Current revision: round detailed body and concealed drives
+
+### Locked decisions (user-confirmed; do not revisit)
+
+2026-09-12: "the servos can not be cisible on the arm.  extensively review the 100 images on a dalek and enhace the details, includi9ng making the base round, not square. s witch out the drive ont eh head to a friction drive using the tt motor and shwel, make sure the wheel friction is adjustabgle"
+
+2026-09-12: "email me a link to the video on s3 along with the pdf when done."
+
+Earlier confirmed requirements remain: classic bronze appearance; original TTGO T-Display ESP32 1.14-inch rear screen; Wi-Fi AP and network modes; circular arm motion; four Adafruit 3777 drive motors and 3766 wheels; large battery; under914.4mm high; strong base within H2D length/width; at most ten STL files with complete vertically stackable body sections. An additional3777motor/3766wheel is explicitly required for the head drive.
+
+### Outcome, non-goals, files and proof
+
+Revise actual printable geometry, mechanisms and matching firmware/electronics; hide all arm servos/horns from external view behind the shoulder armor; use a circular reinforced base and adjustable head friction contact. Review100 distinct reference images and record individual source URLs/observations. Update the matching BOM, assembly PDF, MATLAB-style PNGs and narrated assembly/operation video. Publish the final video to S3 through GitHub Actions/OIDC and email the link with the PDF attachment to the previously configured operator address. No purchases, physical printing, recurring automation, unrelated robot changes or unverified physical performance claims.
+
+Files: C:/dev/robots/dalek/{cad,stl,bom,firmware,electronics,docs,scripts,output,README.md}, this Dalek plan section and the minimum C:/dev/robots/.github/workflows delivery workflow needed for the requested S3 publication. Reuse installed tools and existing code. Preserve unrelated shared-plan edits and R2-D2 work.
+
+Proof:100 unique visually reviewed image entries; <=10 connected watertight STL designs; circular base and all upright parts pass H2D envelope and actual isolated slice checks; arm swept-volume and head-wheel adjustment checks; no external servos in reviewed views; native controls/UI tests and PlatformIO firmware/filesystem build pass; diagrams/BOM/manual match hardware; all PDF pages/PNG views reviewed; full MP4 decode and motion review pass; GitHub publication workflow reaches success; S3 object hash matches MP4 and link responds; SES MessageId proves final email acceptance.
+
+### Verified facts and assumptions
+
+- Read C:/dev/robots/deploy.md and existing CAD, exporter, hardware and firmware. Current design has300x280mm rounded rectangular base, external arm carriers and FS5103R/belt head drive. Git main remote is JeremyProffittOrg/robots. Unrelated R2-D2 changes exist and must remain unstaged.
+- Original video at output/video/dalek-assembly-and-operation.mp4 is120seconds/1080p and is CAD simulation. Existing renderer/FFmpeg/local narration are reusable; no physical robot is available.
+- Assumption: "the100images" means100 distinct online reference images because no collection was supplied. Keep reviewed-source inventory and per-image notes; do not count duplicates or downloaded but unviewed images. Round base is the requested customization even where screen props use faceted bases.
+- Existing operator email recipient is proffitt.jeremy@gmail.com. Use configured @jeremy.ninja sender and local SES us-east-1 identity. Final video access should be limited to a signed S3 link unless an existing suitable delivery route already defines access.
+
+### Workstreams and ordered milestones
+
+- [~] Research, /root/reference_100: source and visually inspect100 unique images; write docs/reference-image-review.csv and docs/appearance-research.md. Done when inventory/dedup checks return100 and every entry has a visual observation. Send early feature findings to mechanical work.
+- [~] Mechanical, /root/round_mechanical, depends on research for final details: real CAD and mount redesign, <=10STLs, BOM mechanical rows and instructions. Done when `python C:/dev/robots/dalek/scripts/export_cad.py --check-only` and mechanical clearance checks pass.
+- [~] Electronics/firmware, /root/head_electronics: head DC driver, safe control and matching wiring/BOM/docs. Done when existing native/UI tests, `pio run -d C:/dev/robots/dalek/firmware` and `pio run -d C:/dev/robots/dalek/firmware -t buildfs` pass.
+- [ ] Integration, /root, depends on mechanisms/research: isolated H2D slices, revised source-based PNGs/video/manual/PDF, independent artifact audit. Done when recorded slice/mesh checks, PDF rendering, image review, FFprobe/full MP4 decode and final consistency checks pass.
+- [ ] Publication/email, /root plus delegated email agent, depends on all final artifacts: GitHub Actions/OIDC S3 upload, object/link verification, HTML email with final PDF. Done when workflow conclusion is success, downloaded object SHA256 matches local MP4, and actual SES MessageId is returned and recorded.
+
+### Stop conditions (only these)
+
+Missing credentials/resources prevent a required upload or send; a materially different scope needs an operator decision; an unapproved irreversible action is necessary. Finish independent work before reporting the exact blocker. Physical tests remain clearly unperformed, not a reason to stop digital work. Do not ask again for already authorized publication or email.
+
+### Jobs and restart policy
+
+Track every agent/process/session identifier and terminal exit status. One-time jobs only. OpenSCAD part timeout240s, H2D slice timeout300s, video timeout20min with progress; adjust a deterministic fault before at most two retries per failure class. Network work gets two bounded retries with backoff. Rendering and slicing use isolated local profiles and no printer connection. GitHub workflow is the only S3 publication path; no local cloud deployment. An accepted SES MessageId ends send retries. Reference image collection is capped at the100 unique images required plus replacement candidates for unusable duplicates.
+
+### Execution log
+
+- 2026-09-12: Read deploy.md and deep-research skill; stated the assumed100-image online source scope and continued under existing confirmed board/style constraints. Started /root/reference_100, /root/round_mechanical and /root/head_electronics; root owns integration and delivery. No files from other robot tasks were changed.
+
 ## Current video task: assembly and simulated operation
 
 ### Locked decision (user-confirmed; do not revisit)
