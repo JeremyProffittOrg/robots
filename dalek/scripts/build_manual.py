@@ -140,7 +140,7 @@ def csv_section(path, title):
 def main():
     OUT.parent.mkdir(parents=True, exist_ok=True)
     docs = [ROOT / 'docs' / name for name in ['assembly.md', 'mechanical.md', 'firmware.md',
-                                            'electronics-research.md', 'research.md']]
+                                            'electronics-research.md', 'research.md', 'appearance-research.md']]
     for path in docs:
         if not path.is_file():
             raise FileNotFoundError(path)
@@ -156,7 +156,7 @@ def main():
             raise RuntimeError('No assembly preview found.')
         preview = candidates[0]
     doc = Manual(str(OUT), pagesize=letter, leftMargin=46, rightMargin=46,
-                 topMargin=42, bottomMargin=48, title='Dalek stacked-body design and assembly',
+                 topMargin=42, bottomMargin=48, title='Dalek round-body design and assembly',
                  author='')
     doc.addPageTemplates([
         PageTemplate(id='portrait', frames=[Frame(46,48,letter[0]-92,letter[1]-90,id='p')],
@@ -164,11 +164,12 @@ def main():
         PageTemplate(id='landscape', frames=[Frame(40,48,DRAWING_PAGE[0]-80,
                                                  DRAWING_PAGE[1]-88,id='l')],
                      onPage=page_footer, pagesize=DRAWING_PAGE)])
-    story = [para('Dalek stacked-body design and assembly', 'Chapter'),
-             para('Ten STL designs form a reinforced single-piece motor base, complete body sections that stack '
-                  'vertically, and the moving arm parts. The base fits the Bambu Lab H2D in one print.'),
+    story = [para('Dalek round-body design and assembly', 'Chapter'),
+             para('Ten STL designs form a reinforced circular motor base, complete body sections that stack '
+                  'vertically, concealed arm mechanisms and an adjustable head friction drive. '
+                  'The base fits the Bambu Lab H2D in one print.'),
              para('The robot keeps four TT drive motors, a rear ESP32 display, Wi-Fi access point and network controls, '
-                  'circular arm motion, a continuously rotating head and 24 original MP3 voices. '
+                  'circular arm motion, a fifth TT motor driving the head through a friction wheel, and 24 original MP3 voices. '
                   'The package includes editable CAD, circuits, mounting hardware lists and assembly instructions.'),
              para('This is a digitally checked design for a first prototype. Physical fit, loaded traction, '
                   'supply temperature and stopping behavior require the tests in this manual. Do not skip those gates.'),
@@ -192,7 +193,7 @@ def main():
         story.extend(markdown(path))
         if path.name == 'mechanical.md':
             for filename, title, caption in [
-                ('base.png', 'Single-piece reinforced motor base', 'The floor, perimeter walls, ribs, motor pockets and battery support form one connected print. The base measures 300 x 280 mm before its brim.'),
+                ('base.png', 'Single-piece circular motor base', 'The floor, circular perimeter, ribs, motor pockets and battery support form one connected print. The base is 300 mm in diameter before its brim.'),
                 ('section.png', 'Internal assembly view', 'Section through the native CAD. The continuous base supports the motor pockets, battery and vertically stacked body.'),
                 ('exploded.png', 'Vertical stacking order', 'Each body tier is one complete print. Registers align the stack; accessible fasteners retain the joints. The gaps in this view are intentional.'),
                 ('rear.png', 'Rear display and access', 'The TTGO display faces outward. Keep the USB opening, operator switches and service fasteners accessible.')]:
@@ -236,6 +237,12 @@ def main():
         img = Image(str(picture))
         img._restrictSize(15.7*inch, 8.70*inch)
         story += [img, para(str(source.relative_to(ROOT)) + ' | Drawing page: 17 x 11 inches. Use named nets and the wiring schedule together.', 'Small')]
+    friction=ROOT/'output/drawings/06_head_friction_drive.png'
+    if not friction.is_file():
+        raise FileNotFoundError(friction)
+    drawing=Image(str(friction));drawing._restrictSize(15.7*inch,8.70*inch)
+    story += [PageBreak(),para('Adjustable head friction drive','Section'),drawing,
+              para('Actual printed geometry shown in cutaway. Follow the mechanical adjustment and locking sequence with power isolated.','Small')]
     doc.build(story)
     check = fitz.open(str(OUT))
     assert len(check) >= 15

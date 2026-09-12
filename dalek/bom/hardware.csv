@@ -3,10 +3,11 @@ fastener,M4x20 socket screw,16,piece,Four stack interfaces,Four per interface;4.
 fastener,M4 nyloc nut,16,piece,Stack interfaces,Use7mm spanner
 fastener,M4 plain washer,32,piece,Stack interfaces,8-9mmOD; one below each head and nut
 fastener,M3x40 socket screw,16,piece,Motor clamps,Four per motor; through29mm boss and floor
-fastener,M3 hex nut,24,piece,Motor clamps speaker display,16 motor plus4 speaker plus4 display
-fastener,M3 plain washer,48,piece,Motor clamps speaker display,32 motor plus8 speaker plus8 display
+fastener,M3 hex nut,25,piece,Motor clamps speaker display jackscrew,16 motor plus4 speaker plus4 display plus1 captured jackscrew nut
+fastener,M3 nyloc nut,4,piece,Head slide clamps,Locks four guide screws after setting contact; no separate jackscrew jam nut
+fastener,M3 plain washer,52,piece,Motor clamps speaker display slide underside,32 motor plus8 speaker plus8 display plus4 slide underside
 retainer,Stainless clamp strip43x8x1mm,8,piece,Two per motor,Two3.4mm holes37mm apart;3mm from ends; deburr and pad
-fastener,M3x20 socket screw,4,piece,Speaker,12mm baffle plus speaker tab washers and nut
+fastener,M3x12 socket screw,4,piece,Speaker,4mm baffle plus speaker tab washers and nut; verify actual flange
 fastener,M3x25 socket screw,4,piece,Display retaining tabs,Through integrated16mm frame
 retainer,Nonconductive retaining tab20x8x1mm,4,piece,Display,Polycarbonate or nylon strip;3.4mm hole3mm from outer end;17mm inward reach; pad bare PCB edge
 fastener,M3x8 plastic thread-forming screw,6,piece,Bearing retainers,Three top and three bottom;2.6mm pilots
@@ -17,12 +18,13 @@ fastener,M8 washer16mmOD,1,piece,Head hub top,Only above printed hub
 bearing,608-2RS bearing,2,piece,Neck tower,22mmOD8mmID7mmwidth
 spacer,Metal spacer8.1x12x12mm,1,piece,Between bearing inner races,8.1mmID12mmOD12mm long; square parallel ends
 spacer,Precision shim8x12x1mm,2,piece,Bearing inner races,One below and one above; narrow OD essential
-belt,NBR O-ring83mmID3mmcord,1,piece,Head drive,Nominal72.5mm shaft spacing; light tension
+fastener,M3x16 socket screw,4,piece,Head radial slide,Through3mm carriage and4mm neck deck; clamp after adjustment
+fastener,M3 washer6mmOD1mmthick,4,piece,Head slide screw heads,Small OD clears motor-saddle walls; do not substitute wide washers
+fastener,M3x25 socket screw,1,piece,Head contact jackscrew,Through captured M3 nut; four slide clamps lock the chosen setting
 fastener,M2x10 machine screw,8,piece,Four arm servo horns,Two each plus supplied spline screws
-fastener,M2x16 machine screw,2,piece,Head servo pulley,Through9mm pulley and supplied horn
-fastener,M2 nut,10,piece,Five servo horns,Two each
-fastener,M2 plain washer,20,piece,Five servo horns,One each head and nut
-panel,Unclad FR4 plate180x72x2mm,2,piece,Electronics mounting,Purchased sheet cut and drilled; not an extra printed part
+fastener,M2 nut,8,piece,Four arm servo horns,Two each
+fastener,M2 plain washer,16,piece,Four arm servo horns,One each head and nut
+panel,Unclad FR4 plate160x56x2mm,2,piece,Electronics mounting,Purchased sheet cut and drilled; X +/-80 Y +/-93 centres; not an extra printed part
 fastener,M2.5x40 machine screw,8,piece,FR4 plates to base,Four per plate through9mm mounting pad25mm spacer2mm plate; verify two threads beyond nut
 spacer,Nylon spacer25mm long M2.5 bore,8,piece,Electronics plates,Plate underside localZ34 clears ribs and motors
 fastener,M2.5x16 machine screw,32,piece,Electronics boards,Up to4 per small board and2 per protoboard; unused pieces are spares
@@ -30,18 +32,20 @@ spacer,Nylon spacer6mm long M2.5 bore,32,piece,Electronics boards,Clearance abov
 fastener,M2.5 nut,40,piece,Electronics,8 plate plus32 PCB allocation
 fastener,M2.5 washer,80,piece,Electronics,One each head and nut; unused pieces are spares
 retainer,20mm hook-and-loop strap350mm long,2,piece,Battery,Independent straps through integral slots
-retainer,2.5mm cable tie200mm long,40,piece,Servos and wiring,8 arm-servo ties2 head-servo ties; remainder routing and spares
+retainer,2.5mm cable tie200mm long,40,piece,Servos head TT motor and wiring,8 arm-servo ties2 head-motor ties; remainder routing and spares
 padding,EPDM foam sheet300x200mm,1,set,Motors battery servos display,Nonconductive1mm2mm3mm assortment; keep off hot components
 consumable,Removable thread-locking compound,1,bottle,Metal-to-metal only,Keep off plastic bearings and nyloc nuts
-consumable,PETG filament,2,kg,Structural prints,Includes support allowance; actual requirement in slicer report
-consumable,PLA filament,2,kg,Cosmetic prints,Includes support allowance; actual requirement in slicer report
+consumable,PETG filament,3,kg,Structural prints,Current model and support estimate plus10percent allowance rounded up to1kg spools
+consumable,PLA filament,3,kg,Cosmetic prints,Current model and support estimate plus10percent allowance rounded up to1kg spools
 consumable,Paint and finish supplies,1,set,Integrated details,Paint bumps eye and lamps; no separate decoration meshes
 accessory,Opaque removable tape30x30mm,1,piece,Optional crown cover,Remove for spindle service; no printed cap
-accessory,Acoustic cloth100x100mm,1,piece,Speaker cone guard,Attach around outer baffle opening without touching cone
+accessory,Acoustic cloth100x100mm,1,piece,Speaker grille guard,Attach inside central front grille without touching cone
+accessory,Opaque black stretch fabric80x80mm,2,piece,Hidden arm socket liners,44mm centre opening and overlapped radial slit; bond inside spherical-root rear rim and fixed socket; retain loose folds
+accessory,Flexible fabric adhesive,1,tube,Socket liners and acoustic cloth,Compatible with printed plastic and fabric; keep away from moving horns
 padding,Nonconductive1mm tab shim,4,piece,Speaker,Use only if surround clearance requires; cut from purchased sheet
 retainer,Hook-and-loop cable strap,6,piece,Service harness,Disconnectable loops at body interfaces
 tool,150mm3mm ball-end hex driver rated20degrees,1,piece,Skirt stack bolts,Angled reach through complete rings
-tool,3mm L-hex key short leg18mm or less,1,piece,Neck stack bolts,Handle fits neck-localZ19-30 gap; tighten before servo
+tool,2.5mm L-hex key short leg15mm,1,piece,Head slide clamp screws,Short leg may be cut and deburred; horizontal shaft passes neck-localZ49.9 through service ports
 tool,7mm open-ended spanner,1,piece,M4 nuts,Attach lower shell before electronics plates
 tool,Metric hex keys and nut drivers,1,set,Remaining fasteners,13mm socket outside diameter<=23mm for head access
 tool,Caliper and2.1mm2.8mm3.4mm drills,1,set,Fit and hardware preparation,Measure actual parts; deburr carefully

@@ -13,7 +13,7 @@ uniform mat4 model;uniform mat4 vp;out vec3 n;out vec3 world;
 void main(){vec4 p=model*vec4(position,1.);world=p.xyz;n=mat3(model)*normal;gl_Position=vp*p;}`;
 const fs=`#version 300 es
 precision highp float;in vec3 n;in vec3 world;uniform vec3 color;uniform int cut;
-out vec4 frag;void main(){if(cut==1&&world.x>0.)discard;
+out vec4 frag;void main(){if(cut==1&&world.x>0.)discard;if(cut==2&&world.y< -5.)discard;
 float light=.40+.60*max(dot(normalize(n),normalize(vec3(-.3,-.6,1.))),0.);
 frag=vec4(color*light,1.);}`;
 function shader(type,source){const s=gl.createShader(type);gl.shaderSource(s,source);gl.compileShader(s);if(!gl.getShaderParameter(s,gl.COMPILE_STATUS))throw new Error(gl.getShaderInfoLog(s));return s;}
@@ -39,13 +39,18 @@ function lookAt(eye,target){const z=normal(eye.map((v,i)=>v-target[i])),x=normal
 function ortho(width,height,near=1,far=4000){return[2/width,0,0,0,0,2/height,0,0,0,0,-2/(far-near),0,0,0,-(far+near)/(far-near),1];}
 const bronze=[[.24,.24,.22],[.65,.46,.25],[.69,.50,.28],[.65,.46,.25],[.41,.42,.40],[.76,.57,.31],[.35,.38,.40],[.69,.70,.70],[.69,.70,.70],[.41,.42,.40]];
 const gray=[.58,.62,.67],steel=[.68,.72,.76],black=[.12,.14,.16],green=[.17,.42,.29],orange=[.91,.42,.12];
-const meshes={};let story,globalPose=I(),hero=false,printedDraws=[];
+const meshes={};let story,boardLayout,globalPose=I(),hero=false,printedDraws=[];
 function draw(key,matrix,color,cut=0,world=false){const mesh=meshes[key];if(/^\d{2}_/.test(key))printedDraws.push(key);gl.bindVertexArray(mesh.vao);gl.uniformMatrix4fv(U.model,false,world?matrix:mul(globalPose,matrix));gl.uniform3fv(U.color,color);gl.uniform1i(U.cut,cut);gl.drawArrays(gl.TRIANGLES,0,mesh.count);}
 const cube=(center,size,color,extra=I(),world=false)=>draw('cube',chain(extra,T(...center),S(...size)),color,0,world);
 const cylinder=(center,radius,height,color,rotation=I(),extra=I())=>draw('cylinder',chain(extra,T(...center),rotation,S(radius,radius,height)),color);
 function arrival(t,start,end,offset){if(hero)return[0,0,0];const k=1-smooth(t,start,end);return offset.map(v=>v*k);}
 const visible=(t,start)=>hero||t>=start;
 function placed(t,start,end,target,offset=[0,0,150]){return T(...target.map((v,i)=>v+arrival(t,start,end,offset)[i]));}
+function via(t,start,turn,end,from,through,target){
+  if(hero)return T(...target);
+  const a=t<turn?from:through,b=t<turn?through:target,f=smooth(t,t<turn?start:turn,t<turn?turn:end);
+  return T(...a.map((v,i)=>lerp(v,b[i],f)));
+}
 
 function drive(t){
   if(t<104)return{x:0,y:0,yaw:0,left:0,right:0,action:'STOPPED'};
@@ -54,7 +59,7 @@ function drive(t){
   y-=d;left+=d;right+=d;
   yaw=.4*smooth(t,107,111);
   x=600*(1-Math.cos(yaw));y-=600*Math.sin(yaw);
-  left+=yaw*(600+122.5);right+=yaw*(600-122.5);
+  left+=yaw*(600+98);right+=yaw*(600-98);
   // End the forward arc at rest, pause 200 ms, then reverse smoothly.
   const back=120*smooth(t,111.2,114);
   x-=back*Math.sin(yaw);y+=back*Math.cos(yaw);left-=back;right-=back;
@@ -72,11 +77,13 @@ function camera(t,pose){
   else if(t>=25&&t<36){focus=125;height=455;az=-38;elev=42;}
   else if(t>=36&&t<41){focus=260;height=690;elev=27;}
   else if(t>=41&&t<51){focus=395;height=735;az=lerp(-55,112,smooth(t,42,49));elev=21;}
-  else if(t>=51&&t<64){focus=315;height=765;az=lerp(112,-55,smooth(t,51,58));elev=26;}
-  else if(t>=64&&t<69.5){focus=453;height=445;az=-38;elev=25;}
-  else if(t>=69.5&&t<73){focus=430;height=670;az=-38;elev=25;}
-  else if(t>=73&&t<80){focus=465;height=570;az=8;elev=32;}
-  else if(t>=80&&t<89){focus=364;height=415;az=-65;elev=24;}
+  else if(t>=51&&t<57){focus=505;height=395;az=-38;elev=36;}
+  else if(t>=57&&t<64){focus=325;height=780;az=-55;elev=26;}
+  else if(t>=64&&t<70){focus=545;height=460;az=-38;elev=31;}
+  else if(t>=70&&t<73){focus=485;height=520;az=-38;elev=31;}
+  else if(t>=73&&t<80){focus=465;height=355;az=-25;elev=42;}
+  else if(t>=80&&t<83){focus=490;height=480;az=-55;elev=30;}
+  else if(t>=83&&t<89){focus=470;height=335;az=-55;elev=34;}
   else if(t>=89&&t<96){focus=280;height=760;az=lerp(-55,96,smooth(t,89,91));elev=19;}
   else if(t>=96&&t<104){focus=295;height=735;az=lerp(96,-55,smooth(t,96,98));elev=21;}
   else if(t>=104&&t<115){focus=255;height=880;az=-45;elev=28;}
@@ -90,20 +97,20 @@ function floor(){
   for(let i=-1500;i<=1500;i+=100){cube([i,0,-.64],[.8,3500,.08],[.84,.87,.90],I(),true);cube([0,i,-.64],[3500,.8,.08],[.84,.87,.90],I(),true);}
 }
 function wheel(t,sx,sy,step,roll){
-  const start=5.5+step*.8,base=placed(t,start,start+2,[sx*122.5,sy*60,31.5],[sx*15,0,145]);
+  const start=5.5+step*.8,base=placed(t,start,start+2,[sx*98,sy*58,31.5],[sx*15,0,145]);
   if(!visible(t,start))return;
   const rotation=chain(base,RX(roll));
   draw('wheel',rotation,orange);
   cylinder([0,0,0],25,27,[.49,.55,.58],RY(Math.PI/2),rotation);
   for(let j=0;j<12;j++)cube([0,0,31.6],[28,3,.8],[.35,.20,.12],chain(rotation,RX(j*Math.PI/6)));
-  const motor=placed(t,start,start+2,[sx*95,sy*38,31.02],[sx*15,0,145]);
+  const motor=placed(t,start,start+2,[sx*70.5,sy*36,31.02],[sx*15,0,145]);
   draw('cube',chain(motor,S(22.4,70,22.44)),[.89,.70,.13]);
-  cylinder([sx*109,sy*60,31.5],3,13,steel,RY(Math.PI/2),T(...arrival(t,start,start+2,[sx*15,0,145])));
+  cylinder([sx*84.5,sy*58,31.5],3,13,steel,RY(Math.PI/2),T(...arrival(t,start,start+2,[sx*15,0,145])));
 }
 function stackBolts(t,start,end,kind,z){
   if(!visible(t,start))return;
   for(let j=0;j<4;j++){
-    const a=j*Math.PI/2,r=kind===0?(j%2===0?137:127):kind===1?112:97,x=r*Math.cos(a),y=r*Math.sin(a);
+    const a=j*Math.PI/2,r=kind===0?137:kind===1?112:97,x=r*Math.cos(a),y=r*Math.sin(a);
     const m=placed(t,start+j*.14,end+j*.14,[x,y,z],[0,0,48]);
     draw('bolt4',chain(m,RZ((1-smooth(t,start,end))*Math.PI*6)),steel);
     draw('washer4',mul(m,T(0,0,-.6)),steel);
@@ -113,10 +120,10 @@ function stackBolts(t,start,end,kind,z){
 function assemble(t,pose,motion){
   draw('01_base',T(0,0,13.8),bronze[0]);
   let order=0;for(const sx of [-1,1])for(const sy of [-1,1])wheel(t,sx,sy,order++,sx<0?pose.left:pose.right);
-  if(visible(t,13))for(const sx of [-1,1])for(const sy of [-1,1])for(const yy of [8,18]){
-    const strip=placed(t,13,15.4,[sx*94.5,sy*yy,43.3],[0,0,85]);
+  if(visible(t,13))for(const sx of [-1,1])for(const sy of [-1,1])for(const yy of [6,16]){
+    const strip=placed(t,13,15.4,[sx*70,sy*yy,43.3],[0,0,85]);
     draw('cube',chain(strip,S(43,8,1)),steel);
-    for(const xx of [76,113]){
+    for(const xx of [51.5,88.5]){
       const m=placed(t,15.2,18,[sx*xx,sy*yy,44.4],[0,0,68]);
       draw('bolt3',chain(m,RZ((1-smooth(t,15.2,18))*Math.PI*8)),steel);
       draw('washer3',mul(m,T(0,0,-.5)),gray);
@@ -126,28 +133,21 @@ function assemble(t,pose,motion){
   if(visible(t,19))draw('02_lower_skirt',placed(t,19,22.4,[0,0,67.8],[0,0,160]),bronze[1],!hero&&t>=25&&t<36?1:0);
   stackBolts(t,22.4,24.5,0,74.4);
   if(visible(t,25)){
-    for(const [ys,ye] of [[-91,-63],[65,93]])for(const x of [-54,54])for(const y of [ys,ye])
+    for(const [ys,ye] of [[-93,-69],[69,93]])for(const x of [-54,54])for(const y of [ys,ye])
       draw('spacer25',placed(t,25,26.5,[x,y,35.3],[0,0,75]),gray);
-    for(const [y,step] of [[-87,0],[87,.3]]){
-      const plate=placed(t,26+step,28+step,[0,y,48.8],[0,0,100]);draw('cube',chain(plate,S(180,72,2)),[.37,.44,.45]);
-      const boardZ=56.6,delta=arrival(t,28,30,[0,0,100]);
-      if(visible(t,28)){
-        cube([-35,y,boardZ],[51,81,1.6],green,T(...delta));
-        cube([-37,y,61],[8,18,7],black,T(...delta));cube([-24,y+12,59],[10,16,4],black,T(...delta));
-        cube([32,y<0?-101:101,boardZ],[25.4,25.4,1.6],green,T(...delta));
-        cube([32,y<0?-101:101,61],[11,11,8],[.23,.26,.29],T(...delta));
-        cube([65,y<0?-101:101,boardZ],[22,25,1.6],green,T(...delta));
-        cube([65,y<0?-101:101,60],[10,11,5],black,T(...delta));
-      }
+    for(const [y,step] of [[-93,0],[93,.3]]){
+      const plate=placed(t,26+step,28+step,[0,y,48.8],[0,0,100]);draw('cube',chain(plate,S(160,56,2)),[.37,.44,.45]);
     }
     if(visible(t,28)){
       const d=T(...arrival(t,28,30,[0,0,100]));
-      cube([52,-67,56.6],[62,25,1.6],green,d);cube([57,70,56.6],[18,22,1.6],green,d);cube([79,70,56.6],[17,11,1.6],green,d);
+      for(const [name,[x,y],[w,h,height]] of boardLayout){
+        cube([x,y,56.6],[w,h,1.6],green,d);cube([x,y,59],[Math.min(w*.55,20),Math.min(h*.55,15),4],black,d);
+      }
     }
-    if(visible(t,30))draw('cube',chain(placed(t,30,32.5,[0,0,57.8],[0,0,135]),S(114,70,76)),[.19,.29,.38]);
-    if(visible(t,32.5))for(const x of [-35,35]){
+    if(visible(t,30))draw('cube',chain(placed(t,30,32.5,[0,0,57.8],[0,0,135]),S(70,114,76)),[.19,.29,.38]);
+    if(visible(t,32.5))for(const y of [-35,35]){
       const d=T(...arrival(t,32.5,34.3,[0,0,90]));
-      cube([x,0,96.5],[20,72,1],black,d);cube([x,-36,57.5],[20,1,77],black,d);cube([x,36,57.5],[20,1,77],black,d);
+      cube([0,y,96.5],[72,20,1],black,d);cube([-36,y,57.5],[1,20,77],black,d);cube([36,y,57.5],[1,20,77],black,d);
     }
     if(visible(t,34)){
       draw('power_wires',T(0,0,0),[.75,.13,.10]);draw('ground_wires',T(0,0,0),black);
@@ -155,12 +155,12 @@ function assemble(t,pose,motion){
   }
   if(visible(t,36))draw('03_upper_skirt',placed(t,36,38.8,[0,0,177.8],[0,0,185]),bronze[2]);
   stackBolts(t,38.8,40.5,1,184.4);
-  const shoulderOffset=hero?0:160*(1-smooth(t,51,54.5));
+  const shoulderOffset=hero?0:160*(1-smooth(t,57,60.5));
   const shoulder=T(0,0,277.8+shoulderOffset);
-  if(visible(t,41))draw('04_shoulder',shoulder,bronze[3]);
-  if(visible(t,41.7)){
-    const d=arrival(t,41.7,44,[0,-85,0]);
-    cylinder([d[0],-108+d[1],50+d[2]],34,2,black,RX(Math.PI/2),shoulder);
+  if(visible(t,41))draw('04_shoulder',shoulder,bronze[3],!hero&&t>=51&&t<57?1:0);
+  if(visible(t,55.7)){
+    const d=arrival(t,55.7,56.7,[0,55,70]);
+    cylinder([d[0],-4.25+d[1],43+d[2]],34,25.5,black,RX(Math.PI/2),shoulder);
   }
   if(visible(t,44.2)){
     const d=T(...arrival(t,44.2,47,[0,-60,50]));
@@ -176,49 +176,90 @@ function assemble(t,pose,motion){
     const m=mul(shoulder,T(...arrival(t,48,50,[0,65,0])));
     cylinder([x,110,23],6,5,steel,RX(Math.PI/2),m);cylinder([x,119,23],2.3,15,gray,RX(Math.PI/2),m);
   }
-  if(visible(t,53.5))draw('upper_harness',T(0,0,0),black);
-  stackBolts(t,54.5,56.5,2,284.4);
-  if(visible(t,57))draw('05_neck',placed(t,57,60.5,[0,0,377.8],[0,0,145]),bronze[4]);
-  stackBolts(t,60.5,63.1,2,384.4);
+  if(visible(t,60))draw('upper_harness',T(0,0,0),black);
+  stackBolts(t,60.5,63.1,2,284.4);
+  const neckLift=hero?0:90*(1-smooth(t,70,72));
   if(visible(t,64)){
-    const x=hero?0:120*(1-smooth(t,64,65));
-    const z=hero?421.3:lerp(401.8,421.3,smooth(t,65,65.8));
-    draw('bearing608',T(x,0,z),steel);
+    const n=T(0,0,397.8+neckLift),cut=!hero&&t>=64&&t<89?2:0;
+    draw('05_neck',n,bronze[4],cut);draw('finish_neck_liner',n,black,cut);
   }
-  if(visible(t,65.8))draw('spacer12',placed(t,65.8,66.5,[0,0,430.8],[0,0,65]),gray);
-  if(visible(t,66.5))draw('bearing608',placed(t,66.5,67.3,[0,0,440.3],[0,0,65]),steel);
-  if(visible(t,67.2))for(const z of [417.3,444.3])for(let j=0;j<3;j++){
-    const a=j*Math.PI*2/3,x=14*Math.cos(a),y=14*Math.sin(a),offset=z<430?-16:25;
-    draw('retaining_washer',placed(t,67.2,68.2,[x,y,z],[0,0,offset]),steel);
-    draw('screw8',chain(placed(t,67.4,68.5,[x,y,z+(z<430?-.5:.5)],[0,0,offset]),z<430?RX(Math.PI):I()),steel);
+  stackBolts(t,72,72.8,2,404.4);
+  if(visible(t,66.3)){
+    const z=441.3-(hero?0:80*(1-smooth(t,66.3,67.5)));
+    draw('bearing608',T(0,0,z+neckLift),steel);
   }
-  if(visible(t,68)){
-    draw('spindle8',chain(placed(t,68,69.2,[0,0,416.8],[0,0,-90]),RZ(motion.head)),steel);
-    draw('shim8',placed(t,68,69,[0,0,417.3],[0,0,-35]),gray);
-    draw('shim8',placed(t,68.6,69.5,[0,0,444.3],[0,0,38]),gray);
+  if(visible(t,67.5))draw('spacer12',placed(t,67.5,68,[0,0,450.8+neckLift],[0,0,55]),gray);
+  if(visible(t,68))draw('bearing608',placed(t,68,68.7,[0,0,460.3+neckLift],[0,0,55]),steel);
+  if(visible(t,68.7))for(const z of [437.3,464.3])for(let j=0;j<3;j++){
+    const a=j*Math.PI*2/3,x=14*Math.cos(a),y=14*Math.sin(a),offset=z<450?-16:25;
+    draw('retaining_washer',placed(t,68.7,69.4,[x,y,z+neckLift],[0,0,offset]),steel);
+    draw('screw8',chain(placed(t,69,69.7,[x,y,z+neckLift+(z<450?-.5:.5)],[0,0,offset]),z<450?RX(Math.PI):I()),steel);
   }
-  // Keep the head free of the spindle while the closed belt is preloaded on its hub.
-  const headLift=hero?0:t<73?140+65*(1-smooth(t,69.5,71.5)):140*(1-smooth(t,77,79.1));
-  if(visible(t,69.5))draw('06_head',chain(T(0,0,444.8+headLift),RZ(motion.head)),bronze[5],!hero&&t>=73&&t<80?1:0);
-  if(visible(t,79.1)){
-    draw('top_washer8',placed(t,79.1,79.4,[0,0,472.6],[0,0,100]),gray);
-    draw('nut8',chain(placed(t,79.35,79.9,[0,0,476.4],[0,0,105]),RZ(motion.head)),steel);
+  if(visible(t,69)){
+    draw('spindle8',chain(placed(t,69,69.8,[0,0,436.8+neckLift],[0,0,-90]),RZ(motion.head)),steel);
+    draw('shim8',placed(t,69,69.7,[0,0,437.3+neckLift],[0,0,-35]),gray);
+    draw('shim8',placed(t,69.3,69.9,[0,0,464.3+neckLift],[0,0,38]),gray);
   }
-  if(visible(t,73))draw('cube',chain(placed(t,73,74.8,[72.5,10.05,430.4],[95,0,50]),S(20.15,40.15,37.2)),black);
-  if(visible(t,74.8))draw('10_servo_pulley',chain(placed(t,74.8,75.8,[72.5,0,456.8],[100,0,0]),RZ(motion.head*62/23)),bronze[9]);
-  if(visible(t,76))draw('belt',T(0,0,461.3+headLift),black);
-  for(const side of [-1,1]){
-    const x=side*48,yaw=motion.yaw,pitch=side<0?motion.pitch:-motion.pitch;
-    if(visible(t,80))draw('cube',chain(placed(t,80,81.6,[x,-131,351.3],[side*70,-60,30]),S(24,12,31)),black);
-    const pivot=chain(T(x,-131,367.8),RZ(yaw));
-    if(visible(t,81.3))cylinder([0,0,-.5],12,1,gray,I(),chain(pivot,T(...arrival(t,81.3,81.6,[0,0,25]))));
-    if(visible(t,81.6))draw('07_pitch_carrier',chain(pivot,T(...arrival(t,81.6,83,[side*65,-60,35]))),bronze[6]);
-    if(visible(t,83))cube([17.5,0,26],[27,12,36],black,chain(pivot,T(...arrival(t,83,84.5,[side*60,-60,30]))));
-    if(visible(t,84.3))cylinder([-2,0,30],12,2,gray,RY(Math.PI/2),chain(pivot,T(...arrival(t,84.3,84.6,[-25,0,0]))));
-    if(visible(t,84.6)){
-      const rest=chain(RZ(-Math.PI/2),RX(Math.PI/2)),offset=side<0?13:3;
-      const m=chain(pivot,T(-3,0,30),RX(-pitch),T(...arrival(t,84.6,87.3,[side*45,-95,0])),rest,T(0,0,-offset));
+  // Fit the entire friction drive before lowering the head around it.
+  const headLift=hero?0:110*(1-smooth(t,80,82));
+  if(visible(t,80)){
+    const transform=chain(T(0,0,449.8+headLift),RZ(motion.head)),cut=!hero&&t>=80&&t<89?2:0;
+    draw('06_head',transform,bronze[5],cut);draw('finish_head_drum',transform,black,cut);
+    draw('finish_eye_discs',transform,[.83,.85,.83],cut);draw('finish_eye_lens',transform,black,cut);
+    draw('finish_eye_face',transform,[.12,.45,.65],cut);
+  }
+  if(visible(t,82)){
+    draw('top_washer8',placed(t,82,82.5,[0,0,492.6],[0,0,80]),gray);
+    draw('nut8',chain(placed(t,82.5,83,[0,0,496.4],[0,0,85]),RZ(motion.head)),steel);
+  }
+  const contactX=hero?64.5:61.5+3*smooth(t,83.4,85.3);
+  if(visible(t,73))draw('10_head_motor_carriage',placed(t,73,74,[contactX,0,427],[85,0,60]),bronze[9]);
+  if(visible(t,74))cube([contactX-.48,-22,441.3],[22.44,70,22.4],[.89,.70,.13],T(...arrival(t,74,75.5,[0,0,75])));
+  if(visible(t,75.5)){
+    const w=chain(placed(t,75.5,76.6,[contactX,0,468.8],[0,0,70]),RZ(motion.head*96/31.5));
+    draw('head_wheel',w,orange);cylinder([0,0,0],25,27,gray,I(),w);
+    for(let j=0;j<12;j++)cube([30.6,0,0],[2,3,28],[.35,.20,.12],chain(w,RZ(j*Math.PI/6)));
+  }
+  if(visible(t,77))for(const [x,y] of [[43,-50],[43,8],[83.5,-40],[83.5,8]]){
+    draw('guide16',chain(placed(t,77,78,[x,y,431.0],[0,0,35]),RZ(smooth(t,85.4,87)*Math.PI*4)),steel);
+    draw('guide_washer3',T(x,y,430.5),gray);draw('washer3',T(x,y,422.5),gray);
+    draw('nut3',T(x,y,420.8),gray);
+  }
+  if(visible(t,78)){
+    draw('adjust25',chain(placed(t,78,79,[contactX-48,-35,435.8],[-65,0,0]),RY(-Math.PI/2),RZ(smooth(t,83.4,85.3)*Math.PI*8)),steel);
+    draw('nut3',chain(T(34.35,-35,435.8),RY(Math.PI/2)),gray);
+  }
+  for(const [side,x] of [[-1,-47],[1,53]]){
+    const yaw=motion.yaw,pitch=side<0?motion.pitch:-motion.pitch;
+    const top=277.8+shoulderOffset;
+    if(visible(t,52.4))draw('socket_liner',chain(placed(t,52.4,52.8,[x-3,-105,354.8+shoulderOffset],[0,45,45]),RX(Math.PI/2)),black);
+    if(visible(t,52.7))draw('cube',chain(via(t,52.7,53.05,53.4,[side*29,-44,top+150],[side*29,-44,top+35],[x,-94,top+23.5]),S(24,12,31)),black);
+    const pivot=chain(T(x,-94,319.8+shoulderOffset),RZ(yaw));
+    if(visible(t,53.25))cylinder([0,0,-.5],12,1,gray,I(),chain(pivot,T(...arrival(t,53.25,53.4,[0,0,25]))));
+    if(visible(t,53.4)){
+      let m;
+      if(hero||t>=54.3)m=T(x,-94,top+42);
+      else if(t<53.75)m=placed(t,53.4,53.75,[side*29,-44,top+46],[0,0,100]);
+      else if(t<53.93)m=T(lerp(side*29,x,smooth(t,53.75,53.93)),-44,top+46);
+      else if(t<54.15)m=T(x,lerp(-44,-94,smooth(t,53.93,54.15)),top+46);
+      else m=T(x,-94,top+lerp(46,42,smooth(t,54.15,54.3)));
+      draw('07_pitch_carrier',chain(m,RZ(yaw)),bronze[6]);
+    }
+    if(visible(t,54.3)){
+      const mount=hero||t>=55.1?chain(pivot,T(17.5,0,31)):via(t,54.3,54.7,55.1,[side*29,-54,top+150],[side*29,-54,top+90],[x+17.5,-94,top+73]);
+      draw('cube',chain(mount,S(27,12,36)),black);
+    }
+    if(visible(t,55.1))cylinder([-2,0,35],12,2,gray,RY(Math.PI/2),chain(pivot,T(...arrival(t,55.1,55.5,[-25,0,0]))));
+    if(visible(t,51)){
+      const rest=chain(RZ(-Math.PI/2),RX(Math.PI/2));
+      let m;
+      if(!hero&&t<52.4){
+        const y=t<51.5?lerp(30,-20,smooth(t,51,51.5)):t<52?-20:lerp(-20,-94,smooth(t,52,52.4));
+        const angle=radians(20)*(1-smooth(t,51.5,52)),z=77+(y+115)*Math.tan(angle);
+        m=chain(T(x-3,y,top+z),RX(angle),rest,T(0,0,-28));
+      }else m=chain(pivot,T(-3,0,35),RX(-pitch),rest,T(0,0,-28));
       draw(side<0?'08_plunger_arm':'09_emitter_arm',m,bronze[side<0?7:8]);
+      draw(side<0?'finish_08_plunger_arm':'finish_09_emitter_arm',m,black);
     }
   }
 }
@@ -243,14 +284,14 @@ function overlay(t,pose){
   ctx.clearRect(0,0,W,H);ctx.drawImage(canvas,0,0);
   ctx.fillStyle='rgba(255,255,255,.96)';ctx.fillRect(0,0,W,112);ctx.fillRect(1415,112,505,910);
   text('DALEK / ASSEMBLY + OPERATION',52,51,30,'#243541');
-  text('STACK-10   |   Original 1.14-inch T-Display   |   Bronze finish',54,87,20,'#586976');
+  text('ROUND-10   |   Original 1.14-inch T-Display   |   Bronze finish',54,87,20,'#586976');
   ctx.fillStyle='#243541';ctx.fillRect(1485,24,382,62);
   text('CAD ANIMATION',1502,49,21,'#ffffff');text('SIMULATED OPERATION',1502,74,18,'#a9d6e8');
   const index=story.chapters.findIndex(c=>t>=c.start&&t<c.end),chapter=story.chapters[index<0?story.chapters.length-1:index];
   text(`STAGE ${String((index<0?15:index)+1).padStart(2,'0')} / 16`,1460,159,17,'#657d8e');
   const last=wrap(chapter.title,1460,203,390,35,'27px Arial','#20303d');
   wrap(chapter.instruction,1460,last+24,390,29,'21px Arial','#435768');
-  const count=hero?11:[0,19,36,41,57,69.5,81.6,81.6,84.6,84.6,74.8].filter(s=>t>=s).length;
+  const count=printedDraws.length;
   text(`${count} / 11 printed pieces shown`,1460,446,20,'#2d607c');
   text('10 STL designs / carrier printed twice',1460,476,17,'#657480');
   if(t>=25&&t<36){
@@ -258,10 +299,20 @@ function overlay(t,pose){
     wrap('CUTAWAY VIEW',1475,555,355,27,'21px Arial','#234c65');
     wrap('The lower skirt is a complete print. It is cut away here to show the electronics.',1475,590,350,24,'17px Arial','#31556b');
   }
-  if(t>=73&&t<80){
+  if(t>=51&&t<57){
     ctx.fillStyle='#dceef5';ctx.fillRect(1460,526,385,155);
-    wrap('HEAD CUTAWAY',1475,555,355,27,'21px Arial','#234c65');
-    wrap('Preload the belt on the loose head hub. Fit the drive, then lower and retain the head.',1475,590,350,25,'18px Arial','#31556b');
+    wrap('SHOULDER CUTAWAY',1475,555,355,27,'21px Arial','#234c65');
+    wrap('Opaque fabric liners close viewing gaps. Servos, horns and cables remain inside.',1475,590,350,25,'18px Arial','#31556b');
+  }
+  if(t>=64&&t<80){
+    ctx.fillStyle='#dceef5';ctx.fillRect(1460,526,385,155);
+    wrap('NECK CUTAWAY',1475,555,355,27,'21px Arial','#234c65');
+    wrap('Prepare bearings before seating the neck. The opaque liner is cut away to expose the mechanism.',1475,590,350,25,'18px Arial','#31556b');
+  }
+  if(t>=80&&t<89){
+    ctx.fillStyle='#dceef5';ctx.fillRect(1460,526,385,155);
+    wrap('HEAD / NECK CUTAWAY',1475,555,355,27,'21px Arial','#234c65');
+    wrap('Screw adjustment moves the tyre toward the internal drum. Lock light contact and check free rotation.',1475,590,350,25,'18px Arial','#31556b');
   }
   if(t>=89&&t<96)screenInset(t);
   if(t>=96&&t<115){
@@ -295,7 +346,7 @@ window.renderFrame=t=>{
 };
 window.frameEvidence=t=>({time:t,drive:drive(t),motion:movement(t),printed_instances:[...printedDraws],simulation:true});
 (async()=>{
-  const data=await(await fetch('/scene.json')).json();story=data.storyboard;
+  const data=await(await fetch('/scene.json')).json();story=data.storyboard;boardLayout=data.board_layout;
   for(const [name,mesh] of Object.entries(data.meshes)){
     const bytes=Uint8Array.from(atob(mesh.buffer),c=>c.charCodeAt(0));const array=new Float32Array(bytes.buffer);
     const vao=gl.createVertexArray();gl.bindVertexArray(vao);const buffer=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,buffer);gl.bufferData(gl.ARRAY_BUFFER,array,gl.STATIC_DRAW);

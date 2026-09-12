@@ -1,0 +1,79 @@
+name: Publish Dalek design artifacts
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/publish-dalek.yml'
+      - 'dalek/infra/deliverables.yaml'
+      - 'dalek/output/video/dalek-assembly-and-operation.mp4'
+      - 'dalek/output/video/video-manifest.json'
+      - 'dalek/output/pdf/dalek-design-and-assembly.pdf'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  id-token: write
+
+concurrency:
+  group: dalek-artifact-publication
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify final video and design inputs
+        shell: bash
+        run: |
+          python - <<'PY'
+          import hashlib,json
+          from pathlib import Path
+          root=Path('dalek')
+          manifest=json.loads((root/'output/video/video-manifest.json').read_text())
+          assert manifest['design_revision']=='ROUND-10'
+          video=root/'output/video/dalek-assembly-and-operation.mp4'
+          assert hashlib.sha256(video.read_bytes()).hexdigest()==manifest['video_sha256']
+          for name,expected in manifest['source_sha256'].items():
+              path=root/Path(name.replace('\\','/'))
+              assert hashlib.sha256(path.read_bytes()).hexdigest()==expected,name
+          assert (root/'output/pdf/dalek-design-and-assembly.pdf').read_bytes().startswith(b'%PDF-')
+          print('PASS: current ROUND-10 video, source hashes and PDF')
+          PY
+      - name: Authenticate through GitHub OIDC
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ vars.AWS_DEPLOY_ROLE_ARN }}
+          role-session-name: gha-${{ github.event.repository.name }}-${{ github.run_id }}
+          aws-region: us-east-1
+      - name: Provision private delivery storage
+        shell: bash
+        run: |
+          aws cloudformation deploy \
+            --template-file dalek/infra/deliverables.yaml \
+            --stack-name robots-dalek-deliverables \
+            --no-fail-on-empty-changeset \
+            --tags Project=robots CostCenter=home-iot Environment=prod ManagedBy=sam DeployedVia=github-actions Owner=jeremy
+      - name: Upload and verify the exact committed artifacts
+        shell: bash
+        env:
+          ARTIFACT_REVISION: ${{ github.sha }}
+        run: |
+          set -euo pipefail
+          bucket=$(aws cloudformation describe-stacks --stack-name robots-dalek-deliverables --query 'Stacks[0].Outputs[?OutputKey==`BucketName`].OutputValue' --output text)
+          prefix="dalek/${ARTIFACT_REVISION}"
+          for item in video/dalek-assembly-and-operation.mp4 pdf/dalek-design-and-assembly.pdf; do
+            filename=${item##*/}
+            source="dalek/output/${item}"
+            digest=$(sha256sum "$source" | cut -d ' ' -f 1)
+            content_type=application/pdf
+            if [[ "$filename" == *.mp4 ]]; then content_type=video/mp4; fi
+            aws s3 cp "$source" "s3://${bucket}/${prefix}/${filename}" --only-show-errors \
+              --content-type "$content_type" --content-disposition "inline; filename=\"${filename}\"" \
+              --metadata "sha256=${digest}" --checksum-algorithm SHA256
+            aws s3 cp "s3://${bucket}/${prefix}/${filename}" "${RUNNER_TEMP}/${filename}" --only-show-errors
+            printf '%s  %s\n' "$digest" "${RUNNER_TEMP}/${filename}" | sha256sum --check
+            printf '%s\n' "Verified s3://${bucket}/${prefix}/${filename}" >> "$GITHUB_STEP_SUMMARY"
+          done

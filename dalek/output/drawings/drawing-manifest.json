@@ -2,23 +2,177 @@
   "style": "MATLAB-style engineering figures, rendered with Matplotlib",
   "inputs_unchanged": true,
   "input_sha256": {
-    "cad\\dalek.scad": "78dd1dadec37aae25459367c0c975d9ea8a13d5f8e925786d209957865f96a05",
-    "stl\\01_base.stl": "40a076687c45c4f8de67554f14a7ba382395e333e479f36c5acdbfd35ba62955",
-    "stl\\02_lower_skirt.stl": "dfcf92bff7aa7db46451d0d82994102d1963fc492ad26a40dd076a2e85a74d5c",
-    "stl\\03_upper_skirt.stl": "3693c825c18a91228aa893ebc82572126315ecb8c10062c029e5fadabb8c7590",
-    "stl\\04_shoulder.stl": "c0e7d360d83daafcf8514e0d120f01d9a3e91fad118a31a4a05ba42c7b204c55",
-    "stl\\05_neck.stl": "be168b3f1fd1abf81758478ea58f483ddcd44f1bd5bbe97e5dd200b3b0fb4793",
-    "stl\\06_head.stl": "9def0e13c9499554883a6714d3dd01a2a5d54ca15a4bedaa9de8d56614a28669",
-    "stl\\07_pitch_carrier.stl": "eff1cb02f20fbca124f87469d936865f27773884cbdf7cc3576d698cebb75ae8",
-    "stl\\08_plunger_arm.stl": "894d60473def2a47a24578af2eae73d16b49f3b3e713a55c2efef09446e5fb52",
-    "stl\\09_emitter_arm.stl": "df8656bf06f25fc153c29e973dd71df2b1473d4913e4b9270cf26dcb6e62f26e",
-    "stl\\10_servo_pulley.stl": "e1cea25d665ed32182f576a66d73ffc769a1dcae243c2a1494d396e002cdd903"
+    "cad\\dalek.scad": "2166521e01e224fa69c71358cdab25758ef2a851232aec13f5fb7f103904e071",
+    "stl\\01_base.stl": "cf36cb9b05210b71e6b5aa08be183e24be2719aa8f4e286b0cb74617b87d6041",
+    "stl\\02_lower_skirt.stl": "30a9a0222a9f510e0ad9b0626304af6bc984692c774a416f7bc29c34128d9b02",
+    "stl\\03_upper_skirt.stl": "bfc0adb2fbafab84a9b2226a4b319cdcc46c9ec52efd894a0fbd1076f5678745",
+    "stl\\04_shoulder.stl": "790aabbaea81385830751e0644091a6d3a3bdaf4328a83420313284df890ec16",
+    "stl\\05_neck.stl": "ac2f5c6f659673cbda8bae3be9ee448ca490d1970dc9f33793cf4e94567ea36b",
+    "stl\\06_head.stl": "2d8d105a7e19b090c0c3eb6a285659584b7bae359712a2be3dce0b2ab521371a",
+    "stl\\07_pitch_carrier.stl": "922f03986e7420655de0a873e5cd5602ffca84dbbbf0a8fa0f5b67cf8f2a2f9a",
+    "stl\\08_plunger_arm.stl": "489d461791963d76dd37be4a2e8e1b2bcc8aafe207b5d82638bba095d15cd2e0",
+    "stl\\09_emitter_arm.stl": "0aacb41cbe14171d80dbbb2f8634d0fe0bfd4dd0de0beef5ef9a4a2bb1335a63",
+    "stl\\10_head_motor_carriage.stl": "6a42e0e7136ffcfee13577ed593dbe0c7ba94347412b02ffb829b14c3ea1b590"
   },
   "units": "mm",
   "printed_designs": 10,
   "printed_piece_quantity": 11,
-  "png_count": 15,
+  "png_count": 16,
   "hardware": "Nominal envelopes; not detailed manufacturer CAD",
+  "board_envelopes": [
+    {
+      "reference": "Buffer prototype",
+      "center_xy_mm": [
+        -35,
+        -93
+      ],
+      "size_xyz_mm": [
+        81,
+        51,
+        1.6
+      ]
+    },
+    {
+      "reference": "Divider prototype",
+      "center_xy_mm": [
+        -35,
+        93
+      ],
+      "size_xyz_mm": [
+        81,
+        51,
+        1.6
+      ]
+    },
+    {
+      "reference": "U10 PCA9685",
+      "center_xy_mm": [
+        40,
+        -80
+      ],
+      "size_xyz_mm": [
+        62.5,
+        25.4,
+        3
+      ]
+    },
+    {
+      "reference": "U5 left DRV8833",
+      "center_xy_mm": [
+        65,
+        -106
+      ],
+      "size_xyz_mm": [
+        26,
+        18,
+        3
+      ]
+    },
+    {
+      "reference": "U2 motor regulator",
+      "center_xy_mm": [
+        26,
+        -107
+      ],
+      "size_xyz_mm": [
+        25.4,
+        25.4,
+        9.5
+      ]
+    },
+    {
+      "reference": "U3 servo regulator",
+      "center_xy_mm": [
+        24,
+        81
+      ],
+      "size_xyz_mm": [
+        25.4,
+        25.4,
+        9.5
+      ]
+    },
+    {
+      "reference": "U6 right DRV8833",
+      "center_xy_mm": [
+        62,
+        78
+      ],
+      "size_xyz_mm": [
+        26,
+        18,
+        3
+      ]
+    },
+    {
+      "reference": "U11 head DRV8833",
+      "center_xy_mm": [
+        62,
+        104
+      ],
+      "size_xyz_mm": [
+        26,
+        18,
+        3
+      ]
+    },
+    {
+      "reference": "U7 amplifier",
+      "center_xy_mm": [
+        23,
+        107
+      ],
+      "size_xyz_mm": [
+        19.4,
+        17.8,
+        3
+      ]
+    },
+    {
+      "reference": "U4 logic regulator",
+      "center_xy_mm": [
+        41,
+        105
+      ],
+      "size_xyz_mm": [
+        10.16,
+        17.145,
+        3
+      ]
+    }
+  ],
+  "battery_envelope_xyz_mm": [
+    70,
+    114,
+    76
+  ],
+  "plate_envelope_xyz_mm": [
+    160,
+    56,
+    2
+  ],
+  "pdf_cad_previews": [
+    {
+      "file": "cad/assembly.png",
+      "sha256": "7e79355ed755ff8b7f1fce2f9dcab39a840985403850794375e17610932ea3ef"
+    },
+    {
+      "file": "cad/base.png",
+      "sha256": "f80ca19df9579320fa41d669041d24c2b59bb347e2f4b00d2dd10643f8911b2a"
+    },
+    {
+      "file": "cad/section.png",
+      "sha256": "4a9d4b3bab4ca08491f85bf92d2b92ce6201739eeb0c29d543cb272d334b307a"
+    },
+    {
+      "file": "cad/exploded.png",
+      "sha256": "5468f1ba9b7d3f565221bf6e37958b0d7e366bf5c952cf67b4d8d0db47d81f87"
+    },
+    {
+      "file": "cad/rear.png",
+      "sha256": "d5e1f5114b78f9fb2569ee8c8ffce70bca9e0b3d7668301f94ccd3c039ecfa78"
+    }
+  ],
   "outputs": [
     {
       "file": "01_robot_assembled.png",
@@ -26,7 +180,7 @@
         2520,
         2160
       ],
-      "sha256": "9cb3c06f3519334576e185fea35a2c8a84ed5423d655be55d6042235038719dc"
+      "sha256": "e5769705d34323a64e029d35f4ea268dbe4ab1787d42b556a91059cbf3ca8566"
     },
     {
       "file": "02_robot_exploded.png",
@@ -34,7 +188,7 @@
         2520,
         2160
       ],
-      "sha256": "ea6a01aa2bb4ec7c24fddf25c426e801f76bc06790b844fe2be292ce07998383"
+      "sha256": "71c668febce943be19d9950d9ae88abb081a4c6ba1a957799205964a89426d46"
     },
     {
       "file": "03_robot_orthographic.png",
@@ -42,7 +196,7 @@
         2700,
         2340
       ],
-      "sha256": "dc9b21c9c295793c40c7e3a25b65647c338346325de99b6817eb2c128294a880"
+      "sha256": "a9f7ff66c1331d09a26becea122c8f9f0adf688becec3546f66e951f9dccdcee"
     },
     {
       "file": "04_printed_components.png",
@@ -50,7 +204,7 @@
         3240,
         2340
       ],
-      "sha256": "3b5a2a70547f20e56532f556724a6ef6f5e1fe178933f088a508867640daaee2"
+      "sha256": "90a5308d5b278dff9100cd7f1c0e503889b7429a2b67e9d26d6428df6c182c55"
     },
     {
       "file": "05_base_drive_breakout.png",
@@ -58,7 +212,15 @@
         2520,
         1980
       ],
-      "sha256": "4da52ecf116bb503b831badf79ced59a0ffdaa60eae42131cce234f95d02e1d5"
+      "sha256": "0f542ed69c0c47ca94207fc59b8f4bfd5ed39dfb4798c85a981408a29c04b62c"
+    },
+    {
+      "file": "06_head_friction_drive.png",
+      "pixels": [
+        2880,
+        1800
+      ],
+      "sha256": "519a5b62348e1de1b0d7e7bb6111e46f65a6d2fb1dd3615fff7a6395fbaea79f"
     },
     {
       "file": "components\\01_base.png",
@@ -66,7 +228,7 @@
         2160,
         1620
       ],
-      "sha256": "002d1c89ee6fd3da3fab35643f63760ad742d337c74a5a01e048c28b9408c3ce"
+      "sha256": "ccc51d92fdfc4639d0c99ffb90ac11c4f9bde4eb8cb3e869f38bf190e3ebbd03"
     },
     {
       "file": "components\\02_lower_skirt.png",
@@ -74,7 +236,7 @@
         2160,
         1620
       ],
-      "sha256": "c0f820887a02d04a7227a0a75580f724241549146f04bd97d44eb4c742d1f34a"
+      "sha256": "26c79cafa943e123030ed443d0c9071b845bedd2bcd317a1812a577fae026543"
     },
     {
       "file": "components\\03_upper_skirt.png",
@@ -82,7 +244,7 @@
         2160,
         1620
       ],
-      "sha256": "a29d2776680731b751fbd91abaa56119f102fbc78a7a586da103c665efbcb584"
+      "sha256": "ed0a5065a3cebe6d5fe2f7bde55415ea299a9b92292f1a1ce78d74bb0bea2b3e"
     },
     {
       "file": "components\\04_shoulder.png",
@@ -90,7 +252,7 @@
         2160,
         1620
       ],
-      "sha256": "7b4506f6460d04ebf51f9da1deed5cdb20cfaeccc5fc4d4e2938a265d9408fa9"
+      "sha256": "89f8b760d7705e91a0477c2dce34289cdf7399af92ea5263a6a2f53412d91e80"
     },
     {
       "file": "components\\05_neck.png",
@@ -98,7 +260,7 @@
         2160,
         1620
       ],
-      "sha256": "f9a031d91fcf8ba549f5feebd4239518c9190e568a3bde8245740f5efab89072"
+      "sha256": "f89bb52839392de2f387abd633afb0c097d7394093804893b1888b7dd585af3b"
     },
     {
       "file": "components\\06_head.png",
@@ -106,7 +268,7 @@
         2160,
         1620
       ],
-      "sha256": "942bea33f5d4636d8eb75399b7318a5716a24a31adf05f88c5cb1f732d227729"
+      "sha256": "3303eaad1e359cc7bf6484c2f158dd551a2bc474416ec1ea1cf452deb93db8ad"
     },
     {
       "file": "components\\07_pitch_carrier.png",
@@ -114,7 +276,7 @@
         2160,
         1620
       ],
-      "sha256": "abf4c8c64712f5135da4b78f95f64ef2dd2f6051cf5dd10f673cabc080ae8ee2"
+      "sha256": "6f2867b44a7cca0f13c0fd7b68b8aec49c70bccd8fb9a298a00a6d8272eaa66c"
     },
     {
       "file": "components\\08_plunger_arm.png",
@@ -122,7 +284,7 @@
         2160,
         1620
       ],
-      "sha256": "b60109b4149aff6de1035548c18198df02b2359adebe811e213231b14f32f524"
+      "sha256": "60f970fdd9529d132d3d4e747731cf801bfab74051aefb5775c08bed294f12c4"
     },
     {
       "file": "components\\09_emitter_arm.png",
@@ -130,15 +292,15 @@
         2160,
         1620
       ],
-      "sha256": "7ef9cc95d8317eaf91ce6b6923dd04ebcdbc670778f058399466b3f159604103"
+      "sha256": "81515f7d07f317b5aa9a8694563121fe2297c089df04b9384d3a1871515859ca"
     },
     {
-      "file": "components\\10_servo_pulley.png",
+      "file": "components\\10_head_motor_carriage.png",
       "pixels": [
         2160,
         1620
       ],
-      "sha256": "0b682b309b6570188016ce0f788895bae435bf607d827d1fdb8bd510efcb17e6"
+      "sha256": "a919c3f042e2aea10e664c5090218cb31366af4f98026da39b7ce2c152c4184b"
     }
   ]
 }

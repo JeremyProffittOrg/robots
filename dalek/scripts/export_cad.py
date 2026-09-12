@@ -1,4 +1,4 @@
-"""Export and validate the ten connected STACK-10 designs. Existing OpenSCAD/trimesh only."""
+"""Export and validate the ten connected ROUND-10 designs. Existing OpenSCAD/trimesh only."""
 import argparse
 import csv
 import json
@@ -10,16 +10,16 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 
 ROOT = Path(__file__).resolve().parents[1]
 PARTS = {
-    "01_base": (1, "PETG", "Floor down; rotate90deg about Z; single nozzle", "300x280 unibody;6mm floor;4mm wall/ribs;6walls6top/bottom40%gyroid;8mmbrim;normal auto supports below wheel-well roofs;remove through bottom wells"),
-    "02_lower_skirt": (1, "PLA", "Large opening down; rotate90deg about Z", "Complete360degree ring; integral bumps;3mm registry above110mm body;4walls15%infill;normal auto supports under bumps"),
-    "03_upper_skirt": (1, "PLA", "Large opening down", "Complete360degree ring; integral bumps;3mm registry above100mm body;4walls15%infill;tree supports under bumps"),
-    "04_shoulder": (1, "PETG", "Bottom flange down", "Integral arm shelves and rear display frame; tree supports under shelves;4walls25%infill"),
-    "05_neck": (1, "PETG", "Bottom flange down", "Integrated rings posts bearing tower servo mount; support deck underside;4walls30%infill"),
-    "06_head": (1, "PLA", "Hub foot down", "Dome eye lamps hub pulley spokes integrated; tree supports inside dome under eye and pulley;4walls15%infill"),
+    "01_base": (1, "PETG", "Floor down; single nozzle", "Diameter300 circular unibody;6mm floor;4mm wall/ribs;6walls6top/bottom40%gyroid;8mmbrim;normal auto supports below wheel-well roofs;remove through bottom wells"),
+    "02_lower_skirt": (1, "PLA", "Large opening down", "Complete circular ring; integral hemisphere bezels and panel ribs;3mm registry above110mm body;4walls15%infill;normal auto supports under bumps"),
+    "03_upper_skirt": (1, "PLA", "Large opening down", "Complete360degree ring; integral bumps;3mm registry above100mm body;4walls15%infill;normal auto supports under bumps"),
+    "04_shoulder": (1, "PETG", "Bottom flange down", "Concealed servo gunboxes spherical sockets slats rear display frame; normal auto supports inside gunboxes;4walls25%infill"),
+    "05_neck": (1, "PETG", "Bottom flange down", "Integrated three rings grille bearing tower radial slide deck jackscrew lug; support deck underside;4walls30%infill"),
+    "06_head": (1, "PLA", "Drum rim down", "Dome eye discs tilted lamps hub friction drum spokes integrated; normal auto supports inside dome under eye and hub;4walls15%infill"),
     "07_pitch_carrier": (2, "PETG", "Floor down", "Print this same file twice;4walls30%infill; actual horn and servo fit gate"),
-    "08_plunger_arm": (1, "PLA", "As exported", "Support cup underside; supplied servo horn; decorative arm only"),
-    "09_emitter_arm": (1, "PLA", "As exported", "Support rods underside; supplied servo horn; decorative arm only"),
-    "10_servo_pulley": (1, "PETG", "Large rim down", "Supplied horn;3mm round belt;4walls30%infill"),
+    "08_plunger_arm": (1, "PLA", "As exported; ensure on bed", "Spherical root and telescoping rings integrated; support cup and root; supplied servo horn; decorative arm only"),
+    "09_emitter_arm": (1, "PLA", "As exported; ensure on bed", "Spherical root eight rods muzzle rings integrated; normal auto supports; supplied servo horn; decorative arm only"),
+    "10_head_motor_carriage": (1, "PETG", "Floor down", "Radial slots padded TT saddle and cable-tie slots;4walls30%infill"),
 }
 
 def openscad_path():
@@ -47,14 +47,14 @@ def validate():
         size=mesh.extents;surfaces=mesh.split(only_watertight=False)
         components=int(sum(m.volume>0 for m in surfaces))
         brim=8 if name=="01_base" else 5
-        rotation=90 if name in ("01_base","02_lower_skirt") else 0
+        rotation=0
         print_size=size[[1,0,2]] if rotation else size
         fit=bool(print_size[0]+2*brim<=325.001 and print_size[1]+2*brim<=320.001 and print_size[2]<=325.001)
         okay=bool(mesh.is_watertight and mesh.is_winding_consistent and mesh.volume>0 and components==1 and fit)
         rows.append(dict(part=name,quantity=qty,material=material,x_mm=round(float(size[0]),3),y_mm=round(float(size[1]),3),z_mm=round(float(size[2]),3),volume_mm3=round(float(mesh.volume),2),solid_mass_g=round(float(mesh.volume)/1000*(1.27 if material=="PETG" else 1.24),2),watertight=bool(mesh.is_watertight),connected_components=components,enclosed_void_surfaces=int(sum(m.volume<0 for m in surfaces)),brim_mm_per_side=brim,print_rotation_z_degrees=rotation,h2d_single_nozzle_with_brim=fit,pass_check=okay,orientation=orientation,notes=notes))
     with (ROOT/"bom/printed-parts.csv").open("w",newline="",encoding="utf-8") as f:
         writer=csv.DictWriter(f,fieldnames=rows[0].keys());writer.writeheader();writer.writerows(rows)
-    report={"design":"STACK-10","mesh_count":len(rows),"maximum_stl_files":10,"all_pass":all(r["pass_check"] for r in rows),"printed_piece_count":sum(r["quantity"] for r in rows),"solid_material_upper_bound_g":round(sum(r["quantity"]*r["solid_mass_g"] for r in rows),1),"bed_envelope_mm":[325,320,325],"base_brim_envelope_mm":[296,316],"base_print_rotation_z_degrees":90,"nozzle_mode":"single","physical_fit_verified":False,"physical_strength_verified":False,"parts":rows}
+    report={"design":"ROUND-10","mesh_count":len(rows),"maximum_stl_files":10,"all_pass":all(r["pass_check"] for r in rows),"printed_piece_count":sum(r["quantity"] for r in rows),"solid_material_upper_bound_g":round(sum(r["quantity"]*r["solid_mass_g"] for r in rows),1),"bed_envelope_mm":[325,320,325],"base_brim_envelope_mm":[316,316],"base_print_rotation_z_degrees":0,"nozzle_mode":"single","physical_fit_verified":False,"physical_strength_verified":False,"parts":rows}
     (ROOT/"cad/validation.json").write_text(json.dumps(report,indent=2)+"\n",encoding="utf-8")
     print(json.dumps({k:v for k,v in report.items() if k!="parts"},indent=2),flush=True)
     bad=[r["part"] for r in rows if not r["pass_check"]]

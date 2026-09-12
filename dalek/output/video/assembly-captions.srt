@@ -5,7 +5,7 @@ Bronze Dalek | Original TTGO T-Display ESP32 | CAD assembly preview
 
 2
 00:00:05,000 --> 00:00:13,000
-01 | Reinforced motor base
+01 | Round reinforced base
 Mate four Adafruit 3777 motors with 3766 wheels; lower the pairs into the one-piece base.
 
 3
@@ -30,33 +30,33 @@ Seat the complete upper skirt and fasten its four M4 joints.
 
 7
 00:00:41,000 --> 00:00:51,000
-06 | Fit the shoulder components
-Bench fit speaker, rear T-Display, four edge-retaining tabs and both power switches.
+06 | Rear display and controls
+Bench fit the rear T-Display, four edge-retaining tabs and both power switches. Keep the shoulder open.
 
 8
 00:00:51,000 --> 00:00:57,000
-07 | Seat the shoulder
-Connect labelled harness plugs, leave service loops and fasten the shoulder.
+07 | Concealed arm servos
+Fit centred internal arm mechanisms and opaque fabric liners. Feed each arm tip out from inside, then fit the speaker.
 
 9
 00:00:57,000 --> 00:01:04,000
-08 | Fasten the neck
-Tighten the neck bolts before fitting the head drive servo.
+08 | Seat the shoulder
+Connect labelled harness plugs, leave service loops and fasten the shoulder. The arm actuators remain behind its armor.
 
 10
 00:01:04,000 --> 00:01:13,000
-09 | Bearing-supported head
-Fit two 608 bearings, retainers, inner-race spacer, narrow shims and M8 spindle. Keep the head loose for belt fitting.
+09 | Neck and head bearings
+Bench fit two 608 bearings, retainers, inner-race spacer, shims and M8 spindle. Then seat and fasten the complete neck assembly.
 
 11
 00:01:13,000 --> 00:01:20,000
-10 | Head drive
-Fit the FS5103R and pulley. Preload the O-ring on the loose head hub, then lower and retain the head.
+10 | TT friction drive
+Fit the sliding carriage, fifth TT motor and horizontal wheel. Begin with the tyre clear of the head drum.
 
 12
 00:01:20,000 --> 00:01:29,000
-11 | Two-axis arm assemblies
-Fit two yaw servos, two shared carriers, two pitch servos and both arms; centre horns before attachment.
+11 | Adjust and lock contact
+Seat and retain the head. Turn the adjustment screw to establish light tyre contact, then lock the carriage. Check a full revolution by hand.
 
 13
 00:01:29,000 --> 00:01:36,000
@@ -76,4 +76,4 @@ Simulated forward travel, broad moving arc, reverse and stop on a level floor.
 16
 00:01:55,000 --> 00:02:00,000
 Assembly complete | Prototype design
-543.8 mm tall | Physical fit, strength, driving and stop tests remain required. See the assembly manual.
+Round base | Concealed arm servos | Adjustable head friction drive | Physical commissioning remains required.

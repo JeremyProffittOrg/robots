@@ -13,9 +13,9 @@
     {
       "start": 5,
       "end": 13,
-      "title": "01 | Reinforced motor base",
+      "title": "01 | Round reinforced base",
       "instruction": "Mate four Adafruit 3777 motors with 3766 wheels; lower the pairs into the one-piece base.",
-      "narration": "Seat the four T T motors and wheels in the reinforced, one piece base."
+      "narration": "Seat the four T T motors and wheels in the round, reinforced base."
     },
     {
       "start": 13,
@@ -48,44 +48,44 @@
     {
       "start": 41,
       "end": 51,
-      "title": "06 | Fit the shoulder components",
-      "instruction": "Bench fit speaker, rear T-Display, four edge-retaining tabs and both power switches.",
-      "narration": "Bench fit the speaker, switches, and original T T G O T Display. Retain its edges."
+      "title": "06 | Rear display and controls",
+      "instruction": "Bench fit the rear T-Display, four edge-retaining tabs and both power switches. Keep the shoulder open.",
+      "narration": "Fit the switches and original T T G O T Display. Keep the shoulder open."
     },
     {
       "start": 51,
       "end": 57,
-      "title": "07 | Seat the shoulder",
-      "instruction": "Connect labelled harness plugs, leave service loops and fasten the shoulder.",
-      "narration": "Seat the shoulder. Keep cables clear of each joint."
+      "title": "07 | Concealed arm servos",
+      "instruction": "Fit centred internal arm mechanisms and opaque fabric liners. Feed each arm tip out from inside, then fit the speaker.",
+      "narration": "Fit the concealed arm mechanisms, fabric liners, and speaker."
     },
     {
       "start": 57,
       "end": 64,
-      "title": "08 | Fasten the neck",
-      "instruction": "Tighten the neck bolts before fitting the head drive servo.",
-      "narration": "Fasten the neck before installing the head drive servo."
+      "title": "08 | Seat the shoulder",
+      "instruction": "Connect labelled harness plugs, leave service loops and fasten the shoulder. The arm actuators remain behind its armor.",
+      "narration": "Seat the shoulder. Keep cables clear of each joint."
     },
     {
       "start": 64,
       "end": 73,
-      "title": "09 | Bearing-supported head",
-      "instruction": "Fit two 608 bearings, retainers, inner-race spacer, narrow shims and M8 spindle. Keep the head loose for belt fitting.",
-      "narration": "Fit the bearings, spacer, shims, and spindle. Prepare the head."
+      "title": "09 | Neck and head bearings",
+      "instruction": "Bench fit two 608 bearings, retainers, inner-race spacer, shims and M8 spindle. Then seat and fasten the complete neck assembly.",
+      "narration": "Fit the bearings, spacer, shims, and spindle. Then fasten the neck."
     },
     {
       "start": 73,
       "end": 80,
-      "title": "10 | Head drive",
-      "instruction": "Fit the FS5103R and pulley. Preload the O-ring on the loose head hub, then lower and retain the head.",
-      "narration": "Fit the drive and belt. Then seat the head."
+      "title": "10 | TT friction drive",
+      "instruction": "Fit the sliding carriage, fifth TT motor and horizontal wheel. Begin with the tyre clear of the head drum.",
+      "narration": "Fit the sliding carriage, T T motor, and friction wheel."
     },
     {
       "start": 80,
       "end": 89,
-      "title": "11 | Two-axis arm assemblies",
-      "instruction": "Fit two yaw servos, two shared carriers, two pitch servos and both arms; centre horns before attachment.",
-      "narration": "Fit both yaw servos, carriers, pitch servos, and arms. Set the neutral positions."
+      "title": "11 | Adjust and lock contact",
+      "instruction": "Seat and retain the head. Turn the adjustment screw to establish light tyre contact, then lock the carriage. Check a full revolution by hand.",
+      "narration": "Seat the head. Adjust light wheel contact, lock the carriage, and check a full turn."
     },
     {
       "start": 89,
@@ -109,7 +109,7 @@
       "start": 115,
       "end": 120,
       "title": "Assembly complete | Prototype design",
-      "instruction": "543.8 mm tall | Physical fit, strength, driving and stop tests remain required. See the assembly manual."
+      "instruction": "Round base | Concealed arm servos | Adjustable head friction drive | Physical commissioning remains required."
     }
   ],
   "audio_cues": [

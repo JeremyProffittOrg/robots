@@ -1,0 +1,74 @@
+{
+  "design": "ROUND-10",
+  "assembly_order": "Center and install yaw servos; feed and support both arms; insert pitch-servo carriers; attach horns and liners; speaker last.",
+  "method": "Deterministic mesh vertices and nominal pitch-servo interior grid at 87 insertion poses per side.",
+  "all_pass": true,
+  "mesh_sha256": {
+    "04_shoulder": "790aabbaea81385830751e0644091a6d3a3bdaf4328a83420313284df890ec16",
+    "07_pitch_carrier": "922f03986e7420655de0a873e5cd5602ffca84dbbbf0a8fa0f5b67cf8f2a2f9a",
+    "08_plunger_arm": "489d461791963d76dd37be4a2e8e1b2bcc8aafe207b5d82638bba095d15cd2e0",
+    "09_emitter_arm": "0aacb41cbe14171d80dbbb2f8634d0fe0bfd4dd0de0beef5ef9a4a2bb1335a63"
+  },
+  "checks": [
+    {
+      "check": "carrier-insertion--47-against-held-arms",
+      "poses": 87,
+      "samples": 26100,
+      "interior_hits": 0,
+      "passed": true
+    },
+    {
+      "check": "carrier-insertion--47-against-shoulder",
+      "poses": 87,
+      "samples": 26100,
+      "interior_hits": 0,
+      "passed": true
+    },
+    {
+      "check": "pitch-case-insertion--47-against-held-arms",
+      "poses": 87,
+      "samples": 20880,
+      "interior_hits": 0,
+      "passed": true
+    },
+    {
+      "check": "pitch-case-insertion--47-against-shoulder",
+      "poses": 87,
+      "samples": 20880,
+      "interior_hits": 0,
+      "passed": true
+    },
+    {
+      "check": "carrier-insertion-53-against-held-arms",
+      "poses": 87,
+      "samples": 26100,
+      "interior_hits": 0,
+      "passed": true
+    },
+    {
+      "check": "carrier-insertion-53-against-shoulder",
+      "poses": 87,
+      "samples": 26100,
+      "interior_hits": 0,
+      "passed": true
+    },
+    {
+      "check": "pitch-case-insertion-53-against-held-arms",
+      "poses": 87,
+      "samples": 20880,
+      "interior_hits": 0,
+      "passed": true
+    },
+    {
+      "check": "pitch-case-insertion-53-against-shoulder",
+      "poses": 87,
+      "samples": 20880,
+      "interior_hits": 0,
+      "passed": true
+    }
+  ],
+  "limits": [
+    "Finite sampling does not prove continuous-path clearance.",
+    "Actual horns, wiring, fabric, supports and print tolerances require a careful hand fit."
+  ]
+}

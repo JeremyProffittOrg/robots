@@ -21,7 +21,7 @@ import numpy as np
 from PIL import Image
 from playwright.sync_api import sync_playwright
 import trimesh
-from render_drawings import NAMES
+from render_drawings import NAMES, BOARD_LAYOUT
 
 ROOT=Path(__file__).resolve().parents[1]
 OUT=ROOT/'output/video'
@@ -29,7 +29,7 @@ CHROME=Path('C:/Program Files/Google/Chrome/Application/chrome.exe')
 FPS=24
 WIDTH,HEIGHT=1920,1080
 DURATION=120
-KEYFRAMES=[0,11,18,24,29,35,40,49,56,63,67,72,79,87.5,91,94.5,97,99,106,110,111.1,113,114.5,119]
+KEYFRAMES=[0,11,18,24,29,35,40,49,53,56,63,67,72,75,79,83,87.5,91,94.5,97,99,106,110,111.1,113,114.5,119]
 
 
 def sha(path):
@@ -70,28 +70,49 @@ def tube(points,radius=1.5,sides=8,closed=False):
 
 def geometry():
     meshes={name:trimesh.load_mesh(ROOT/'stl'/f'{name}.stl',process=True) for name in NAMES}
+    # Split existing triangles into paint regions; no surface or STL is changed.
+    for name in ['08_plunger_arm','09_emitter_arm']:
+        mesh=meshes[name];centers=mesh.triangles_center
+        radial=np.hypot(centers[:,1],centers[:,2]-28)
+        cap=(centers[:,0]>=7.99)&(centers[:,0]<=28.01)&(radial>6.1)
+        if name=='08_plunger_arm':
+            cap|=centers[:,0]>=104
+        meshes['finish_'+name]=mesh.submesh([cap],append=True,repair=False)
+        meshes[name]=mesh.submesh([~cap],append=True,repair=False)
+    mesh=meshes['06_head'];centers=mesh.triangles_center
+    drum=(centers[:,2]<39)&(np.hypot(centers[:,0],centers[:,1])>98.8)
+    eye=(centers[:,1]<-112)&(np.hypot(centers[:,0],centers[:,2]-63)<16)
+    discs=eye&(centers[:,1]>-152)&(np.hypot(centers[:,0],centers[:,2]-63)>8)
+    lens=eye&(centers[:,1]<=-152)&(centers[:,1]>=-174.5)
+    face=eye&(centers[:,1]<-174.5)
+    for name,mask in [('finish_eye_discs',discs),('finish_eye_lens',lens),('finish_eye_face',face)]:
+        meshes[name]=mesh.submesh([mask],append=True,repair=False)
+    meshes['finish_head_drum']=mesh.submesh([drum],append=True,repair=False)
+    meshes['06_head']=mesh.submesh([~(drum|discs|lens|face)],append=True,repair=False)
+    mesh=meshes['05_neck'];centers=mesh.triangles_center
+    radial=np.hypot(centers[:,0],centers[:,1])
+    liner=(radial>94)&(radial<98.8)&(centers[:,2]<53)
+    meshes['finish_neck_liner']=mesh.submesh([liner],append=True,repair=False)
+    meshes['05_neck']=mesh.submesh([~liner],append=True,repair=False)
     meshes['cube']=trimesh.creation.box(extents=[1,1,1])
     meshes['cylinder']=trimesh.creation.cylinder(radius=1,height=1,sections=40)
     for name,inner,outer,height,sections in [
         ('wheel',27.5,31.5,29,48),('bearing608',4,11,7,48),('spacer12',4.05,6,12,32),
         ('shim8',4,6,1,32),('top_washer8',4.2,8,1.6,32),('retaining_washer',1.7,4.5,1,24),
-        ('washer3',1.7,3.5,1,24),('washer4',2.2,4.5,1.2,24),
-        ('nut3',1.5,3.17,2.4,6),('nut4',2,4.04,3.2,6),('nut8',4,7.5,6.5,6),('spacer25',1.25,3.5,25,24)]:
+        ('washer3',1.7,3.5,1,24),('guide_washer3',1.7,3,1,24),('washer4',2.2,4.5,1.2,24),
+        ('nut3',1.5,3.17,2.4,6),('nut4',2,4.04,3.2,6),('nut8',4,7.5,6.5,6),('spacer25',1.25,3.5,25,24),
+        ('socket_liner',22,33,.7,48)]:
         meshes[name]=trimesh.creation.annulus(r_min=inner,r_max=outer,height=height,sections=sections)
+    meshes['head_wheel']=meshes['wheel'].copy()
     meshes['wheel'].apply_transform(trimesh.transformations.rotation_matrix(np.pi/2,[0,1,0]))
     meshes['bolt3']=bolt(3,40,5.5,3)
     meshes['bolt4']=bolt(4,20,7,4)
     meshes['screw8']=bolt(3,8,5.5,3)
+    meshes['guide16']=bolt(3,16,5.5,3)
+    meshes['adjust25']=bolt(3,25,5.5,3)
     meshes['spindle8']=trimesh.util.concatenate([
         shifted(trimesh.creation.cylinder(radius=4,height=70,sections=24),(0,0,35)),
         shifted(trimesh.creation.cylinder(radius=7.5,height=5,sections=6),(0,0,-2.5))])
-    R,r,C=31,11.5,72.5; beta=np.arccos((R-r)/C)
-    top_big=np.array([R*np.cos(beta),R*np.sin(beta),0]);top_small=np.array([C+r*np.cos(beta),r*np.sin(beta),0])
-    points=[*np.linspace(top_big,top_small,10,endpoint=False)]
-    points.extend([[C+r*np.cos(a),r*np.sin(a),0] for a in np.linspace(beta,-beta,22,endpoint=False)])
-    points.extend(np.linspace([C+r*np.cos(beta),-r*np.sin(beta),0],[R*np.cos(beta),-R*np.sin(beta),0],10,endpoint=False))
-    points.extend([[R*np.cos(a),R*np.sin(a),0] for a in np.linspace(-beta,beta-2*np.pi,38,endpoint=False)])
-    meshes['belt']=tube(points,1.5,8,closed=True)
     meshes['power_wires']=trimesh.util.concatenate([
         tube([[0,38,82],[0,50,82],[32,70,67],[32,92,61]],1.4),
         tube([[32,92,61],[55,92,61],[70,80,63],[90,42,52]],1.2),
@@ -103,9 +124,12 @@ def geometry():
 
 def export_scene(target):
     source_paths=[ROOT/'cad/dalek.scad',ROOT/'firmware/include/config.h',ROOT/'firmware/include/control.h',
+                  ROOT/'firmware/src/main.cpp',ROOT/'scripts/render_drawings.py',ROOT/'scripts/video_scene.js',
+                  ROOT/'scripts/video_storyboard.json',ROOT/'bom/electronics.csv',ROOT/'bom/hardware.csv',
                   *[ROOT/'stl'/f'{name}.stl' for name in NAMES],*sorted((ROOT/'firmware/data/audio').glob('*.mp3'))]
-    hashes={str(p.relative_to(ROOT)):sha(p) for p in source_paths}
-    data={'meshes':{},'sources':hashes,'storyboard':json.loads((ROOT/'scripts/video_storyboard.json').read_text())}
+    hashes={p.relative_to(ROOT).as_posix():sha(p) for p in source_paths}
+    data={'meshes':{},'sources':hashes,'board_layout':BOARD_LAYOUT,
+          'storyboard':json.loads((ROOT/'scripts/video_storyboard.json').read_text())}
     for name,mesh in geometry().items():
         positions=mesh.triangles.reshape(-1,3)
         normals=np.repeat(mesh.face_normals,3,axis=0)
@@ -177,7 +201,7 @@ def run():
                         video=OUT/'dalek-assembly-and-operation.mp4'
                         log=directory/'ffmpeg.log'
                         with log.open('wb') as errors:
-                            command=['ffmpeg','-hide_banner','-loglevel','error','-y','-f','image2pipe','-framerate',str(FPS),'-vcodec','mjpeg','-i','pipe:0','-i',str(audio),'-map','0:v:0','-map','1:a:0','-c:v','libx264','-preset','fast','-crf','20','-pix_fmt','yuv420p','-r',str(FPS),'-c:a','aac','-b:a','160k','-t',str(DURATION),'-movflags','+faststart','-metadata','title=Dalek STACK-10 assembly and simulated operation',str(video)]
+                            command=['ffmpeg','-hide_banner','-loglevel','error','-y','-f','image2pipe','-framerate',str(FPS),'-vcodec','mjpeg','-i','pipe:0','-i',str(audio),'-map','0:v:0','-map','1:a:0','-c:v','libx264','-preset','fast','-crf','20','-pix_fmt','yuv420p','-r',str(FPS),'-c:a','aac','-b:a','160k','-t',str(DURATION),'-movflags','+faststart','-metadata','title=Dalek ROUND-10 assembly and simulated operation',str(video)]
                             encoder=subprocess.Popen(command,stdin=subprocess.PIPE,stderr=errors)
                             print(f'RENDER encoder PID {encoder.pid}; {DURATION*FPS} frames; {renderer}',flush=True)
                             for frame in range(DURATION*FPS):
@@ -218,7 +242,7 @@ def run():
         for index,chapter in enumerate(story['chapters'],1):
             subtitles.append(f"{index}\n{timestamp(chapter['start'])} --> {timestamp(chapter['end'])}\n{chapter['title']}\n{chapter['instruction']}\n")
         (OUT/'assembly-captions.srt').write_text('\n'.join(subtitles),encoding='utf-8')
-        manifest={'type':'CAD animation and simulated operation, not physical footage','seconds':DURATION,'fps':FPS,
+        manifest={'design_revision':'ROUND-10','type':'CAD animation and simulated operation, not physical footage','seconds':DURATION,'fps':FPS,
                   'frames':frames,'resolution':[WIDTH,HEIGHT],'video_codec':v['codec_name'],'audio_codec':a['codec_name'],
                   'printed_designs':10,'printed_instances':11,'source_sha256':inputs,'inputs_unchanged':True,
                   'video_sha256':sha(video),'video_bytes':video.stat().st_size,'render_seconds':round(time.monotonic()-began,2),
