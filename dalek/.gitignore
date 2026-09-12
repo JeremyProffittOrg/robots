@@ -1,4 +1,5 @@
 __pycache__/
 output/pdf/rendered/
 output/pdf/qa/
+output/video/review/
 result.json

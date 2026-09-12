@@ -20,6 +20,11 @@ Confirmed by user2026-09-12: four wheels per foot/twelve total, phone Wi-Fi cont
 
 ## R2-D2 milestones
 
+- [~] Revision C,2026-09-12: user requires HIGHLY DETAILED recognizable R2-D2 head/body, as few STLs as possible, swinging outer legs, robust extend/retract third-leg post that tilts the body, and powered head rotation. Subsequent user wording: "the swinging of the arms and the foot on teh back leg, need to be extremely, robustly strong"; "the head needs to be able to turn, you can use a motor and a wheel internally if you want". Outcome: replace generic exterior with source-grounded relief geometry and engineer metal load paths, bearing pivots and feedback-controlled actuator. Preserve confirmed12wheels/6drive motors, phone Wi-Fi and original audio unless demonstrated infeasible and separately resolved. Non-goals: no purchasing, physical build, unsupported strength certification or exact latest-club-standard claim. Required package files are r2d2 CAD/STLs/mechanical drawings/BOM/wiring/firmware/manual/PDF and PNGs; only necessary changes. Proof: source comparison, closed printable meshes, mating/kinematic checks, documented factored loads, firmware safety tests, four-way visual review, current artifacts and final email. Physical strength must be fixture-tested before operation.
+  - [~] Appearance research and detailed geometry: /root/r2_reference_research completed docs/appearance-research.md. Primary ellipse/body drawings and front/rear photographs inspected. Scale609.6/1090 gives259.25mm diameter,140.02mm ellipse rise and12.12mm straight lip. Body/leg feature placement beyond verified dimensions is image-derived.
+  - [~] Load hardware research: /root/load_hardware_research completed docs/load-hardware-research.md. P16-100-256-12-P candidate100mm stroke/300N lifted/500N static, external end switches required; separate metal guides mandatory. Catalog backorder noted. Proposed bearing/shaft/frame interfaces need final drawings and force checks.
+  - [ ] Stance geometry decision, user input requested: keep all three feet down during tilt or fully retract to two feet; third foot forward like classic R2-D2 or rear as described. Complete independent exterior work while these choices remain pending; do not publish a guessed motion mechanism as verified.
+
 - [x] Drawings,2026-09-12 user: "show me matlab style drawings of the robot plus components broken out as png's". Created eight MATLAB-style PNG sheets from Revision B meshes: assembled, orthographic, exploded, mechanism views and all29 printed components. Files: r2d2/scripts/draw_robot.py and r2d2/output/drawings. `python scripts/draw_robot.py` passed; generation session32519 completed; all PNGs visually reviewed, source SHA256 values unchanged and ZIP CRCs passed. Replaced inaccurate painter-order surface shading with depth-buffered triangle plotting; corrected label spacing. Existing Matplotlib/trimesh only, no geometry/firmware/hardware/PDF changes. Purchased shapes explicitly schematic. Drawing-only request does not require another PDF email. Deliver by focused commit/push and show PNGs with ZIP download.
 
 - [x] Revision B: user2026-09-11 "That's too many pieces, adjust the size so the body prints as single stackable pieces, same for the arms". Delivered two complete stackable body prints and one295mm print per arm, at609.6mm overall height.29 meshes/83 printed pieces. Removed14 superseded STLs. All geometry, mating-plane and four whole-part H2D PETG slice checks passed. Updated hardware list,35-page PDF and ZIP pushed in20126db6f74ef44463c791edad89d30b1aa6840e and emailed. No physical build or purchases.
@@ -53,6 +58,35 @@ Track OpenSCAD, PlatformIO and email tool session/agent IDs. Observe exit codes 
 ---
 
 # Dalek fabrication package
+
+## Current video task: assembly and simulated operation
+
+### Locked decision (user-confirmed; do not revisit)
+
+2026-09-12: "create an assembly video showing all the parts coming together and the robot operating"
+
+### Outcome, non-goals, files and proof
+
+Create a 120-second 1920 x 1080 MP4 at 24 fps from the current ten STL designs, showing all eleven printed pieces and nominal purchased components assembling, followed by rear-screen examples, circular arm motion, head rotation, driving along broad arcs, reverse and stop. Reuse original robot MP3s and add concise local speech narration for assembly. Clearly label CAD animation and simulated operation; do not claim a physical robot or live Wi-Fi test.
+
+Files: C:/dev/robots/dalek/scripts/render_video.py, scripts/video_scene.js, scripts/video_storyboard.json, scripts/build_video_audio.ps1, output/video, and the README video link. No CAD/STL, electronics, firmware, existing voice, printer or PDF changes. No dependency install, purchase, scheduled task, external upload or email is required for this video request.
+
+Proof: all ten input STL hashes unchanged; all eleven printed instances included in the assembly timeline; correct yaw/pitch/head/wheel transforms reviewed; actual MP4 has 2880 frames, 120 seconds, Full HD H.264 video and audio; FFmpeg decodes the complete video; representative frames and motion clips pass visual review.
+
+### Workstreams
+
+- [~] Renderer/video, /root: reuse current geometry and installed headless Chrome/WebGL through existing Python Playwright, encode with installed FFmpeg, produce MP4, poster and verification manifest. One-time local rendering only; no user browser state or printer connection.
+- [x] Sequence/kinematic review, /root/video_sequence_review: read actual manual/CAD/firmware. Verified motor/wheel pairs precede clamps, lower ring precedes electronics, neck bolts precede head servo, and head/arm pivots match source. Final visual review to follow.
+- [~] Storyboard/audio, /root/video_audio: shared 120-second chapter JSON and reproducible Windows speech/FFmpeg script; verify narration fits each interval and preserve original MP3s.
+- [ ] Delivery: review, commit/push only task files on main, check any workflow, provide the finished video.
+
+### Stop conditions and jobs
+
+Stop only for missing credentials or a material scope expansion that needs user input. Track render/audio process IDs and exit codes. Fix deterministic errors before at most two retries per failure class. A render must emit progress and have a bounded timeout; failure must remain visible. No recurring machine automation. Physical operation is outside available resources and remains unverified.
+
+### Execution log
+
+- 2026-09-12: Read parent deploy.md, current drawing renderer/CAD, firmware motion limits and audio catalog. Working tree clean. FFmpeg/FFprobe, Python Playwright, Chrome, NumPy/trimesh/Pillow are installed. No Blender or separate OpenGL Python framework is installed. Selected the existing browser graphics engine for a local headless render. Delegated bounded sequence and soundtrack work to the agents listed above.
 
 ## Current drawing task: MATLAB-style PNGs
 
