@@ -1,0 +1,42 @@
+[Unit]
+Description=R2-FABLE control server
+Documentation=file:/home/pi/fable-r2d2/docs/firmware.md
+# The KB2040 is hot plugged, so do not fail the unit when it is absent: the
+# serial worker reconnects on its own once the controller appears.
+After=network-online.target sound.target
+Wants=network-online.target
+# Five failures inside a minute means something is really wrong; stop trying
+# rather than power cycling the motors over and over.  These two live in
+# [Unit], not [Service], on systemd 229 and later.
+StartLimitBurst=5
+StartLimitIntervalSec=60
+
+[Service]
+Type=simple
+User=pi
+Group=pi
+# The user must be in dialout for /dev/ttyACM*, i2c for the logic displays,
+# spi for the radar eye, gpio for the backlight, and audio for aplay:
+#   sudo usermod -aG dialout,i2c,spi,gpio,audio pi
+SupplementaryGroups=dialout i2c spi gpio audio
+
+WorkingDirectory=/home/pi/fable-r2d2
+ExecStart=/home/pi/r2d2-venv/bin/python firmware/pi/server.py
+Environment=PYTHONUNBUFFERED=1
+Environment=R2D2_HOST=0.0.0.0
+Environment=R2D2_PORT=8080
+# Uncomment to pin the controller port instead of searching for it:
+# Environment=R2D2_SERIAL_PORT=/dev/ttyACM1
+
+# SIGINT runs the aiohttp cleanup handlers, which stop the motors, drop the
+# DRV8833 enable line and blank the displays before the process exits.
+KillSignal=SIGINT
+TimeoutStopSec=10
+Restart=on-failure
+RestartSec=5
+
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target

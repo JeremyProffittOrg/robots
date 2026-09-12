@@ -1,0 +1,170 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html><head>
+<meta content="text/html; charset=ISO-8859-1" http-equiv="content-type"><title>R2.CS:R.ANH.Skins</title>
+
+</head>
+<body>
+<p style="text-align: center;" class="MsoNormal"><big><big><big><big>CS:R
+ANH Skins</big></big></big></big></p>
+<big>In 2009 when I started designing R2 Parts life was a lot
+simpler. The major design tool at the time was Autocad, a 2D drafting
+program. I could do with it everything that I learned in my "mechanical
+drawing" class in High School. Plus a bit more! Six years later and the
+world, myself included, has moved on to 3D design tools. But we still
+find a need to design 2D things. Seemingly, for some reason, that's
+gotten harder instead of simpler.<br>
+<br>
+Chris Reiff, and a team of R2 Builders, developed what is now called
+Club Spec: Revisited and published a huge volume of documented changes
+to the existing set of R2 drawings (now called Club Spec: Legacy). For
+more information see the <a href="http://astromech.net/droidwiki/index.php?title=CSR_Overview_and_Files" target="_blank"> wiki.</a> The files were made
+available in a number of 3D engineering formats, none included the
+veritable Autocad formats. Curiously enough, one tool I had used
+extensively to convert &nbsp;adobe .pdf documents into autocad .dxf
+format, Pdf2Dxf, would no longer work on the published .pdf files. Let
+me show you why that was a problem for me.<br>
+</big><big><br>
+</big>
+<table style="width: 980px; text-align: left; margin-left: auto; margin-right: auto;" border="1" cellpadding="2" cellspacing="2">
+<tbody>
+<tr>
+<td style="width: 481px; text-align: center;"><a href="images/csr.anh.skins/orig.pix/pdf.crp.jpg" target="_blank"><img style="border: 0px solid ; width: 400px; height: 209px;" alt="" src="images/csr.anh.skins/pdf.crp.jpg"></a><br>
+</td>
+<td style="width: 479px; text-align: center;"><big><a href="images/csr.anh.skins/orig.pix/imported.crp.jpg" target="_blank"><img style="border: 0px solid ; width: 400px; height: 205px;" alt="" src="images/csr.anh.skins/imported.crp.jpg"></a><br>
+</big></td>
+</tr>
+<tr>
+<td colspan="2"><big>It's a little difficult
+to see at this size, the images link to
+larger versions, just click on them. On the left is the .pdf version of
+the front skin. On the right is the .igs [IGES format] version of the
+skin that's been imported into Geomagic Designs cad software. The
+notable difference is that double line gap around the skin panels is
+missing on the .igs version. </big></td>
+</tr>
+<tr>
+<td style="text-align: center;"><img style="width: 400px; height: 174px;" alt="" src="images/csr.anh.skins/spline.jpg"></td>
+<td><big>The other difference is not apparent until
+you get into editing the design file. On the left are two door panels
+that are on either side of the coin slot feature. <br>
+<br>
+The curved portion of the right hand panel, the curve is represented by
+two lines meeting at 90 degrees and a circular arc of 90 degrees. The
+extra dot is the center of the arc. </big><br>
+<br>
+<big>The left hand panel is represented by a spline.which
+creates a problem because the portion of the line going to the left
+isn't aligned with the horizontal axis. It hooks slightly, an artifact
+of the conversion of .igs into a different format.</big></td>
+</tr>
+</tbody>
+</table>
+<big><br>
+While the problems above deal with the source data, the other problem a
+prospective R2 Builder faces is that you need two sets of files for the
+skins, an "inner set" that provides a foundation and an "outer set"
+that provides the panel details. You need both sets for the Front and
+Rear Skins. To make things worse, you typically need those files in
+.dxf format to feed to the cutting programs that control the machine
+tools that make the actual skins! Since I'm building a CS:R frame with
+a removable rear door, I decided to take the plunge, and create a set
+of files for the CS:R ANH droid.<br>
+<br>
+</big>
+<table style="width: 900px; text-align: left; margin-left: auto; margin-right: auto;" border="2" cellpadding="2" cellspacing="2">
+<tbody>
+<tr>
+<td style="width: 439px;"><a href="images/csr.anh.skins/orig.pix/csr.anh.front.asm.jpg" target="_blank"><img style="border: 0px solid ; width: 400px; height: 276px;" alt="" src="images/csr.anh.skins/csr.anh.front.asm.jpg"></a><a href="images/csr.anh.skins/orig.pix/csr.anh.front.asm.jpg" target="_blank"><br>
+</a></td>
+<td style="width: 439px;"><big>To the left is
+a composite of the front outer skin file (blue) placed over the front
+inner file (purple).<br>
+<br>
+Below are the two files taken separately.<br>
+<br>
+Each image links to a larger version of the image file.</big></td>
+</tr>
+<tr>
+<td style="width: 439px;"><a href="images/csr.anh.skins/orig.pix/csr.anh.front.inner.jpg" target="_blank"><img style="border: 0px solid ; width: 400px; height: 273px;" alt="" src="images/csr.anh.skins/csr.anh.front.inner.jpg"></a></td>
+<td style="width: 439px;"><a href="images/csr.anh.skins/orig.pix/csr.anh.front.outer.jpg" target="_blank"><img style="border: 0px solid ; width: 400px; height: 273px;" alt="" src="images/csr.anh.skins/csr.anh.front.outer.jpg"></a></td>
+</tr>
+<tr>
+<td><a href="images/csr.anh.skins/orig.pix/csr.anh.rear.asm.jpg" target="_blank"><img style="border: 0px solid ; width: 400px; height: 278px;" alt="" src="images/csr.anh.skins/csr.anh.rear.asm.jpg"></a><a href="images/csr.anh.skins/orig.pix/csr.anh.rear.asm.jpg" target="_blank"><br>
+</a></td>
+<td><big>To the left is a composite of the rear outer
+skin file (blue) placed over the rear inner file (purple).<br>
+<br>
+Below are the two files taken separately.<br>
+<br>
+Each image links to a larger version of the image file.</big></td>
+</tr>
+<tr>
+<td><a href="images/csr.anh.skins/orig.pix/csr.anh.rear.inner.jpg" target="_blank"><img style="border: 0px solid ; width: 400px; height: 276px;" alt="" src="images/csr.anh.skins/csr.anh.rear.inner.jpg"></a></td>
+<td><a href="images/csr.anh.skins/orig.pix/csr.anh.rear.outer.jpg" target="_blank"><img style="border: 0px solid ; width: 400px; height: 275px;" alt="" src="images/csr.anh.skins/csr.anh.rear.outer.jpg"></a></td>
+</tr>
+</tbody>
+</table>
+<big><br>
+There are two additional factors that need to be taken into account
+when creating skin files:<br>
+<br>
+</big><big><span style="font-weight: bold;"></span>First
+the skins need to be adjusted to take into account the wrap diameter -
+my calculations follow:<br>
+</big>
+<div style="margin-left: 40px;"><big>A CS:R droid
+is 18.25" in diameter.&nbsp; The inner skins wrap around a frame
+which
+is 18.09" in diameter. </big><br>
+<big>Frame at 18.09" + 2(.040" inner skins) = 18.17" diameter of
+inner
+skins. [ 57.0827" in circumference ]</big><br>
+<big>Inner skins 18.17" + 2(.040" outer skins) = 18.25" finished
+droid
+diameter. [ 57.3340" in circumference ]</big><br>
+<big>Looking at the circumference numbers
+the outer skins are&nbsp; ~
+.2513"</big><big>
+wider </big><big> [</big><big>57.3340 - </big><big>57.0827]
+</big><big>than the inner skins. </big><br>
+<big>This implies that panel edges that are
+aligned in the center of the Droid will be off by ~ .125 on the
+edges closest to the seam </big><br>
+<big>unless the inner skins are scaled in the
+horizontal direction by ~ 0.44 %</big>. [ <big>.2513/</big><big>57.0827
+= .0044] </big><br>
+</div>
+<big><br>
+Second to allow for the practical needs of the builder the edges need
+to be oversized so the skins can be trimmed to fit.<br>
+I have added .0625 to the top/bottom edges and for overlap at the
+joints&nbsp;.125 on each end for lapping/trimming the joint.<br>
+<br style="color: red;">
+<span style="color: red;"></span>My thanks to John
+(galaia2004) for confirming my calculations and pointing out an
+omission in the original skin files and <br>
+John Z (Ziz) for providing the missing measurements. <br>
+The two forum threads where the skin files are discussed are:<br>
+<a href="http://astromech.net/forums/showthread.php?22983-CS-R-ANH-Skin-files-posted-in-dxf-format-Questions-on-adjusting-for-wrap" target="_blank">http://astromech.net/forums/showthread.php?22983-CS-R-ANH-Skin-files-posted-in-dxf-format-Questions-on-adjusting-for-wrap</a><br>
+<a href="http://astromech.net/forums/showthread.php?18329-Club-Spec-Revisited" target="_blank">http://astromech.net/forums/showthread.php?18329-Club-Spec-Revisited</a>
+&nbsp; &nbsp;&nbsp; around post number 142 </big><big><br>
+<br>
+I have made the adjustments noted above and you can <a href="images/csr.anh.skins/csr.anh.skins.rev2.zip" target="_blank">download a .zip file</a> that has .pdf
+and .dwg versions (noted as V2) of the front &amp; rear, inner
+&amp; outer, skin files made slightly oversize and with the inner
+layer shrunk .44%. </big><br>
+<br>
+<big><br>
+</big>
+<table style="text-align: left; width: 100%;" border="0" cellpadding="2" cellspacing="2">
+<tbody>
+<tr>
+<td style="text-align: center;"><a href="design.html"><big><br>
+</big></a></td>
+<td style="text-align: center;"><a href="index.html"><big><big><big>Home</big></big></big></a></td>
+<td style="text-align: center;"><a href="machining.html"><big><br>
+</big></a></td>
+</tr>
+</tbody>
+</table>
+</body></html>

@@ -1,0 +1,10 @@
+__pycache__/
+output/pdf/rendered/
+output/pdf/qa/
+output/video/review/
+result.json
+tmp/
+research/drawings/*.zip
+research/drawings/*/
+research/drawings/photos/
+*.3mf

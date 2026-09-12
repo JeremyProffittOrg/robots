@@ -1,0 +1,13 @@
+name,file,seconds,sha256
+greet,firmware/pi/sounds/greet.wav,0.550,2993789f1df0aebfc1157c754ee11558e3080a3c9e0062222861164eb1815b3c
+acknowledge,firmware/pi/sounds/acknowledge.wav,0.195,386b6be011f737484abfe99cabaedb56a1c54e49b69180191def18dcd0c85cab
+alarm,firmware/pi/sounds/alarm.wav,0.720,fcf2e5cf318b80b11828b87c6fed58872b35fc8cdc83e8ddbf4e3e43cbd24d3a
+question,firmware/pi/sounds/question.wav,0.410,8043f0d8bd4fd7664346bf447f459bd4d527f5650505e980d8b3f077168ca66d
+sad,firmware/pi/sounds/sad.wav,0.850,7c70ed07e13819e8bb8e669f619f9546c9f76134a8269ac19497f0a993a73726
+happy,firmware/pi/sounds/happy.wav,0.490,c5e5155081924b37dd1fa95c8da1771a539faff519ba07aaaa61258cfe085a8b
+scan,firmware/pi/sounds/scan.wav,1.000,8216e6fda2bf3aa49a62c7a49ad353374a184c380b151474e45400d2328b0ffe
+whistle-up,firmware/pi/sounds/whistle-up.wav,0.400,7f33c1bdaf906136e2a9350d5611df97bd69199bc79b7fa5c5170eef0e52585b
+whistle-down,firmware/pi/sounds/whistle-down.wav,0.400,e4ecda449079598ef9fb7065fea751ebaaec9b6e513cb56062ad659069cd4850
+chirp-double,firmware/pi/sounds/chirp-double.wav,0.160,061d769663cdabf79daef05b2bab003a565bfd0ddf180d7fe46f74c5c0559368
+power-on,firmware/pi/sounds/power-on.wav,1.000,9162aab1e4f9275e9e41d1a1b55a55986e7ac24be0325c449c225cfa17ec3133
+power-off,firmware/pi/sounds/power-off.wav,0.850,8c1d892ece51d58c615761a080ba04dade6f58643c9b1d8a7dfcf844e16a626c

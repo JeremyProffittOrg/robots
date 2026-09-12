@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<meta name="theme-color" content="#0b0f19">
+<title>R2-FABLE control</title>
+<link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+<header class="bar">
+  <span class="name">R2-FABLE</span>
+  <span id="link-state" class="pill pill-down">connecting</span>
+  <span id="battery" class="pill">battery --</span>
+</header>
+
+<main>
+  <section class="panel">
+    <div class="panel-head">
+      <h2>Drive</h2>
+      <label class="toggle">
+        <input type="checkbox" id="enable">
+        <span>Motors armed</span>
+      </label>
+    </div>
+    <canvas id="joystick" width="320" height="320" aria-label="Touch joystick"></canvas>
+    <p id="drive-readout" class="readout">x 0.00 &nbsp; y 0.00 &nbsp; L 0 R 0 C 0</p>
+  </section>
+
+  <section class="panel">
+    <h2>Speed cap <span id="cap-value" class="readout inline">60%</span></h2>
+    <input type="range" id="cap" min="20" max="100" step="5" value="60">
+    <h2>Head duty <span id="head-duty-value" class="readout inline">45%</span></h2>
+    <input type="range" id="head-duty" min="15" max="100" step="5" value="45">
+  </section>
+
+  <section class="panel">
+    <h2>Dome</h2>
+    <div class="grid">
+      <button class="btn hold" data-head="-1">&#9664;&#9664; Spin left</button>
+      <button class="btn hold" data-head="1">Spin right &#9654;&#9654;</button>
+      <button class="btn" data-nudge="-1">&#9664; Nudge</button>
+      <button class="btn" data-nudge="1">Nudge &#9654;</button>
+    </div>
+    <h2>Dome lights</h2>
+    <div class="grid grid-lights">
+      <button class="btn light" data-rgb="0,90,255">Blue</button>
+      <button class="btn light" data-rgb="255,40,0">Red</button>
+      <button class="btn light" data-rgb="255,180,0">Amber</button>
+      <button class="btn light" data-rgb="0,0,0">Off</button>
+    </div>
+  </section>
+
+  <section class="panel">
+    <h2>Sounds</h2>
+    <div id="sounds" class="grid grid-sounds"></div>
+  </section>
+</main>
+
+<button id="stop" class="stop">STOP</button>
+
+<script src="/static/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,22 @@
+# fable-r2d2 Raspberry Pi control server.
+# Raspberry Pi OS Bookworm 64 bit, Python 3.11.
+#
+# Install into a virtual environment (Bookworm's Python is externally managed):
+#   python3 -m venv --system-site-packages ~/r2d2-venv
+#   ~/r2d2-venv/bin/pip install -r firmware/pi/requirements.txt
+#
+# Required: without these the server does not start or the robot does not move.
+aiohttp>=3.9,<4
+pyserial>=3.5
+
+# Head displays and battery sensing.  The server logs a clear reason and keeps
+# running when any of these is absent, so they can be left out on a bench Pi.
+Adafruit-Blinka>=8.40
+adafruit-circuitpython-ht16k33>=4.6
+adafruit-circuitpython-rgb-display>=3.14   # supplies adafruit_rgb_display.gc9a01a
+adafruit-circuitpython-ads1x15>=3.0
+Pillow>=10.0
+
+# Only needed to regenerate the sound clips with scripts/generate_audio.py.
+# The WAV files are committed, so a Pi that only runs the robot can skip it.
+numpy>=1.24
