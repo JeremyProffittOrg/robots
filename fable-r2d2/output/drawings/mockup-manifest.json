@@ -1,0 +1,22 @@
+{
+  "file": "output/drawings/00_final_build_mockup.png",
+  "pixels": [
+    2660,
+    3958
+  ],
+  "sha256": "53f68d8ec5b1f628146794bb4ecb3dc7bf09effa57e55c1db55d6afed3c7b35a",
+  "views": [
+    "Front",
+    "Three-quarter",
+    "Right side",
+    "Rear"
+  ],
+  "projection": {
+    "Front": "orthographic",
+    "Three-quarter": "orthographic",
+    "Right side": "orthographic",
+    "Rear": "orthographic"
+  },
+  "source": "cad/r2d2.scad part=assembly",
+  "physical_build": false
+}
