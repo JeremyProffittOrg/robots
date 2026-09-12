@@ -163,11 +163,15 @@ Missingcredentials/resourcesblockpublication/send; materiallydifferentuserintent
 
 ### Jobs and retry policy
 
-Trackagent/processIDsandterminalresults. Export240s/part; slicer300s/part; video20minwithprogress; boundedtwochanged-inputretriesperdeterministicfailureclass. Reuseunchangedverifiedartifactsbyhash; do notre-rununaffectedphysicalmodeltestswithoutareason. ExistingGitHubActions/OIDCistheonlyS3uploadpath. Emailonlyafterfinalartifactreview/publication; no retryafteracceptedMessageId. Do notretrypreviouslydeniedtempcleanupthroughdifferenttools/agents.
+Trackagent/processIDsandterminalresults. Newcombined-skirt export600s (otherparts240s); slicer300s/part; video20minwithprogress; boundedtwochanged-inputretriesperdeterministicfailureclass. Reuseunchangedverifiedartifactsbyhash; do notre-rununaffectedphysicalmodeltestswithoutareason. ExistingGitHubActions/OIDCistheonlyS3uploadpath. Emailonlyafterfinalartifactreview/publication; no retryafteracceptedMessageId. Do notretrypreviouslydeniedtempcleanupthroughdifferenttools/agents.
 
 ### Execution log
 
 - 2026-09-12: Readdeploy.md,currentCAD/exporter/mechanicalcheckerandPDFskill. Dalekworktreeclean; unrelatedR2-D2/Fable/sharedplanworkpresentandpreserved. Started /root/merge_skirt, /root/merged_drawings and /root/merged_access_review. Selectedsingle213mmskirt withunchangedshoulderorigin277.8; removeonlyobsolete02/03skirtfilesandmiddlejoint hardware.
+- 2026-09-12: Plancheckpoint1f11c3d pushed. Original240sexporttimedout(session8959/PID273416); increasedonlynewskirtboundto600s andkeptonedirectexportpath. Intermediateexportpipelinewasremovedandtemporaryjobs262140/268532stopped. Nextdirectexport92768/PID276912 completedbutmeshcheckrejected95nonmanifoldedgesattheribapex. ReplacedribcavityBooleanwithasinglerevolvedsolidpolygon; finaldirectexport70488/PID277440passed.
+- 2026-09-12: Final02_skirtSHA256ff1baa0536e36c0730d69f5cf8004e069f4fe4e430026d6f3e6bc734a125146e;300.331848x300.331848x213mm;all39728facesnondegenerate,everyedgehasexactlytwoadjacentfaces. NineSTLs/tenprintspass,2995.9gsolidmaterialbound;other8STLhashesunchanged.8496exteriorraysmatchpriorpairwithin0.000004554mm. Internalribhas240mmbore;topopening184mm. OldtwoSTLsretiredonlyaftervalidreplacement.
+- 2026-09-12: NewskirtH2Dslice41562/PID279088passedwithstockmachinegeometryandfull213mmheight. Nine-recordreportretains8unchangedhashes. Newskirt1033.87gfilament/527.879gmodel/23h45m40s; package3951.62gfilament/2345.25gmodel/406685.32s. Savings121.44gfilament/83.95gmodel/3h18m57svspriorrevision. A1kgspoolisinsufficientforthisjob;docsrequireatleast1.14kgavailableincludingreserve. Existing3kgPLAsupplykeptaslarge-printretryallowance.
+- 2026-09-12: Drawingrun91233passed15drawingPNGs/fiveCADpreviews/ZIP/currenthashes;mainviewsand213mmskirtdrawingreviewed. Rendererfrozen. Rootpreviewpassednew9/10countsandcamera; finalvideo40597/PID272616running. Fullmechanicalrun6726andfocused51-checkaccessscriptpending; currentaccessrouteusesbareplateundersidebaseZ41beforeYtranslationandbattery-lastassembly. Longdriver/crowfoot/universal/extensionspecifiedinBOM. RootPDFskilloperationmarkerexecutedonceforthisrevision.
 
 ## Current revision: round detailed body and concealed drives
 
@@ -472,3 +476,9 @@ before retrying; at most two corrected attempts per failure class.
 2026-09-12: Read repo conventions, toolchain and the dalek/r2d2 patterns. Recorded the three
 answered decisions verbatim. Created `C:/dev/robots/doorbot/` skeleton. Starting primary-source
 hardware research and the mechanism design panel.
+
+2026-09-12: Delivery path built first, before CAD, so publication is never the long pole.
+`doorbot/infra/deliverables.yaml` (private S3 + CloudFront origin-access control, bucket policy
+scoped to exactly the two final object keys) and `.github/workflows/publish-doorbot.yml` committed
+as `97c2a0d` and pushed. GitHub Actions run `34705401319` finished `completed success`; its upload
+step is a deliberate no-op until `doorbot/output/delivery/manifest.json` exists.
