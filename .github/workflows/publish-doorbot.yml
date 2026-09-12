@@ -1,0 +1,76 @@
+name: Publish Doorbot deliverables
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/publish-doorbot.yml
+      - doorbot/infra/**
+      - doorbot/output/delivery/**
+  workflow_dispatch:
+permissions:
+  contents: read
+  id-token: write
+concurrency:
+  group: doorbot-publication
+  cancel-in-progress: false
+jobs:
+  publish:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+      - uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ vars.AWS_DEPLOY_ROLE_ARN }}
+          role-session-name: gha-doorbot-${{ github.run_id }}
+          aws-region: us-east-1
+          allowed-account-ids: ${{ vars.DEPLOY_AWS_ACCOUNT }}
+      - name: Deploy storage and HTTPS delivery
+        shell: bash
+        run: |
+          set -euo pipefail
+          aws cloudformation deploy --stack-name robots-doorbot-deliverables --template-file doorbot/infra/deliverables.yaml --no-fail-on-empty-changeset --tags Project=robots CostCenter=home-iot Environment=prod ManagedBy=sam DeployedVia=github-actions Owner=jeremy
+          aws cloudformation describe-stacks --stack-name robots-doorbot-deliverables --query 'Stacks[0].Outputs' --output json > /tmp/doorbot-outputs.json
+      - name: Upload and verify final artifacts when present
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [[ ! -f doorbot/output/delivery/manifest.json ]]; then
+            echo 'Infrastructure is ready. No final Doorbot files have been published.' >> "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+          cd doorbot/output/delivery
+          python - <<'PY'
+          import hashlib,json,pathlib
+          manifest=json.loads(pathlib.Path('manifest.json').read_text())
+          assert set(manifest['files']) == {'doorbot-assembly-and-usage.mp4','doorbot-build-guide.pdf'}, manifest['files']
+          for name,sha in manifest['files'].items():
+              assert hashlib.sha256(pathlib.Path(name).read_bytes()).hexdigest()==sha, name
+          print('PASS: delivery manifest hashes match the committed bytes')
+          PY
+          bucket=$(jq -r '.[]|select(.OutputKey=="Bucket")|.OutputValue' /tmp/doorbot-outputs.json)
+          distribution=$(jq -r '.[]|select(.OutputKey=="Distribution")|.OutputValue' /tmp/doorbot-outputs.json)
+          base=$(jq -r '.[]|select(.OutputKey=="BaseUrl")|.OutputValue' /tmp/doorbot-outputs.json)
+          for name in doorbot-assembly-and-usage.mp4 doorbot-build-guide.pdf; do
+            type=application/pdf
+            [[ "$name" != *.mp4 ]] || type=video/mp4
+            sha=$(sha256sum "$name" | cut -d' ' -f1)
+            aws s3 cp "$name" "s3://$bucket/doorbot/revision-a/$name" --content-type "$type" --content-disposition inline --cache-control 'public,max-age=300' --checksum-algorithm SHA256 --metadata "sha256=$sha" --only-show-errors
+          done
+          invalidation=$(aws cloudfront create-invalidation --distribution-id "$distribution" --paths '/doorbot/revision-a/doorbot-assembly-and-usage.mp4' '/doorbot/revision-a/doorbot-build-guide.pdf' --query Invalidation.Id --output text)
+          aws cloudfront wait invalidation-completed --distribution-id "$distribution" --id "$invalidation"
+          for name in doorbot-assembly-and-usage.mp4 doorbot-build-guide.pdf; do
+            curl --fail --silent --show-error --retry 2 "$base/$name" -o "/tmp/$name"
+            cmp "$name" "/tmp/$name"
+            printf '%s\n' "$base/$name" >> "$GITHUB_STEP_SUMMARY"
+            sha256sum "$name" >> "$GITHUB_STEP_SUMMARY"
+          done
+          code=$(curl -sS -H 'Range: bytes=0-1023' -D /tmp/range.headers -o /tmp/range.bin -w '%{http_code}' "$base/doorbot-assembly-and-usage.mp4")
+          test "$code" = 206
+          test "$(wc -c < /tmp/range.bin)" = 1024
+          grep -qi '^content-type: video/mp4' /tmp/range.headers
+          curl --fail --silent --head "$base/doorbot-build-guide.pdf" | grep -qi '^content-type: application/pdf'
+          test "$(curl -sS -o /dev/null -w '%{http_code}' "https://$bucket.s3.us-east-1.amazonaws.com/doorbot/revision-a/doorbot-assembly-and-usage.mp4")" = 403
+          test "$(curl -sS -o /dev/null -w '%{http_code}' "https://$bucket.s3.us-east-1.amazonaws.com/?list-type=2")" = 403
+          echo 'PASS: public downloads match committed bytes; video ranges work; S3 stays private.' >> "$GITHUB_STEP_SUMMARY"
