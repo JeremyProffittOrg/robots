@@ -1,0 +1,96 @@
+{
+  "purchased_line_items": 23,
+  "purchased_pieces": 46,
+  "electronics_usd": 76.6,
+  "hardware_usd": 47.89,
+  "printed_designs": 7,
+  "printed_pieces": 8,
+  "printed_mass_g": 255.9,
+  "printed": [
+    {
+      "part": "base_shell",
+      "quantity": 1,
+      "material": "Bambu Lab PLA Tough+",
+      "x_mm": 50.0,
+      "y_mm": 252.0,
+      "z_mm": 60.0,
+      "solid_mass_g": 147.3,
+      "line_mass_g": 147.3,
+      "layer_h_mm": 0.2,
+      "purpose": "the whole unibody: motor cradle, both gear planes, drum bay, cable chute, exit nose, board pockets, sensor shelf and the jamb flange"
+    },
+    {
+      "part": "base_cover",
+      "quantity": 1,
+      "material": "Bambu Lab PLA Tough+",
+      "x_mm": 48.8,
+      "y_mm": 250.4,
+      "z_mm": 13.0,
+      "solid_mass_g": 32.5,
+      "line_mass_g": 32.5,
+      "layer_h_mm": 0.2,
+      "purpose": "closes the bay, presses the motor into its cradle, carries the display window, both sensor windows and the engraved hand-wave target"
+    },
+    {
+      "part": "motor_pinion",
+      "quantity": 1,
+      "material": "Bambu Lab PLA Tough+",
+      "x_mm": 11.2,
+      "y_mm": 11.2,
+      "z_mm": 10.0,
+      "solid_mass_g": 0.6,
+      "line_mass_g": 0.6,
+      "layer_h_mm": 0.2,
+      "purpose": "12T module 0.8 on the motor's double-D shaft"
+    },
+    {
+      "part": "compound_gear",
+      "quantity": 1,
+      "material": "Bambu Lab PLA Tough+",
+      "x_mm": 40.0,
+      "y_mm": 40.0,
+      "z_mm": 27.2,
+      "solid_mass_g": 16.5,
+      "line_mass_g": 16.5,
+      "layer_h_mm": 0.2,
+      "purpose": "48T module 0.8 and 14T module 1.0 on one print, on a steel dowel"
+    },
+    {
+      "part": "drum_gear",
+      "quantity": 1,
+      "material": "Bambu Lab PLA Tough+",
+      "x_mm": 44.0,
+      "y_mm": 43.9,
+      "z_mm": 27.2,
+      "solid_mass_g": 27.3,
+      "line_mass_g": 27.3,
+      "layer_h_mm": 0.2,
+      "purpose": "42T module 1.0 plus the grooved cable drum on one print"
+    },
+    {
+      "part": "door_anchor",
+      "quantity": 1,
+      "material": "Bambu Lab PLA Tough+",
+      "x_mm": 60.0,
+      "y_mm": 22.0,
+      "z_mm": 25.0,
+      "solid_mass_g": 11.9,
+      "line_mass_g": 11.9,
+      "layer_h_mm": 0.2,
+      "purpose": "screws to the door face and holds the cable eye 25 mm off it"
+    },
+    {
+      "part": "magnet_pod",
+      "quantity": 2,
+      "material": "Bambu Lab PLA Tough+",
+      "x_mm": 58.0,
+      "y_mm": 20.0,
+      "z_mm": 9.0,
+      "solid_mass_g": 9.9,
+      "line_mass_g": 19.8,
+      "layer_h_mm": 0.2,
+      "purpose": "one design, printed twice: latch edge of the door and the jamb facing it, magnets loaded to attract"
+    }
+  ],
+  "total_usd": 124.49
+}

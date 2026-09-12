@@ -43,8 +43,8 @@
 // these still match that file, so the firmware cannot drift away from the mechanism.
 #define GEAR_RATIO 12.0f        // (48/12) * (42/14)
 #define DRUM_EFF_R_MM 3.1f      // groove bottom 2.5 plus half the 1.2 mm cable
-#define CABLE_TRAVEL_MM 105.9f  // fully open to shut, from check_mechanism.py
-#define ARM_MIN_MM 41.6f
+#define CABLE_TRAVEL_MM 101.3f  // fully open to shut, from check_mechanism.py
+#define ARM_MIN_MM 41.7f
 #define DOOR_OPEN_DEG 90.0f
 
 // Millimetres of cable per encoder edge: one motor turn is 2 * pi * r / ratio of cable.

@@ -1,0 +1,14 @@
+{
+  "drawings": [
+    "diagram_curves.png",
+    "diagram_gear_train.png",
+    "diagram_geometry.png",
+    "diagram_print_plate.png",
+    "diagram_sensors.png",
+    "diagram_states.png",
+    "diagram_wiring.png",
+    "template_door.png",
+    "template_jamb.png",
+    "template_pod.png"
+  ]
+}

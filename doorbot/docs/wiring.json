@@ -1,0 +1,117 @@
+{
+  "all_pass": true,
+  "pins": [
+    {
+      "signal": "I2C SDA",
+      "gpio": 21,
+      "direction": "bidir",
+      "note": "LilyGO's own I2C pin; both VL53 boards and the LIS3DH share it"
+    },
+    {
+      "signal": "I2C SCL",
+      "gpio": 22,
+      "direction": "out",
+      "note": "LilyGO's own I2C pin"
+    },
+    {
+      "signal": "MOTOR IN1",
+      "gpio": 32,
+      "direction": "out",
+      "note": "LEDC PWM channel 0, 20 kHz"
+    },
+    {
+      "signal": "MOTOR IN2",
+      "gpio": 33,
+      "direction": "out",
+      "note": "LEDC PWM channel 1, 20 kHz"
+    },
+    {
+      "signal": "MOTOR nSLEEP",
+      "gpio": 27,
+      "direction": "out",
+      "note": "add a 100k pulldown so the driver sleeps through reset"
+    },
+    {
+      "signal": "MOTOR nFAULT",
+      "gpio": 36,
+      "direction": "in",
+      "note": "input-only pin; the driver's open-drain output needs a pull-up"
+    },
+    {
+      "signal": "TOF WAVE XSHUT",
+      "gpio": 25,
+      "direction": "out",
+      "note": "held low at boot so both sensors can be addressed in turn"
+    },
+    {
+      "signal": "TOF GUARD XSHUT",
+      "gpio": 26,
+      "direction": "out",
+      "note": "as above"
+    },
+    {
+      "signal": "ACCEL INT1",
+      "gpio": 39,
+      "direction": "in",
+      "note": "input-only pin; the LIS3DH drives it push-pull"
+    },
+    {
+      "signal": "ENCODER",
+      "gpio": 37,
+      "direction": "in",
+      "note": "input-only pin; the slot sensor drives it push-pull"
+    },
+    {
+      "signal": "BUZZER",
+      "gpio": 17,
+      "direction": "out",
+      "note": "through a transistor for a magnetic buzzer; direct for a piezo"
+    },
+    {
+      "signal": "BUTTON (close now)",
+      "gpio": 35,
+      "direction": "in",
+      "note": "on-board top button, active low with a 100k pull-up"
+    }
+  ],
+  "nets": [
+    {
+      "net": "USB-C 5 V",
+      "where": "T-Display USB connector",
+      "note": "the only power input. The motor's 5 V is taken from the same USB source AT THE DRIVER, not through the T-Display: the board's only VBUS path to its 5V header pin is a single 1 A 1N5819, unfused, and it also feeds the 3.3 V regulator and the USB-serial bridge, so a 1 A motor step on that node browns out the ESP32"
+    },
+    {
+      "net": "GND star",
+      "where": "one point at the driver board",
+      "note": "motor return and logic return meet once, at the driver. The T-Display header GND carries logic current only"
+    },
+    {
+      "net": "VM decoupling",
+      "where": "100 uF electrolytic + 0.1 uF ceramic across the driver's VM and GND",
+      "note": "TI's minimum is 10 uF on VM; a 1.0 A chopped stall on a shared USB rail earns more"
+    },
+    {
+      "net": "Motor",
+      "where": "DRV8833 AOUT1/AOUT2 to the TT motor",
+      "note": "polarity only sets which way the drum winds. Swap the two leads if the first close pays cable out instead of taking it in"
+    },
+    {
+      "net": "I2C chain",
+      "where": "T-Display 3V3/GND/21/22 to VL53L4CD, then VL53L1X, then LIS3DH",
+      "note": "STEMMA QT cables daisy-chain all three; the two VL53 boards also need their XSHUT lines run individually to GPIO 25 and 26 or they will both sit on 0x29 and fight"
+    }
+  ],
+  "problems": [],
+  "spare_gpio": [
+    2,
+    12,
+    13,
+    15,
+    38
+  ],
+  "current_budget_a": {
+    "motor_chop": 1.0,
+    "esp32_peak": 0.5,
+    "sensors": 0.05
+  }
+}

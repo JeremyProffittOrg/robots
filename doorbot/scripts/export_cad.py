@@ -59,6 +59,25 @@ def export_part(name):
                 str(SCAD)], 600, f"stl/{name}")
 
 
+def assert_not_blank(path, min_fraction=0.004):
+    """Fail on a blank render.
+
+    OpenSCAD 2021.01 ignores a top-level assert(), so a view built from an unknown part name
+    exits 0 and writes an empty image. That happened once here and the empty PNG went
+    unnoticed into the drawings folder, so it is now a hard check.
+    """
+    from PIL import Image, ImageChops
+    with Image.open(path) as im:
+        im = im.convert("RGB")
+        bg = Image.new("RGB", im.size, im.getpixel((2, 2)))
+        mask = ImageChops.difference(im, bg).convert("L").point(lambda v: 255 if v > 12 else 0)
+        ink = sum(1 for v in mask.getdata() if v) / (im.width * im.height)
+    if ink < min_fraction:
+        raise RuntimeError(f"{path.name} is blank ({ink * 100:.3f}% of pixels drawn) - "
+                           f"check the part name in cad/doorbot.scad")
+    return ink
+
+
 def render(out, part, rot, extra, size, timeout=180):
     args = [EXE, "-o", str(out), f"--imgsize={size}", "--colorscheme=Tomorrow",
             "--projection=o", "--viewall", "--autocenter", f"--camera=0,0,0,{rot},0",
@@ -66,7 +85,9 @@ def render(out, part, rot, extra, size, timeout=180):
     for e in extra:
         args += ["-D", e]
     args.append(str(SCAD))
-    return run(args, timeout, str(out.name))
+    label = run(args, timeout, str(out.name))
+    assert_not_blank(out)
+    return label
 
 
 def export_view(name, spec):

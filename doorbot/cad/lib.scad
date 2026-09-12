@@ -75,14 +75,33 @@ function gear_outline(m, n) = let (
           let (a = k * step + half + (step - 2 * half) * j / 5)
           [rr * cos(a), rr * sin(a)] ] ];
 
-module spur_gear(m, n, face, bore = 0, hub_d = 0, hub_h = 0) {
-    difference() {
-        union() {
-            linear_extrude(height = face) polygon(gear_outline(m, n));
-            if (hub_d > 0) cyl(hub_d, hub_h > 0 ? hub_h : face);
-        }
-        if (bore > 0) through_hole(bore, max(face, hub_h) + 1);
+// A circle as a point list, wound backwards so polygon() treats it as a hole.
+function hole_path(d, seg = 64) =
+    [for (i = [seg - 1 : -1 : 0]) [d / 2 * cos(i * 360 / seg), d / 2 * sin(i * 360 / seg)]];
+
+// The gear is ONE polygon with the bore as a hole path, not a solid minus a cylinder.
+// That matters for more than tidiness: every difference() in a part makes OpenSCAD's preview
+// renderer z-fight across the teeth, which made the gear train unreadable in every render
+// and every video frame.
+module spur_gear(m, n, face, bore = 0) {
+    outer = gear_outline(m, n);
+    if (bore > 0) {
+        hole = hole_path(bore);
+        linear_extrude(height = face)
+            polygon(concat(outer, hole),
+                    [[for (i = [0 : len(outer) - 1]) i],
+                     [for (i = [0 : len(hole) - 1]) len(outer) + i]]);
+    } else {
+        linear_extrude(height = face) polygon(outer);
     }
+}
+
+// A round tube, again as one polygon with a hole rather than a subtraction.
+module ring(od, id, h) {
+    outer = hole_path(od, 64);
+    linear_extrude(height = h)
+        polygon(concat([for (i = [len(outer) - 1 : -1 : 0]) outer[i]], hole_path(id, 64)),
+                [[for (i = [0 : 63]) i], [for (i = [0 : 63]) 64 + i]]);
 }
 
 // ---------------------------------------------------------------- TT motor envelope

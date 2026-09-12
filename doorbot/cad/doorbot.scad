@@ -15,6 +15,9 @@ use <mounts.scad>
 part = "assembly";
 explode = 0;            // 0 = assembled, 1 = fully exploded
 door_deg = 0;           // door angle for the installed view
+spin = 0;               // motor pinion rotation in degrees; the train follows it
+show_hand = 0;          // 1 = a hand at the wave target, 2 = an obstacle in the doorway
+cable_mm = 0;           // paid-out cable, only used to label the animation
 
 // ---------------------------------------------------------------- placement in the unit frame
 module at_drum(z) { translate([drum_axis[0], drum_axis[1], z]) children(); }
@@ -41,9 +44,14 @@ module assembly_core(e = 0) {
     color("#e2e8f0") base_shell();
     translate([0, 0, e * 190]) color("#cbd5e1") base_cover();
     translate([0, 0, e * 60]) motor_stand_in();
-    translate([0, 0, e * 120]) color("#b45309") at_motor(plane1_z) motor_pinion();
-    translate([0, 0, e * 145]) color("#0369a1") at_compound(plane1_z) compound_gear();
-    translate([0, 0, e * 95]) color("#7c3aed") at_drum(drum_z) drum_gear();
+    // The train turns together: 12T on 48T is 4:1, then 14T on 42T is another 3:1.
+    translate([0, 0, e * 120]) color("#b45309") at_motor(plane1_z) rotate([0, 0, spin])
+        motor_pinion();
+    translate([0, 0, e * 145]) color("#0369a1") at_compound(plane1_z)
+        rotate([0, 0, -spin * stage1_pinion_t / stage1_gear_t]) compound_gear();
+    translate([0, 0, e * 95]) color("#7c3aed") at_drum(drum_z)
+        rotate([0, 0, spin * stage1_pinion_t / stage1_gear_t
+                     * stage2_pinion_t / stage2_gear_t]) drum_gear();
     translate([0, 0, e * 165]) { dowel(drum_axis); dowel(compound_axis); }
     translate([0, 0, e * 40]) {
         board_stand_in(tdisp_pos, tdisp_w, tdisp_l, tdisp_t, "#111827");
@@ -97,6 +105,24 @@ module view_installed() {
     color("#b45309") translate([ax, ay, 0]) cyl(10, 10);
     // the hinge axis itself, for orientation
     color("#1f2937") cyl(6, 14);
+    // a hand at the wave target, or something standing in the doorway
+    if (show_hand == 1)
+        color("#f59e0b") translate([exit_x + 120, exit_y - 10, 0]) cyl(70, 18);
+    if (show_hand == 2)
+        color("#b91c1c") translate([500, 120, 0]) cyl(150, 22);
+}
+
+// Just the moving drive: both compound prints, the pinion and the drum, no shell in the way.
+module view_drive_train() {
+    color("#b45309") at_motor(plane1_z) rotate([0, 0, spin]) motor_pinion();
+    color("#0369a1") at_compound(plane1_z)
+        rotate([0, 0, -spin * stage1_pinion_t / stage1_gear_t]) compound_gear();
+    color("#7c3aed") at_drum(drum_z)
+        rotate([0, 0, spin * stage1_pinion_t / stage1_gear_t
+                     * stage2_pinion_t / stage2_gear_t]) drum_gear();
+    dowel(drum_axis);
+    dowel(compound_axis);
+    motor_stand_in();
 }
 
 // ---------------------------------------------------------------- dispatch
@@ -111,4 +137,5 @@ else if (part == "assembly") view_assembly();
 else if (part == "exploded") view_exploded();
 else if (part == "section") view_section();
 else if (part == "installed") view_installed();
+else if (part == "drive_train") view_drive_train();
 else assert(false, str("unknown part: ", part));

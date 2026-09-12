@@ -1,0 +1,79 @@
+{
+  "revision": "A",
+  "all_pass": true,
+  "physical_test": false,
+  "analysis_only": true,
+  "steps": [
+    {
+      "step": "mechanism analysis",
+      "pass": true,
+      "seconds": 0.2,
+      "output_tail": "hat without making the whole shell that deep\nPASS  nose_bending: the nose root sees 3.63 N.m of bending from 151 N at its tip: 3.02 MPa against the 5.0 MPa across-layer allowable, which is the right allowable because the shell prints with its open face up and the nose therefore grows along the layer axis\nPASS  guide_loss_accounted: the cable turns 50 deg through the exit chute, so the door only receives 1/1.140 of the drum tension: 133 N delivered from 151 N wound. Every printed part above is checked at the wound figure\nPASS  anchor_withdrawal: the 25 mm standoff turns 151 N of tension into 3.78 N.m on the anchor base; over a 40 mm screw span that is 95 N of withdrawal per screw, against 400 N allowed for a #8 screw 25 mm into a solid-core stile\nPASS  current_budget: motor current is chopped in hardware at 1.0 A by the DRV8833 breakout's 0.2 ohm sense resistors, taken from the USB 5 V rail at the driver, never through the T-Display board\n\nratio 12.00:1   arm 41.7 mm   travel 101.3 mm (5.20 turns)   max tension 151 N\nclose 21.0 s   last 10 deg 1.64 s   peak energy 0.600 J   worst margin 2.98x at 90 deg\nPASS: mechanism analysis. This is analysis of the design, not a test of a build."
+    },
+    {
+      "step": "CAD analysis",
+      "pass": true,
+      "seconds": 1.6,
+      "output_tail": "check_mechanism.py puts the cable exit (60 mm from the hinge axis)\nPASS  stage1_centre_distance: stage1: 12T on 48T at module 0.8 needs a 24.00 mm centre distance; the axes in params.scad are 24.00 mm apart\nPASS  stage1_tip_clearance: stage1: 0.20 mm between the wheel's tip circle and the pinion's root circle, so the teeth engage without bottoming\nPASS  stage2_centre_distance: stage2: 14T on 42T at module 1.0 needs a 28.00 mm centre distance; the axes in params.scad are 28.00 mm apart\nPASS  stage2_tip_clearance: stage2: 0.25 mm between the wheel's tip circle and the pinion's root circle, so the teeth engage without bottoming\nPASS  no_internal_collisions: every board, the motor, both gear planes, the drum, the encoder wheel, the sensor shelf and the nose root occupy disjoint space\nPASS  wheels_clear_cavity: both wheels turn inside the plain cavity with clearance, so the shell needs no local sweep pockets - cutting those was what removed the floor under the dowel bosses\nPASS  sensor_separation: the hand-wave and doorway windows are 21 mm apart with 9 mm apertures, so neither cone clips the other's bezel\n\n7 designs / 8 pieces, 255.9 g of PLA Tough+ at 100% infill\nPASS: CAD analysis."
+    },
+    {
+      "step": "wiring and pin map",
+      "pass": true,
+      "seconds": 0.1,
+      "output_tail": "connector\n    the only power input. The motor's 5 V is taken from the same USB source AT THE DRIVER, not through the T-Display: the board's only VBUS path to its 5V header pin is a single 1 A 1N5819, unfused, and it also feeds the 3.3 V regulator and the USB-serial bridge, so a 1 A motor step on that node browns out the ESP32\nGND star: one point at the driver board\n    motor return and logic return meet once, at the driver. The T-Display header GND carries logic current only\nVM decoupling: 100 uF electrolytic + 0.1 uF ceramic across the driver's VM and GND\n    TI's minimum is 10 uF on VM; a 1.0 A chopped stall on a shared USB rail earns more\nMotor: DRV8833 AOUT1/AOUT2 to the TT motor\n    polarity only sets which way the drum winds. Swap the two leads if the first close pays cable out instead of taking it in\nI2C chain: T-Display 3V3/GND/21/22 to VL53L4CD, then VL53L1X, then LIS3DH\n    STEMMA QT cables daisy-chain all three; the two VL53 boards also need their XSHUT lines run individually to GPIO 25 and 26 or they will both sit on 0x29 and fight\n\nPASS: 12 signals, no collision with the display, flash, strapping or input-only pins, and the firmware's config.h agrees with this table."
+    },
+    {
+      "step": "bill of materials",
+      "pass": true,
+      "seconds": 1.4,
+      "output_tail": "7 printed designs / 8 pieces, 255.9 g of PLA Tough+\n23 purchased line items / 46 purchased pieces, $76.60 electronics + $47.89 hardware = $124.49"
+    },
+    {
+      "step": "firmware constants match cad/params.scad",
+      "pass": true,
+      "output_tail": ""
+    },
+    {
+      "step": "firmware behaviour tests",
+      "pass": true,
+      "seconds": 4.0,
+      "output_tail": "est_single_sample_does_not_command\t[PASSED]\ntest\\test_controller.cpp:248: test_double_kick_commands_close\t[PASSED]\ntest\\test_controller.cpp:249: test_slow_second_kick_is_ignored\t[PASSED]\ntest\\test_controller.cpp:250: test_obstacle_blocks_command\t[PASSED]\ntest\\test_controller.cpp:251: test_retry_every_19s_then_alert\t[PASSED]\ntest\\test_controller.cpp:252: test_retry_closes_when_cleared\t[PASSED]\ntest\\test_controller.cpp:253: test_first_close_homes_and_shuts\t[PASSED]\ntest\\test_controller.cpp:254: test_early_stall_is_treated_as_blocked\t[PASSED]\ntest\\test_controller.cpp:255: test_shut_pays_out_slack\t[PASSED]\ntest\\test_controller.cpp:256: test_manual_open_is_detected\t[PASSED]\ntest\\test_controller.cpp:257: test_auto_close_after_clear_delay\t[PASSED]\ntest\\test_controller.cpp:258: test_driver_fault_stops_everything\t[PASSED]\n--------------------- native:* [PASSED] Took 1.94 seconds ---------------------\n\n=================================== SUMMARY ===================================\nEnvironment    Test    Status    Duration\n-------------  ------  --------  ------------\nnative         *       PASSED    00:00:01.940\n================= 13 test cases: 13 succeeded in 00:00:01.940 ================="
+    },
+    {
+      "step": "firmware target build",
+      "pass": true,
+      "seconds": 14.4,
+      "output_tail": "m-usb-ocd, olimex-arm-usb-ocd-h, olimex-arm-usb-tiny-h, olimex-jtag-tiny, tumpa)\nPACKAGES: \n - framework-arduinoespressif32 @ 3.20014.231204 (2.0.14) \n - tool-esptoolpy @ 1.40501.0 (4.5.1) \n - toolchain-xtensa-esp32 @ 8.4.0+2021r2-patch5\nLDF: Library Dependency Finder -> https://bit.ly/configure-pio-ldf\nLDF Modes: Finder ~ chain, Compatibility ~ soft\nFound 39 compatible libraries\nScanning dependencies...\nDependency Graph\n|-- TFT_eSPI @ 2.5.43\n|-- Adafruit VL53L1X @ 3.1.2\n|-- Adafruit LIS3DH @ 1.3.0\n|-- Adafruit Unified Sensor @ 1.1.15\n|-- Adafruit BusIO @ 1.16.1\n|-- Wire @ 2.0.0\nBuilding in release mode\nRetrieving maximum program size .pio\\build\\tdisplay\\firmware.elf\nChecking size .pio\\build\\tdisplay\\firmware.elf\nAdvanced Memory Usage is available via \"PlatformIO Home > Project Inspect\"\nRAM:   [=         ]   7.0% (used 22956 bytes from 327680 bytes)\nFlash: [===       ]  25.4% (used 333225 bytes from 1310720 bytes)\n========================= [SUCCESS] Took 13.60 seconds =========================\n\nEnvironment    Status    Duration\n-------------  --------  ------------\ntdisplay       SUCCESS   00:00:13.602\n========================= 1 succeeded in 00:00:13.602 ========================="
+    }
+  ],
+  "source_sha256": {
+    "cad/base.scad": "a46a0365a99ca732fb77e7444f8608e4a2d97f126e06eafe352418807976ace1",
+    "cad/doorbot.scad": "f57e04163b509056cc5a625c9294e85bb9981d177be04f6045fd1c427e2561a8",
+    "cad/drive.scad": "aa998a3927f45479d020179518211ef891b879d59c4edf8e76ccd3ae26ca50eb",
+    "cad/lib.scad": "3394f7c4fdb40403bd752971d7c757a6822bfa1fb54e064d4863214ec0fefdbb",
+    "cad/mounts.scad": "14d66d64098d2045957c98f7e7b4801fc1c7578b747753c352c33fbd84df4d4a",
+    "cad/params.scad": "dd982f084e289ea39c3da35c223ce22143d5d5236d79b862c1f00f7537b16208",
+    "scripts/bom.py": "12c6c9e452c29e9b90f1a91253c4a416056646895b5d9243573d5b54ba5726e0",
+    "scripts/build_guide.py": "5225c8dfe64ae2ea4d1384d32f60343851edc6fec285c27ff9ca8fd71376817b",
+    "scripts/check_cad.py": "a476257fd5992c32447694c0b7d10623ad6f3e1d7b64eb907d932e8ae9d97c45",
+    "scripts/check_mechanism.py": "f6dfb8b128d8ceac987784f040c3dd62dd087c5ec8040ddbe1a79f447394bad1",
+    "scripts/draw_diagrams.py": "eda194e0bc04ed45f0f600350888a4278031abcb9c18f8225cd5fc9165e60aec",
+    "scripts/electronics.py": "c78f90c3f4f03cf32815aaa31a25a7cd8146bee0752d1d633c9fae9aa97f92c7",
+    "scripts/export_cad.py": "f530d3c43c6b795afc6101594e88f18a509e0d12dd5df9ebd4122a64846050d6",
+    "scripts/render_video.py": "674833c5cea2006f78bc85428ca4a7f56c4e49d64630cf08c5d2767f0deb4ceb",
+    "scripts/scad_params.py": "db30151777043cf386d324ee79f4cf391e666b21a9678efe9e32541837388367",
+    "scripts/verify.py": "78e01b10edc20a2c47ebb5738cf72bcf8440d0861a8987d3b5716d174558dfea",
+    "firmware/include/config.h": "809fbe7529d340d654d2b61a38d8559c9b1705cd34491e2fc126e9f593203bcc",
+    "firmware/include/controller.h": "fd6cdfb617d50fdcd7da72deaf02f2ca3a744a4ddc1a7f13911e01a789fe666e",
+    "firmware/src/main.cpp": "17982dc882f97416770ce82eae88cb618d2cd3956fe702bd164d918c076cfd19",
+    "firmware/test/test_controller.cpp": "b6597e9db1aec8ae958e006e86ffbd6cbc1b45eab3462d6ec50a64a273667007",
+    "firmware/platformio.ini": "b69fab7e708d51ce0e22e77d451d7a2212f509b25ba118cf9b5031dcdf364a28",
+    "stl/base_cover.stl": "5a31ffb9370458e6a8fc3b9d922dc5330363b861f066c58f3e3c1e2ca7ea63c8",
+    "stl/base_shell.stl": "f23b8cf6faf6963e11bd1816630968cfc4bb7f90ba7e4fbaadd2961a7e8f2aee",
+    "stl/compound_gear.stl": "c198d8f2c86d13eebc59c9caffd04d6c08d283f325a907e413e9d50ab25ea53e",
+    "stl/door_anchor.stl": "41d16c15cbbe86c6ec20c34c188c46a84bce4dcd59f77d08ab5be85e745a147e",
+    "stl/drum_gear.stl": "b65e3d1cb9e455fcc375461361c75dcfad29b6bc8a1af9b02d22f83612ead78f",
+    "stl/magnet_pod.stl": "57a21ee77220e4144c466404a3c0c83c58b4aca69eb8307e7ade554f0983b27a",
+    "stl/motor_pinion.stl": "61f213f33e8c4c94ee7bfd0e95a83898fa7de24eb5dcbb6678935e16dd8db1dc"
+  }
+}

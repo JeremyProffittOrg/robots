@@ -1,0 +1,10 @@
+vendor,sku,item,quantity,unit_usd,line_usd,why,source
+K&J Magnetics,D84,"Neodymium disc magnet, 12.7 x 6.35 mm, N42",4,2.03,8.12,"two facing pairs at the latch edge: 70 N of pull at the as-built 2 mm gap, which is what shuts the last few millimetres and holds the leaf closed",https://www.kjmagnetics.com/proddetail.asp?prod=D84
+generic,dyneema-150,"Braided Dyneema line, 1.2 mm, 150 lb test, 2 m",1,8.00,8.00,"the cable; 680 N rating against a hardware-limited 151 N, a factor of 4.5",
+generic,dowel-4x35,"Steel dowel pin, 4 x 35 mm",2,0.60,1.20,"the two gear shafts, so no printed part is a bearing surface under load",
+generic,screw-8x32,"Wood screw, #8 x 32 mm, countersunk",3,0.15,0.45,holds the shell to the hinge-side jamb reveal,
+generic,screw-8x25,"Wood screw, #8 x 25 mm, countersunk",3,0.15,0.45,holds the cable anchor to the door face; 95 N of withdrawal per screw at full tension,
+generic,screw-6x20,"Wood screw, #6 x 20 mm, countersunk",4,0.12,0.48,two per magnet pod,
+generic,m3x10,M3 x 10 mm self-tapping screw,8,0.10,0.80,"four for the cover, two per time-of-flight board into their printed bosses",
+generic,m3x8,M3 x 8 mm self-tapping screw,4,0.10,0.40,the T-Display and the driver board into their printed bosses,
+Bambu Lab,pla-tough-plus,"PLA Tough+ filament, 1 kg spool",1,27.99,27.99,"every structural part; 245 g of it at 100% infill, so one spool covers several builds",https://bambulab.com/en/filament/pla-tough

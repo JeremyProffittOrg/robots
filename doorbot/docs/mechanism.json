@@ -5,18 +5,18 @@
   "summary": {
     "ratio": 12.0,
     "efficiency": 0.81,
-    "cable_travel_mm": 102.2587,
-    "turns": 5.25,
+    "cable_travel_mm": 101.3284,
+    "turns": 5.2022,
     "max_tension_n": 151.239,
-    "close_time_s": 21.1191,
-    "latch_period_s": 1.6766,
-    "peak_energy_j": 0.5942,
-    "worst_margin": 2.9771,
+    "close_time_s": 20.9567,
+    "latch_period_s": 1.6398,
+    "peak_energy_j": 0.5998,
+    "worst_margin": 2.982,
     "worst_margin_deg": 90.0,
-    "arm_min_mm": 42.9003,
-    "arm_closed_mm": 42.9003,
-    "arm_open_mm": 53.5002,
-    "psi_closed_deg": 29.5825,
+    "arm_min_mm": 41.6648,
+    "arm_closed_mm": 41.6648,
+    "arm_open_mm": 53.5886,
+    "psi_closed_deg": 28.9264,
     "magnet_hold_n": 70.0,
     "leaf_inertia_kgm2": 11.1386
   },
@@ -24,17 +24,17 @@
     {
       "check": "offset_removes_dead_centre",
       "pass": true,
-      "detail": "included angle at the hinge axis is 29.6 deg when shut and 119.6 deg wide open. It never reaches 0 or 180 deg, which are the two collinear dead centres where no tension makes any torque"
+      "detail": "included angle at the hinge axis is 28.9 deg when shut and 118.9 deg wide open. It never reaches 0 or 180 deg, which are the two collinear dead centres where no tension makes any torque"
     },
     {
       "check": "arm_never_collapses",
       "pass": true,
-      "detail": "worst-case moment arm over the whole swing is 42.9 mm (peak 70.7 mm), after subtracting the 2 mm mounting tolerance. A straight chord with the exit on the closed-door plane would instead go to 0 mm at 0 deg"
+      "detail": "worst-case moment arm over the whole swing is 41.7 mm (peak 70.1 mm), after subtracting the 2 mm mounting tolerance. A straight chord with the exit on the closed-door plane would instead go to 0 mm at 0 deg"
     },
     {
       "check": "drum_holds_travel",
       "pass": true,
-      "detail": "102.3 mm of travel = 5.25 turns at an effective 3.1 mm winding radius needs 8.1 mm of grooved drum; drum_width is 10 mm"
+      "detail": "101.3 mm of travel = 5.20 turns at an effective 3.1 mm winding radius needs 8.1 mm of grooved drum; drum_width is 10 mm"
     },
     {
       "check": "cable_strength",
@@ -54,17 +54,17 @@
     {
       "check": "close_time_sane",
       "pass": true,
-      "detail": "full close from 90 deg takes 21.1 s at the quasi-static operating point (the TT motor's 65.4 mN.m and 207 RPM at 5 V cap mechanical power near 0.35 W, so the 5 s sweep of a hydraulic closer is not available at any gear ratio)"
+      "detail": "full close from 90 deg takes 21.0 s at the quasi-static operating point (the TT motor's 65.4 mN.m and 207 RPM at 5 V cap mechanical power near 0.35 W, so the 5 s sweep of a hydraulic closer is not available at any gear ratio)"
     },
     {
       "check": "energy_cap",
       "pass": true,
-      "detail": "the leaf arrives carrying 0.59 J - 0.095 J of cable-driven kinetic energy plus 0.50 J of magnet work over the last 15 mm - against the A156.19 1.69 J cap (leaf inertia 11.14 kg.m2)"
+      "detail": "the leaf arrives carrying 0.60 J - 0.100 J of cable-driven kinetic energy plus 0.50 J of magnet work over the last 15 mm - against the A156.19 1.69 J cap (leaf inertia 11.14 kg.m2)"
     },
     {
       "check": "latch_period_reported",
       "pass": true,
-      "detail": "the last 10 deg takes 1.68 s under cable drive alone; A156.19's 1.5 s latch period is written for a sprung hydraulic closer with a latch bolt to retract. This design has no latch bolt: the magnets take over at about 1 deg and snap the leaf shut, so the energy check above is the meaningful limit and this figure is reported, not asserted"
+      "detail": "the last 10 deg takes 1.64 s under cable drive alone; A156.19's 1.5 s latch period is written for a sprung hydraulic closer with a latch bolt to retract. This design has no latch bolt: the magnets take over at about 1 deg and snap the leaf shut, so the energy check above is the meaningful limit and this figure is reported, not asserted"
     },
     {
       "check": "magnet_holds_closed",
@@ -109,7 +109,7 @@
     {
       "check": "cable_stays_push_side",
       "pass": true,
-      "detail": "both cable ends sit clear of the leaf's push face - the anchor eye 25 mm off the face, the exit 41 mm off the closed plane - so the straight run between them stays on the push side at every angle and can never foul the leaf or wrap the hinge"
+      "detail": "both cable ends sit clear of the leaf's push face - the anchor eye 25 mm off the face, the exit 40 mm off the closed plane - so the straight run between them stays on the push side at every angle and can never foul the leaf or wrap the hinge"
     },
     {
       "check": "unit_within_rebate",
@@ -119,12 +119,12 @@
     {
       "check": "exit_reachable_on_nose",
       "pass": true,
-      "detail": "the exit at (60, 41) mm sits in the integral nose, a 22 x 22 mm fin that carries the chute 26 mm past the cover to x = 62 mm. The exit has to reach out along the door to keep the moment arm up; the nose is the cheapest way to do that without making the whole shell that deep"
+      "detail": "the exit at (60, 40) mm sits in the integral nose, a 20 x 18 mm fin that carries the chute 24 mm past the cover to x = 60 mm. The exit has to reach out along the door to keep the moment arm up; the nose is the cheapest way to do that without making the whole shell that deep"
     },
     {
       "check": "nose_bending",
       "pass": true,
-      "detail": "the nose root sees 3.93 N.m of bending from 151 N at its tip: 2.22 MPa against the 5.0 MPa across-layer allowable, which is the right allowable because the shell prints with its open face up and the nose therefore grows along the layer axis"
+      "detail": "the nose root sees 3.63 N.m of bending from 151 N at its tip: 3.02 MPa against the 5.0 MPa across-layer allowable, which is the right allowable because the shell prints with its open face up and the nose therefore grows along the layer axis"
     },
     {
       "check": "guide_loss_accounted",
@@ -147,700 +147,700 @@
       "deg": 0.0,
       "resist_nm": 0.82,
       "magnet_assist_nm": 62.93,
-      "available_nm": 5.692,
+      "available_nm": 5.528,
       "margin": null,
-      "deg_per_s": 7.47,
+      "deg_per_s": 7.69,
       "motor_a": 0.16
     },
     {
       "deg": 1.0,
       "resist_nm": 0.847,
       "magnet_assist_nm": 2.563,
-      "available_nm": 5.854,
+      "available_nm": 5.691,
       "margin": null,
-      "deg_per_s": 7.26,
+      "deg_per_s": 7.47,
       "motor_a": 0.16
     },
     {
       "deg": 2.0,
       "resist_nm": 0.875,
       "magnet_assist_nm": 0.111,
-      "available_nm": 6.013,
-      "margin": 7.88,
-      "deg_per_s": 6.41,
-      "motor_a": 0.26
+      "available_nm": 5.851,
+      "margin": 7.66,
+      "deg_per_s": 6.57,
+      "motor_a": 0.27
     },
     {
       "deg": 3.0,
       "resist_nm": 0.902,
       "magnet_assist_nm": 0.005,
-      "available_nm": 6.168,
-      "margin": 6.88,
-      "deg_per_s": 6.15,
+      "available_nm": 6.007,
+      "margin": 6.7,
+      "deg_per_s": 6.3,
       "motor_a": 0.28
     },
     {
       "deg": 4.0,
       "resist_nm": 0.929,
       "magnet_assist_nm": 0.0,
-      "available_nm": 6.319,
-      "margin": 6.8,
-      "deg_per_s": 6.0,
+      "available_nm": 6.159,
+      "margin": 6.63,
+      "deg_per_s": 6.13,
       "motor_a": 0.28
     },
     {
       "deg": 5.0,
       "resist_nm": 0.956,
       "magnet_assist_nm": 0.0,
-      "available_nm": 6.467,
-      "margin": 6.76,
-      "deg_per_s": 5.86,
+      "available_nm": 6.309,
+      "margin": 6.6,
+      "deg_per_s": 5.99,
       "motor_a": 0.28
     },
     {
       "deg": 6.0,
       "resist_nm": 0.984,
       "magnet_assist_nm": 0.0,
-      "available_nm": 6.611,
-      "margin": 6.72,
-      "deg_per_s": 5.72,
-      "motor_a": 0.28
+      "available_nm": 6.454,
+      "margin": 6.56,
+      "deg_per_s": 5.85,
+      "motor_a": 0.29
     },
     {
       "deg": 7.0,
       "resist_nm": 1.011,
       "magnet_assist_nm": 0.0,
-      "available_nm": 6.752,
-      "margin": 6.68,
-      "deg_per_s": 5.6,
-      "motor_a": 0.28
+      "available_nm": 6.596,
+      "margin": 6.53,
+      "deg_per_s": 5.72,
+      "motor_a": 0.29
     },
     {
       "deg": 8.0,
       "resist_nm": 1.038,
       "magnet_assist_nm": 0.0,
-      "available_nm": 6.889,
-      "margin": 6.64,
-      "deg_per_s": 5.49,
-      "motor_a": 0.28
+      "available_nm": 6.734,
+      "margin": 6.49,
+      "deg_per_s": 5.59,
+      "motor_a": 0.29
     },
     {
       "deg": 9.0,
       "resist_nm": 1.065,
       "magnet_assist_nm": 0.0,
-      "available_nm": 7.022,
-      "margin": 6.6,
-      "deg_per_s": 5.38,
-      "motor_a": 0.28
+      "available_nm": 6.869,
+      "margin": 6.45,
+      "deg_per_s": 5.48,
+      "motor_a": 0.29
     },
     {
       "deg": 10.0,
       "resist_nm": 1.092,
       "magnet_assist_nm": 0.0,
-      "available_nm": 7.152,
-      "margin": 6.55,
-      "deg_per_s": 5.27,
+      "available_nm": 7.0,
+      "margin": 6.41,
+      "deg_per_s": 5.37,
       "motor_a": 0.29
     },
     {
       "deg": 11.0,
       "resist_nm": 1.118,
       "magnet_assist_nm": 0.0,
-      "available_nm": 7.277,
-      "margin": 6.51,
-      "deg_per_s": 5.18,
+      "available_nm": 7.127,
+      "margin": 6.37,
+      "deg_per_s": 5.27,
       "motor_a": 0.29
     },
     {
       "deg": 12.0,
       "resist_nm": 1.145,
       "magnet_assist_nm": 0.0,
-      "available_nm": 7.399,
-      "margin": 6.46,
-      "deg_per_s": 5.09,
+      "available_nm": 7.251,
+      "margin": 6.33,
+      "deg_per_s": 5.18,
       "motor_a": 0.29
     },
     {
       "deg": 13.0,
       "resist_nm": 1.172,
       "magnet_assist_nm": 0.0,
-      "available_nm": 7.517,
-      "margin": 6.41,
-      "deg_per_s": 5.0,
+      "available_nm": 7.371,
+      "margin": 6.29,
+      "deg_per_s": 5.09,
       "motor_a": 0.29
     },
     {
       "deg": 14.0,
       "resist_nm": 1.198,
       "magnet_assist_nm": 0.0,
-      "available_nm": 7.632,
-      "margin": 6.37,
-      "deg_per_s": 4.93,
+      "available_nm": 7.487,
+      "margin": 6.25,
+      "deg_per_s": 5.01,
       "motor_a": 0.29
     },
     {
       "deg": 15.0,
       "resist_nm": 1.225,
       "magnet_assist_nm": 0.0,
-      "available_nm": 7.742,
-      "margin": 6.32,
-      "deg_per_s": 4.85,
+      "available_nm": 7.599,
+      "margin": 6.2,
+      "deg_per_s": 4.93,
       "motor_a": 0.29
     },
     {
       "deg": 16.0,
       "resist_nm": 1.251,
       "magnet_assist_nm": 0.0,
-      "available_nm": 7.849,
-      "margin": 6.27,
-      "deg_per_s": 4.78,
+      "available_nm": 7.708,
+      "margin": 6.16,
+      "deg_per_s": 4.85,
       "motor_a": 0.29
     },
     {
       "deg": 17.0,
       "resist_nm": 1.277,
       "magnet_assist_nm": 0.0,
-      "available_nm": 7.952,
-      "margin": 6.23,
-      "deg_per_s": 4.71,
+      "available_nm": 7.813,
+      "margin": 6.12,
+      "deg_per_s": 4.79,
       "motor_a": 0.29
     },
     {
       "deg": 18.0,
       "resist_nm": 1.303,
       "magnet_assist_nm": 0.0,
-      "available_nm": 8.051,
-      "margin": 6.18,
-      "deg_per_s": 4.65,
-      "motor_a": 0.29
+      "available_nm": 7.914,
+      "margin": 6.07,
+      "deg_per_s": 4.72,
+      "motor_a": 0.3
     },
     {
       "deg": 19.0,
       "resist_nm": 1.329,
       "magnet_assist_nm": 0.0,
-      "available_nm": 8.147,
-      "margin": 6.13,
-      "deg_per_s": 4.59,
-      "motor_a": 0.29
+      "available_nm": 8.011,
+      "margin": 6.03,
+      "deg_per_s": 4.66,
+      "motor_a": 0.3
     },
     {
       "deg": 20.0,
       "resist_nm": 1.355,
       "magnet_assist_nm": 0.0,
-      "available_nm": 8.238,
-      "margin": 6.08,
-      "deg_per_s": 4.53,
+      "available_nm": 8.105,
+      "margin": 5.98,
+      "deg_per_s": 4.6,
       "motor_a": 0.3
     },
     {
       "deg": 21.0,
       "resist_nm": 1.381,
       "magnet_assist_nm": 0.0,
-      "available_nm": 8.326,
-      "margin": 6.03,
-      "deg_per_s": 4.48,
+      "available_nm": 8.195,
+      "margin": 5.94,
+      "deg_per_s": 4.54,
       "motor_a": 0.3
     },
     {
       "deg": 22.0,
       "resist_nm": 1.406,
       "magnet_assist_nm": 0.0,
-      "available_nm": 8.41,
-      "margin": 5.98,
-      "deg_per_s": 4.43,
+      "available_nm": 8.281,
+      "margin": 5.89,
+      "deg_per_s": 4.49,
       "motor_a": 0.3
     },
     {
       "deg": 23.0,
       "resist_nm": 1.431,
       "magnet_assist_nm": 0.0,
-      "available_nm": 8.491,
-      "margin": 5.93,
-      "deg_per_s": 4.38,
+      "available_nm": 8.363,
+      "margin": 5.84,
+      "deg_per_s": 4.44,
       "motor_a": 0.3
     },
     {
       "deg": 24.0,
       "resist_nm": 1.456,
       "magnet_assist_nm": 0.0,
-      "available_nm": 8.568,
-      "margin": 5.88,
-      "deg_per_s": 4.34,
+      "available_nm": 8.442,
+      "margin": 5.8,
+      "deg_per_s": 4.39,
       "motor_a": 0.3
     },
     {
       "deg": 25.0,
       "resist_nm": 1.481,
       "magnet_assist_nm": 0.0,
-      "available_nm": 8.641,
-      "margin": 5.83,
-      "deg_per_s": 4.3,
+      "available_nm": 8.518,
+      "margin": 5.75,
+      "deg_per_s": 4.35,
       "motor_a": 0.3
     },
     {
       "deg": 26.0,
       "resist_nm": 1.506,
       "magnet_assist_nm": 0.0,
-      "available_nm": 8.71,
-      "margin": 5.78,
-      "deg_per_s": 4.26,
+      "available_nm": 8.589,
+      "margin": 5.7,
+      "deg_per_s": 4.31,
       "motor_a": 0.3
     },
     {
       "deg": 27.0,
       "resist_nm": 1.53,
       "magnet_assist_nm": 0.0,
-      "available_nm": 8.776,
-      "margin": 5.74,
-      "deg_per_s": 4.22,
-      "motor_a": 0.3
+      "available_nm": 8.657,
+      "margin": 5.66,
+      "deg_per_s": 4.27,
+      "motor_a": 0.31
     },
     {
       "deg": 28.0,
       "resist_nm": 1.554,
       "magnet_assist_nm": 0.0,
-      "available_nm": 8.838,
-      "margin": 5.69,
-      "deg_per_s": 4.19,
+      "available_nm": 8.721,
+      "margin": 5.61,
+      "deg_per_s": 4.23,
       "motor_a": 0.31
     },
     {
       "deg": 29.0,
       "resist_nm": 1.578,
       "magnet_assist_nm": 0.0,
-      "available_nm": 8.897,
-      "margin": 5.64,
-      "deg_per_s": 4.15,
+      "available_nm": 8.782,
+      "margin": 5.56,
+      "deg_per_s": 4.2,
       "motor_a": 0.31
     },
     {
       "deg": 30.0,
       "resist_nm": 1.602,
       "magnet_assist_nm": 0.0,
-      "available_nm": 8.952,
-      "margin": 5.59,
-      "deg_per_s": 4.12,
+      "available_nm": 8.84,
+      "margin": 5.52,
+      "deg_per_s": 4.17,
       "motor_a": 0.31
     },
     {
       "deg": 31.0,
       "resist_nm": 1.626,
       "magnet_assist_nm": 0.0,
-      "available_nm": 9.003,
-      "margin": 5.54,
-      "deg_per_s": 4.09,
+      "available_nm": 8.893,
+      "margin": 5.47,
+      "deg_per_s": 4.14,
       "motor_a": 0.31
     },
     {
       "deg": 32.0,
       "resist_nm": 1.649,
       "magnet_assist_nm": 0.0,
-      "available_nm": 9.051,
-      "margin": 5.49,
-      "deg_per_s": 4.07,
+      "available_nm": 8.944,
+      "margin": 5.42,
+      "deg_per_s": 4.11,
       "motor_a": 0.31
     },
     {
       "deg": 33.0,
       "resist_nm": 1.672,
       "magnet_assist_nm": 0.0,
-      "available_nm": 9.096,
-      "margin": 5.44,
-      "deg_per_s": 4.04,
+      "available_nm": 8.99,
+      "margin": 5.38,
+      "deg_per_s": 4.08,
       "motor_a": 0.31
     },
     {
       "deg": 34.0,
       "resist_nm": 1.695,
       "magnet_assist_nm": 0.0,
-      "available_nm": 9.137,
-      "margin": 5.39,
-      "deg_per_s": 4.02,
-      "motor_a": 0.31
+      "available_nm": 9.034,
+      "margin": 5.33,
+      "deg_per_s": 4.05,
+      "motor_a": 0.32
     },
     {
       "deg": 35.0,
       "resist_nm": 1.717,
       "magnet_assist_nm": 0.0,
-      "available_nm": 9.175,
-      "margin": 5.34,
-      "deg_per_s": 3.99,
-      "motor_a": 0.31
+      "available_nm": 9.074,
+      "margin": 5.28,
+      "deg_per_s": 4.03,
+      "motor_a": 0.32
     },
     {
       "deg": 36.0,
       "resist_nm": 1.74,
       "magnet_assist_nm": 0.0,
-      "available_nm": 9.209,
-      "margin": 5.29,
-      "deg_per_s": 3.97,
+      "available_nm": 9.111,
+      "margin": 5.24,
+      "deg_per_s": 4.01,
       "motor_a": 0.32
     },
     {
       "deg": 37.0,
       "resist_nm": 1.761,
       "magnet_assist_nm": 0.0,
-      "available_nm": 9.24,
-      "margin": 5.25,
-      "deg_per_s": 3.95,
+      "available_nm": 9.144,
+      "margin": 5.19,
+      "deg_per_s": 3.99,
       "motor_a": 0.32
     },
     {
       "deg": 38.0,
       "resist_nm": 1.783,
       "magnet_assist_nm": 0.0,
-      "available_nm": 9.268,
-      "margin": 5.2,
-      "deg_per_s": 3.94,
+      "available_nm": 9.174,
+      "margin": 5.14,
+      "deg_per_s": 3.97,
       "motor_a": 0.32
     },
     {
       "deg": 39.0,
       "resist_nm": 1.804,
       "magnet_assist_nm": 0.0,
-      "available_nm": 9.293,
-      "margin": 5.15,
-      "deg_per_s": 3.92,
+      "available_nm": 9.201,
+      "margin": 5.1,
+      "deg_per_s": 3.95,
       "motor_a": 0.32
     },
     {
       "deg": 40.0,
       "resist_nm": 1.826,
       "magnet_assist_nm": 0.0,
-      "available_nm": 9.314,
-      "margin": 5.1,
-      "deg_per_s": 3.9,
+      "available_nm": 9.224,
+      "margin": 5.05,
+      "deg_per_s": 3.94,
       "motor_a": 0.32
     },
     {
       "deg": 41.0,
       "resist_nm": 1.846,
       "magnet_assist_nm": 0.0,
-      "available_nm": 9.332,
-      "margin": 5.05,
-      "deg_per_s": 3.89,
-      "motor_a": 0.32
+      "available_nm": 9.245,
+      "margin": 5.01,
+      "deg_per_s": 3.92,
+      "motor_a": 0.33
     },
     {
       "deg": 42.0,
       "resist_nm": 1.867,
       "magnet_assist_nm": 0.0,
-      "available_nm": 9.347,
-      "margin": 5.01,
-      "deg_per_s": 3.88,
+      "available_nm": 9.262,
+      "margin": 4.96,
+      "deg_per_s": 3.91,
       "motor_a": 0.33
     },
     {
       "deg": 43.0,
       "resist_nm": 1.887,
       "magnet_assist_nm": 0.0,
-      "available_nm": 9.359,
-      "margin": 4.96,
-      "deg_per_s": 3.87,
+      "available_nm": 9.276,
+      "margin": 4.92,
+      "deg_per_s": 3.9,
       "motor_a": 0.33
     },
     {
       "deg": 44.0,
       "resist_nm": 1.907,
       "magnet_assist_nm": 0.0,
-      "available_nm": 9.368,
-      "margin": 4.91,
-      "deg_per_s": 3.86,
+      "available_nm": 9.287,
+      "margin": 4.87,
+      "deg_per_s": 3.88,
       "motor_a": 0.33
     },
     {
       "deg": 45.0,
       "resist_nm": 1.926,
       "magnet_assist_nm": 0.0,
-      "available_nm": 9.374,
-      "margin": 4.87,
-      "deg_per_s": 3.85,
+      "available_nm": 9.295,
+      "margin": 4.83,
+      "deg_per_s": 3.87,
       "motor_a": 0.33
     },
     {
       "deg": 46.0,
       "resist_nm": 1.945,
       "magnet_assist_nm": 0.0,
-      "available_nm": 9.376,
-      "margin": 4.82,
-      "deg_per_s": 3.84,
+      "available_nm": 9.3,
+      "margin": 4.78,
+      "deg_per_s": 3.87,
       "motor_a": 0.33
     },
     {
       "deg": 47.0,
       "resist_nm": 1.964,
       "magnet_assist_nm": 0.0,
-      "available_nm": 9.376,
-      "margin": 4.77,
-      "deg_per_s": 3.83,
+      "available_nm": 9.302,
+      "margin": 4.74,
+      "deg_per_s": 3.86,
       "motor_a": 0.33
     },
     {
       "deg": 48.0,
       "resist_nm": 1.983,
       "magnet_assist_nm": 0.0,
-      "available_nm": 9.373,
-      "margin": 4.73,
-      "deg_per_s": 3.83,
+      "available_nm": 9.302,
+      "margin": 4.69,
+      "deg_per_s": 3.85,
       "motor_a": 0.34
     },
     {
       "deg": 49.0,
       "resist_nm": 2.001,
       "magnet_assist_nm": 0.0,
-      "available_nm": 9.367,
-      "margin": 4.68,
-      "deg_per_s": 3.82,
+      "available_nm": 9.298,
+      "margin": 4.65,
+      "deg_per_s": 3.85,
       "motor_a": 0.34
     },
     {
       "deg": 50.0,
       "resist_nm": 2.018,
       "magnet_assist_nm": 0.0,
-      "available_nm": 9.359,
-      "margin": 4.64,
-      "deg_per_s": 3.82,
+      "available_nm": 9.291,
+      "margin": 4.6,
+      "deg_per_s": 3.84,
       "motor_a": 0.34
     },
     {
       "deg": 51.0,
       "resist_nm": 2.036,
       "magnet_assist_nm": 0.0,
-      "available_nm": 9.347,
-      "margin": 4.59,
-      "deg_per_s": 3.82,
+      "available_nm": 9.282,
+      "margin": 4.56,
+      "deg_per_s": 3.84,
       "motor_a": 0.34
     },
     {
       "deg": 52.0,
       "resist_nm": 2.053,
       "magnet_assist_nm": 0.0,
-      "available_nm": 9.333,
-      "margin": 4.55,
-      "deg_per_s": 3.82,
+      "available_nm": 9.27,
+      "margin": 4.52,
+      "deg_per_s": 3.84,
       "motor_a": 0.34
     },
     {
       "deg": 53.0,
       "resist_nm": 2.069,
       "magnet_assist_nm": 0.0,
-      "available_nm": 9.316,
-      "margin": 4.5,
-      "deg_per_s": 3.82,
-      "motor_a": 0.34
+      "available_nm": 9.255,
+      "margin": 4.47,
+      "deg_per_s": 3.84,
+      "motor_a": 0.35
     },
     {
       "deg": 54.0,
       "resist_nm": 2.086,
       "magnet_assist_nm": 0.0,
-      "available_nm": 9.296,
-      "margin": 4.46,
-      "deg_per_s": 3.82,
+      "available_nm": 9.237,
+      "margin": 4.43,
+      "deg_per_s": 3.84,
       "motor_a": 0.35
     },
     {
       "deg": 55.0,
       "resist_nm": 2.101,
       "magnet_assist_nm": 0.0,
-      "available_nm": 9.273,
-      "margin": 4.41,
-      "deg_per_s": 3.82,
+      "available_nm": 9.217,
+      "margin": 4.39,
+      "deg_per_s": 3.84,
       "motor_a": 0.35
     },
     {
       "deg": 56.0,
       "resist_nm": 2.117,
       "magnet_assist_nm": 0.0,
-      "available_nm": 9.248,
-      "margin": 4.37,
-      "deg_per_s": 3.82,
+      "available_nm": 9.194,
+      "margin": 4.34,
+      "deg_per_s": 3.84,
       "motor_a": 0.35
     },
     {
       "deg": 57.0,
       "resist_nm": 2.132,
       "magnet_assist_nm": 0.0,
-      "available_nm": 9.221,
-      "margin": 4.32,
-      "deg_per_s": 3.82,
+      "available_nm": 9.169,
+      "margin": 4.3,
+      "deg_per_s": 3.84,
       "motor_a": 0.35
     },
     {
       "deg": 58.0,
       "resist_nm": 2.147,
       "magnet_assist_nm": 0.0,
-      "available_nm": 9.191,
-      "margin": 4.28,
-      "deg_per_s": 3.83,
+      "available_nm": 9.141,
+      "margin": 4.26,
+      "deg_per_s": 3.85,
       "motor_a": 0.35
     },
     {
       "deg": 59.0,
       "resist_nm": 2.161,
       "magnet_assist_nm": 0.0,
-      "available_nm": 9.158,
-      "margin": 4.24,
-      "deg_per_s": 3.83,
+      "available_nm": 9.11,
+      "margin": 4.22,
+      "deg_per_s": 3.85,
       "motor_a": 0.36
     },
     {
       "deg": 60.0,
       "resist_nm": 2.175,
       "magnet_assist_nm": 0.0,
-      "available_nm": 9.123,
-      "margin": 4.19,
-      "deg_per_s": 3.84,
+      "available_nm": 9.077,
+      "margin": 4.17,
+      "deg_per_s": 3.86,
       "motor_a": 0.36
     },
     {
       "deg": 61.0,
       "resist_nm": 2.188,
       "magnet_assist_nm": 0.0,
-      "available_nm": 9.085,
-      "margin": 4.15,
-      "deg_per_s": 3.85,
+      "available_nm": 9.042,
+      "margin": 4.13,
+      "deg_per_s": 3.86,
       "motor_a": 0.36
     },
     {
       "deg": 62.0,
       "resist_nm": 2.201,
       "magnet_assist_nm": 0.0,
-      "available_nm": 9.045,
-      "margin": 4.11,
-      "deg_per_s": 3.86,
+      "available_nm": 9.004,
+      "margin": 4.09,
+      "deg_per_s": 3.87,
       "motor_a": 0.36
     },
     {
       "deg": 63.0,
       "resist_nm": 2.214,
       "magnet_assist_nm": 0.0,
-      "available_nm": 9.003,
-      "margin": 4.07,
-      "deg_per_s": 3.87,
-      "motor_a": 0.36
+      "available_nm": 8.964,
+      "margin": 4.05,
+      "deg_per_s": 3.88,
+      "motor_a": 0.37
     },
     {
       "deg": 64.0,
       "resist_nm": 2.226,
       "magnet_assist_nm": 0.0,
-      "available_nm": 8.959,
-      "margin": 4.02,
-      "deg_per_s": 3.88,
+      "available_nm": 8.922,
+      "margin": 4.01,
+      "deg_per_s": 3.89,
       "motor_a": 0.37
     },
     {
       "deg": 65.0,
       "resist_nm": 2.238,
       "magnet_assist_nm": 0.0,
-      "available_nm": 8.912,
-      "margin": 3.98,
-      "deg_per_s": 3.89,
+      "available_nm": 8.877,
+      "margin": 3.97,
+      "deg_per_s": 3.9,
       "motor_a": 0.37
     },
     {
       "deg": 66.0,
       "resist_nm": 2.249,
       "magnet_assist_nm": 0.0,
-      "available_nm": 8.863,
-      "margin": 3.94,
-      "deg_per_s": 3.9,
+      "available_nm": 8.83,
+      "margin": 3.93,
+      "deg_per_s": 3.91,
       "motor_a": 0.37
     },
     {
       "deg": 67.0,
       "resist_nm": 2.26,
       "magnet_assist_nm": 0.0,
-      "available_nm": 8.811,
-      "margin": 3.9,
-      "deg_per_s": 3.91,
+      "available_nm": 8.78,
+      "margin": 3.89,
+      "deg_per_s": 3.92,
       "motor_a": 0.37
     },
     {
       "deg": 68.0,
       "resist_nm": 2.27,
       "magnet_assist_nm": 0.0,
-      "available_nm": 8.758,
-      "margin": 3.86,
-      "deg_per_s": 3.93,
+      "available_nm": 8.729,
+      "margin": 3.84,
+      "deg_per_s": 3.94,
       "motor_a": 0.38
     },
     {
       "deg": 69.0,
       "resist_nm": 2.28,
       "magnet_assist_nm": 0.0,
-      "available_nm": 8.702,
-      "margin": 3.82,
-      "deg_per_s": 3.94,
+      "available_nm": 8.675,
+      "margin": 3.8,
+      "deg_per_s": 3.95,
       "motor_a": 0.38
     },
     {
       "deg": 70.0,
       "resist_nm": 2.29,
       "magnet_assist_nm": 0.0,
-      "available_nm": 8.645,
-      "margin": 3.77,
-      "deg_per_s": 3.96,
+      "available_nm": 8.62,
+      "margin": 3.76,
+      "deg_per_s": 3.97,
       "motor_a": 0.38
     },
     {
       "deg": 71.0,
       "resist_nm": 2.299,
       "magnet_assist_nm": 0.0,
-      "available_nm": 8.585,
-      "margin": 3.73,
-      "deg_per_s": 3.97,
+      "available_nm": 8.562,
+      "margin": 3.72,
+      "deg_per_s": 3.98,
       "motor_a": 0.38
     },
     {
       "deg": 72.0,
       "resist_nm": 2.308,
       "magnet_assist_nm": 0.0,
-      "available_nm": 8.523,
-      "margin": 3.69,
-      "deg_per_s": 3.99,
+      "available_nm": 8.502,
+      "margin": 3.68,
+      "deg_per_s": 4.0,
       "motor_a": 0.39
     },
     {
       "deg": 73.0,
       "resist_nm": 2.316,
       "magnet_assist_nm": 0.0,
-      "available_nm": 8.459,
-      "margin": 3.65,
-      "deg_per_s": 4.01,
+      "available_nm": 8.44,
+      "margin": 3.64,
+      "deg_per_s": 4.02,
       "motor_a": 0.39
     },
     {
       "deg": 74.0,
       "resist_nm": 2.324,
       "magnet_assist_nm": 0.0,
-      "available_nm": 8.393,
-      "margin": 3.61,
-      "deg_per_s": 4.03,
+      "available_nm": 8.376,
+      "margin": 3.6,
+      "deg_per_s": 4.04,
       "motor_a": 0.39
     },
     {
       "deg": 75.0,
       "resist_nm": 2.331,
       "magnet_assist_nm": 0.0,
-      "available_nm": 8.326,
+      "available_nm": 8.31,
       "margin": 3.57,
-      "deg_per_s": 4.05,
+      "deg_per_s": 4.06,
       "motor_a": 0.39
     },
     {
       "deg": 76.0,
       "resist_nm": 2.338,
       "magnet_assist_nm": 0.0,
-      "available_nm": 8.256,
+      "available_nm": 8.243,
       "margin": 3.53,
-      "deg_per_s": 4.07,
+      "deg_per_s": 4.08,
       "motor_a": 0.4
     },
     {
       "deg": 77.0,
       "resist_nm": 2.344,
       "magnet_assist_nm": 0.0,
-      "available_nm": 8.184,
+      "available_nm": 8.173,
       "margin": 3.49,
       "deg_per_s": 4.1,
       "motor_a": 0.4
@@ -849,7 +849,7 @@
       "deg": 78.0,
       "resist_nm": 2.35,
       "magnet_assist_nm": 0.0,
-      "available_nm": 8.111,
+      "available_nm": 8.101,
       "margin": 3.45,
       "deg_per_s": 4.12,
       "motor_a": 0.4
@@ -858,7 +858,7 @@
       "deg": 79.0,
       "resist_nm": 2.356,
       "magnet_assist_nm": 0.0,
-      "available_nm": 8.036,
+      "available_nm": 8.028,
       "margin": 3.41,
       "deg_per_s": 4.15,
       "motor_a": 0.4
@@ -867,7 +867,7 @@
       "deg": 80.0,
       "resist_nm": 2.361,
       "magnet_assist_nm": 0.0,
-      "available_nm": 7.959,
+      "available_nm": 7.953,
       "margin": 3.37,
       "deg_per_s": 4.17,
       "motor_a": 0.41
@@ -876,7 +876,7 @@
       "deg": 81.0,
       "resist_nm": 2.365,
       "magnet_assist_nm": 0.0,
-      "available_nm": 7.88,
+      "available_nm": 7.876,
       "margin": 3.33,
       "deg_per_s": 4.2,
       "motor_a": 0.41
@@ -885,7 +885,7 @@
       "deg": 82.0,
       "resist_nm": 2.369,
       "magnet_assist_nm": 0.0,
-      "available_nm": 7.8,
+      "available_nm": 7.798,
       "margin": 3.29,
       "deg_per_s": 4.23,
       "motor_a": 0.41
@@ -894,7 +894,7 @@
       "deg": 83.0,
       "resist_nm": 2.373,
       "magnet_assist_nm": 0.0,
-      "available_nm": 7.718,
+      "available_nm": 7.717,
       "margin": 3.25,
       "deg_per_s": 4.26,
       "motor_a": 0.42
@@ -903,7 +903,7 @@
       "deg": 84.0,
       "resist_nm": 2.376,
       "magnet_assist_nm": 0.0,
-      "available_nm": 7.634,
+      "available_nm": 7.635,
       "margin": 3.21,
       "deg_per_s": 4.29,
       "motor_a": 0.42
@@ -912,8 +912,8 @@
       "deg": 85.0,
       "resist_nm": 2.378,
       "magnet_assist_nm": 0.0,
-      "available_nm": 7.549,
-      "margin": 3.17,
+      "available_nm": 7.552,
+      "margin": 3.18,
       "deg_per_s": 4.32,
       "motor_a": 0.42
     },
@@ -921,16 +921,16 @@
       "deg": 86.0,
       "resist_nm": 2.381,
       "magnet_assist_nm": 0.0,
-      "available_nm": 7.462,
-      "margin": 3.13,
-      "deg_per_s": 4.36,
+      "available_nm": 7.467,
+      "margin": 3.14,
+      "deg_per_s": 4.35,
       "motor_a": 0.43
     },
     {
       "deg": 87.0,
       "resist_nm": 2.382,
       "magnet_assist_nm": 0.0,
-      "available_nm": 7.373,
+      "available_nm": 7.38,
       "margin": 3.1,
       "deg_per_s": 4.39,
       "motor_a": 0.43
@@ -939,25 +939,25 @@
       "deg": 88.0,
       "resist_nm": 2.383,
       "magnet_assist_nm": 0.0,
-      "available_nm": 7.283,
+      "available_nm": 7.291,
       "margin": 3.06,
-      "deg_per_s": 4.43,
+      "deg_per_s": 4.42,
       "motor_a": 0.43
     },
     {
       "deg": 89.0,
       "resist_nm": 2.384,
       "magnet_assist_nm": 0.0,
-      "available_nm": 7.192,
+      "available_nm": 7.202,
       "margin": 3.02,
-      "deg_per_s": 4.47,
+      "deg_per_s": 4.46,
       "motor_a": 0.44
     },
     {
       "deg": 90.0,
       "resist_nm": 2.384,
       "magnet_assist_nm": 0.0,
-      "available_nm": 7.099,
+      "available_nm": 7.11,
       "margin": 2.98,
       "deg_per_s": 4.5,
       "motor_a": 0.44

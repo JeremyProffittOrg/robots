@@ -3,7 +3,7 @@
   "analysis_only": true,
   "printed_designs": 7,
   "printed_pieces": 8,
-  "solid_mass_total_g": 244.8,
+  "solid_mass_total_g": 255.9,
   "checks": [
     {
       "check": "mesh_base_shell",
@@ -23,12 +23,12 @@
     {
       "check": "mesh_compound_gear",
       "pass": true,
-      "detail": "compound_gear: watertight=True bodies=1 sealed_voids=0/0 40.0 x 40.0 x 27.2 mm, 12 g solid, sits on z=0"
+      "detail": "compound_gear: watertight=True bodies=1 sealed_voids=0/0 40.0 x 40.0 x 27.2 mm, 16 g solid, sits on z=0"
     },
     {
       "check": "mesh_drum_gear",
       "pass": true,
-      "detail": "drum_gear: watertight=True bodies=1 sealed_voids=0/0 44.0 x 43.9 x 27.2 mm, 20 g solid, sits on z=0"
+      "detail": "drum_gear: watertight=True bodies=1 sealed_voids=0/0 44.0 x 43.9 x 27.2 mm, 27 g solid, sits on z=0"
     },
     {
       "check": "mesh_door_anchor",
@@ -127,8 +127,8 @@
       "x_mm": 11.2,
       "y_mm": 11.2,
       "z_mm": 10.0,
-      "solid_volume_cm3": 0.44,
-      "solid_mass_g": 0.5,
+      "solid_volume_cm3": 0.46,
+      "solid_mass_g": 0.6,
       "watertight": true,
       "bodies": 1,
       "sealed_voids": 0
@@ -139,8 +139,8 @@
       "x_mm": 40.0,
       "y_mm": 40.0,
       "z_mm": 27.2,
-      "solid_volume_cm3": 9.96,
-      "solid_mass_g": 12.4,
+      "solid_volume_cm3": 13.29,
+      "solid_mass_g": 16.5,
       "watertight": true,
       "bodies": 1,
       "sealed_voids": 0
@@ -151,8 +151,8 @@
       "x_mm": 44.0,
       "y_mm": 43.91,
       "z_mm": 27.2,
-      "solid_volume_cm3": 16.43,
-      "solid_mass_g": 20.4,
+      "solid_volume_cm3": 22.03,
+      "solid_mass_g": 27.3,
       "watertight": true,
       "bodies": 1,
       "sealed_voids": 0

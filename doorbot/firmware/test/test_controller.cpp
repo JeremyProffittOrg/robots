@@ -19,13 +19,13 @@ struct Rig {
 
     Rig() {
         c.set_cable_mm_per_edge(0.0812f);
-        c.set_travel_mm(105.9f);
+        c.set_travel_mm(101.3f);
     }
     // Advance time, optionally winding cable in at the analysed rate.
     Outputs tick(uint32_t dt_ms, bool winding_moves = true) {
         in.now_ms += dt_ms;
         if (winding_moves && out.motor == Motor::Wind) {
-            // 21.8 s for 105.9 mm is 4.86 mm/s, i.e. 59.8 edges per second.
+            // 21.0 s for 101.3 mm, i.e. 59.8 edges per second.
             edges += (int32_t)(dt_ms * 0.0598f);
         } else if (winding_moves && out.motor == Motor::Payout) {
             edges -= (int32_t)(dt_ms * 0.0598f);
