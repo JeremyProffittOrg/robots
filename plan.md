@@ -707,3 +707,11 @@ answers HTTP 404. Replaced everywhere with `https://us.store.bambulab.com/collec
 which answers HTTP 200. All 23 buy links now answer HTTP 200; 9 of them are vendor searches
 rather than single listings, and the list marks those as `search` rather than implying a
 specific part.
+
+2026-09-12: Parts list published and emailed. Publication run `34722872347` finished
+`completed success`; the guide at the same URL now hashes
+`453149274ac53e46bfa363e5e785b5bd514d7edbbc0eb1396fc389ad5ade3c89`, re-verified HTTP 200 from
+this machine. Final email accepted once, MessageId
+`010001a097bf903f-edb12491-4227-48cb-ad8d-9a8527023351-000000`, 1,792,800 bytes, with
+shopping-list.xlsx, shopping-list.csv and the corrected PDF attached. It supersedes status #1
+and #2 and carries the dead-link correction near the top.
