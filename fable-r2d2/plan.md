@@ -130,7 +130,10 @@ re-litigated mid-run):
 - [x] video — `python scripts/render_video.py` writes a verified 170 s 1920x1080 H.264+AAC
   `output/video/r2d2-assembly-and-operation.mp4`
 - [x] verify-all — `python scripts/verify.py` ALL PASS on all nine checks
-- [ ] deliver — upload the video to S3, presign 7 days, email it with the PDF attached
+- [x] deliver — video and manual uploaded to the private, encrypted, public-access-blocked
+  bucket `robots-deliverables-759775734231` (us-east-1) with 7-day presigned links; one SES
+  email sent to proffitt.jeremy@gmail.com, MessageId
+  `010001a097d00729-b3e2c2bc-8943-49ef-8147-e92663a7fb87-000000`, MIME 19,274,937 bytes
 
 ## Stop conditions (only these)
 - A purchase, physical action, or email would be required.
@@ -165,4 +168,8 @@ re-litigated mid-run):
   leg collar clear of the caster stem. All seven interference checks empty or zero-volume.
 - 2026-09-12 18:20 Full regeneration against the final meshes: 9/9 export, 9/9 slice with no
   warnings (10,053.9 g / 320.6 h), 25 drawings, 170 s video, 99-page manual, BOM spreadsheet.
-  `python scripts/verify.py` ALL PASS.
+  `python scripts/verify.py` ALL PASS. Pushed to main as 72b46ad.
+- 2026-09-12 18:49 Delivered. The first send failed deterministically: `scripts/deliver.py`
+  guarded at 40 MB but called the SES v1 `send_raw_email`, which caps at 10 MB
+  (`InvalidParameterValue: Message length is more than 10485760 bytes long: '19274596'`).
+  The script now calls SESv2 `send_email` with raw content, whose limit really is 40 MB.

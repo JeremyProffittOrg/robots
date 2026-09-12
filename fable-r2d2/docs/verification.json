@@ -2,14 +2,49 @@
   "all_pass": true,
   "checks": [
     {
-      "check": "bom",
+      "check": "images",
       "pass": true,
-      "detail": "purchased subtotal $1,052.34; xlsx=present; problems=[]"
+      "detail": "59 listed files present, 54 distinct by hash (>= 30 required)"
     },
     {
       "check": "cad",
       "pass": true,
       "detail": "9/9 STLs, validation all_pass=True, slice all_pass=True, stale slices=[], missing=[]"
+    },
+    {
+      "check": "bom",
+      "pass": true,
+      "detail": "purchased subtotal $1,052.34; xlsx=present; problems=[]"
+    },
+    {
+      "check": "wiring",
+      "pass": true,
+      "detail": "136 wires; KB2040 pins in wiring not in code.py: []"
+    },
+    {
+      "check": "firmware",
+      "pass": true,
+      "detail": "OK; OK; app.js syntax OK"
+    },
+    {
+      "check": "audio",
+      "pass": true,
+      "detail": "12 clips, mismatches=[]"
+    },
+    {
+      "check": "drawings",
+      "pass": true,
+      "detail": "25 files, mismatches=[]"
+    },
+    {
+      "check": "manual",
+      "pass": true,
+      "detail": "pdf=present, pages=99, all_pass=True"
+    },
+    {
+      "check": "video",
+      "pass": true,
+      "detail": "170 s, 4080 frames, hash match=True"
     }
   ],
   "physical_validation": false

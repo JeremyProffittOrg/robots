@@ -133,14 +133,17 @@ def main():
     message.attach(attachment)
     raw = message.as_bytes()
     print(f"MIME size {len(raw)} bytes; bucket {bucket_state}; PDF sha256 {sha256(PDF)}; video sha256 {sha256(VIDEO)}")
+    # SESv2 accepts 40 MB; the older v1 send_raw_email caps at 10 MB, which a manual with
+    # figures attached exceeds, so this sends through SESv2.
     if len(raw) > 40 * 1024 * 1024:
-        raise SystemExit("Message exceeds the SES 40 MB limit")
+        raise SystemExit(f"Message is {len(raw)} bytes; SESv2 accepts at most 40 MB")
     if args.dry_run:
         (ROOT / "output/delivery-preview.html").write_text(html, encoding="utf-8")
         print("DRY RUN: wrote output/delivery-preview.html; nothing sent")
         return
-    ses = boto3.client("ses", region_name=REGION)
-    response = ses.send_raw_email(Source=SENDER, Destinations=[RECIPIENT], RawMessage={"Data": raw})
+    ses = boto3.client("sesv2", region_name=REGION)
+    response = ses.send_email(FromEmailAddress=SENDER, Destination={"ToAddresses": [RECIPIENT]},
+                              Content={"Raw": {"Data": raw}})
     receipt = {"MessageId": response["MessageId"], "sent_at_utc": timestamp, "to": RECIPIENT, "subject": args.subject,
                "mime_bytes": len(raw), "video_sha256": sha256(VIDEO), "pdf_sha256": sha256(PDF),
                "video_s3_key": KEY_PREFIX + VIDEO.name, "pdf_s3_key": KEY_PREFIX + PDF.name, "bucket": BUCKET,

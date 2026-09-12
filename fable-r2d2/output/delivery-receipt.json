@@ -1,0 +1,14 @@
+{
+  "MessageId": "010001a097d00729-b3e2c2bc-8943-49ef-8147-e92663a7fb87-000000",
+  "sent_at_utc": "2026-09-12 22:49 UTC",
+  "to": "proffitt.jeremy@gmail.com",
+  "subject": "fable-r2d2 delivered - printable 317 mm R2-D2: 9 STL files, 99-page manual, 170 s video, all nine package checks pass",
+  "mime_bytes": 19274937,
+  "video_sha256": "d9743065b5b8d87914d1c90a7e93811453cdc4df96de939bfe3821c8e34939bd",
+  "pdf_sha256": "ce78f5a2aeaf0b43763d7b17d1eabc60285eb507cae2b08dcca3f16b9bcfdf66",
+  "video_s3_key": "fable-r2d2/r2d2-assembly-and-operation.mp4",
+  "pdf_s3_key": "fable-r2d2/r2d2-assembly-manual.pdf",
+  "bucket": "robots-deliverables-759775734231",
+  "link_valid_days": 7,
+  "head_sha": "72b46ad8828748e83419dce1aabf0418ca264e08"
+}
