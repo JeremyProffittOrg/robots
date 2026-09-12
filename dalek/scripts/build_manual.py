@@ -157,7 +157,7 @@ def main():
             raise RuntimeError('No assembly preview found.')
         preview = candidates[0]
     doc = Manual(str(OUT), pagesize=letter, leftMargin=46, rightMargin=46,
-                 topMargin=42, bottomMargin=48, title='Dalek round-body design and assembly',
+                 topMargin=42, bottomMargin=48, title='Dalek faceted-body design and assembly',
                  author='')
     doc.addPageTemplates([
         PageTemplate(id='portrait', frames=[Frame(46,48,letter[0]-92,letter[1]-90,id='p')],
@@ -165,8 +165,8 @@ def main():
         PageTemplate(id='landscape', frames=[Frame(40,48,DRAWING_PAGE[0]-80,
                                                  DRAWING_PAGE[1]-88,id='l')],
                      onPage=page_footer, pagesize=DRAWING_PAGE)])
-    story = [para('Dalek round-body design and assembly', 'Chapter'),
-             para('MOUNT-1 uses ten STL designs for a reinforced circular base, a213mm skirt, a combined186mm shoulder and neck, '
+    story = [para('Dalek faceted-body design and assembly', 'Chapter'),
+             para('FACET-1 uses ten STL designs for a reinforced circular base, a213mm skirt with twelve full-height flat panels, a combined186mm shoulder and neck, '
                   'smaller concealed arm mechanisms and an adjustable head friction drive. '
                   'Four printed motor clamps use four screws total; motor ties can replace those clamps. '
                   'The screw-clamp option needs fourteen prints, and the motor-tie option needs ten.'),

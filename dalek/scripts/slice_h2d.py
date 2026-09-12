@@ -184,7 +184,7 @@ def main():
             record['adhesion_note']=('Slicer generated a brim; the complete model/support/brim deposition footprint is checked.'
                 if record['generated_brim_and_skirt_mass_g']>0 else
                 'No Brim feature was generated despite the requested brim setting. The measured model/support footprint fits; inspect adhesion in the actual print preparation.')
-        report=dict(design='MOUNT-1',checked_at_utc=datetime.now(timezone.utc).isoformat(),
+        report=dict(design='FACET-1',checked_at_utc=datetime.now(timezone.utc).isoformat(),
             status='pass' if len(ordered)==len(PARTS) else 'in_progress',
             test_type='Actual isolated Bambu Studio H2D CLI slices; no printer connection or physical print',
             profiles=dict(machine='Bambu Lab H2D 0.4 nozzle',process='0.20mm Standard @BBL H2D',bed='Textured PEI Plate',

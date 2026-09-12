@@ -44,8 +44,8 @@
   "battery_choice_rule": "ONE selected battery;never connect options in series or parallel;charge outside robot",
   "mass_baseline": {
     "source": "cad/h2d-slice-check.json",
-    "design": "MOUNT-1",
-    "installed_plastic_kg": 2.46959,
+    "design": "FACET-1",
+    "installed_plastic_kg": 2.47398,
     "five_motors_five_wheels_four_servos_kg": 0.39899999999999997,
     "remaining_hardware_and_finish": "NOT INCLUDED;weigh complete robot;not a motor payload rating"
   },
@@ -62,7 +62,7 @@
         76
       ],
       "charger": "BPC-1502DC14.6V2A",
-      "partial_robot_mass_kg": 3.5685900000000004
+      "partial_robot_mass_kg": 3.5729800000000003
     },
     {
       "model": "Power-Sonic PS-1270 F2",
@@ -76,7 +76,7 @@
         102
       ],
       "charger": "PSC-121000ACX12V1A or PSC-12500ACX",
-      "partial_robot_mass_kg": 4.83859
+      "partial_robot_mass_kg": 4.84298
     },
     {
       "model": "Power-Sonic PS-12140 F2",
@@ -91,7 +91,7 @@
         103
       ],
       "charger": "PSC-121000ACX12V1A",
-      "partial_robot_mass_kg": 6.64859
+      "partial_robot_mass_kg": 6.6529799999999994
     }
   ]
 }

@@ -1,27 +1,29 @@
 # Digital verification and physical limits
 
-MOUNT-1 has ten STL designs: fourteen prints with the four motor clamps, or ten when motor ties replace them. The platform and its legs form one print. Shoulder and neck form one186mm print. The skirt is213mm and the robot remains563.8mm tall. Both motor and servo-case retention options are documented.
+FACET-1 has twelve full-height flat skirt panels in one print, within the same ten STL designs: fourteen prints with the four motor clamps, or ten when motor ties replace them. The platform and its legs form one print. Shoulder and neck form one186mm print. The skirt is213mm and the robot remains563.8mm tall. Both motor and servo-case retention options are documented.
 
 ## Geometry and access
 
 The following commands passed from C:/dev/robots/dalek. Their reports identify exact current mesh hashes.
 
-- python scripts/export_cad.py --check-only: ten consistently wound, watertight meshes, each one connected positive solid. All fit the stock H2D single-nozzle envelope and recorded brim allowances. Solid-material volume bound:3,202.1g, not sliced or measured mass.
-- python scripts/check_base_mounts.py:309 checks and1,117,361 evaluations. Covers motor/wheel installation, four hook clamps/screws, alternative ties, both platform-foot options, batteries, populated terminal clearance, captured nuts, tools and skirt installation.
-- python scripts/check_upper_mounts.py:68 checks and1,650,576 samples. Covers servo ears and retention, yaw-servo entry, bounded screw/nut tools, detached-arm paths, head/bearing entry, speaker clearance and all four body-joint driver approaches.
-- python scripts/check_arm_assembly.py:8 checks and417,648 samples. Both carriers enter through the left lower opening before moving to their final positions. Both supported arms are included.
+- python scripts/export_cad.py --check-only: ten consistently wound, watertight meshes, each one connected positive solid. All fit the stock H2D single-nozzle envelope and recorded brim allowances. Solid-material volume bound:3,202.8g, not sliced or measured mass.
+- python scripts/check_base_mounts.py:346 checks and1,117,327 evaluations. Adds actual panel-plane, normal,1.8mm wall and240mm rib measurements to the existing mounting tests. Covers motor/wheel installation, four hook clamps/screws, alternative ties, both platform-foot options, batteries, populated terminal clearance, captured nuts, tools and skirt installation.
+- python scripts/check_upper_mounts.py: retained68 checks and1,650,576 samples. Covers servo ears and retention, yaw-servo entry, bounded screw/nut tools, detached-arm paths, head/bearing entry, speaker clearance and all four body-joint driver approaches.
+- python scripts/check_arm_assembly.py: retained8 checks and417,648 samples. Both carriers enter through the left lower opening before moving to their final positions. Both supported arms are included.
 - python scripts/check_mechanical.py:110 checks and374,697 samples. Includes wheels, batteries, skirt interfaces, arm extremes and head adjustment. The30mm outer fabric radius gives zero visible servo targets in4,800 current-body rays.
-- python scripts/mesh_queries.py:4,400 samples and zero differences from the original query on the final upper mesh. Two near-axis rays must agree; disagreements use the original query. Tolerances are unchanged.
+- python scripts/mesh_queries.py: retained4,400 samples and zero differences from the original query on the final upper mesh. Two near-axis rays must agree; disagreements use the original query. Tolerances are unchanged.
+
+Only the skirt STL changed. The nine other STL hashes match the MOUNT-1 release; upper, carrier-entry and query-comparison evidence is retained for those exact unchanged meshes. All current general/base/facet checks were rerun. The old curved skirt failed all36 panel-plane, normal and wall tests.
 
 Finite sampling does not prove every possible continuous pose. Skirt lowering separately uses a conservative continuous projection bound. Actual servo shaft offsets and ear holes are not fully dimensioned by the maker. The guide specifies measured fit gates and slotted supports.
 
 ## Printing and mass
 
-The H2D script uses isolated installed Bambu Studio settings and never contacts a printer. Eight changed designs were newly sliced, with exact unchanged records retained for the head and carriage. All ten source hashes and deposited heights match. All generated deposition fits the stock left325 x320mm area. Requested brim settings do not prove a separate brim was generated; the report records actual feature output.
+The H2D script uses isolated installed Bambu Studio settings and never contacts a printer. The complete faceted skirt was newly sliced. Nine unchanged slice records were retained only after verifying their exact STL hashes. All ten source hashes and deposited heights match. All generated deposition fits the stock left325 x320mm area. Requested brim settings do not prove a separate brim was generated; the report records actual feature output.
 
-The clamp option predicts4,212.07g filament,2,469.59g installed plastic and124.49hours of sequential printing. The skirt uses1,040.72g PLA and predicts24 hours8 minutes10 seconds: allow1.15kg with reserve. The upper shell uses1,235.49g PETG and predicts39 hours10 minutes11 seconds: allow1.36kg. Both need sufficient capacity or compatible filament changes.
+The clamp option predicts4,180.82g filament,2,473.98g installed plastic and124.28hours of sequential printing. The skirt uses1,009.47g PLA and predicts23 hours55 minutes37 seconds: allow1.12kg with reserve. The upper shell uses1,235.49g PETG and predicts39 hours10 minutes11 seconds: allow1.36kg. Both need sufficient capacity or compatible filament changes.
 
-The electrical generator reads the current installed-plastic prediction. Including only plastic, five motors/wheels, four servos and the battery gives incomplete totals of3.569kg Bioenno,4.839kg7Ah SLA and6.649kg14Ah SLA. Other electronics, bearings, fasteners, wiring, padding and finish must be added. Actual weighing is required.
+The electrical generator reads the current installed-plastic prediction. Including only plastic, five motors/wheels, four servos and the battery gives incomplete totals of3.573kg Bioenno,4.843kg7Ah SLA and6.653kg14Ah SLA. Other electronics, bearings, fasteners, wiring, padding and finish must be added. Actual weighing is required.
 
 ## Circuits, control and media
 

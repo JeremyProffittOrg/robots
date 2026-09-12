@@ -7,7 +7,7 @@
       "start": 0,
       "end": 5,
       "title": "Ten STL designs. Two mounting options.",
-      "instruction": "Fourteen prints with motor clamps; ten with motor ties. One-piece board platform and combined shoulder/neck.",
+      "instruction": "Twelve flat skirt panels in one print. Ten STL designs; fourteen prints with clamps or ten with motor ties.",
       "narration": "Simulated assembly. Ten designs."
     },
     {
@@ -41,9 +41,9 @@
     {
       "start": 36,
       "end": 41,
-      "title": "05 | Lower the skirt around the base",
-      "instruction": "The whole213mm skirt lowers around the completed base assembly. Four M4 screws engage retained nuts. Lift the skirt for battery service.",
-      "narration": "Lower the one piece skirt over the finished base."
+      "title": "05 | Twelve flat skirt panels",
+      "instruction": "The single213mm skirt has twelve full-height flat faces. Lower it around the completed base. The circular joints and captured nuts retain their positions.",
+      "narration": "Lower the faceted skirt over the finished base."
     },
     {
       "start": 41,

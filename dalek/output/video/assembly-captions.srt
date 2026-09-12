@@ -1,7 +1,7 @@
 1
 00:00:00,000 --> 00:00:05,000
 Ten STL designs. Two mounting options.
-Fourteen prints with motor clamps; ten with motor ties. One-piece board platform and combined shoulder/neck.
+Twelve flat skirt panels in one print. Ten STL designs; fourteen prints with clamps or ten with motor ties.
 
 2
 00:00:05,000 --> 00:00:13,000
@@ -25,8 +25,8 @@ Fit boards on the bench. Lower the single platform with its four legs over the b
 
 6
 00:00:36,000 --> 00:00:41,000
-05 | Lower the skirt around the base
-The whole213mm skirt lowers around the completed base assembly. Four M4 screws engage retained nuts. Lift the skirt for battery service.
+05 | Twelve flat skirt panels
+The single213mm skirt has twelve full-height flat faces. Lower it around the completed base. The circular joints and captured nuts retain their positions.
 
 7
 00:00:41,000 --> 00:00:51,000

@@ -1,8 +1,9 @@
-// DALEK MOUNT-1. Millimetres; +Y rear, +X right, Z up.
+// DALEK FACET-1. Millimetres; +Y rear, +X right, Z up.
 // Ten STL designs; two pitch carriers and four optional motor clamps.
 part="assembly";
 $fn=64;
 wall=1.8; M3=3.4; M4=4.4;
+skirt_sides=12;
 motor_axle_height=11.7;
 base_z=31.5-6-motor_axle_height;
 shoulder_h=120;
@@ -14,43 +15,49 @@ module ring(ro,ri,h){difference(){cylinder(r=ro,h=h);translate([0,0,-.1])cylinde
 module joint_holes(r=150,z=0){for(a=[0:90:270])rotate([0,0,a])translate([r-13,0,z])hole(M4,18);}
 module tongue(r=150,z=0){translate([0,0,z])ring(r-4.5,r-6.5,3);}
 module groove(r=150){translate([0,0,-.1])ring(r-4.2,r-6.8,3.4);}
-module conical_inner(a,b,h){translate([0,0,-.1])cylinder(r1=a-wall,r2=b-wall,h=h+.2);}
+module conical_inner(a,b,h){
+ dr=(b-a)/h; cp=cos(180/skirt_sides);
+ inset=wall*sqrt(1+dr*dr*cp*cp)/cp;
+ translate([0,0,-.1])cylinder(r1=a-inset-.1*dr,r2=b-inset+.1*dr,h=h+.2,$fn=skirt_sides);
+}
 module motor_envelope(){translate([-11.2,-57,0])cube([22.4,70,22.44]);}
 module wheel_wells(){intersection(){translate([0,0,-1])cylinder(r=147,h=59);union(){for(sx=[-1,1])for(sy=[-1,1])scale([sx,sy,1])translate([80.5,24,-1])cube([37,70,59]);}}}
 include <base_mounts.scad>;
-module bump(a,b,h,z,ang){rr=a+(b-a)*z/h;rotate([0,0,ang])translate([rr-3,0,z])rotate([0,90,0]){
- cylinder(d=23,h=3,$fn=32);translate([0,0,1.8])scale([1,1,.72])sphere(r=10,$fn=32);
+module bump(a,b,h,z,ang){
+ rr=(a+(b-a)*z/h)*cos(180/skirt_sides);
+ tilt=atan((a-b)*cos(180/skirt_sides)/h);
+ rotate([0,0,ang])translate([rr,0,z])rotate([0,90-tilt,0])translate([0,0,-3]){
+ cylinder(d=23,h=4,$fn=32);translate([0,0,1.8])scale([1,1,.72])sphere(r=10,$fn=32);
  }}
 module skirt_skin(a,b,h){union(){
- difference(){cylinder(r1=a,r2=b,h=h);conical_inner(a,b,h);}
+ difference(){cylinder(r1=a,r2=b,h=h,$fn=skirt_sides);conical_inner(a,b,h);}
  difference(){union(){
-  for(z=[26,76])for(ang=[15:30:345])bump(a,b,h,z,ang);
-  for(ang=[0:30:330])rotate([0,0,ang])hull(){translate([a-.8,0,8])sphere(r=1,$fn=12);translate([b-.8,0,h-8])sphere(r=1,$fn=12);}
+  for(z=[26,76,136,186])for(ang=[15:30:345])bump(a,b,h,z,ang);
+  for(ang=[0:30:330])rotate([0,0,ang])hull(){
+   translate([a+(b-a)*8/h-.3,0,8])sphere(r=.8,$fn=12);
+   translate([b-(b-a)*8/h-.3,0,h-8])sphere(r=.8,$fn=12);
+  }
  }conical_inner(a,b,h);}
  }}
-module skirt_rib(){rotate_extrude()polygon([
- [125.9090909,106],[125,110],[124.4,114],
- [123.6,114],[120,110],[124.1,106]
-]);}
-module skirt_lower(){difference(){union(){
- skirt_skin(150,125,110);ring(150,132,6);
- }groove(150);joint_holes(150,3);}}
-module skirt_upper(){union(){difference(){union(){
- translate([0,0,110])skirt_skin(125,110,100);
- // Preserve the former upper flange's visible6mm outer band as thin skin.
- translate([0,0,110])ring(125,123.2,6);
+module skirt_rib(){
+ cp=cos(180/skirt_sides); dr=-40/210;
+ inset=wall*sqrt(1+dr*dr*cp*cp)/cp;
+ rotate_extrude($fn=skirt_sides)polygon([
+  [150+dr*106,106],[150+dr*110,110],[150+dr*114,114],
+  [150+dr*114-inset+.1,114],[120/cp,110],[150+dr*106-inset+.1,106]
+ ]);
+}
+module skirt(){union(){difference(){union(){
+ skirt_skin(150,110,210);ring(150,132,6);skirt_rib();
  translate([0,0,204])ring(110,92,6);tongue(110,210);
  // Captured upper-joint nuts use the same proven pocket and roof as the base.
  for(a=[0:90:270])rotate([0,0,a])translate([97,0,199])cylinder(d=16,h=11);
- // Integral tapered rib replaces the two middle flanges and four bolts.
- // Its inside radius is120mm; tapered undersides avoid a wide support ledge.
- }joint_holes(110,207);
+ }groove(150);joint_holes(150,3);joint_holes(110,207);
  for(a=[0:90:270])rotate([0,0,a])translate([97,0,156])captive_base_nut_pocket();
  }
  for(a=[0:90:270])rotate([0,0,a])translate([97,0,199])
   for(x=[-3.55,3.55])translate([x-.3,-1.8,0])cube([.6,3.6,.6]);
 }}
-module skirt(){union(){skirt_lower();skirt_upper();skirt_rib();}}
 module horn_pattern(){hole(5,18);for(a=[0:90:270])rotate([0,0,a])translate([8,0,0])slot(3,2.2,18);}
 module rounded_box(size,r=5){hull()for(x=[r,size[0]-r])for(y=[r,size[1]-r])for(z=[r,size[2]-r])translate([x,y,z])sphere(r=r,$fn=24);}
 include <upper_mounts.scad>;

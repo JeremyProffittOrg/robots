@@ -1,4 +1,4 @@
-"""Sample released MOUNT-1 component, motion and assembly-path clearances.
+"""Sample released FACET-1 component, motion and assembly-path clearances.
 
 These are nominal digital envelope checks, not a print-strength or hardware test.
 """
@@ -158,6 +158,6 @@ for yaw,pitch in [(-8,-8),(-8,8),(0,0),(8,-8),(8,8)]:
     record(f"opaque-liner-visible-servo-rays-{yaw}-{pitch}",total,visible)
 
 assert mesh_hashes=={n:hashlib.sha256((ROOT/"stl"/(n+".stl")).read_bytes()).hexdigest() for n in sorted(meshes)},"Mesh changed during mechanical checks"
-report={"design":"MOUNT-1","method":METHOD+"; deterministic nominal samples and mesh-vertex paths; no physical test","seed":37773766,"all_pass":all(r["passed"] for r in results),"mesh_sha256":mesh_hashes,"checks":results,"limits":["Finite sampling is not an exact collision proof.","Paint, tire runout, real horns, cable ties, fabric folds and print strength require builder checks.","Fabric liners must be opaque and remain attached throughout the permitted eight-degree motion."]}
+report={"design":"FACET-1","method":METHOD+"; deterministic nominal samples and mesh-vertex paths; no physical test","seed":37773766,"all_pass":all(r["passed"] for r in results),"mesh_sha256":mesh_hashes,"checks":results,"limits":["Finite sampling is not an exact collision proof.","Paint, tire runout, real horns, cable ties, fabric folds and print strength require builder checks.","Fabric liners must be opaque and remain attached throughout the permitted eight-degree motion."]}
 (ROOT/"cad/mechanical-checks.json").write_text(json.dumps(report,indent=2)+"\n",encoding="utf-8")
 raise SystemExit(0 if report["all_pass"] else "Mechanical sampling failed; see cad/mechanical-checks.json")

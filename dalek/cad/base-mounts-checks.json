@@ -1,23 +1,23 @@
 {
-  "design": "MOUNT-1",
+  "design": "FACET-1",
   "all_pass": true,
   "method": "Deterministic finite volume, surface and installation-path samples; millimetres in base coordinates",
   "mesh_query_method": "Two independent near-axis parity rays; original trimesh.contains on disagreements",
   "mesh_sha256": {
     "01_base": "630add985fa781c9b147c5d3bb8902277886cb6051b13170d043c3b284b921cb",
-    "02_skirt": "e1c5b30b59fc58872fa6330aae276f9cdba8bbf3136164a0e63bb2e81075dfc6",
+    "02_skirt": "5149241c3c95dc439403d857803fc50b5022a8757f729c8dbcf69a8435757b56",
     "11_motor_clamp": "2cc2fe30c3189d2346972caf989f2b90e2006d1196c611d8e3ca648186263fac",
     "12_electronics_platform": "3e437481e29666f0df7320da469ad02914122c45b5dd4fa570c24a34960b4e9f"
   },
   "source_sha256": {
     "stl/01_base.stl": "630add985fa781c9b147c5d3bb8902277886cb6051b13170d043c3b284b921cb",
-    "stl/02_skirt.stl": "e1c5b30b59fc58872fa6330aae276f9cdba8bbf3136164a0e63bb2e81075dfc6",
+    "stl/02_skirt.stl": "5149241c3c95dc439403d857803fc50b5022a8757f729c8dbcf69a8435757b56",
     "stl/11_motor_clamp.stl": "2cc2fe30c3189d2346972caf989f2b90e2006d1196c611d8e3ca648186263fac",
     "stl/12_electronics_platform.stl": "3e437481e29666f0df7320da469ad02914122c45b5dd4fa570c24a34960b4e9f",
     "cad/base_mounts.scad": "c17ea3ce7b041f4f2d9534c1cae9c4942bbd9f0bea82642bff0d5a66de21bbcd",
-    "cad/dalek.scad": "6d7e60ce25e627b4fa94c9da662890127f20613b1164fce99424dab9c5042c11",
+    "cad/dalek.scad": "a0f5378d05b069367310bd0934f6cd1d9e20d258894db7ab1a4d5610c424017c",
     "scripts/mesh_queries.py": "f7c67798f3b32d9f8dbad6649fa88cccfc7b7af0763d160cfc2e97ac0df89e08",
-    "scripts/check_base_mounts.py": "534de2e172e0d81568cfb19a2f5d1d6b566deb940d10fe18cd0ea604a5e5ebf0"
+    "scripts/check_base_mounts.py": "c80e37236bf8fd041ce0761d0934c747b58afadfd650fc96d2a99f1d18f0d52a"
   },
   "board_layout": [
     [
@@ -190,6 +190,266 @@
       "samples": 1,
       "failures": 0,
       "passed": true
+    },
+    {
+      "check": "faceted-full-height-panel-00-outer-plane",
+      "samples": 45,
+      "failures": 0,
+      "passed": true,
+      "maximum_position_error_mm": 5.331906658412322e-06
+    },
+    {
+      "check": "faceted-full-height-panel-00-plane-normal",
+      "samples": 45,
+      "failures": 0,
+      "passed": true,
+      "minimum_normal_cosine": 0.9999999999435237
+    },
+    {
+      "check": "faceted-full-height-panel-00-1.8mm-normal-wall",
+      "samples": 40,
+      "failures": 0,
+      "passed": true,
+      "maximum_thickness_error_mm": 7.67093895182036e-06
+    },
+    {
+      "check": "faceted-full-height-panel-01-outer-plane",
+      "samples": 45,
+      "failures": 0,
+      "passed": true,
+      "maximum_position_error_mm": 3.5244750655749613e-06
+    },
+    {
+      "check": "faceted-full-height-panel-01-plane-normal",
+      "samples": 45,
+      "failures": 0,
+      "passed": true,
+      "minimum_normal_cosine": 0.9999999999975553
+    },
+    {
+      "check": "faceted-full-height-panel-01-1.8mm-normal-wall",
+      "samples": 40,
+      "failures": 0,
+      "passed": true,
+      "maximum_thickness_error_mm": 3.7199426887735143e-06
+    },
+    {
+      "check": "faceted-full-height-panel-02-outer-plane",
+      "samples": 45,
+      "failures": 0,
+      "passed": true,
+      "maximum_position_error_mm": 5.331906658412322e-06
+    },
+    {
+      "check": "faceted-full-height-panel-02-plane-normal",
+      "samples": 45,
+      "failures": 0,
+      "passed": true,
+      "minimum_normal_cosine": 0.9999999999435237
+    },
+    {
+      "check": "faceted-full-height-panel-02-1.8mm-normal-wall",
+      "samples": 40,
+      "failures": 0,
+      "passed": true,
+      "maximum_thickness_error_mm": 7.67093895270854e-06
+    },
+    {
+      "check": "faceted-full-height-panel-03-outer-plane",
+      "samples": 45,
+      "failures": 0,
+      "passed": true,
+      "maximum_position_error_mm": 5.331906658412322e-06
+    },
+    {
+      "check": "faceted-full-height-panel-03-plane-normal",
+      "samples": 45,
+      "failures": 0,
+      "passed": true,
+      "minimum_normal_cosine": 0.9999999999435237
+    },
+    {
+      "check": "faceted-full-height-panel-03-1.8mm-normal-wall",
+      "samples": 40,
+      "failures": 0,
+      "passed": true,
+      "maximum_thickness_error_mm": 7.67093895226445e-06
+    },
+    {
+      "check": "faceted-full-height-panel-04-outer-plane",
+      "samples": 45,
+      "failures": 0,
+      "passed": true,
+      "maximum_position_error_mm": 3.0118258389499886e-06
+    },
+    {
+      "check": "faceted-full-height-panel-04-plane-normal",
+      "samples": 45,
+      "failures": 0,
+      "passed": true,
+      "minimum_normal_cosine": 0.9999999999975031
+    },
+    {
+      "check": "faceted-full-height-panel-04-1.8mm-normal-wall",
+      "samples": 40,
+      "failures": 0,
+      "passed": true,
+      "maximum_thickness_error_mm": 3.7199426887735143e-06
+    },
+    {
+      "check": "faceted-full-height-panel-05-outer-plane",
+      "samples": 45,
+      "failures": 0,
+      "passed": true,
+      "maximum_position_error_mm": 5.196419218922443e-06
+    },
+    {
+      "check": "faceted-full-height-panel-05-plane-normal",
+      "samples": 45,
+      "failures": 0,
+      "passed": true,
+      "minimum_normal_cosine": 0.9999999999435236
+    },
+    {
+      "check": "faceted-full-height-panel-05-1.8mm-normal-wall",
+      "samples": 40,
+      "failures": 0,
+      "passed": true,
+      "maximum_thickness_error_mm": 7.67093895270854e-06
+    },
+    {
+      "check": "faceted-full-height-panel-06-outer-plane",
+      "samples": 45,
+      "failures": 0,
+      "passed": true,
+      "maximum_position_error_mm": 5.1964191896125556e-06
+    },
+    {
+      "check": "faceted-full-height-panel-06-plane-normal",
+      "samples": 45,
+      "failures": 0,
+      "passed": true,
+      "minimum_normal_cosine": 0.9999999999435237
+    },
+    {
+      "check": "faceted-full-height-panel-06-1.8mm-normal-wall",
+      "samples": 40,
+      "failures": 0,
+      "passed": true,
+      "maximum_thickness_error_mm": 7.67093895270854e-06
+    },
+    {
+      "check": "faceted-full-height-panel-07-outer-plane",
+      "samples": 45,
+      "failures": 0,
+      "passed": true,
+      "maximum_position_error_mm": 3.011825818965974e-06
+    },
+    {
+      "check": "faceted-full-height-panel-07-plane-normal",
+      "samples": 45,
+      "failures": 0,
+      "passed": true,
+      "minimum_normal_cosine": 0.9999999999975553
+    },
+    {
+      "check": "faceted-full-height-panel-07-1.8mm-normal-wall",
+      "samples": 40,
+      "failures": 0,
+      "passed": true,
+      "maximum_thickness_error_mm": 3.7199426992096107e-06
+    },
+    {
+      "check": "faceted-full-height-panel-08-outer-plane",
+      "samples": 45,
+      "failures": 0,
+      "passed": true,
+      "maximum_position_error_mm": 5.331906657968233e-06
+    },
+    {
+      "check": "faceted-full-height-panel-08-plane-normal",
+      "samples": 45,
+      "failures": 0,
+      "passed": true,
+      "minimum_normal_cosine": 0.9999999999435236
+    },
+    {
+      "check": "faceted-full-height-panel-08-1.8mm-normal-wall",
+      "samples": 40,
+      "failures": 0,
+      "passed": true,
+      "maximum_thickness_error_mm": 7.67093895226445e-06
+    },
+    {
+      "check": "faceted-full-height-panel-09-outer-plane",
+      "samples": 45,
+      "failures": 0,
+      "passed": true,
+      "maximum_position_error_mm": 5.331906630434702e-06
+    },
+    {
+      "check": "faceted-full-height-panel-09-plane-normal",
+      "samples": 45,
+      "failures": 0,
+      "passed": true,
+      "minimum_normal_cosine": 0.9999999999435237
+    },
+    {
+      "check": "faceted-full-height-panel-09-1.8mm-normal-wall",
+      "samples": 40,
+      "failures": 0,
+      "passed": true,
+      "maximum_thickness_error_mm": 7.670938951598316e-06
+    },
+    {
+      "check": "faceted-full-height-panel-10-outer-plane",
+      "samples": 45,
+      "failures": 0,
+      "passed": true,
+      "maximum_position_error_mm": 3.0118258389499886e-06
+    },
+    {
+      "check": "faceted-full-height-panel-10-plane-normal",
+      "samples": 45,
+      "failures": 0,
+      "passed": true,
+      "minimum_normal_cosine": 0.9999999999975553
+    },
+    {
+      "check": "faceted-full-height-panel-10-1.8mm-normal-wall",
+      "samples": 40,
+      "failures": 0,
+      "passed": true,
+      "maximum_thickness_error_mm": 3.7199426887735143e-06
+    },
+    {
+      "check": "faceted-full-height-panel-11-outer-plane",
+      "samples": 45,
+      "failures": 0,
+      "passed": true,
+      "maximum_position_error_mm": 5.1964191896125556e-06
+    },
+    {
+      "check": "faceted-full-height-panel-11-plane-normal",
+      "samples": 45,
+      "failures": 0,
+      "passed": true,
+      "minimum_normal_cosine": 0.9999999999435236
+    },
+    {
+      "check": "faceted-full-height-panel-11-1.8mm-normal-wall",
+      "samples": 40,
+      "failures": 0,
+      "passed": true,
+      "maximum_thickness_error_mm": 7.67093895182036e-06
+    },
+    {
+      "check": "faceted-rib-240mm-across-flats",
+      "samples": 12,
+      "failures": 0,
+      "passed": true,
+      "minimum_across_flats_mm": 239.99998914907917,
+      "maximum_across_flats_mm": 239.999990989703
     },
     {
       "check": "base-captive-M4-nut-0-pocket",
@@ -1751,10 +2011,10 @@
     },
     {
       "check": "skirt-lowers-over-populated-chassis",
-      "samples": 32190,
+      "samples": 30584,
       "failures": 0,
       "passed": true,
-      "conservative_radial_clearance_mm": 11.615,
+      "conservative_radial_clearance_mm": 3.044,
       "method": "Continuous conservative XY projection bound for all triangles that can reach the chassis"
     },
     {

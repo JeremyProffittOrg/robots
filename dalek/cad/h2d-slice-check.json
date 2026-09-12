@@ -1,6 +1,6 @@
 {
-  "design": "MOUNT-1",
-  "checked_at_utc": "2026-09-12T18:46:36.422182+00:00",
+  "design": "FACET-1",
+  "checked_at_utc": "2026-09-12T22:43:31.625162+00:00",
   "status": "pass",
   "test_type": "Actual isolated Bambu Studio H2D CLI slices; no printer connection or physical print",
   "profiles": {
@@ -269,7 +269,7 @@
     {
       "part": "02_skirt",
       "path": "stl/02_skirt.stl",
-      "sha256": "e1c5b30b59fc58872fa6330aae276f9cdba8bbf3136164a0e63bb2e81075dfc6",
+      "sha256": "5149241c3c95dc439403d857803fc50b5022a8757f729c8dbcf69a8435757b56",
       "quantity": 1,
       "material": "PLA",
       "process_overrides": {
@@ -286,11 +286,11 @@
         "skirt_loops": "0"
       },
       "mesh_bounds_mm": [
-        300.33184814453125,
-        300.33184814453125,
+        300.0,
+        300.0,
         213.0
       ],
-      "checked_at_utc": "2026-09-12T18:39:11.383135+00:00",
+      "checked_at_utc": "2026-09-12T22:42:45.400351+00:00",
       "pass_check": true,
       "flattened_profile_sha256": {
         "machine": "4b6df1bb49551f697a9ade537fcff4a296a490ea5989fa8456e4d1ee71c56e66",
@@ -329,17 +329,17 @@
       "argv": [
         "C:\\Program Files\\Bambu Studio\\bambu-studio.exe",
         "--datadir",
-        "C:\\Users\\Jeremy\\AppData\\Local\\Temp\\dalek-round-h2d-nx56_om8\\state",
+        "C:\\Users\\Jeremy\\AppData\\Local\\Temp\\dalek-round-h2d-1vxwp2m5\\state",
         "--load-settings",
-        "C:\\Users\\Jeremy\\AppData\\Local\\Temp\\dalek-round-h2d-nx56_om8\\machine.json;C:\\Users\\Jeremy\\AppData\\Local\\Temp\\dalek-round-h2d-nx56_om8\\process.json",
+        "C:\\Users\\Jeremy\\AppData\\Local\\Temp\\dalek-round-h2d-1vxwp2m5\\machine.json;C:\\Users\\Jeremy\\AppData\\Local\\Temp\\dalek-round-h2d-1vxwp2m5\\process.json",
         "--load-filaments",
-        "C:\\Users\\Jeremy\\AppData\\Local\\Temp\\dalek-round-h2d-nx56_om8\\filament.json",
+        "C:\\Users\\Jeremy\\AppData\\Local\\Temp\\dalek-round-h2d-1vxwp2m5\\filament.json",
         "--curr-bed-type",
         "Textured PEI Plate",
         "--debug",
         "2",
         "--load-assemble-list",
-        "C:\\Users\\Jeremy\\AppData\\Local\\Temp\\dalek-round-h2d-nx56_om8\\assemble.json",
+        "C:\\Users\\Jeremy\\AppData\\Local\\Temp\\dalek-round-h2d-1vxwp2m5\\assemble.json",
         "--ensure-on-bed",
         "--allow-rotations=0",
         "--arrange",
@@ -347,24 +347,24 @@
         "--slice",
         "0",
         "--export-3mf",
-        "C:\\Users\\Jeremy\\AppData\\Local\\Temp\\dalek-round-h2d-nx56_om8\\part.3mf"
+        "C:\\Users\\Jeremy\\AppData\\Local\\Temp\\dalek-round-h2d-1vxwp2m5\\part.3mf"
       ],
-      "process_id": 94944,
+      "process_id": 130732,
       "process_exit_code": 0,
-      "elapsed_seconds": 19.45,
+      "elapsed_seconds": 26.04,
       "slicer_stdout_tail": "",
       "slicer_stderr_tail": "",
       "result_code": 0,
       "error_string": "Success.",
       "loaded_bbox": {
-        "depth": 300.33184814453125,
+        "depth": 300.0,
         "height": 213.0,
-        "width": 300.33184814453125,
-        "x": 12.334075927734375,
-        "y": 9.834075927734375,
+        "width": 300.0,
+        "x": 12.5,
+        "y": 10.0,
         "z": 0.0
       },
-      "loaded_triangle_count": 40992,
+      "loaded_triangle_count": 36664,
       "rigid_model_transforms": [
         [
           1.0,
@@ -398,7 +398,7 @@
       "selected_nozzle": "left: logical filament T0 -> filament_map1 -> physical_extruder_map[0]=1",
       "gcode_extrusion_bounds": {
         "verified": true,
-        "extruding_move_count": 1511332,
+        "extruding_move_count": 1336497,
         "features": [
           "Bottom surface",
           "Bridge",
@@ -419,14 +419,14 @@
           "T0"
         ],
         "extrusion_centerline_bounds_xy_mm": [
-          8.077,
-          5.577,
-          316.924,
-          314.424
+          8.063,
+          5.564,
+          316.937,
+          314.437
         ],
         "extrusion_centerline_size_xy_mm": [
-          308.847,
-          308.847
+          308.874,
+          308.873
         ],
         "deposition_z_range_mm": [
           0.2,
@@ -436,12 +436,12 @@
           0.2,
           213.0
         ],
-        "maximum_bead_width_used_mm": 0.735414,
+        "maximum_bead_width_used_mm": 0.675808,
         "conservative_bead_bounds_xy_mm": [
-          7.7093,
-          5.2093,
-          317.2917,
-          314.7917
+          7.7251,
+          5.2261,
+          317.2749,
+          314.7749
         ],
         "single_nozzle_areas_containing_all_paths": [
           "left"
@@ -452,40 +452,40 @@
           "filament_diameter_mm": 1.75,
           "filament_length_mm_by_feature": {
             "Bottom surface": 499.106,
-            "Bridge": 3814.649,
-            "Brim": 312.528,
-            "Floating vertical shell": 1938.21,
-            "Gap infill": 11323.04,
-            "Inner wall": 81111.34,
-            "Internal solid infill": 11519.558,
-            "Outer wall": 54282.293,
-            "Overhang wall": 120.685,
-            "Sparse infill": 8434.607,
-            "Support": 165762.063,
-            "Support interface": 1228.66,
-            "Support transition": 606.438,
-            "Top surface": 2433.647
+            "Bridge": 3735.067,
+            "Brim": 356.517,
+            "Floating vertical shell": 1843.125,
+            "Gap infill": 13755.731,
+            "Inner wall": 80893.478,
+            "Internal solid infill": 11239.053,
+            "Outer wall": 54400.633,
+            "Overhang wall": 197.255,
+            "Sparse infill": 8149.851,
+            "Support": 153503.968,
+            "Support interface": 1592.803,
+            "Support transition": 695.314,
+            "Top surface": 2212.948
           },
           "filament_mass_g_by_feature": {
             "Bottom surface": 1.513,
-            "Bridge": 11.561,
-            "Brim": 0.947,
-            "Floating vertical shell": 5.874,
-            "Gap infill": 34.316,
-            "Inner wall": 245.821,
-            "Internal solid infill": 34.912,
-            "Outer wall": 164.511,
-            "Overhang wall": 0.366,
-            "Sparse infill": 25.562,
-            "Support": 502.368,
-            "Support interface": 3.724,
-            "Support transition": 1.838,
-            "Top surface": 7.376
+            "Bridge": 11.32,
+            "Brim": 1.08,
+            "Floating vertical shell": 5.586,
+            "Gap infill": 41.689,
+            "Inner wall": 245.16,
+            "Internal solid infill": 34.062,
+            "Outer wall": 164.87,
+            "Overhang wall": 0.598,
+            "Sparse infill": 24.699,
+            "Support": 465.218,
+            "Support interface": 4.827,
+            "Support transition": 2.107,
+            "Top surface": 6.707
           },
-          "estimated_installed_printed_model_mass_g": 531.811,
-          "support_mass_g": 507.929,
-          "brim_and_skirt_mass_g": 0.947,
-          "all_labelled_moving_extrusion_mass_g": 1040.687,
+          "estimated_installed_printed_model_mass_g": 536.202,
+          "support_mass_g": 472.152,
+          "brim_and_skirt_mass_g": 1.08,
+          "all_labelled_moving_extrusion_mass_g": 1009.435,
           "method": "Sum positive filament extrusion on XY-moving G0/G1/G2/G3 paths labelled after CHANGE_LAYER; exclude Custom/Flush machine commands and stationary unretraction; convert1.75mmfilament length with G-code profile density. Support labels and Brim/Skirt are separated from model labels. This is a G-code prediction, not measured installed mass."
         },
         "excluded_features": [
@@ -494,7 +494,7 @@
         ],
         "limitation": "Bounds include sliced model, support and brim paths with half the maximum bead width added. Machine purge/cleaning moves are excluded. Z ranges are actual moving deposition endpoints, separate from slicer header metadata."
       },
-      "gcode_sha256": "61cde96d4b73371c21c4c8f60d9fe0babf63f4430b2eed5979aa5e61cea2bfaa",
+      "gcode_sha256": "f0a96e9846c360d47d3a302794a78b3107235b75ea8eeff4b0ec526ab7a8565e",
       "gcode_verified_config": {
         "bottom_shell_layers": "4",
         "brim_type": "outer_only",
@@ -517,12 +517,12 @@
         "wall_loops": "4"
       },
       "complete_printed_height_verified": true,
-      "filament_mass_g": 1040.7174072265625,
-      "total_time_seconds": 86889.703125,
-      "estimated_installed_printed_model_mass_g": 531.811,
-      "temporary_slice_archive": "C:\\Users\\Jeremy\\AppData\\Local\\Temp\\dalek-round-h2d-02_skirt-cmj5qzk0.3mf",
-      "temporary_slice_archive_sha256": "172758990559f971619b9ba1d3fca619bca4283414c6edcddb5c85905281ea67",
-      "generated_brim_and_skirt_mass_g": 0.947,
+      "filament_mass_g": 1009.4653930664062,
+      "total_time_seconds": 86137.40625,
+      "estimated_installed_printed_model_mass_g": 536.202,
+      "temporary_slice_archive": "C:\\Users\\Jeremy\\AppData\\Local\\Temp\\dalek-round-h2d-02_skirt-0c714tzw.3mf",
+      "temporary_slice_archive_sha256": "f08ca8ff11b07e8421c1e56ef45d04b51c9f86b0f7b270b506101563bf1411e8",
+      "generated_brim_and_skirt_mass_g": 1.08,
       "adhesion_note": "Slicer generated a brim; the complete model/support/brim deposition footprint is checked."
     },
     {
@@ -2587,8 +2587,8 @@
   ],
   "unique_designs_sliced": 10,
   "printed_piece_quantity": 14,
-  "total_predicted_filament_mass_g": 4212.07,
-  "total_predicted_installed_model_mass_g": 2469.59,
-  "total_predicted_time_seconds": 448159.36,
+  "total_predicted_filament_mass_g": 4180.82,
+  "total_predicted_installed_model_mass_g": 2473.98,
+  "total_predicted_time_seconds": 447407.06,
   "physical_verified": false
 }

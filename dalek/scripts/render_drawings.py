@@ -1,4 +1,4 @@
-"""Render MATLAB-style PNG engineering views of the MOUNT-1 STL set.
+"""Render MATLAB-style PNG engineering views of the FACET-1 STL set.
 
 Uses the installed Matplotlib/trimesh tools. No MATLAB licence or CAD edit is needed.
 Run from any directory: python C:/dev/robots/dalek/scripts/render_drawings.py
@@ -23,9 +23,9 @@ OUT = ROOT / 'output/drawings'
 DPI = 180
 NAMES = ['01_base', '02_skirt', '04_shoulder', '06_head', '07_pitch_carrier',
          '08_plunger_arm', '09_emitter_arm', '10_head_motor_carriage', '11_motor_clamp', '12_electronics_platform']
-LABELS = ['Motor base', 'One-piece skirt', 'Shoulder and neck', 'Integrated head',
+LABELS = ['Motor base', 'Faceted skirt', 'Shoulder and neck', 'Integrated head',
           'Pitch carrier', 'Plunger arm', 'Emitter arm', 'Head motor carriage', 'Hook motor clamp', 'Board platform']
-# MATLAB default colour-order family; the merged skirt retains the cyan lower-skirt colour.
+# MATLAB default colour-order family; cyan identifies the faceted skirt.
 COLORS = np.array([[0, .447, .741], [.301, .745, .933],
                    [.494, .184, .556], [.929, .694, .125], [.10, .63, .57],
                    [.85, .325, .098], [.635, .078, .184], [.28, .49, .80], [.55, .55, .25], [.466, .674, .188]])
@@ -88,9 +88,6 @@ def scene(meshes, gap=0, spread=False, bronze=False):
     for i, height in enumerate([BASE_Z, 67.8, SHOULDER_Z, HEAD_Z]):
         render_mesh = meshes[NAMES[i]]
         color = palette[i]
-        if bronze and i == 1:
-            centers = meshes[NAMES[i]].triangles_center
-            color = np.tile(color, (len(centers), 1)); color[centers[:, 2] >= 110] = [.69, .50, .28]
         if bronze and i == 2:
             # Subdivide display-copy faces at the paint line. A centroid test on
             # merged wall triangles otherwise paints gray wedges into the shoulder.
@@ -271,7 +268,7 @@ def title(fig, heading, subtitle):
     fig.text(.05, .934, subtitle, fontsize=10, color='#535e69', ha='left')
 
 
-def footer(fig, text='Actual MOUNT-1 STL geometry | Dimensions in mm | +Y is rear; -Y is front'):
+def footer(fig, text='Actual FACET-1 STL geometry | Dimensions in mm | +Y is rear; -Y is front'):
     fig.text(.05, .035, text, fontsize=9, color='#626b74')
 
 
@@ -318,14 +315,14 @@ def robot_figures(meshes):
         draw_meshes(ax, items, edges=False)
         bounds = [[-205, -370 if exploded else -270, 0], [215, 175, 765 if exploded else 590]]
         setup_3d(ax, bounds, elev=22, azim=-58, tick_step=100)
-        title(fig, 'Dalek MOUNT-1 / '+('exploded assembly' if exploded else 'assembled robot'),
+        title(fig, 'Dalek FACET-1 / '+('exploded assembly' if exploded else 'assembled robot'),
               '10 STL designs / 14 prints with clamps; 10 prints with motor ties' +
               (' | Body separation 44 mm; hidden arms and carriage offset for clarity' if exploded
                else ' | Bronze finish | Nominal height 563.8 mm | Round base diameter 300 mm'))
         footer(fig, 'STL surfaces are exact | Gray purchased-part envelopes are illustrative | Orthographic 3D projection')
         fig.canvas.draw()
         labels = [((145, -80, 51.8), '01  Motor base', (.04, .18)),
-                  ((105, -80, 157.8+gap), '02  One-piece skirt', (.82, .36)),
+                  ((105, -80, 157.8+gap), '02  Faceted skirt', (.82, .36)),
                   ((95, -45, 337.8+2*gap), '04  Shoulder + neck', (.82, .59)),
                   ((60, -55, 524.8+3*gap), '06  Integrated head', (.82, .84))]
         for point, label, position in labels:
@@ -371,7 +368,7 @@ def orthographics(meshes):
     dimension(axes[0, 0], (-188, 0), (-188, HEIGHT), '563.8 mm', rotation=90)
     dimension(axes[1, 1], (-150, 166), (150, 166), 'Base diameter 300 mm')
     dimension(axes[1, 1], (181, -150), (181, 150), 'Base 300 mm', rotation=90)
-    title(fig, 'Dalek MOUNT-1 / orthographic drawings',
+    title(fig, 'Dalek FACET-1 / orthographic drawings',
           'Projected from the same STL assembly | Axis units are millimetres | View directions are labelled')
     footer(fig, 'Assembled dimensions are nominal CAD values. Individual panels have their own axis limits.')
     save(fig, OUT / '03_robot_orthographic.png')
@@ -406,7 +403,7 @@ def component_figures(meshes, manifest):
         ax.text2D(.5, -.03, ' x '.join(f'{v:.1f}' for v in mesh.extents)+' mm',
                   transform=ax.transAxes, ha='center', fontsize=9, color='#515c65')
     fig.subplots_adjust(left=.035, right=.975, bottom=.12, top=.85, wspace=.07, hspace=.25)
-    title(fig, 'Dalek MOUNT-1 / printed components',
+    title(fig, 'Dalek FACET-1 / printed components',
           'Ten designs | 07 x2; 11 x4 optional clamps | 14 prints with clamps / 10 with motor ties')
     footer(fig, 'Dimensions are each STL bounding box in its exported orientation. Hardware is listed separately in the BOM.')
     save(fig, OUT / '04_printed_components.png')
@@ -431,7 +428,7 @@ def base_drive_breakout(meshes):
                       np.array([.20, .42, .52]) if 'prototype' not in ref else np.array([.74, .72, .53])))
     draw_meshes(ax, items, edges=False)
     setup_3d(ax, [[-225, -165, 0], [225, 165, 455]], elev=24, azim=-55, tick_step=100)
-    title(fig, 'Dalek MOUNT-1 / base and drive components',
+    title(fig, 'Dalek FACET-1 / base and drive components',
           'One platform above one battery | Four hook clamps / four motor screws, or two ties per motor')
     footer(fig, 'Bioenno: 70 x 114 x 76 mm in assembled views | SLA maximum: 100 x 153 x 103 mm including terminals')
     fig.canvas.draw()
@@ -473,7 +470,7 @@ def head_friction_breakout(meshes):
     top.set_aspect('equal'); top.set_xlim(-115, 120); top.set_ylim(-110, 110)
     top.set_axisbelow(True); top.grid(True); top.set_xlabel('X (mm)'); top.set_ylabel('Y (mm)')
     top.set_title('Top section / fixed motor, rotating track', fontsize=11)
-    title(fig, 'Dalek MOUNT-1 / adjustable head friction drive',
+    title(fig, 'Dalek FACET-1 / adjustable head friction drive',
           'Fixed drive support is integral with shoulder | Separate sliding carriage preserves 3.6 mm adjustment')
     footer(fig, 'Blue: sliding carriage | Orange: 63 mm tyre | Yellow: motor envelope | Set light contact; preserve slip if obstructed.')
     fig.canvas.draw()
@@ -507,7 +504,7 @@ def cad_previews(meshes):
             elevation, azimuth = (12, 90) if name == 'rear' else (22, -35 if name == 'section' else -58)
         draw_meshes(ax, items, edges=False)
         setup_3d(ax, bounds, elev=elevation, azim=azimuth, tick_step=100 if name != 'base' else 50)
-        title(fig, 'Dalek MOUNT-1 / '+name,
+        title(fig, 'Dalek FACET-1 / '+name,
               'Right shell half omitted to expose internal components' if name == 'section'
               else 'Rear-mounted original TTGO T-Display' if name == 'rear'
               else 'Actual STL geometry | Purchased hardware uses nominal envelopes')

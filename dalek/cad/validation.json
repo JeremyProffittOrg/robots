@@ -1,11 +1,11 @@
 {
-  "design": "MOUNT-1",
+  "design": "FACET-1",
   "mesh_count": 10,
   "maximum_stl_files": 10,
   "all_pass": true,
   "printed_piece_count": 14,
   "printed_piece_count_motor_tie_option": 10,
-  "solid_material_upper_bound_g": 3202.1,
+  "solid_material_upper_bound_g": 3202.8,
   "bed_envelope_mm": [
     325,
     320,
@@ -44,11 +44,11 @@
       "part": "02_skirt",
       "quantity": 1,
       "material": "PLA",
-      "x_mm": 300.332,
-      "y_mm": 300.332,
+      "x_mm": 300.0,
+      "y_mm": 300.0,
       "z_mm": 213.0,
-      "volume_mm3": 522581.34,
-      "solid_mass_g": 648.0,
+      "volume_mm3": 523169.79,
+      "solid_mass_g": 648.73,
       "watertight": true,
       "connected_components": 1,
       "enclosed_void_surfaces": 0,
@@ -57,7 +57,7 @@
       "h2d_single_nozzle_with_brim": true,
       "pass_check": true,
       "orientation": "Large opening down",
-      "notes": "One210mm two-slope body plus3mm register;four hemisphere rows and integral rib;captured top-joint M4 nuts;4walls15%infill;normal auto supports"
+      "notes": "Twelve full-height planar faces;linear300-to220mm vertex-diameter taper over210mm plus3mm register;four hemisphere rows;faceted240mm-clear rib;captured M4 nuts;4walls15%infill;normal auto supports"
     },
     {
       "part": "04_shoulder",

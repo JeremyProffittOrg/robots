@@ -1,46 +1,29 @@
-# MOUNT-1 mechanical revision review
+# FACET-1 skirt revision review
 
-Reviewed2026-09-12. Ten STL designs produce fourteen prints with the four motor clamps, or ten prints when motor ties replace those clamps. The round base remains300mm in diameter and the complete robot563.8mm tall. This review describes digital evidence, not a physical load rating.
+The skirt is now twelve full-height planar panels arranged around the existing circular base. Its main faces follow a single linear taper from150mm vertex radius atZ0 to110mm atZ210. Circular collars and the3mm top register keep the existing interfaces; total skirt height remains213mm. The round middle band and old slope break are removed.
 
-## Changes and assembly consequences
+The four hemisphere rows remain atZ26,76,136,186, centered on the twelve panel normals at15+30k degrees. Each bezel axis is normal to its sloped panel, tilted10.425026degrees upward from horizontal. The23mm bezel extends1mm above the face. Narrow relief follows the actual panel-edge slope. These are changes to the actual STL surfaces, not rendered shading alone.
 
-- Four identical printed hook clamps each use one M3 screw. Each toe slides inward4mm. Two independent longitudinal ties per motor provide the alternative. Front and rear routes are staggered so opposing ties do not touch. Open wheel wells admit the mated motor/wheel units while the outer bumper remains continuous.
-- One216mm board platform has a6mm deck and four integral legs. It prints deck down at112mm height. Its installed underside is base-local Z140. The battery rests on the base. PCB hardware projects no more than3mm below the deck; the largest bare SLA terminal envelope ends atZ111, leaving26mm. Attached battery contacts, ties and wiring stay belowZ130.
-- The cradle accepts the original Bioenno or the specified Power-Sonic7Ah/14Ah SLA cases. The largest bare envelope is100 x153 x103mm. Two padded long ties retain one battery. Foam blocks locate smaller cases. Capacity labels alone do not establish fit.
-- Shoulder and neck form one186mm print. Arm boxes shrink from94 x58 x106 to90 x52 x103mm. Servo cases accept M2 ear screws or ties. Supplied spline screws and horn-to-print fasteners remain mandatory. Small root flats clear the maker-derived servo envelope without changing the shaft axes.
-- The speaker uses an open rear frame at upper-local Y52.5..56.5. Its body ends atY81.99. This frees the bottom-entry arm paths. Fit arms and lower-bearing hardware before the speaker and rear controls.
-- The fixed head deck and bearing tower are integral with the upper shell. The moving carriage remains separate to preserve3.6mm adjustment. Fit its underside nuts while the upper shell is removed. Retract the tire and leave the head off while fastening that shell.
-- Both body joints have captured standard M4 nuts: eight M4x20 screws, eight nuts and eight screwhead washers. No washers go in the nut pockets. Skirt-top bosses use the same6.7mm roof as the base pockets. Four specified driver approaches replace inaccessible loose-nut work.
+## Geometry and fit evidence
 
-Full paths, tools, fastener stacks and physical fit gates are in mechanical.md. The source notes are base-mounts-revision.md, upper-mounts-revision.md and battery-options-research.md.
+The exported skirt is300 x300 x213mm,36,664 nondegenerate faces, one connected watertight positive solid. SHA256:5149241c3c95dc439403d857803fc50b5022a8757f729c8dbcf69a8435757b56. The other nine STL files are byte-identical to the preceding MOUNT-1 release. Hardware, upper assembly, batteries, firmware and all24 original MP3 files retain their design.
 
-## Reproducible checks
+python scripts/check_base_mounts.py passed346 checks across1,117,327 evaluations. The37 new checks measure twelve continuous outer planes, their normals, true1.8mm normal wall thickness away from thicker features, and the faceted reinforcing rib. Maximum sampled plane error is0.000005332mm and thickness error0.000007671mm. Rib clearance measures239.999989..239.999991mm across flats. The prior curved skirt failed all36 panel-plane/normal/wall checks in the negative control.
 
-Run from C:/dev/robots/dalek:
+The existing mounting checks also passed, including all eight captured body nuts, battery/platform space and the long-driver paths. A conservative continuous projection bound leaves3.044mm for lowering the skirt around the populated chassis. This bound includes triangle portions above the chassis and is intentionally conservative.
 
-    python scripts/export_cad.py --check-only
-    python scripts/check_base_mounts.py
-    python scripts/check_upper_mounts.py
-    python scripts/check_arm_assembly.py
-    python scripts/check_mechanical.py
-    python scripts/mesh_queries.py
+python scripts/check_mechanical.py passed110 checks across374,697 samples against all ten current mesh hashes. Its4,800 sight rays found no exposed servo targets with the specified opaque liners. The68 upper-mount checks,8 carrier-entry checks and4,400-point query comparison are retained on unchanged relevant mesh hashes. They are not relabelled as newly run tests.
 
-Final records pass ten watertight connected meshes,309 base/platform checks across1,117,361 evaluations,68 upper checks across1,650,576 samples,8 carrier-insertion checks across417,648 samples, and110 general mechanical checks across374,697 samples. Every report mesh hash matches the final file. General checks use the corrected30mm outer fabric radius and include4,800 visibility rays with no visible servo targets.
+## H2D printing
 
-The point-containment helper compares two independent near-axis parity rays and uses the original trimesh query on disagreements. A4,400-point final-mesh comparison found zero differences:1,269 inside and3,131 outside. It includes points close to surfaces and known solids/voids. Recorded time was11.363seconds for the original query and1.010seconds for the helper. No collision tolerance was relaxed.
+python scripts/export_cad.py --check-only passed all ten connected meshes and their recorded H2D brim envelopes. The part count stays fourteen with motor clamps, or ten with motor ties. The robot remains563.8mm tall.
 
-The base checker also uses a conservative continuous projection bound for lowering the skirt around the populated chassis. Other motion/tool checks use finite poses. Actual horns, servo offsets, PCB holes, connectors, tie heads, print error, paint and tool handles remain measured fit gates.
+python scripts/slice_h2d.py --parts 02_skirt passed the complete new skirt in the stock left325 x320mm H2D nozzle area. All model/support/brim paths and full213mm deposited height were checked. Nine unchanged slice records were retained by exact hash.
 
-## Actual H2D slices
+The skirt predicts1,009.47g PLA including support,536.202g installed model and86,137.406seconds (23hours55minutes37seconds). Allow at least1.12kg with reserve; one1kg spool is insufficient. The full clamp-option package predicts4,180.82g filament,2,473.98g installed plastic and447,407.06seconds (124.28hours sequentially). These are slicer estimates, not physical consumption or finished mass.
 
-Eight changed parts were actually sliced:01_base,02_skirt,04_shoulder,07_pitch_carrier,08_plunger_arm,09_emitter_arm,11_motor_clamp and12_electronics_platform. The exact unchanged head and carriage slice records were retained. All ten hashes match. The script checks stock machine geometry, complete deposited height and model/support/brim bead bounds in the left325 x320mm area. It never contacts a printer.
+## Limits and deliverables
 
-    python scripts/slice_h2d.py --parts 01_base 02_skirt 04_shoulder 07_pitch_carrier 08_plunger_arm 09_emitter_arm 11_motor_clamp 12_electronics_platform
+Current PNGs, CAD previews, PDF and video show the actual faceted mesh. Their source hashes identify the generating files. The body still prints as one complete skirt; there are no extra loose panel STLs. The original circular base, collars, mounts, arms, head and battery options are retained.
 
-The clamp-option total is4,212.07g filament,2,469.59g installed plastic and448,159.36seconds, or124.49hours of sequential printing. The213mm skirt uses1,040.72g PLA and the186mm upper shell1,235.49g PETG. Supply at least1.15kg and1.36kg respectively with reserve. Neither job fits on one1kg spool.
-
-## Limits
-
-No robot was printed, wired, powered or driven during this revision. No physical strength, impact, fatigue, payload or traction rating is established. The14Ah battery adds several kilograms. Its defined fit and electrical compatibility do not establish loaded driving. Complete the hard-floor current, temperature and stop tests; retain the lighter battery if an SLA build fails.
-
-The old FR4 access checker is replaced by the current base/platform checks. The older merged-skirt comparison record is historical ROUND-9 evidence, not a current ten-part verification report.
+No physical print, strength, traction or loaded-drive test was performed. The prior physical commissioning gates remain required. Older ROUND-9 and MOUNT-1 records remain historical evidence for their own hashes; use the current FACET-1 geometry/slice reports for this skirt.

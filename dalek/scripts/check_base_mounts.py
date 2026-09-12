@@ -1,4 +1,4 @@
-"""MOUNT-1 finite geometry checks for the battery, motor clamps and bridge deck.
+"""FACET-1 geometry checks for flat skirt panels and the retained base mounts.
 
 Uses the existing NumPy/trimesh stack. No load rating or physical fit is inferred
 from these checks. Run after exporting the current base, clamp and platform.
@@ -67,6 +67,69 @@ def loop_x(x0, x1, y, z0, z1, width=4.8, thickness=1.2):
 for name, mesh in MESHES.items():
     record(name + '-valid-connected-solid', 1,
            not (mesh.is_watertight and mesh.is_winding_consistent and mesh.volume > 0 and mesh.body_count == 1))
+
+# Real plane surfaces, not merely seams painted or embossed on a round shell.
+# Sample clear patches between hemisphere rows and away from edge beads. Rays
+# start2mm outside each expected plane and enter along its true3D normal.
+local_skirt = MESHES['02_skirt']
+facet_cos, facet_sin = np.cos(np.deg2rad(15)), np.sin(np.deg2rad(15))
+slope = -40/210*facet_cos
+for panel in range(12):
+    angle = np.deg2rad(15+30*panel)
+    radial = np.array([np.cos(angle), np.sin(angle), 0])
+    tangent = np.array([-np.sin(angle), np.cos(angle), 0])
+    normal = (radial+[0, 0, -slope])/np.sqrt(1+slope*slope)
+    expected, ray_levels = [], []
+    for z in (44, 51, 58, 101, 110, 119, 154, 161, 168):
+        radius = 150-40*z/210
+        for fraction in (-.65, -.35, 0, .35, .65):
+            expected.append(radial*radius*facet_cos + tangent*fraction*radius*facet_sin + [0, 0, z])
+            ray_levels.append(z)
+    origins = np.array(expected)+normal*2
+    directions = np.tile(-normal, (len(origins), 1))
+    locations, ray_ids, triangle_ids = local_skirt.ray.intersects_location(origins, directions, multiple_hits=True)
+    distances = ((locations-origins[ray_ids])*directions[ray_ids]).sum(axis=1)
+    outer_errors, thickness_errors, normal_cosines = [], [], []
+    missing, missing_wall = 0, 0
+    for ray in range(len(origins)):
+        selected = np.flatnonzero((ray_ids == ray) & (distances >= 0))
+        selected = selected[np.argsort(distances[selected])]
+        if len(selected) < 2:
+            missing += 1
+            missing_wall += int(ray_levels[ray] != 110)
+            continue
+        first, second = selected[:2]
+        outer_errors.append(abs(float(distances[first])-2))
+        # The internal rib deliberately thickens the wall atZ110. Its exterior
+        # must still share the same plane; measure its opening separately.
+        if ray_levels[ray] != 110:
+            thickness_errors.append(abs(float(distances[second]-distances[first])-1.8))
+        normal_cosines.append(float(local_skirt.face_normals[triangle_ids[first]] @ normal))
+    prefix = f'faceted-full-height-panel-{panel:02d}'
+    record(prefix+'-outer-plane', len(origins), missing+sum(e > .01 for e in outer_errors),
+           maximum_position_error_mm=max(outer_errors, default=None))
+    record(prefix+'-plane-normal', len(origins), missing+sum(c < .999999 for c in normal_cosines),
+           minimum_normal_cosine=min(normal_cosines, default=None))
+    record(prefix+'-1.8mm-normal-wall', sum(z != 110 for z in ray_levels), missing_wall+sum(e > .01 for e in thickness_errors),
+           maximum_thickness_error_mm=max(thickness_errors, default=None))
+
+# Check the changed internal rib at the centres of its twelve flats. This
+# measures its opening, rather than assuming an unchanged round120mm radius.
+rib_origins = np.tile([0, 0, 110], (12, 1))
+rib_angles = np.deg2rad(np.arange(15, 360, 30))
+rib_directions = np.column_stack([np.cos(rib_angles), np.sin(rib_angles), np.zeros(12)])
+rib_locations, rib_ids, _ = local_skirt.ray.intersects_location(rib_origins, rib_directions, multiple_hits=True)
+rib_distances = ((rib_locations-rib_origins[rib_ids])*rib_directions[rib_ids]).sum(axis=1)
+rib_widths = []
+rib_missing = 0
+for ray in range(12):
+    positive = rib_distances[(rib_ids == ray) & (rib_distances > 0)]
+    if not len(positive):
+        rib_missing += 1
+    else:
+        rib_widths.append(2*float(positive.min()))
+record('faceted-rib-240mm-across-flats', 12, rib_missing+sum(abs(w-240) > .02 for w in rib_widths),
+       minimum_across_flats_mm=min(rib_widths, default=None), maximum_across_flats_mm=max(rib_widths, default=None))
 
 for joint, obstacle, radius, height_offset in [('base', BASE, 137, 0), ('skirt-top', SKIRT, 97, 210)]:
     for angle in (0, 90, 180, 270):
@@ -266,7 +329,7 @@ for angle in (0, 90, 180, 270):
 record('inputs-unchanged-through-checks', len(INPUTS),
        sum(hashlib.sha256(p.read_bytes()).hexdigest() != SOURCE_HASHES[str(p.relative_to(ROOT)).replace('\\', '/')]
            for p in INPUTS))
-report = dict(design='MOUNT-1', all_pass=all(c['passed'] for c in CHECKS),
+report = dict(design='FACET-1', all_pass=all(c['passed'] for c in CHECKS),
               method='Deterministic finite volume, surface and installation-path samples; millimetres in base coordinates',
               mesh_query_method=METHOD,
               mesh_sha256={n: hashlib.sha256((ROOT/'stl'/(n+'.stl')).read_bytes()).hexdigest() for n in NAMES},

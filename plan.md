@@ -169,10 +169,10 @@ Read C:/dev/robots/deploy.md and current CAD/check/export/render sources. Dalek 
 
 ### Workstreams and milestones
 
-- [~] Root CAD: replace the two curved slopes with one twelve-plane skirt; tilt bump mounts to panel normals; retain interfaces and interior clearances. Done when exported mesh checks and nine unchanged hashes pass.
-- [~] /root/base_platform_revision: extend the existing base checker with actual STL facet/normal/thickness tests; preserve assembly tests. Done when the old round mesh fails the new criterion and final current geometry passes it.
-- [~] /root/upper_mount_revision: independent read-only review of changed CAD, decoration connection, collars and assembly risks. Done when concrete findings are resolved against final geometry.
-- [ ] Root delivery: actual changed-part H2D slice, documentation/media update and review, focused commit/push, successful workflow and final PDF/video email. Done when current hashes and SES MessageId are recorded.
+- [x] Root CAD: twelve true panel planes, face-normal bump mounts and raised bezels; final mesh valid and nine other STL hashes unchanged.
+- [x] /root/base_platform_revision:346 checks/1,117,327 evaluations pass, including37 new panel/rib criteria; old curved skirt fails all36 panel criteria.
+- [x] /root/upper_mount_revision: corrected the buried-bezel issue; independent final geometry and PDF/video review passed with no unresolved findings.
+- [~] Root delivery: current H2D slice, matching16 PNGs/five previews/ZIP,78-page PDF and120s video all pass review. Final commit/push, workflow and operator email remain.
 
 ### Stop conditions (only these)
 
@@ -185,6 +185,12 @@ Track each command session/PID and agent. Skirt export600s; slicer300s; video20m
 ### Execution log
 
 - 2026-09-12: Read current files and deploy.md. Chose twelve continuous planar skirt faces and retained circular joints/base. Started independent geometry/checker agents alongside root CAD work. Agent confirmed the normal-wall offset and that a120/cos15 inner rib vertex radius preserves240mm across-flat clearance. Negative-control facet checks rejected the current curved skirt while its existing309 access checks passed.
+
+- 2026-09-12: Plan7cd69a3 pushed. First export9766/PID179244 was intentionally stopped after review found the normal-aligned3mm bezel fully buried at the face; root raised bezel cylinder height to4mm for1mm visible relief. Expected export stop exited1. Corrected direct export86869/PID176928 completed within600s. Final02_skirt SHA2565149241c3c95dc439403d857803fc50b5022a8757f729c8dbcf69a8435757b56,300x300x213mm,36,664 nondegenerate faces,one watertight positive solid. Nine other STL files remain byte-identical.
+- 2026-09-12: Base/facet25977 passed346 checks/1,117,327 evaluations; maximum sampled plane error0.000005332mm and wall error0.000007671mm. Rib239.999989..239.999991mm across flats; continuous conservative skirt-installation bound3.044mm. Full core45818 passed110/374,697 including4,800 visibility rays/zero exposed servo targets. Independent96-detail-ray review confirmed all48 bezels0.999998..1.000003mm raised and caps5.965327..5.965333mm. Unchanged upper/carrier/query reports retained on exact hashes.
+- 2026-09-12: Actual H2D skirt slice98789/PID130732 passed1,009.465393g PLA/536.202g installed model/86,137.40625s (23h55m37s). Nine other slice records retained by matching mesh/G-code hashes. Package4,180.82g filament/2,473.98g installed plastic/447,407.06s (124.28h); skirt supply allowance1.12kg including reserve. Electronics generator refreshed only derived mass records; hardware/firmware/circuits remain unchanged.
+- 2026-09-12: Drawing63160 passed16 PNGs/five CAD previews/ZIP/current source hashes; actual flat panels reviewed by root and drawing agent, nine other component PNGs byte-identical. Video44605/encoder67620 passed120s/2,880frames/1080p/H.264+AAC/full decode/47 unchanged inputs. MP426,171,745bytes/SHA2565d4639a32d091c8167cfcf9038d6e8e95eae57469da7e0bc0ae5c05391fc9bbe. Independent encoded frames0/36/40/106/119 passed actual facets, missing middle band, framing and captions.
+- 2026-09-12: PDF skill edit marker ran exactly once. Manual78pages/4,011,151bytes/SHA2562d191ed7147937677141894f9b9c0682b5e30fdd0d382b627a48e92b23bc080a. Poppler59845/PID38080 rendered all78 pages; zero text-boundary errors. Root inspected37 changed pages in seven sheets;41 pages were pixel-identical to the previously reviewed release. Independent critical-page audit passed dimensions, retained assembly text, masses and verification provenance. /root/merged_drawings is preparing the authorized final email and waits for publication READY.
 
 ## Current revision: printed mounts and alternative batteries
 

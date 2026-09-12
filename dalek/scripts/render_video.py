@@ -196,7 +196,7 @@ def run():
                         video=OUT/'dalek-assembly-and-operation.mp4'
                         log=directory/'ffmpeg.log'
                         with log.open('wb') as errors:
-                            command=['ffmpeg','-hide_banner','-loglevel','error','-y','-f','image2pipe','-framerate',str(FPS),'-vcodec','mjpeg','-i','pipe:0','-i',str(audio),'-map','0:v:0','-map','1:a:0','-c:v','libx264','-preset','fast','-crf','20','-pix_fmt','yuv420p','-r',str(FPS),'-c:a','aac','-b:a','160k','-t',str(DURATION),'-movflags','+faststart','-metadata','title=Dalek MOUNT-1 assembly and simulated operation',str(video)]
+                            command=['ffmpeg','-hide_banner','-loglevel','error','-y','-f','image2pipe','-framerate',str(FPS),'-vcodec','mjpeg','-i','pipe:0','-i',str(audio),'-map','0:v:0','-map','1:a:0','-c:v','libx264','-preset','fast','-crf','20','-pix_fmt','yuv420p','-r',str(FPS),'-c:a','aac','-b:a','160k','-t',str(DURATION),'-movflags','+faststart','-metadata','title=Dalek FACET-1 assembly and simulated operation',str(video)]
                             encoder=subprocess.Popen(command,stdin=subprocess.PIPE,stderr=errors)
                             print(f'RENDER encoder PID {encoder.pid}; {DURATION*FPS} frames; {renderer}',flush=True)
                             for frame in range(DURATION*FPS):
@@ -238,7 +238,7 @@ def run():
         for index,chapter in enumerate(story['chapters'],1):
             subtitles.append(f"{index}\n{timestamp(chapter['start'])} --> {timestamp(chapter['end'])}\n{chapter['title']}\n{chapter['instruction']}\n")
         (OUT/'assembly-captions.srt').write_text('\n'.join(subtitles),encoding='utf-8')
-        manifest={'design_revision':'MOUNT-1','type':'CAD animation and simulated operation, not physical footage','seconds':DURATION,'fps':FPS,
+        manifest={'design_revision':'FACET-1','type':'CAD animation and simulated operation, not physical footage','seconds':DURATION,'fps':FPS,
                   'frames':frames,'resolution':[WIDTH,HEIGHT],'video_codec':v['codec_name'],'audio_codec':a['codec_name'],
                   'printed_designs':10,'printed_instances':14,'motor_tie_option_prints':10,'source_sha256':inputs,'inputs_unchanged':True,
                   'video_sha256':sha(video),'video_bytes':video.stat().st_size,'render_seconds':round(time.monotonic()-began,2),

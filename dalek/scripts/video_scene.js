@@ -335,7 +335,7 @@ function overlay(t,pose){
   ctx.clearRect(0,0,W,H);ctx.drawImage(canvas,0,0);
   ctx.fillStyle='rgba(255,255,255,.96)';ctx.fillRect(0,0,W,112);ctx.fillRect(1415,112,505,910);
   text('DALEK / ASSEMBLY + OPERATION',52,51,30,'#243541');
-  text('MOUNT-1   |   Original 1.14-inch T-Display   |   Bronze finish',54,87,20,'#586976');
+  text('FACET-1   |   Original 1.14-inch T-Display   |   Bronze finish',54,87,20,'#586976');
   ctx.fillStyle='#243541';ctx.fillRect(1485,24,382,62);
   text('CAD ANIMATION',1502,49,21,'#ffffff');text('SIMULATED OPERATION',1502,74,18,'#a9d6e8');
   const index=story.chapters.findIndex(c=>t>=c.start&&t<c.end),chapter=story.chapters[index<0?story.chapters.length-1:index];

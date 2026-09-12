@@ -1,6 +1,6 @@
 # Video and PDF delivery
 
-The `Publish Dalek design artifacts` GitHub Actions workflow publishes the committed MOUNT-1 MP4 and PDF to the private `robots-dalek-deliverables-759775734231` S3 bucket in `us-east-1`. The object prefix is `dalek/<full Git commit SHA>/`. Each uploaded file has its media type, inline filename and SHA256 metadata. The workflow downloads both objects and compares their complete SHA256 hashes before reporting success.
+The `Publish Dalek design artifacts` GitHub Actions workflow publishes the committed FACET-1 MP4 and PDF to the private `robots-dalek-deliverables-759775734231` S3 bucket in `us-east-1`. The object prefix is `dalek/<full Git commit SHA>/`. Each uploaded file has its media type, inline filename and SHA256 metadata. The workflow downloads both objects and compares their complete SHA256 hashes before reporting success.
 
 Publication uses the repository's `AWS_DEPLOY_ROLE_ARN` through GitHub OIDC. The CloudFormation template creates one encrypted bucket with public access blocked. There are no public bucket grants, servers, scheduled jobs or stored workflow keys. Run the workflow on `main` or push updated final artifacts to `main`.
 
