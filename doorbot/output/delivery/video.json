@@ -1,0 +1,21 @@
+{
+  "file": "doorbot-assembly-and-usage.mp4",
+  "seconds": 71.0,
+  "width": 1920,
+  "height": 1080,
+  "fps_out": 24,
+  "frames_rendered": 852,
+  "bytes": 2447528,
+  "sha256": "4e09b3fd9cbb536f41f893be14d688fdf65702b2a8aa730bfe4348857681e9a6",
+  "simulation": true,
+  "physical_test": false,
+  "source_sha256": {
+    "cad/base.scad": "a46a0365a99ca732fb77e7444f8608e4a2d97f126e06eafe352418807976ace1",
+    "cad/doorbot.scad": "f57e04163b509056cc5a625c9294e85bb9981d177be04f6045fd1c427e2561a8",
+    "cad/drive.scad": "aa998a3927f45479d020179518211ef891b879d59c4edf8e76ccd3ae26ca50eb",
+    "cad/lib.scad": "3394f7c4fdb40403bd752971d7c757a6822bfa1fb54e064d4863214ec0fefdbb",
+    "cad/mounts.scad": "14d66d64098d2045957c98f7e7b4801fc1c7578b747753c352c33fbd84df4d4a",
+    "cad/params.scad": "dd982f084e289ea39c3da35c223ce22143d5d5236d79b862c1f00f7537b16208",
+    "scripts/render_video.py": "674833c5cea2006f78bc85428ca4a7f56c4e49d64630cf08c5d2767f0deb4ceb"
+  }
+}

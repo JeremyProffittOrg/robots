@@ -1,0 +1,13 @@
+{
+  "project": "doorbot",
+  "revision": "A",
+  "files": {
+    "doorbot-assembly-and-usage.mp4": "4e09b3fd9cbb536f41f893be14d688fdf65702b2a8aa730bfe4348857681e9a6",
+    "doorbot-build-guide.pdf": "199966255c63fd0526cb5203d3e22acdcd9164daa4ef33e2d9073d418e52090e"
+  },
+  "pdf_pages": 14,
+  "video_seconds": 71.0,
+  "video_simulation": true,
+  "physical_tested": false,
+  "verification_steps": 7
+}
