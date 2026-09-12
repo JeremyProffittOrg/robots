@@ -54,6 +54,34 @@ Track OpenSCAD, PlatformIO and email tool session/agent IDs. Observe exit codes 
 
 # Dalek fabrication package
 
+## Current drawing task: MATLAB-style PNGs
+
+### Locked decision (user-confirmed; do not revisit)
+
+2026-09-12: "show me matlab style drawings of the robot plus components broken out as png's"
+
+2026-09-12: "that is correct, it's my board" — in reply to the original TTGO T-Display ESP32 with 1.14-inch screen confirmation. This board selection is confirmed and must not be asked again.
+
+### Outcome, scope and proof
+
+Render the current STACK-10 STL geometry as MATLAB-style engineering PNGs: assembled robot, exploded robot, orthographic views, a labelled component sheet, base/drive component breakout and ten separate printed-component images. Use millimetre axes, equal spatial scale, light grids, shaded surfaces and stable part colours. Use existing Python Matplotlib and trimesh; this is a visual style request, not a requirement to run MATLAB.
+
+Files: C:/dev/robots/dalek/scripts/render_drawings.py; C:/dev/robots/dalek/output/drawings; a short drawing link in C:/dev/robots/dalek/README.md; this plan section. No mechanical, STL, circuit, firmware, audio or PDF changes. No new email is needed for this PNG-only request. Keep the ten-STL inventory unchanged.
+
+- [x] Renderer and PNGs, /root: 15 PNGs generated with actual STL surfaces, millimetre axes, shaded surfaces, correct depth visibility and dimension/quantity labels. Render command passed; CAD/STL hashes unchanged. ZIP contents and PNG dimensions verified.
+- [x] Transform review, /root/drawing_layout_audit: exact transforms agree with cad/dalek.scad. Independent final visual review passed all five overview sheets, callouts 07/10, rear display, component counts/materials/dimensions, and clipping/occlusion checks.
+- [ ] Delivery: create a ZIP containing the PNGs, commit/push only task files on main and check any triggered workflow. Show the main PNGs and provide access to the complete set.
+
+### Stop conditions and jobs
+
+Stop only for missing credentials or a requested material scope change. Tools are already installed. Figure renders run as tracked one-time commands with exit-code monitoring; fix deterministic errors before at most two retries. No scheduled automation, dependency installs or physical testing. Preserve other robot work.
+
+### Execution log
+
+- 2026-09-12: Read parent deploy.md, current CAD, print manifest, mechanical guide and exporter. Working tree was clean. Matplotlib 3.11.0 and trimesh 4.12.2 are available. Delegated independent transform review to /root/drawing_layout_audit. Verified arm mapping: remove each STL's print Z offset before applying Rz(-90)Rx(90).
+- 2026-09-12: First render exposed Matplotlib mean-depth sorting artifacts on hollow STL shells. Replaced painter rendering with a per-pixel depth buffer, keeping Matplotlib axes and the unchanged meshes. Final render session 62661 exited 0: `PASS: 15 PNG drawings; 10 STL designs / 11 pieces; assembly transforms; unchanged CAD/STL hashes; ZIP verified`. Assembled/orthographic plots use the bronze finish; breakout plots use MATLAB-family part colours.
+- 2026-09-12: User confirmed the existing board choice while drawings were being created. No controller or geometry changes were needed. Root and /root/drawing_layout_audit inspected final PNGs; no visible clipping, label overlap or depth-rendering defect remains. Files are in C:/dev/robots/dalek/output/drawings, with a 15-PNG ZIP and input/output hash manifest.
+
 ## Current revision: strong base and ten STL files
 
 ### Locked decisions (user-confirmed; do not revisit)

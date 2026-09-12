@@ -1,0 +1,144 @@
+{
+  "style": "MATLAB-style engineering figures, rendered with Matplotlib",
+  "inputs_unchanged": true,
+  "input_sha256": {
+    "cad\\dalek.scad": "78dd1dadec37aae25459367c0c975d9ea8a13d5f8e925786d209957865f96a05",
+    "stl\\01_base.stl": "40a076687c45c4f8de67554f14a7ba382395e333e479f36c5acdbfd35ba62955",
+    "stl\\02_lower_skirt.stl": "dfcf92bff7aa7db46451d0d82994102d1963fc492ad26a40dd076a2e85a74d5c",
+    "stl\\03_upper_skirt.stl": "3693c825c18a91228aa893ebc82572126315ecb8c10062c029e5fadabb8c7590",
+    "stl\\04_shoulder.stl": "c0e7d360d83daafcf8514e0d120f01d9a3e91fad118a31a4a05ba42c7b204c55",
+    "stl\\05_neck.stl": "be168b3f1fd1abf81758478ea58f483ddcd44f1bd5bbe97e5dd200b3b0fb4793",
+    "stl\\06_head.stl": "9def0e13c9499554883a6714d3dd01a2a5d54ca15a4bedaa9de8d56614a28669",
+    "stl\\07_pitch_carrier.stl": "eff1cb02f20fbca124f87469d936865f27773884cbdf7cc3576d698cebb75ae8",
+    "stl\\08_plunger_arm.stl": "894d60473def2a47a24578af2eae73d16b49f3b3e713a55c2efef09446e5fb52",
+    "stl\\09_emitter_arm.stl": "df8656bf06f25fc153c29e973dd71df2b1473d4913e4b9270cf26dcb6e62f26e",
+    "stl\\10_servo_pulley.stl": "e1cea25d665ed32182f576a66d73ffc769a1dcae243c2a1494d396e002cdd903"
+  },
+  "units": "mm",
+  "printed_designs": 10,
+  "printed_piece_quantity": 11,
+  "png_count": 15,
+  "hardware": "Nominal envelopes; not detailed manufacturer CAD",
+  "outputs": [
+    {
+      "file": "01_robot_assembled.png",
+      "pixels": [
+        2520,
+        2160
+      ],
+      "sha256": "9cb3c06f3519334576e185fea35a2c8a84ed5423d655be55d6042235038719dc"
+    },
+    {
+      "file": "02_robot_exploded.png",
+      "pixels": [
+        2520,
+        2160
+      ],
+      "sha256": "ea6a01aa2bb4ec7c24fddf25c426e801f76bc06790b844fe2be292ce07998383"
+    },
+    {
+      "file": "03_robot_orthographic.png",
+      "pixels": [
+        2700,
+        2340
+      ],
+      "sha256": "dc9b21c9c295793c40c7e3a25b65647c338346325de99b6817eb2c128294a880"
+    },
+    {
+      "file": "04_printed_components.png",
+      "pixels": [
+        3240,
+        2340
+      ],
+      "sha256": "3b5a2a70547f20e56532f556724a6ef6f5e1fe178933f088a508867640daaee2"
+    },
+    {
+      "file": "05_base_drive_breakout.png",
+      "pixels": [
+        2520,
+        1980
+      ],
+      "sha256": "4da52ecf116bb503b831badf79ced59a0ffdaa60eae42131cce234f95d02e1d5"
+    },
+    {
+      "file": "components\\01_base.png",
+      "pixels": [
+        2160,
+        1620
+      ],
+      "sha256": "002d1c89ee6fd3da3fab35643f63760ad742d337c74a5a01e048c28b9408c3ce"
+    },
+    {
+      "file": "components\\02_lower_skirt.png",
+      "pixels": [
+        2160,
+        1620
+      ],
+      "sha256": "c0f820887a02d04a7227a0a75580f724241549146f04bd97d44eb4c742d1f34a"
+    },
+    {
+      "file": "components\\03_upper_skirt.png",
+      "pixels": [
+        2160,
+        1620
+      ],
+      "sha256": "a29d2776680731b751fbd91abaa56119f102fbc78a7a586da103c665efbcb584"
+    },
+    {
+      "file": "components\\04_shoulder.png",
+      "pixels": [
+        2160,
+        1620
+      ],
+      "sha256": "7b4506f6460d04ebf51f9da1deed5cdb20cfaeccc5fc4d4e2938a265d9408fa9"
+    },
+    {
+      "file": "components\\05_neck.png",
+      "pixels": [
+        2160,
+        1620
+      ],
+      "sha256": "f9a031d91fcf8ba549f5feebd4239518c9190e568a3bde8245740f5efab89072"
+    },
+    {
+      "file": "components\\06_head.png",
+      "pixels": [
+        2160,
+        1620
+      ],
+      "sha256": "942bea33f5d4636d8eb75399b7318a5716a24a31adf05f88c5cb1f732d227729"
+    },
+    {
+      "file": "components\\07_pitch_carrier.png",
+      "pixels": [
+        2160,
+        1620
+      ],
+      "sha256": "abf4c8c64712f5135da4b78f95f64ef2dd2f6051cf5dd10f673cabc080ae8ee2"
+    },
+    {
+      "file": "components\\08_plunger_arm.png",
+      "pixels": [
+        2160,
+        1620
+      ],
+      "sha256": "b60109b4149aff6de1035548c18198df02b2359adebe811e213231b14f32f524"
+    },
+    {
+      "file": "components\\09_emitter_arm.png",
+      "pixels": [
+        2160,
+        1620
+      ],
+      "sha256": "7ef9cc95d8317eaf91ce6b6923dd04ebcdbc670778f058399466b3f159604103"
+    },
+    {
+      "file": "components\\10_servo_pulley.png",
+      "pixels": [
+        2160,
+        1620
+      ],
+      "sha256": "0b682b309b6570188016ce0f788895bae435bf607d827d1fdb8bd510efcb17e6"
+    }
+  ]
+}
