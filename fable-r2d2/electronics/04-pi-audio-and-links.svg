@@ -1,0 +1,146 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1680" height="1140" viewBox="0 0 1680 1140">
+<rect width="1680" height="1140" fill="#ffffff"/>
+<text x="36" y="46" font-family="Arial, Helvetica, sans-serif" font-size="27" font-weight="bold" fill="#12283d" text-anchor="start">04  Raspberry Pi 4: header pins in use, USB link, audio and battery sense</text>
+<text x="36" y="74" font-family="Arial, Helvetica, sans-serif" font-size="16" font-weight="normal" fill="#5b7c99" text-anchor="start">The Pi runs the web server, the head displays, the sounds and the battery gauge. It never drives a motor directly.</text>
+<line x1="36" y1="88" x2="1644" y2="88" stroke="#5b7c99" stroke-width="1.2"/>
+<rect x="36" y="120" width="800" height="268" rx="7" fill="#ffffff" stroke="#2e7d32" stroke-width="1.6"/>
+<text x="50" y="150" font-family="Arial, Helvetica, sans-serif" font-size="19" font-weight="bold" fill="#12283d" text-anchor="start">A1  Raspberry Pi 4 Model B, 40 pin header</text>
+<text x="50" y="176" font-family="Consolas, monospace" font-size="14" font-weight="normal" fill="#00507f" text-anchor="start">pin 1   3V3</text>
+<text x="276" y="176" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" fill="#12283d" text-anchor="start">U9 ADS1115 VDD</text>
+<line x1="50" y1="183" x2="822" y2="183" stroke="#dde7ef" stroke-width="1.2"/>
+<text x="50" y="198" font-family="Consolas, monospace" font-size="14" font-weight="normal" fill="#00507f" text-anchor="start">pin 3   GPIO2 / SDA1</text>
+<text x="276" y="198" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" fill="#12283d" text-anchor="start">slip ring 6 -&gt; four HT16K33 backpacks; U9 SDA</text>
+<line x1="50" y1="205" x2="822" y2="205" stroke="#dde7ef" stroke-width="1.2"/>
+<text x="50" y="220" font-family="Consolas, monospace" font-size="14" font-weight="normal" fill="#00507f" text-anchor="start">pin 5   GPIO3 / SCL1</text>
+<text x="276" y="220" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" fill="#12283d" text-anchor="start">slip ring 7 -&gt; four HT16K33 backpacks; U9 SCL</text>
+<line x1="50" y1="227" x2="822" y2="227" stroke="#dde7ef" stroke-width="1.2"/>
+<text x="50" y="242" font-family="Consolas, monospace" font-size="14" font-weight="normal" fill="#00507f" text-anchor="start">pin 6   GND</text>
+<text x="276" y="242" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" fill="#12283d" text-anchor="start">star ground TB2 and U9 GND</text>
+<line x1="50" y1="249" x2="822" y2="249" stroke="#dde7ef" stroke-width="1.2"/>
+<text x="50" y="264" font-family="Consolas, monospace" font-size="14" font-weight="normal" fill="#00507f" text-anchor="start">pin 12  GPIO18</text>
+<text x="276" y="264" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" fill="#12283d" text-anchor="start">radar-eye backlight control (not wired: see note)</text>
+<line x1="50" y1="271" x2="822" y2="271" stroke="#dde7ef" stroke-width="1.2"/>
+<text x="50" y="286" font-family="Consolas, monospace" font-size="14" font-weight="normal" fill="#00507f" text-anchor="start">pin 18  GPIO24</text>
+<text x="276" y="286" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" fill="#12283d" text-anchor="start">slip ring 12 -&gt; TFT RST</text>
+<line x1="50" y1="293" x2="822" y2="293" stroke="#dde7ef" stroke-width="1.2"/>
+<text x="50" y="308" font-family="Consolas, monospace" font-size="14" font-weight="normal" fill="#00507f" text-anchor="start">pin 19  GPIO10 / MOSI</text>
+<text x="276" y="308" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" fill="#12283d" text-anchor="start">slip ring 8 -&gt; TFT MOSI</text>
+<line x1="50" y1="315" x2="822" y2="315" stroke="#dde7ef" stroke-width="1.2"/>
+<text x="50" y="330" font-family="Consolas, monospace" font-size="14" font-weight="normal" fill="#00507f" text-anchor="start">pin 22  GPIO25</text>
+<text x="276" y="330" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" fill="#12283d" text-anchor="start">slip ring 11 -&gt; TFT DC</text>
+<line x1="50" y1="337" x2="822" y2="337" stroke="#dde7ef" stroke-width="1.2"/>
+<text x="50" y="352" font-family="Consolas, monospace" font-size="14" font-weight="normal" fill="#00507f" text-anchor="start">pin 23  GPIO11 / SCLK</text>
+<text x="276" y="352" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" fill="#12283d" text-anchor="start">slip ring 9 -&gt; TFT SCLK</text>
+<line x1="50" y1="359" x2="822" y2="359" stroke="#dde7ef" stroke-width="1.2"/>
+<text x="50" y="374" font-family="Consolas, monospace" font-size="14" font-weight="normal" fill="#00507f" text-anchor="start">pin 24  GPIO8 / CE0</text>
+<text x="276" y="374" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" fill="#12283d" text-anchor="start">slip ring 10 -&gt; TFT CS</text>
+<rect x="856" y="120" width="380" height="208" rx="7" fill="#f2f7fb" stroke="#ad1457" stroke-width="1.6"/>
+<rect x="856" y="120" width="6" height="208" rx="3" fill="#ad1457"/>
+<text x="876" y="150" font-family="Arial, Helvetica, sans-serif" font-size="19" font-weight="bold" fill="#12283d" text-anchor="start">Power into the Pi</text>
+<text x="876" y="174" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" fill="#12283d" text-anchor="start">U5 5 V -&gt; J12 USB-C plug</text>
+<text x="876" y="194" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" fill="#12283d" text-anchor="start">breakout -&gt; Pi USB-C input.</text>
+<text x="876" y="214" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" fill="#12283d" text-anchor="start">J12 carries the 5.1 k CC1</text>
+<text x="876" y="234" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" fill="#12283d" text-anchor="start">resistor that makes the Pi</text>
+<text x="876" y="254" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" fill="#12283d" text-anchor="start">accept the supply.</text>
+<text x="876" y="274" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" fill="#12283d" text-anchor="start">16 AWG, under 250 mm.</text>
+<text x="876" y="294" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" fill="#12283d" text-anchor="start">Do NOT also feed 5 V into</text>
+<text x="876" y="314" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" fill="#12283d" text-anchor="start">header pins 2 and 4.</text>
+<rect x="1256" y="120" width="388" height="208" rx="7" fill="#f2f7fb" stroke="#1565c0" stroke-width="1.6"/>
+<rect x="1256" y="120" width="6" height="208" rx="3" fill="#1565c0"/>
+<text x="1276" y="150" font-family="Arial, Helvetica, sans-serif" font-size="19" font-weight="bold" fill="#12283d" text-anchor="start">USB link to the KB2040</text>
+<text x="1276" y="174" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" fill="#12283d" text-anchor="start">Cable J11, USB A to USB C, 1 m.</text>
+<text x="1276" y="194" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" fill="#12283d" text-anchor="start">Carries 5 V for the KB2040 and</text>
+<text x="1276" y="214" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" fill="#12283d" text-anchor="start">the CDC serial link at 115200.</text>
+<text x="1276" y="234" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" fill="#12283d" text-anchor="start">The Pi sees /dev/ttyACM1 once</text>
+<text x="1276" y="254" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" fill="#12283d" text-anchor="start">boot.py has enabled the second</text>
+<text x="1276" y="274" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" fill="#12283d" text-anchor="start">endpoint.</text>
+<text x="1276" y="294" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" fill="#12283d" text-anchor="start">It is also the KB2040&#x27;s only</text>
+<text x="1276" y="314" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" fill="#12283d" text-anchor="start">power source.</text>
+<text x="36" y="446" font-family="Arial, Helvetica, sans-serif" font-size="19" font-weight="bold" fill="#12283d" text-anchor="start">A.  Audio: Pi jack -&gt; summing resistors -&gt; PAM8302 -&gt; 3 inch speaker</text>
+<rect x="36" y="482" width="250" height="108" rx="7" fill="#f2f7fb" stroke="#5b7c99" stroke-width="1.6"/>
+<rect x="36" y="482" width="6" height="108" rx="3" fill="#5b7c99"/>
+<text x="56" y="512" font-family="Arial, Helvetica, sans-serif" font-size="19" font-weight="bold" fill="#12283d" text-anchor="start">A1 3.5 mm jack</text>
+<text x="56" y="536" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" fill="#12283d" text-anchor="start">tip = left</text>
+<text x="56" y="556" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" fill="#12283d" text-anchor="start">ring = right</text>
+<text x="56" y="576" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" fill="#12283d" text-anchor="start">sleeve = ground</text>
+<line x1="286" y1="520" x2="330" y2="520" stroke="#1565c0" stroke-width="2.2" stroke-linecap="round"/>
+<line x1="286" y1="572" x2="330" y2="572" stroke="#1565c0" stroke-width="2.2" stroke-linecap="round"/>
+<rect x="330" y="511" width="70" height="18" rx="3" fill="#ffffff" stroke="#12283d" stroke-width="2"/>
+<text x="365" y="505" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" fill="#12283d" text-anchor="middle">R4A 10k</text>
+<line x1="400" y1="520" x2="452" y2="520" stroke="#1565c0" stroke-width="2.2" stroke-linecap="round"/>
+<rect x="330" y="563" width="70" height="18" rx="3" fill="#ffffff" stroke="#12283d" stroke-width="2"/>
+<text x="365" y="557" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" fill="#12283d" text-anchor="middle">R4B 10k</text>
+<line x1="400" y1="572" x2="452" y2="572" stroke="#1565c0" stroke-width="2.2" stroke-linecap="round"/>
+<line x1="452" y1="520" x2="452" y2="572" stroke="#1565c0" stroke-width="2.2" stroke-linecap="round"/>
+<circle cx="452" cy="546" r="4.5" fill="#1565c0"/>
+<line x1="452" y1="546" x2="520" y2="546" stroke="#1565c0" stroke-width="2.2" stroke-linecap="round"/>
+<path d="M509,540 L520,546 L509,552" fill="none" stroke="#1565c0" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+<rect x="520" y="482" width="320" height="128" rx="7" fill="#f2f7fb" stroke="#ad1457" stroke-width="1.6"/>
+<rect x="520" y="482" width="6" height="128" rx="3" fill="#ad1457"/>
+<text x="540" y="512" font-family="Arial, Helvetica, sans-serif" font-size="19" font-weight="bold" fill="#12283d" text-anchor="start">U8  PAM8302</text>
+<text x="540" y="536" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" fill="#12283d" text-anchor="start">A+ = summed audio</text>
+<text x="540" y="556" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" fill="#12283d" text-anchor="start">A- = jack sleeve</text>
+<text x="540" y="576" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" fill="#12283d" text-anchor="start">VIN = 5 V rail</text>
+<text x="540" y="596" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" fill="#12283d" text-anchor="start">gain pot sets volume</text>
+<line x1="840" y1="545" x2="906" y2="545" stroke="#1565c0" stroke-width="2.2" stroke-linecap="round"/>
+<path d="M895,539 L906,545 L895,551" fill="none" stroke="#1565c0" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+<rect x="906" y="502" width="230" height="86" rx="6" fill="#f2f7fb" stroke="#5b7c99" stroke-width="1.6"/>
+<text x="920" y="528" font-family="Arial, Helvetica, sans-serif" font-size="15" font-weight="normal" fill="#12283d" text-anchor="start">LS1  3 inch 4 ohm</text>
+<text x="920" y="552" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" fill="#12283d" text-anchor="start">OUT+ / OUT- only:</text>
+<text x="920" y="574" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" fill="#12283d" text-anchor="start">neither lead to ground</text>
+<rect x="1160" y="482" width="484" height="148" rx="7" fill="#f2f7fb" stroke="#5b7c99" stroke-width="1.6"/>
+<rect x="1160" y="482" width="6" height="148" rx="3" fill="#5b7c99"/>
+<text x="1180" y="512" font-family="Arial, Helvetica, sans-serif" font-size="19" font-weight="bold" fill="#12283d" text-anchor="start">Audio notes</text>
+<text x="1180" y="536" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" fill="#12283d" text-anchor="start">The PAM8302 output is a bridge. Grounding either speaker lead</text>
+<text x="1180" y="556" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" fill="#12283d" text-anchor="start">destroys the amplifier.</text>
+<text x="1180" y="576" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" fill="#12283d" text-anchor="start">Summing left and right through two 10 k resistors is what makes</text>
+<text x="1180" y="596" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" fill="#12283d" text-anchor="start">a stereo jack drive a mono amp without loading either channel.</text>
+<text x="1180" y="616" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" fill="#12283d" text-anchor="start">Set the trim pot with the dome on: the vent changes the level.</text>
+<text x="36" y="662" font-family="Arial, Helvetica, sans-serif" font-size="19" font-weight="bold" fill="#12283d" text-anchor="start">B.  Battery sense and the first power-on test</text>
+<rect x="36" y="672" width="800" height="202" rx="7" fill="#f2f7fb" stroke="#1565c0" stroke-width="1.6"/>
+<rect x="36" y="672" width="6" height="202" rx="3" fill="#1565c0"/>
+<text x="56" y="702" font-family="Arial, Helvetica, sans-serif" font-size="19" font-weight="bold" fill="#12283d" text-anchor="start">U9  ADS1115, address 0x48, on Pi I2C-1</text>
+<text x="56" y="728" font-family="Arial, Helvetica, sans-serif" font-size="15" font-weight="normal" fill="#12283d" text-anchor="start">12V-BUS -&gt; R2 100 k -&gt; A0 node -&gt; R3 15 k -&gt; star ground.</text>
+<text x="56" y="750" font-family="Arial, Helvetica, sans-serif" font-size="15" font-weight="normal" fill="#12283d" text-anchor="start">A0 node -&gt; ADS1115 A0. VDD from Pi header pin 1 (3V3), GND pin 6,</text>
+<text x="56" y="772" font-family="Arial, Helvetica, sans-serif" font-size="15" font-weight="normal" fill="#12283d" text-anchor="start">SDA pin 3, SCL pin 5 - the same two wires the dome matrices use.</text>
+<text x="56" y="794" font-family="Arial, Helvetica, sans-serif" font-size="15" font-weight="normal" fill="#12283d" text-anchor="start">Ratio (100k + 15k) / 15k = 7.6667, so 12.70 V reads 1.657 V and the</text>
+<text x="56" y="816" font-family="Arial, Helvetica, sans-serif" font-size="15" font-weight="normal" fill="#12283d" text-anchor="start">14.75 V charge peak reads 1.924 V: inside the 4.096 V full scale.</text>
+<text x="56" y="838" font-family="Arial, Helvetica, sans-serif" font-size="15" font-weight="normal" fill="#12283d" text-anchor="start">firmware/pi/battery.py: 12.70 V full, 11.60 V empty, 11.20 V critical.</text>
+<text x="56" y="860" font-family="Arial, Helvetica, sans-serif" font-size="15" font-weight="normal" fill="#12283d" text-anchor="start">No KB2040 pin is involved; A0 and A1 there drive the head motor.</text>
+<rect x="856" y="672" width="788" height="202" rx="7" fill="#f2f7fb" stroke="#c62828" stroke-width="1.6"/>
+<rect x="856" y="672" width="6" height="202" rx="3" fill="#c62828"/>
+<text x="876" y="702" font-family="Arial, Helvetica, sans-serif" font-size="19" font-weight="bold" fill="#12283d" text-anchor="start">Rail check with a multimeter, loads disconnected</text>
+<text x="876" y="728" font-family="Arial, Helvetica, sans-serif" font-size="15" font-weight="normal" fill="#12283d" text-anchor="start">1. Fuses out, battery connected, SW1 off: 0 V at the bus, 12.x V at F1 in.</text>
+<text x="876" y="750" font-family="Arial, Helvetica, sans-serif" font-size="15" font-weight="normal" fill="#12283d" text-anchor="start">2. F1 in, SW1 on, no other fuse: 12.0-13.0 V across the bus studs.</text>
+<text x="876" y="772" font-family="Arial, Helvetica, sans-serif" font-size="15" font-weight="normal" fill="#12283d" text-anchor="start">3. Fit F3 only. U5 VOUT to ground = 5.00 V +/- 0.2 V. Then power off.</text>
+<text x="876" y="794" font-family="Arial, Helvetica, sans-serif" font-size="15" font-weight="normal" fill="#12283d" text-anchor="start">4. Fit F4 and F5. U6 and U7 VOUT = 6.0 V +/- 0.25 V each. Power off.</text>
+<text x="876" y="816" font-family="Arial, Helvetica, sans-serif" font-size="15" font-weight="normal" fill="#12283d" text-anchor="start">5. Only now plug in J12 (Pi), the driver VMOTOR leads and FH6 (dome).</text>
+<text x="876" y="838" font-family="Arial, Helvetica, sans-serif" font-size="15" font-weight="normal" fill="#12283d" text-anchor="start">6. With the Pi running, U9 must read within 0.15 V of the meter at the</text>
+<text x="876" y="860" font-family="Arial, Helvetica, sans-serif" font-size="15" font-weight="normal" fill="#12283d" text-anchor="start">   battery terminals; if not, check R2 and R3 before trusting the gauge.</text>
+<rect x="36" y="888" width="420" height="136" rx="7" fill="#ffffff" stroke="#5b7c99" stroke-width="1.6"/>
+<text x="50" y="918" font-family="Arial, Helvetica, sans-serif" font-size="19" font-weight="bold" fill="#12283d" text-anchor="start">Legend</text>
+<line x1="50" y1="939" x2="84" y2="939" stroke="#ad1457" stroke-width="4" stroke-linecap="round"/>
+<text x="96" y="944" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" fill="#12283d" text-anchor="start">5 V rail</text>
+<line x1="50" y1="961" x2="84" y2="961" stroke="#1565c0" stroke-width="4" stroke-linecap="round"/>
+<text x="96" y="966" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" fill="#12283d" text-anchor="start">analogue / SPI / audio</text>
+<line x1="50" y1="983" x2="84" y2="983" stroke="#2e7d32" stroke-width="4" stroke-linecap="round"/>
+<text x="96" y="988" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" fill="#12283d" text-anchor="start">I2C and digital</text>
+<line x1="50" y1="1005" x2="84" y2="1005" stroke="#263238" stroke-width="4" stroke-linecap="round"/>
+<text x="96" y="1010" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" fill="#12283d" text-anchor="start">ground</text>
+<rect x="476" y="888" width="560" height="128" rx="7" fill="#f2f7fb" stroke="#5b7c99" stroke-width="1.6"/>
+<rect x="476" y="888" width="6" height="128" rx="3" fill="#5b7c99"/>
+<text x="496" y="918" font-family="Arial, Helvetica, sans-serif" font-size="19" font-weight="bold" fill="#12283d" text-anchor="start">What is NOT wired</text>
+<text x="496" y="942" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" fill="#12283d" text-anchor="start">GPIO18 backlight control (R1 ties the backlight on: sheet 03).</text>
+<text x="496" y="962" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" fill="#12283d" text-anchor="start">The KB2040 STEMMA QT port (GPIO12/13): reserved, unused.</text>
+<text x="496" y="982" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" fill="#12283d" text-anchor="start">KB2040 RAW: the Pi&#x27;s USB port is the only 5 V source for it.</text>
+<text x="496" y="1002" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" fill="#12283d" text-anchor="start">Pi header pins 2 and 4: 5 V goes in through the USB-C input only.</text>
+<rect x="1056" y="888" width="588" height="158" rx="7" fill="#f2f7fb" stroke="#5b7c99" stroke-width="1.6"/>
+<text x="1076" y="918" font-family="Arial, Helvetica, sans-serif" font-size="19" font-weight="bold" fill="#12283d" text-anchor="start">Ground rule for the whole robot</text>
+<text x="1076" y="944" font-family="Arial, Helvetica, sans-serif" font-size="15" font-weight="normal" fill="#12283d" text-anchor="start">One star point, TB2, on the electronics tray. The Pi, the KB2040,</text>
+<text x="1076" y="966" font-family="Arial, Helvetica, sans-serif" font-size="15" font-weight="normal" fill="#12283d" text-anchor="start">both 6 V rails, the 5 V rail, the amplifier, the dome return and the</text>
+<text x="1076" y="988" font-family="Arial, Helvetica, sans-serif" font-size="15" font-weight="normal" fill="#12283d" text-anchor="start">battery minus all land there. Audio ground reaches the amplifier</text>
+<text x="1076" y="1010" font-family="Arial, Helvetica, sans-serif" font-size="15" font-weight="normal" fill="#12283d" text-anchor="start">through the jack sleeve, not through a second path, so the speaker</text>
+<text x="1076" y="1032" font-family="Arial, Helvetica, sans-serif" font-size="15" font-weight="normal" fill="#12283d" text-anchor="start">never shares a return with a motor.</text>
+<line x1="36" y1="1096" x2="1644" y2="1096" stroke="#5b7c99" stroke-width="1.2"/>
+<text x="36" y="1118" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" fill="#5b7c99" text-anchor="start">fable-r2d2 electrical set, 2026-09-12  |  sheets 01-04 and electronics/wiring.csv are one drawing set  |  pin names are the final firmware names in firmware/kb2040/code.py  |  not yet validated on hardware</text>
+</svg>

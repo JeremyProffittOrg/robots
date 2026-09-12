@@ -15,7 +15,7 @@ at 20 Hz, animates the head displays, and plays the sound clips.
 ```
  phone browser ──WebSocket──► Pi: server.py ──USB CDC 115200──► KB2040: code.py
                                    │                                  │
-                                   ├─ displays.py  HT16K33 x3, GC9A01A ├─ 7 x DRV8833 channels
+                                   ├─ displays.py  HT16K33 x4, GC9A01A ├─ 7 x DRV8833 channels
                                    ├─ audio.py     aplay / pygame      └─ 17 x NeoPixel
                                    └─ battery.py   ADS1115 (optional)
 ```
@@ -41,7 +41,7 @@ at 20 Hz, animates the head displays, and plays the sound clips.
 | `server.py` | aiohttp server: static page, WebSocket, control state, workers. |
 | `mixing.py` | Differential drive maths, clamps, speed cap, minimum duty, ramp. |
 | `serial_link.py` | Background thread owning the USB CDC port; 20 Hz command stream. |
-| `displays.py` | Front/rear logic matrices and the radar eye. |
+| `displays.py` | Four 8x8 HT16K33 logic matrices and the radar eye. |
 | `audio.py` | WAV playback through `aplay`, or `pygame.mixer` as a fallback. |
 | `battery.py` | Optional pack voltage through an ADS1115. |
 | `test_mixing.py` | CPython unit tests for `mixing.py`. |
@@ -56,6 +56,56 @@ at 20 Hz, animates the head displays, and plays the sound clips.
 | ---- | ------- |
 | `scripts/generate_audio.py` | Synthesises the twelve clips and writes the catalogue. |
 | `audio/catalog.csv` | `name, file, seconds, sha256` for every clip. |
+
+### Dome display and I2C map
+
+Everything in this table is on the **Raspberry Pi's own I2C bus 1** (header pins
+3 and 5, `/dev/i2c-1`) except the radar eye, which is on the Pi's SPI0. The
+KB2040 drives no display at all; its STEMMA QT bus stays unused.
+
+| Device | Bus | Address | Driven as |
+| ------ | --- | ------- | --------- |
+| Front logic, **upper window** | I2C-1 | `0x70` | Adafruit 0.8 inch 8x8 mini matrix backpack, `Matrix8x8`, its own animation |
+| Front logic, **lower window** | I2C-1 | `0x71` | Adafruit 0.8 inch 8x8 mini matrix backpack, `Matrix8x8`, its own animation |
+| Rear logic, **left** (seen from behind) | I2C-1 | `0x72` | 8x8 backpack, columns 0-7 of one 16x8 strip |
+| Rear logic, **right** (seen from behind) | I2C-1 | `0x73` | 8x8 backpack, columns 8-15 of the same strip |
+| Battery ADC, optional | I2C-1 | `0x48` | ADS1115, channel `A0`/`P0` |
+| Radar eye | SPI0 | CE0 | GC9A01A 240x240, DC GPIO25, RST GPIO24, backlight GPIO18 |
+
+Four 0.8 inch **8x8** backpacks, not three 8x16 units. Set each backpack's
+address with its `A0`/`A1` solder jumpers: none bridged gives `0x70`, `A0`
+bridged `0x71`, `A1` bridged `0x72`, both bridged `0x73`.
+
+The two **front** windows are independent displays and get independent
+animations with separate random seeds, so the upper and lower windows never fall
+into the same rhythm. The two **rear** backpacks are treated as one 16 column by
+8 row strip sharing a single pattern that scrolls sideways across the seam, so
+the movement carries from one unit to the other instead of stopping between
+them.
+
+Degradation is per device. A backpack that does not answer at start up, or that
+stops answering later, is logged with its address and dropped while the others
+keep running. If only one rear backpack answers, the strip still runs on that
+half.
+
+### Battery sensing does not touch the KB2040
+
+Stated here so the wiring author does not route a divider to the microcontroller:
+
+* `firmware/pi/battery.py` reads **only** an ADS1115 on the **Pi's** I2C-1 bus at
+  `0x48`, single-ended channel `A0` (`ads1115.P0`), through a 100 kilohm over
+  15 kilohm divider across the 12 V pack (`DIVIDER_TOP_OHMS` and
+  `DIVIDER_BOTTOM_OHMS` in that file).
+* It never opens a serial port and never speaks to the KB2040.
+* The KB2040 serial protocol carries **no** voltage field: `st` reports
+  `<enabled> <l> <r> <c> <h> <index>` and nothing else.
+* No KB2040 pin is free for this anyway. Its only ADC pins are `A0`-`A3`
+  (GP26-GP29): `A0` and `A1` drive the head motor, `A2` is the NeoPixel data
+  line and `A3` is the dome index sensor. The one spare pin, `D0`/GP0, has no
+  ADC on the RP2040.
+
+So the divider's tap wire goes to the **ADS1115 `A0` input on the Pi's I2C bus**,
+and nowhere near the KB2040.
 
 ---
 
@@ -206,7 +256,11 @@ Two smaller corrections, both verified against
 5. Download the CircuitPython **9.x** library bundle from
    <https://circuitpython.org/libraries>, and copy **`neopixel.mpy`** from its
    `lib/` folder into `CIRCUITPY/lib/`. That is the only bundle file needed;
-   everything else `code.py` uses is built into the firmware.
+   everything else `code.py` uses is built into the firmware. In particular the
+   four HT16K33 logic matrices and the radar eye are driven from the **Pi**, so
+   `adafruit_ht16k33` and `adafruit_rgb_display` are pip packages in
+   `firmware/pi/requirements.txt` and must **not** be copied into
+   `CIRCUITPY/lib/`.
 6. Unplug and replug the board, or press `RESET`. A power cycle is required for
    `boot.py` to take effect; a soft reload is not enough.
 
@@ -231,7 +285,7 @@ sudo reboot
 After the reboot, confirm the displays answer:
 
 ```bash
-i2cdetect -y 1        # expect 70, 71, 72, and 48 if the ADS1115 is fitted
+i2cdetect -y 1        # expect 70, 71, 72, 73, and 48 if the ADS1115 is fitted
 ls /dev/spidev0.*     # expect /dev/spidev0.0 and /dev/spidev0.1
 ```
 
@@ -249,7 +303,7 @@ Check the parts that matter:
 ```bash
 /home/pi/r2d2-venv/bin/python -c "import aiohttp, serial; print('core ok')"
 /home/pi/r2d2-venv/bin/python -c "from adafruit_rgb_display import gc9a01a; print('radar ok')"
-/home/pi/r2d2-venv/bin/python -c "from adafruit_ht16k33 import matrix; print('logic ok')"
+/home/pi/r2d2-venv/bin/python -c "from adafruit_ht16k33.matrix import Matrix8x8; print('logic ok')"
 which aplay
 ```
 
@@ -469,7 +523,50 @@ message is logged and ignored rather than raising, that the 500 ms client
 watchdog zeroes the drive, and that `mixing.ramp_step` and `protocol.ramp_step`
 agree for every sampled pair.
 
-### 9.7 What is *not* verified
+### 9.7 Four-backpack logic display change, re-verified 2026-09-12
+
+`displays.py` was changed from three 8x16 matrices to four 0.8 inch 8x8 mini
+matrix backpacks (`Matrix8x8`): front `0x70` upper and `0x71` lower as
+independent animations, rear `0x72` left and `0x73` right as one 16x8 scrolling
+strip.
+
+```
+$ python -m py_compile firmware/pi/displays.py firmware/pi/test_mixing.py
+exit 0
+$ python firmware/pi/test_mixing.py
+----------------------------------------------------------------------
+Ran 44 tests in 0.005s
+
+OK
+$ python firmware/kb2040/test_protocol.py
+----------------------------------------------------------------------
+Ran 47 tests in 0.001s
+
+OK
+$ node --check firmware/pi/static/app.js
+exit 0
+```
+
+A headless animation check (throwaway script, fake matrix objects that assert
+every coordinate is inside 8x8, no I2C):
+
+```
+addresses: front 0x70 upper / 0x71 lower, rear 0x72 left / 0x73 right, 8x8 each
+front windows: 400 frames each, bars in range, patterns differ in 400/400 frames
+rear strip: 400 frames, 16-wide pattern scrolled coherently in 309/400 frames
+degradation: rear 0x73 dropped, strip survived on 0x72, then both dropped;
+  front window dropped
+```
+
+The two front windows never produced the same pattern in 400 frames. The rear
+strip's 16 column pattern shifted as a whole in 309 of 400 frames; the other 91
+are the deliberate single-column flicker that keeps the strip from looking like
+a conveyor belt. Degradation was exercised by making a fake backpack raise
+`OSError`: the strip dropped `0x73` and kept scrolling on `0x72` alone, reported
+itself finished only when both were gone, and a front window dropped itself the
+same way.
+
+### 9.8 What is *not* verified
 
 No motor has turned, no pixel has lit, no display has been written and no audio
 has been played: there is no hardware on this machine. Everything above is a
@@ -489,8 +586,9 @@ first real checks are the terminal bench check in
 | One motor runs backwards | Swap its two leads at the DRV8833 output, or set its `invert` flag in the `MOTORS` table in `code.py`. See section 4. |
 | Motors buzz but do not turn | The minimum duty is too low for that gearbox under load, or the pack is flat. Raise the speed cap first; `MIN_DUTY` in `mixing.py` is the floor. |
 | Robot veers on a straight run | Adjust `TURN_GAIN` in `mixing.py`, or check for a slipping wheel. Both motors in a foot always get the same value, so a difference is mechanical. |
-| Logic displays blank | `i2cdetect -y 1` should show `70`, `71`, `72`. The server logs which address did not answer. |
+| A logic window is blank | `i2cdetect -y 1` should show `70`, `71`, `72`, `73`. The server logs the address that did not answer and keeps the others running. Check that backpack's `A0`/`A1` address jumpers. |
+| Half the rear strip is blank | One rear backpack is missing or mis-addressed. `0x72` is the left half and `0x73` the right half seen from behind; the surviving half keeps scrolling. |
 | Radar eye blank | SPI not enabled, or `adafruit_rgb_display` too old to contain `gc9a01a`. The startup log names the exact reason. |
-| `battery --` in the header | No ADS1115 fitted, or the library is absent. Optional; the rest runs normally. |
+| `battery --` in the header | No ADS1115 fitted at `0x48` on the Pi's I2C-1, or the library is absent. Optional; the rest runs normally. The KB2040 is not involved. |
 | No sound | `aplay` missing and pygame absent. `which aplay`; the startup log says which back end was chosen. |
 | Dome pixels ignore `L` and `P` | `neopixel.mpy` not in `CIRCUITPY/lib/`. The board answers `err neopixel library missing`. |

@@ -1,0 +1,160 @@
+{
+  "status": "engineering calculation from research/loads.md section 6 and research/components-electronics.md; no measurement on hardware",
+  "date": "2026-09-12",
+  "battery": {
+    "part": "Power-Sonic PS-1270 F2",
+    "nominal_V": 12.0,
+    "capacity_Ah_20h": 7.0,
+    "capacity_Ah_10h": 6.7,
+    "usable_Ah_at_50_percent_DoD": 3.35,
+    "short_circuit_current_A_estimated": 457,
+    "datasheet_5s_rating_A": 108,
+    "cycle_charge_V": [
+      14.1,
+      14.7
+    ],
+    "float_V": [
+      13.5,
+      13.8
+    ],
+    "maximum_charge_current_A": 2.16
+  },
+  "charging": {
+    "charger": "PowerStream PST-P2012-A12B",
+    "bulk_A": 1.5,
+    "absorb_V": 14.75,
+    "float_V": 13.75,
+    "bulk_hours_from_50_percent": 2.63,
+    "total_hours_to_float": "6 to 7",
+    "note": "loads.md quotes about 6 h with a 1 A charger; the 1.5 A charger reaches float sooner but absorption still dominates the tail."
+  },
+  "rails": {
+    "five_volt_loads_A": {
+      "raspberry_pi_4_A": 0.6,
+      "led_matrices_four_A": 0.15,
+      "neopixels_average_A": 0.3,
+      "radar_tft_A": 0.1,
+      "kb2040_A": 0.05,
+      "audio_amplifier_average_A": 0.2
+    },
+    "five_volt_total_A": 1.4,
+    "five_volt_total_W": 7.0,
+    "converter_efficiency": 0.9,
+    "five_volt_draw_from_12V_A": 0.648,
+    "driving_motor_W": 15.36,
+    "driving_draw_from_12V_A": 1.422,
+    "worst_case_motor_W": 42.0,
+    "worst_case_draw_from_12V_A": 4.537,
+    "six_volt_rail_A_headroom": {
+      "U6_load_A": 4.0,
+      "U7_load_A": 3.0,
+      "regulator_rating_A": 5.5
+    }
+  },
+  "fuses": [
+    {
+      "designator": "F1",
+      "circuit": "main, battery positive lead",
+      "rating_A": 15,
+      "measured_or_estimated_load_A": 4.537,
+      "loads_md_minimum_A": 7.5,
+      "note": "Sized for the 20 A switch and the 16 AWG lead rather than for the load; loads.md section 6 would allow 7.5 A. The larger fuse still protects the 16 AWG (22 A chassis) cable."
+    },
+    {
+      "designator": "F2",
+      "circuit": "charge port branch to the battery side of SW1",
+      "rating_A": 3,
+      "measured_or_estimated_load_A": 1.5,
+      "loads_md_minimum_A": 2,
+      "note": "Charger G1 delivers 1.5 A maximum."
+    },
+    {
+      "designator": "F3",
+      "circuit": "5 V regulator U5 input",
+      "rating_A": 3,
+      "measured_or_estimated_load_A": 0.648,
+      "loads_md_minimum_A": 2,
+      "note": "0.65 A idle, 1.4 A if every 5 V load peaks together."
+    },
+    {
+      "designator": "F4",
+      "circuit": "6 V regulator U6 input (left and centre feet)",
+      "rating_A": 5,
+      "measured_or_estimated_load_A": 2.222,
+      "loads_md_minimum_A": 5,
+      "note": "Four motors at the DRV8833 1 A limit."
+    },
+    {
+      "designator": "F5",
+      "circuit": "6 V regulator U7 input (right foot and head)",
+      "rating_A": 5,
+      "measured_or_estimated_load_A": 1.667,
+      "loads_md_minimum_A": 5,
+      "note": "Three motors at the 1 A limit."
+    },
+    {
+      "designator": "F6",
+      "circuit": "5 V dome feed through the slip ring",
+      "rating_A": 2,
+      "measured_or_estimated_load_A": 1.62,
+      "loads_md_minimum_A": 1.5,
+      "note": "17 NeoPixels at 60 mA (1.02 A) plus four backpacks (0.50 A) plus the TFT (0.10 A). loads.md proposed a 1.5 A polyfuse, which the worst case exceeds; a 2 A blade fuse is used instead."
+    }
+  ],
+  "wire_ampacity": [
+    {
+      "gauge_awg": 16,
+      "chassis_rating_A": 22,
+      "used_for": "battery, main fuse, switch, charge branch, regulator inputs, Pi 5 V feed",
+      "worst_case_A": 4.537,
+      "verdict": "pass"
+    },
+    {
+      "gauge_awg": 22,
+      "chassis_rating_A": 7,
+      "used_for": "6 V branches, motor extensions, dome feed, display and NeoPixel signals",
+      "worst_case_A": 4.0,
+      "verdict": "pass"
+    },
+    {
+      "gauge_awg": 28,
+      "chassis_rating_A": 1.4,
+      "used_for": "the motors' own factory leads and the slip-ring leads",
+      "worst_case_A": 1.0,
+      "verdict": "pass at the DRV8833 1 A limit; keep these leads short (85 mV drop over 200 mm)"
+    }
+  ],
+  "slip_ring": {
+    "wires": 12,
+    "rating_A_per_wire": 2.0,
+    "five_volt_wires": 2,
+    "ground_wires": 2,
+    "five_volt_capacity_A": 4.0,
+    "dome_worst_case_A": 1.62,
+    "dome_practical_A_at_firmware_brightness_0p4": 1.01
+  },
+  "runtime": {
+    "idle_displays_on": {
+      "amps_12V": 0.648,
+      "runtime_h_to_50_percent_DoD": 5.17
+    },
+    "continuous_driving": {
+      "amps_12V": 2.07,
+      "runtime_h_to_50_percent_DoD": 1.62
+    },
+    "mixed_50_percent_driving": {
+      "amps_12V": 1.359,
+      "runtime_h_to_50_percent_DoD": 2.47
+    },
+    "worst_case_all_seven_motors_at_the_1A_limit": {
+      "amps_12V": 4.537,
+      "runtime_h_to_50_percent_DoD": 0.74
+    }
+  },
+  "notes": [
+    "Motor currents come from loads.md section 2: 0.385 A per drive motor at 6 V on a hard floor, and 0.5 A at 3 V for the head drive.",
+    "The DRV8833 sense resistors chop each motor at 1 A, so a stall is a limit, not a fault current.",
+    "Runtime is to 50 percent depth of discharge, which is the figure that keeps an SLA's cycle life; running to 11.2 V gives more time and fewer cycles.",
+    "Every figure here is arithmetic on published ratings. Nothing has been measured on a built robot."
+  ]
+}

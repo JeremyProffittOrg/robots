@@ -1,0 +1,163 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1680" height="1235" viewBox="0 0 1680 1235">
+<rect width="1680" height="1235" fill="#ffffff"/>
+<text x="36" y="46" font-family="Arial, Helvetica, sans-serif" font-size="27" font-weight="bold" fill="#12283d" text-anchor="start">01  Power and charging</text>
+<text x="36" y="74" font-family="Arial, Helvetica, sans-serif" font-size="16" font-weight="normal" fill="#5b7c99" text-anchor="start">12 V 7 Ah SLA, one main fuse, one switch, three regulators, one star ground. Charging reaches the battery with the switch off.</text>
+<line x1="36" y1="88" x2="1644" y2="88" stroke="#5b7c99" stroke-width="1.2"/>
+<text x="36" y="128" font-family="Arial, Helvetica, sans-serif" font-size="19" font-weight="bold" fill="#12283d" text-anchor="start">A.  Battery, main fuse, switch and the 12 V bus</text>
+<rect x="36" y="152" width="250" height="114" rx="7" fill="#f2f7fb" stroke="#c62828" stroke-width="1.6"/>
+<rect x="36" y="152" width="6" height="114" rx="3" fill="#c62828"/>
+<text x="56" y="182" font-family="Arial, Helvetica, sans-serif" font-size="19" font-weight="bold" fill="#12283d" text-anchor="start">BT1  12 V 7 Ah SLA</text>
+<text x="56" y="208" font-family="Arial, Helvetica, sans-serif" font-size="15" font-weight="normal" fill="#12283d" text-anchor="start">Power-Sonic PS-1270 F2</text>
+<text x="56" y="230" font-family="Arial, Helvetica, sans-serif" font-size="15" font-weight="normal" fill="#12283d" text-anchor="start">F2 blades, 6.35 mm</text>
+<text x="56" y="252" font-family="Arial, Helvetica, sans-serif" font-size="15" font-weight="normal" fill="#12283d" text-anchor="start">on the body_lower shelf</text>
+<line x1="286" y1="208" x2="330" y2="208" stroke="#c62828" stroke-width="2.2" stroke-linecap="round"/>
+<rect x="330" y="191" width="72" height="34" rx="5" fill="#ffffff" stroke="#c62828" stroke-width="2"/>
+<text x="366" y="213" font-family="Consolas, monospace" font-size="14" font-weight="normal" fill="#00507f" text-anchor="middle">J10</text>
+<text x="366" y="252" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" fill="#12283d" text-anchor="middle">Powerpole</text>
+<line x1="412" y1="208" x2="426" y2="208" stroke="#c62828" stroke-width="2.2" stroke-linecap="round"/>
+<rect x="426" y="199" width="58" height="18" rx="4" fill="#ffffff" stroke="#c62828" stroke-width="2"/>
+<line x1="426" y1="208" x2="484" y2="208" stroke="#c62828" stroke-width="1.6" stroke-linecap="round"/>
+<line x1="484" y1="208" x2="498" y2="208" stroke="#c62828" stroke-width="2.2" stroke-linecap="round"/>
+<text x="455" y="192" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" fill="#12283d" text-anchor="middle">F1  15 A  (holder FH1)</text>
+<line x1="498" y1="208" x2="520" y2="208" stroke="#c62828" stroke-width="2.2" stroke-linecap="round"/>
+<circle cx="520" cy="208" r="4.5" fill="#c62828"/>
+<line x1="520" y1="208" x2="536" y2="208" stroke="#c62828" stroke-width="2.2" stroke-linecap="round"/>
+<circle cx="536" cy="208" r="4.5" fill="#c62828"/>
+<line x1="536" y1="208" x2="578" y2="186" stroke="#c62828" stroke-width="2.2" stroke-linecap="round"/>
+<circle cx="594" cy="208" r="4.5" fill="#c62828"/>
+<line x1="594" y1="208" x2="616" y2="208" stroke="#c62828" stroke-width="2.2" stroke-linecap="round"/>
+<text x="568" y="164" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" fill="#12283d" text-anchor="middle">SW1  Carling 20 A rocker</text>
+<line x1="616" y1="208" x2="696" y2="208" stroke="#c62828" stroke-width="2.2" stroke-linecap="round"/>
+<circle cx="696" cy="208" r="4.5" fill="#c62828"/>
+<text x="710" y="213" font-family="Consolas, monospace" font-size="14" font-weight="normal" fill="#00507f" text-anchor="start">12V-BUS</text>
+<line x1="696" y1="208" x2="696" y2="340" stroke="#c62828" stroke-width="2.2" stroke-linecap="round"/>
+<text x="710" y="344" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" fill="#12283d" text-anchor="start">to the three regulator fuses (B)</text>
+<rect x="36" y="288" width="250" height="114" rx="7" fill="#f2f7fb" stroke="#c62828" stroke-width="1.6"/>
+<rect x="36" y="288" width="6" height="114" rx="3" fill="#c62828"/>
+<text x="56" y="318" font-family="Arial, Helvetica, sans-serif" font-size="19" font-weight="bold" fill="#12283d" text-anchor="start">J1  charge jack</text>
+<text x="56" y="344" font-family="Arial, Helvetica, sans-serif" font-size="15" font-weight="normal" fill="#12283d" text-anchor="start">Switchcraft L722A</text>
+<text x="56" y="366" font-family="Arial, Helvetica, sans-serif" font-size="15" font-weight="normal" fill="#12283d" text-anchor="start">5.5 x 2.1 mm, centre +</text>
+<text x="56" y="388" font-family="Arial, Helvetica, sans-serif" font-size="15" font-weight="normal" fill="#12283d" text-anchor="start">rear lower band</text>
+<line x1="286" y1="340" x2="330" y2="340" stroke="#c62828" stroke-width="2.2" stroke-linecap="round"/>
+<line x1="330" y1="340" x2="344" y2="340" stroke="#c62828" stroke-width="2.2" stroke-linecap="round"/>
+<rect x="344" y="331" width="58" height="18" rx="4" fill="#ffffff" stroke="#c62828" stroke-width="2"/>
+<line x1="344" y1="340" x2="402" y2="340" stroke="#c62828" stroke-width="1.6" stroke-linecap="round"/>
+<line x1="402" y1="340" x2="416" y2="340" stroke="#c62828" stroke-width="2.2" stroke-linecap="round"/>
+<text x="373" y="324" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" fill="#12283d" text-anchor="middle">F2  3 A  (holder FH2)</text>
+<path d="M416,340 L520,340 L520,208" fill="none" stroke="#c62828" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="476" y="324" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" fill="#12283d" text-anchor="start">joins the BATTERY side of SW1</text>
+<text x="476" y="356" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" fill="#5b7c99" text-anchor="start">so the charger works with the robot switched off,</text>
+<text x="476" y="378" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" fill="#5b7c99" text-anchor="start">and SW1 still isolates every load.</text>
+<line x1="160" y1="418" x2="160" y2="432" stroke="#263238" stroke-width="2.2" stroke-linecap="round"/>
+<line x1="144" y1="432" x2="176" y2="432" stroke="#263238" stroke-width="2.2" stroke-linecap="round"/>
+<line x1="150" y1="439" x2="170" y2="439" stroke="#263238" stroke-width="2.2" stroke-linecap="round"/>
+<line x1="156" y1="446" x2="164" y2="446" stroke="#263238" stroke-width="2.2" stroke-linecap="round"/>
+<text x="196" y="440" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" fill="#12283d" text-anchor="start">J1 sleeve and BT1 minus go straight to the star ground (C)</text>
+<text x="36" y="492" font-family="Arial, Helvetica, sans-serif" font-size="19" font-weight="bold" fill="#12283d" text-anchor="start">B.  Regulators, each behind its own fuse</text>
+<rect x="36" y="508" width="520" height="180" rx="7" fill="#f2f7fb" stroke="#ad1457" stroke-width="1.6"/>
+<rect x="36" y="508" width="6" height="180" rx="3" fill="#ad1457"/>
+<text x="56" y="538" font-family="Arial, Helvetica, sans-serif" font-size="19" font-weight="bold" fill="#12283d" text-anchor="start">U5  Pololu D36V50F5  12 V -&gt; 5 V 5.5 A</text>
+<text x="56" y="564" font-family="Arial, Helvetica, sans-serif" font-size="15" font-weight="normal" fill="#12283d" text-anchor="start">12V-BUS -&gt; FH3 (F3 3 A) -&gt; VIN</text>
+<text x="56" y="586" font-family="Arial, Helvetica, sans-serif" font-size="15" font-weight="normal" fill="#12283d" text-anchor="start">VOUT -&gt; J12 USB-C plug breakout -&gt; Pi USB-C power</text>
+<text x="56" y="608" font-family="Arial, Helvetica, sans-serif" font-size="15" font-weight="normal" fill="#12283d" text-anchor="start">VOUT -&gt; FH6 (F6 2 A) -&gt; slip ring wires 1 and 2 (dome)</text>
+<text x="56" y="630" font-family="Arial, Helvetica, sans-serif" font-size="15" font-weight="normal" fill="#12283d" text-anchor="start">VOUT -&gt; U8 PAM8302 amplifier</text>
+<text x="56" y="652" font-family="Arial, Helvetica, sans-serif" font-size="15" font-weight="normal" fill="#12283d" text-anchor="start">Load: 0.65 A from 12 V idle, 1.40 A at 5 V worst case</text>
+<text x="56" y="674" font-family="Arial, Helvetica, sans-serif" font-size="15" font-weight="normal" fill="#12283d" text-anchor="start">Keep the Pi feed under 250 mm of 16 AWG: 31 mV drop at 3 A</text>
+<rect x="576" y="508" width="520" height="180" rx="7" fill="#f2f7fb" stroke="#ef6c00" stroke-width="1.6"/>
+<rect x="576" y="508" width="6" height="180" rx="3" fill="#ef6c00"/>
+<text x="596" y="538" font-family="Arial, Helvetica, sans-serif" font-size="19" font-weight="bold" fill="#12283d" text-anchor="start">U6  D36V50F6  12 V -&gt; 6 V 5.5 A  (rail A)</text>
+<text x="596" y="564" font-family="Arial, Helvetica, sans-serif" font-size="15" font-weight="normal" fill="#12283d" text-anchor="start">12V-BUS -&gt; FH4 (F4 5 A) -&gt; VIN</text>
+<text x="596" y="586" font-family="Arial, Helvetica, sans-serif" font-size="15" font-weight="normal" fill="#12283d" text-anchor="start">VOUT -&gt; U1 VMOTOR (left foot) and U3 VMOTOR (centre foot)</text>
+<text x="596" y="608" font-family="Arial, Helvetica, sans-serif" font-size="15" font-weight="normal" fill="#12283d" text-anchor="start">Four motors, DRV8833 limited to 1 A each: 4 A worst case</text>
+<text x="596" y="630" font-family="Arial, Helvetica, sans-serif" font-size="15" font-weight="normal" fill="#12283d" text-anchor="start">24 W at 6 V is 2.2 A from 12 V at 90 percent efficiency</text>
+<text x="596" y="652" font-family="Arial, Helvetica, sans-serif" font-size="15" font-weight="normal" fill="#12283d" text-anchor="start">Never feed a DRV8833 from the 12 V bus: 10.8 V maximum</text>
+<text x="596" y="674" font-family="Arial, Helvetica, sans-serif" font-size="15" font-weight="normal" fill="#12283d" text-anchor="start">Pololu stock is rationed; order this part early</text>
+<rect x="1116" y="508" width="528" height="180" rx="7" fill="#f2f7fb" stroke="#ef6c00" stroke-width="1.6"/>
+<rect x="1116" y="508" width="6" height="180" rx="3" fill="#ef6c00"/>
+<text x="1136" y="538" font-family="Arial, Helvetica, sans-serif" font-size="19" font-weight="bold" fill="#12283d" text-anchor="start">U7  D36V50F6  12 V -&gt; 6 V 5.5 A  (rail B)</text>
+<text x="1136" y="564" font-family="Arial, Helvetica, sans-serif" font-size="15" font-weight="normal" fill="#12283d" text-anchor="start">12V-BUS -&gt; FH5 (F5 5 A) -&gt; VIN</text>
+<text x="1136" y="586" font-family="Arial, Helvetica, sans-serif" font-size="15" font-weight="normal" fill="#12283d" text-anchor="start">VOUT -&gt; U2 VMOTOR (right foot) and U4 VMOTOR (head drive)</text>
+<text x="1136" y="608" font-family="Arial, Helvetica, sans-serif" font-size="15" font-weight="normal" fill="#12283d" text-anchor="start">Three motors at the 1 A limit: 3 A worst case</text>
+<text x="1136" y="630" font-family="Arial, Helvetica, sans-serif" font-size="15" font-weight="normal" fill="#12283d" text-anchor="start">18 W at 6 V is 1.7 A from 12 V at 90 percent efficiency</text>
+<text x="1136" y="652" font-family="Arial, Helvetica, sans-serif" font-size="15" font-weight="normal" fill="#12283d" text-anchor="start">Splitting the rails keeps a stalled foot off the head drive</text>
+<text x="1136" y="674" font-family="Arial, Helvetica, sans-serif" font-size="15" font-weight="normal" fill="#12283d" text-anchor="start">Both 6 V rails share the star ground, nothing else</text>
+<text x="36" y="720" font-family="Arial, Helvetica, sans-serif" font-size="19" font-weight="bold" fill="#12283d" text-anchor="start">C.  Star ground, charger polarity and the battery sense divider</text>
+<rect x="36" y="740" width="520" height="180" rx="7" fill="#f2f7fb" stroke="#5b7c99" stroke-width="1.6"/>
+<text x="56" y="770" font-family="Arial, Helvetica, sans-serif" font-size="19" font-weight="bold" fill="#12283d" text-anchor="start">TB2  star ground on the electronics tray</text>
+<text x="56" y="796" font-family="Arial, Helvetica, sans-serif" font-size="15" font-weight="normal" fill="#12283d" text-anchor="start">One stud. Every return lands here and nowhere else:</text>
+<text x="56" y="818" font-family="Arial, Helvetica, sans-serif" font-size="15" font-weight="normal" fill="#12283d" text-anchor="start">BT1 minus, J1 sleeve, U5/U6/U7 GND, U1-U4 GND, U8 GND,</text>
+<text x="56" y="840" font-family="Arial, Helvetica, sans-serif" font-size="15" font-weight="normal" fill="#12283d" text-anchor="start">slip-ring wires 3 and 4, the Pi (through J12) and the KB2040</text>
+<text x="56" y="862" font-family="Arial, Helvetica, sans-serif" font-size="15" font-weight="normal" fill="#12283d" text-anchor="start">(through the USB cable J11).</text>
+<text x="56" y="884" font-family="Arial, Helvetica, sans-serif" font-size="15" font-weight="normal" fill="#12283d" text-anchor="start">16 AWG for battery and regulator returns, 22 AWG for the rest.</text>
+<text x="56" y="906" font-family="Arial, Helvetica, sans-serif" font-size="15" font-weight="normal" fill="#12283d" text-anchor="start">Never daisy-chain a motor return through a logic board.</text>
+<rect x="576" y="740" width="520" height="180" rx="7" fill="#f2f7fb" stroke="#c62828" stroke-width="1.6"/>
+<rect x="576" y="740" width="6" height="180" rx="3" fill="#c62828"/>
+<text x="596" y="770" font-family="Arial, Helvetica, sans-serif" font-size="19" font-weight="bold" fill="#12283d" text-anchor="start">G1  charger, PowerStream PST-P2012-A12B</text>
+<text x="596" y="796" font-family="Arial, Helvetica, sans-serif" font-size="15" font-weight="normal" fill="#12283d" text-anchor="start">Bulk 1.5 A, absorb 14.75 V, float 13.75 V, 3 stage.</text>
+<text x="596" y="818" font-family="Arial, Helvetica, sans-serif" font-size="15" font-weight="normal" fill="#12283d" text-anchor="start">Plug: 5.5 mm OD x 2.1 mm ID barrel, CENTRE POSITIVE.</text>
+<text x="596" y="840" font-family="Arial, Helvetica, sans-serif" font-size="15" font-weight="normal" fill="#12283d" text-anchor="start">J1 centre pin = +12 V, sleeve = ground. Check with a meter</text>
+<text x="596" y="862" font-family="Arial, Helvetica, sans-serif" font-size="15" font-weight="normal" fill="#12283d" text-anchor="start">before the first plug-in: a reversed plug blows F2 at once.</text>
+<text x="596" y="884" font-family="Arial, Helvetica, sans-serif" font-size="15" font-weight="normal" fill="#12283d" text-anchor="start">Charge 6-7 h from 50 percent. Never below 0 C, never inverted,</text>
+<text x="596" y="906" font-family="Arial, Helvetica, sans-serif" font-size="15" font-weight="normal" fill="#12283d" text-anchor="start">never in a sealed box: an SLA vents hydrogen.</text>
+<rect x="1116" y="740" width="528" height="218" rx="7" fill="#ffffff" stroke="#5b7c99" stroke-width="1.6"/>
+<text x="1130" y="770" font-family="Arial, Helvetica, sans-serif" font-size="19" font-weight="bold" fill="#12283d" text-anchor="start">Battery sense divider -&gt; U9 ADS1115</text>
+<text x="1130" y="798" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" fill="#12283d" text-anchor="start">12.7 V pack -&gt; 1.657 V at A0; ratio 7.6667; address 0x48 on Pi I2C-1.</text>
+<text x="1136" y="853" font-family="Consolas, monospace" font-size="14" font-weight="normal" fill="#00507f" text-anchor="start">12V-BUS</text>
+<line x1="1226" y1="848" x2="1258" y2="848" stroke="#c62828" stroke-width="2.2" stroke-linecap="round"/>
+<rect x="1258" y="839" width="64" height="18" rx="3" fill="#ffffff" stroke="#12283d" stroke-width="2"/>
+<text x="1290" y="832" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" fill="#12283d" text-anchor="middle">R2 100k</text>
+<line x1="1322" y1="848" x2="1400" y2="848" stroke="#12283d" stroke-width="2.2" stroke-linecap="round"/>
+<circle cx="1400" cy="848" r="4.5" fill="#12283d"/>
+<line x1="1400" y1="848" x2="1490" y2="848" stroke="#1565c0" stroke-width="2.2" stroke-linecap="round"/>
+<text x="1500" y="853" font-family="Consolas, monospace" font-size="14" font-weight="normal" fill="#00507f" text-anchor="start">U9.A0</text>
+<line x1="1400" y1="848" x2="1400" y2="874" stroke="#12283d" stroke-width="2.2" stroke-linecap="round"/>
+<rect x="1391" y="874" width="18" height="52" rx="3" fill="#ffffff" stroke="#12283d" stroke-width="2"/>
+<text x="1420" y="906" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" fill="#12283d" text-anchor="start">R3 15k</text>
+<line x1="1400" y1="926" x2="1400" y2="932" stroke="#12283d" stroke-width="2.2" stroke-linecap="round"/>
+<line x1="1400" y1="932" x2="1400" y2="946" stroke="#263238" stroke-width="2.2" stroke-linecap="round"/>
+<line x1="1384" y1="946" x2="1416" y2="946" stroke="#263238" stroke-width="2.2" stroke-linecap="round"/>
+<line x1="1390" y1="953" x2="1410" y2="953" stroke="#263238" stroke-width="2.2" stroke-linecap="round"/>
+<line x1="1396" y1="960" x2="1404" y2="960" stroke="#263238" stroke-width="2.2" stroke-linecap="round"/>
+<rect x="36" y="984" width="520" height="158" rx="7" fill="#ffffff" stroke="#5b7c99" stroke-width="1.6"/>
+<text x="50" y="1014" font-family="Arial, Helvetica, sans-serif" font-size="19" font-weight="bold" fill="#12283d" text-anchor="start">Legend</text>
+<line x1="50" y1="1035" x2="84" y2="1035" stroke="#c62828" stroke-width="4" stroke-linecap="round"/>
+<text x="96" y="1040" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" fill="#12283d" text-anchor="start">12 V, fused and switched (16 AWG red)</text>
+<line x1="50" y1="1057" x2="84" y2="1057" stroke="#ef6c00" stroke-width="4" stroke-linecap="round"/>
+<text x="96" y="1062" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" fill="#12283d" text-anchor="start">6 V motor rails A and B (22 AWG red)</text>
+<line x1="50" y1="1079" x2="84" y2="1079" stroke="#ad1457" stroke-width="4" stroke-linecap="round"/>
+<text x="96" y="1084" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" fill="#12283d" text-anchor="start">5 V logic, dome and audio rail (16/22 AWG red)</text>
+<line x1="50" y1="1101" x2="84" y2="1101" stroke="#263238" stroke-width="4" stroke-linecap="round"/>
+<text x="96" y="1106" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" fill="#12283d" text-anchor="start">ground, star connected (16/22 AWG black)</text>
+<line x1="50" y1="1123" x2="84" y2="1123" stroke="#1565c0" stroke-width="4" stroke-linecap="round"/>
+<text x="96" y="1128" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" fill="#12283d" text-anchor="start">analogue sense</text>
+<rect x="576" y="984" width="520" height="180" rx="7" fill="#ffffff" stroke="#c62828" stroke-width="1.6"/>
+<text x="590" y="1014" font-family="Arial, Helvetica, sans-serif" font-size="19" font-weight="bold" fill="#12283d" text-anchor="start">Fuses, in order from the battery</text>
+<text x="590" y="1040" font-family="Consolas, monospace" font-size="14" font-weight="normal" fill="#00507f" text-anchor="start">F1  15 A</text>
+<text x="716" y="1040" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" fill="#12283d" text-anchor="start">main, at the battery lead, holder FH1</text>
+<line x1="590" y1="1047" x2="1082" y2="1047" stroke="#dde7ef" stroke-width="1.2"/>
+<text x="590" y="1062" font-family="Consolas, monospace" font-size="14" font-weight="normal" fill="#00507f" text-anchor="start">F2  3 A</text>
+<text x="716" y="1062" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" fill="#12283d" text-anchor="start">charge port branch, holder FH2</text>
+<line x1="590" y1="1069" x2="1082" y2="1069" stroke="#dde7ef" stroke-width="1.2"/>
+<text x="590" y="1084" font-family="Consolas, monospace" font-size="14" font-weight="normal" fill="#00507f" text-anchor="start">F3  3 A</text>
+<text x="716" y="1084" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" fill="#12283d" text-anchor="start">5 V regulator U5 input, holder FH3</text>
+<line x1="590" y1="1091" x2="1082" y2="1091" stroke="#dde7ef" stroke-width="1.2"/>
+<text x="590" y="1106" font-family="Consolas, monospace" font-size="14" font-weight="normal" fill="#00507f" text-anchor="start">F4  5 A</text>
+<text x="716" y="1106" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" fill="#12283d" text-anchor="start">6 V regulator U6 input, holder FH4</text>
+<line x1="590" y1="1113" x2="1082" y2="1113" stroke="#dde7ef" stroke-width="1.2"/>
+<text x="590" y="1128" font-family="Consolas, monospace" font-size="14" font-weight="normal" fill="#00507f" text-anchor="start">F5  5 A</text>
+<text x="716" y="1128" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" fill="#12283d" text-anchor="start">6 V regulator U7 input, holder FH5</text>
+<line x1="590" y1="1135" x2="1082" y2="1135" stroke="#dde7ef" stroke-width="1.2"/>
+<text x="590" y="1150" font-family="Consolas, monospace" font-size="14" font-weight="normal" fill="#00507f" text-anchor="start">F6  2 A</text>
+<text x="716" y="1150" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" fill="#12283d" text-anchor="start">5 V dome feed to the slip ring, holder FH6</text>
+<rect x="1116" y="984" width="528" height="180" rx="7" fill="#f2f7fb" stroke="#c62828" stroke-width="1.6"/>
+<rect x="1116" y="984" width="6" height="180" rx="3" fill="#c62828"/>
+<text x="1136" y="1014" font-family="Arial, Helvetica, sans-serif" font-size="19" font-weight="bold" fill="#12283d" text-anchor="start">Safety, before the battery goes in</text>
+<text x="1136" y="1040" font-family="Arial, Helvetica, sans-serif" font-size="15" font-weight="normal" fill="#12283d" text-anchor="start">1. F1 within 100 mm of the battery positive terminal.</text>
+<text x="1136" y="1062" font-family="Arial, Helvetica, sans-serif" font-size="15" font-weight="normal" fill="#12283d" text-anchor="start">2. Short-circuit current of this pack is about 457 A. Fuse</text>
+<text x="1136" y="1084" font-family="Arial, Helvetica, sans-serif" font-size="15" font-weight="normal" fill="#12283d" text-anchor="start">   first, then wire: never test a rail with a bridged fuse.</text>
+<text x="1136" y="1106" font-family="Arial, Helvetica, sans-serif" font-size="15" font-weight="normal" fill="#12283d" text-anchor="start">3. Insulate every F2 blade; a dropped spanner welds itself on.</text>
+<text x="1136" y="1128" font-family="Arial, Helvetica, sans-serif" font-size="15" font-weight="normal" fill="#12283d" text-anchor="start">4. Charge upright, in free air, above 0 C.</text>
+<text x="1136" y="1150" font-family="Arial, Helvetica, sans-serif" font-size="15" font-weight="normal" fill="#12283d" text-anchor="start">5. Meter every rail before any load is connected (sheet 04).</text>
+<line x1="36" y1="1191" x2="1644" y2="1191" stroke="#5b7c99" stroke-width="1.2"/>
+<text x="36" y="1213" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" fill="#5b7c99" text-anchor="start">fable-r2d2 electrical set, 2026-09-12  |  sheets 01-04 and electronics/wiring.csv are one drawing set  |  pin names are the final firmware names in firmware/kb2040/code.py  |  not yet validated on hardware</text>
+</svg>

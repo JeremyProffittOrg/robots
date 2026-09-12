@@ -29,7 +29,9 @@ SCAD = ROOT / "cad/r2d2.scad"
 
 
 def openscad_path():
-    for candidate in [os.environ.get("OPENSCAD"), r"C:\Program Files\OpenSCAD\openscad.com", shutil.which("openscad")]:
+    # Prefer the portable nightly (manifold backend, much faster CSG) when it is installed.
+    nightly = Path.home() / "tools/openscad-nightly/openscad.com"
+    for candidate in [os.environ.get("OPENSCAD"), str(nightly), r"C:\Program Files\OpenSCAD\openscad.com", shutil.which("openscad")]:
         if candidate and Path(candidate).is_file():
             return candidate
     raise SystemExit("OpenSCAD executable not found; set OPENSCAD")
@@ -42,8 +44,9 @@ def export_one(name, executable):
     if os.name == "nt":
         startup = subprocess.STARTUPINFO()
         startup.dwFlags |= subprocess.STARTF_USESHOWWINDOW
+    backend = ["--backend=manifold"] if "nightly" in executable.lower() else []
     result = subprocess.run(
-        [executable, "--export-format", "binstl", "-o", str(target), "-D", f'part="{name}"', str(SCAD)],
+        [executable, *backend, "--export-format", "binstl", "-o", str(target), "-D", f'part="{name}"', str(SCAD)],
         capture_output=True, text=True, timeout=1800, startupinfo=startup)
     if result.returncode or not target.exists() or "ERROR:" in result.stderr:
         raise RuntimeError(f"{name}: rc={result.returncode}\n{result.stderr[-4000:]}")

@@ -1,0 +1,137 @@
+wire_id,net,source,source_pin,target,target_pin,gauge_awg,colour,length_mm_estimate,route
+W001,BAT-POS,BT1,+ (F2 blade),J10,red housing,16,red,200,body_lower (battery shelf)
+W002,BAT-POS,J10,red housing,FH1,in,16,red,150,body_lower
+W003,BAT-FUSED,FH1,out (F1 15 A),SW1,term 1 (battery side),16,red,260,body_lower -> rear lower band
+W004,12V-BUS,SW1,term 2 (load side),TB2,12V+ stud,16,red,420,body_lower -> body_upper tray
+W005,BAT-NEG,BT1,- (F2 blade),J10,black housing,16,black,200,body_lower (battery shelf)
+W006,GND,J10,black housing,TB2,star ground stud,16,black,420,body_lower -> body_upper tray
+W007,CHG-POS,J1,centre pin (+),FH2,in,16,red,180,rear lower band of body_lower
+W008,CHG-FUSED,FH2,out (F2 3 A),SW1,term 1 (battery side),16,red,160,rear lower band of body_lower
+W009,GND,J1,sleeve (-),TB2,star ground stud,16,black,430,body_lower -> body_upper tray
+W010,12V-BUS,TB2,12V+ stud,FH3,in,16,red,120,body_upper tray
+W011,5V-REG-IN,FH3,out (F3 3 A),U5,VIN,16,red,120,body_upper tray
+W012,GND,TB2,star ground stud,U5,GND,16,black,120,body_upper tray
+W013,12V-BUS,TB2,12V+ stud,FH4,in,16,red,120,body_upper tray
+W014,6VA-REG-IN,FH4,out (F4 5 A),U6,VIN,16,red,120,body_upper tray
+W015,GND,TB2,star ground stud,U6,GND,16,black,120,body_upper tray
+W016,12V-BUS,TB2,12V+ stud,FH5,in,16,red,120,body_upper tray
+W017,6VB-REG-IN,FH5,out (F5 5 A),U7,VIN,16,red,120,body_upper tray
+W018,GND,TB2,star ground stud,U7,GND,16,black,120,body_upper tray
+W019,5V,U5,VOUT,J12,VBUS,16,red,220,body_upper tray
+W020,GND,U5,GND,J12,GND,16,black,220,body_upper tray
+W021,5V-USB,J12,USB-C plug,A1,USB-C power input,16,red,0,"body_upper tray (the plug is the connector, not a wire)"
+W022,5V,U5,VOUT,FH6,in,22,red,140,body_upper tray
+W023,5V,U5,VOUT,U8,VIN,22,red,260,body_upper tray
+W024,GND,TB2,star ground stud,U8,GND,22,black,260,body_upper tray
+W025,6V-U6,U6,VOUT,U1,VMOTOR,22,red,150,body_upper tray
+W026,GND,TB2,star ground stud,U1,GND,22,black,150,body_upper tray
+W027,6V-U6,U6,VOUT,U3,VMOTOR,22,red,150,body_upper tray
+W028,GND,TB2,star ground stud,U3,GND,22,black,150,body_upper tray
+W029,6V-U7,U7,VOUT,U2,VMOTOR,22,red,150,body_upper tray
+W030,GND,TB2,star ground stud,U2,GND,22,black,150,body_upper tray
+W031,6V-U7,U7,VOUT,U4,VMOTOR,22,red,150,body_upper tray
+W032,GND,TB2,star ground stud,U4,GND,22,black,150,body_upper tray
+W033,12V-BUS,TB2,12V+ stud,R2,100k leg 1,22,red,150,body_upper tray
+W034,VBAT-SENSE,R2,100k leg 2,R3,15k leg 1,22,white,20,body_upper tray
+W035,VBAT-SENSE,R3,15k leg 1,U9,A0,22,white,120,body_upper tray
+W036,GND,R3,15k leg 2,TB2,star ground stud,22,black,150,body_upper tray
+W037,3V3,A1,header pin 1 (3V3),U9,VDD,22,red,180,body_upper tray
+W038,GND,A1,header pin 6 (GND),U9,GND,22,black,180,body_upper tray
+W039,SDA,A1,header pin 3 (GPIO2),U9,SDA,22,white,180,body_upper tray
+W040,SCL,A1,header pin 5 (GPIO3),U9,SCL,22,yellow,180,body_upper tray
+W041,USB-LINK,A1,USB 2.0 type A port,A2,USB-C,0,cable J11,1000,body_upper tray (5 V power and the USB CDC serial link)
+W042,SIG-lf-front-PWM,A2,D3,U1,AIN2,22,green,140,body_upper tray
+W043,SIG-lf-front-DIR,A2,D2,U1,AIN1,22,white,140,body_upper tray
+W044,SIG-lf-rear-PWM,A2,D5,U1,BIN2,22,green,140,body_upper tray
+W045,SIG-lf-rear-DIR,A2,D4,U1,BIN1,22,white,140,body_upper tray
+W046,SIG-rf-front-PWM,A2,D7,U2,AIN2,22,green,140,body_upper tray
+W047,SIG-rf-front-DIR,A2,D6,U2,AIN1,22,white,140,body_upper tray
+W048,SIG-rf-rear-PWM,A2,D9,U2,BIN2,22,green,140,body_upper tray
+W049,SIG-rf-rear-DIR,A2,D8,U2,BIN1,22,white,140,body_upper tray
+W050,SIG-cf-front-PWM,A2,D10,U3,AIN2,22,green,140,body_upper tray
+W051,SIG-cf-front-DIR,A2,MOSI,U3,AIN1,22,white,140,body_upper tray
+W052,SIG-cf-rear-PWM,A2,SCK,U3,BIN2,22,green,140,body_upper tray
+W053,SIG-cf-rear-DIR,A2,MISO,U3,BIN1,22,white,140,body_upper tray
+W054,SIG-head-PWM,A2,A1,U4,AIN2,22,green,140,body_upper tray
+W055,SIG-head-DIR,A2,A0,U4,AIN1,22,white,140,body_upper tray
+W056,SIG-SLP,A2,D1,U1,SLP,22,yellow,140,body_upper tray
+W057,SIG-SLP,A2,D1,U2,SLP,22,yellow,140,body_upper tray
+W058,SIG-SLP,A2,D1,U3,SLP,22,yellow,140,body_upper tray
+W059,SIG-SLP,A2,D1,U4,SLP,22,yellow,140,body_upper tray
+W060,MOT-lf-front-A,U1,AOUT1,M1,terminal + (JST-XH pin 1),22,yellow,820,body_upper tray -> left leg -> left foot
+W061,MOT-lf-front-B,U1,AOUT2,M1,terminal - (JST-XH pin 2),22,blue,820,body_upper tray -> left leg -> left foot
+W062,MOT-lf-rear-A,U1,BOUT1,M2,terminal + (JST-XH pin 1),22,yellow,820,body_upper tray -> left leg -> left foot
+W063,MOT-lf-rear-B,U1,BOUT2,M2,terminal - (JST-XH pin 2),22,blue,820,body_upper tray -> left leg -> left foot
+W064,MOT-rf-front-A,U2,AOUT1,M3,terminal + (JST-XH pin 1),22,yellow,820,body_upper tray -> right leg -> right foot
+W065,MOT-rf-front-B,U2,AOUT2,M3,terminal - (JST-XH pin 2),22,blue,820,body_upper tray -> right leg -> right foot
+W066,MOT-rf-rear-A,U2,BOUT1,M4,terminal + (JST-XH pin 1),22,yellow,820,body_upper tray -> right leg -> right foot
+W067,MOT-rf-rear-B,U2,BOUT2,M4,terminal - (JST-XH pin 2),22,blue,820,body_upper tray -> right leg -> right foot
+W068,MOT-cf-front-A,U3,AOUT1,M5,terminal + (JST-XH pin 1),22,yellow,760,body_upper tray -> body_lower -> centre leg -> centre foot
+W069,MOT-cf-front-B,U3,AOUT2,M5,terminal - (JST-XH pin 2),22,blue,760,body_upper tray -> body_lower -> centre leg -> centre foot
+W070,MOT-cf-rear-A,U3,BOUT1,M6,terminal + (JST-XH pin 1),22,yellow,760,body_upper tray -> body_lower -> centre leg -> centre foot
+W071,MOT-cf-rear-B,U3,BOUT2,M6,terminal - (JST-XH pin 2),22,blue,760,body_upper tray -> body_lower -> centre leg -> centre foot
+W072,MOT-head-A,U4,AOUT1,M7,terminal + (JST-XH pin 1),22,yellow,300,body_upper tray -> under the body top plate
+W073,MOT-head-B,U4,AOUT2,M7,terminal - (JST-XH pin 2),22,blue,300,body_upper tray -> under the body top plate
+W074,GND,TB2,star ground stud,U4,BIN1 and BIN2 (tied low),22,black,150,body_upper tray (driver 4 channel B is unused)
+W075,3V3,A2,3V3 pad,SQ1,pin 1 (VCC),22,red,420,body_upper tray -> body top plate
+W076,GND,A2,GND pad,SQ1,pin 2 (GND),22,black,420,body_upper tray -> body top plate
+W077,SIG-DOME-INDEX,A2,A3,SQ1,pin 3 (open drain out),22,green,420,body_upper tray -> body top plate (magnet on the dome plate)
+W078,5V-DOME,FH6,out (F6 2 A),SR1,stator wire 1,22,red,520,body_upper tray -> body top plate -> slip-ring post
+W079,5V-DOME,FH6,out (F6 2 A),SR1,stator wire 2,22,red,520,body_upper tray -> body top plate -> slip-ring post
+W080,GND,TB2,star ground stud,SR1,stator wire 3,22,black,520,body_upper tray -> body top plate -> slip-ring post
+W081,GND,TB2,star ground stud,SR1,stator wire 4,22,black,520,body_upper tray -> body top plate -> slip-ring post
+W082,NEOPIXEL,A2,A2,SR1,stator wire 5,22,green,520,body_upper tray -> body top plate -> slip-ring post
+W083,SDA,A1,header pin 3 (GPIO2),SR1,stator wire 6,22,white,520,body_upper tray -> body top plate -> slip-ring post
+W084,SCL,A1,header pin 5 (GPIO3),SR1,stator wire 7,22,yellow,520,body_upper tray -> body top plate -> slip-ring post
+W085,SPI-MOSI,A1,header pin 19 (GPIO10),SR1,stator wire 8,22,blue,520,body_upper tray -> body top plate -> slip-ring post
+W086,SPI-SCLK,A1,header pin 23 (GPIO11),SR1,stator wire 9,22,blue,520,body_upper tray -> body top plate -> slip-ring post
+W087,TFT-CS,A1,header pin 24 (GPIO8),SR1,stator wire 10,22,green,520,body_upper tray -> body top plate -> slip-ring post
+W088,TFT-DC,A1,header pin 22 (GPIO25),SR1,stator wire 11,22,white,520,body_upper tray -> body top plate -> slip-ring post
+W089,TFT-RST,A1,header pin 18 (GPIO24),SR1,stator wire 12,22,yellow,520,body_upper tray -> body top plate -> slip-ring post
+W090,NEOPIXEL,SR1,rotor wire 5,LED1,DIN,22,green,260,dome (after the slip ring)
+W091,NEOPIXEL,LED1,DOUT,LED2,DIN,22,green,300,dome (after the slip ring)
+W092,NEOPIXEL,LED2,DOUT,LED3,DIN,22,green,260,dome (after the slip ring)
+W093,NEOPIXEL,LED3,DOUT,LED4,DIN,22,green,150,dome (after the slip ring)
+W094,NEOPIXEL,LED4,DOUT,LED5,DIN,22,green,150,dome (after the slip ring)
+W095,5V-DOME,SR1,rotor wire 1,LED1,5V,22,red,240,dome (after the slip ring)
+W096,GND,SR1,rotor wire 3,LED1,GND,22,black,240,dome (after the slip ring)
+W097,5V-DOME,SR1,rotor wire 2,LED2,5V,22,red,270,dome (after the slip ring)
+W098,GND,SR1,rotor wire 4,LED2,GND,22,black,270,dome (after the slip ring)
+W099,5V-DOME,SR1,rotor wire 1,LED3,5V,22,red,300,dome (after the slip ring)
+W100,GND,SR1,rotor wire 3,LED3,GND,22,black,300,dome (after the slip ring)
+W101,5V-DOME,SR1,rotor wire 2,LED4,5V,22,red,330,dome (after the slip ring)
+W102,GND,SR1,rotor wire 4,LED4,GND,22,black,330,dome (after the slip ring)
+W103,5V-DOME,SR1,rotor wire 1,LED5,5V,22,red,360,dome (after the slip ring)
+W104,GND,SR1,rotor wire 3,LED5,GND,22,black,360,dome (after the slip ring)
+W105,SDA,SR1,rotor wire 6,DS1,SDA (0x70),22,white,220,dome (after the slip ring)
+W106,SCL,SR1,rotor wire 7,DS1,SCL (0x70),22,yellow,220,dome (after the slip ring)
+W107,5V-DOME,SR1,rotor wire 2,DS1,+,22,red,220,dome (after the slip ring)
+W108,GND,SR1,rotor wire 4,DS1,-,22,black,220,dome (after the slip ring)
+W109,SDA,SR1,rotor wire 6,DS2,SDA (0x71),22,white,260,dome (after the slip ring)
+W110,SCL,SR1,rotor wire 7,DS2,SCL (0x71),22,yellow,260,dome (after the slip ring)
+W111,5V-DOME,SR1,rotor wire 2,DS2,+,22,red,260,dome (after the slip ring)
+W112,GND,SR1,rotor wire 4,DS2,-,22,black,260,dome (after the slip ring)
+W113,SDA,SR1,rotor wire 6,DS3,SDA (0x72),22,white,300,dome (after the slip ring)
+W114,SCL,SR1,rotor wire 7,DS3,SCL (0x72),22,yellow,300,dome (after the slip ring)
+W115,5V-DOME,SR1,rotor wire 2,DS3,+,22,red,300,dome (after the slip ring)
+W116,GND,SR1,rotor wire 4,DS3,-,22,black,300,dome (after the slip ring)
+W117,SDA,SR1,rotor wire 6,DS4,SDA (0x73),22,white,340,dome (after the slip ring)
+W118,SCL,SR1,rotor wire 7,DS4,SCL (0x73),22,yellow,340,dome (after the slip ring)
+W119,5V-DOME,SR1,rotor wire 2,DS4,+,22,red,340,dome (after the slip ring)
+W120,GND,SR1,rotor wire 4,DS4,-,22,black,340,dome (after the slip ring)
+W121,SPI-MOSI,SR1,rotor wire 8,DS5,MOSI,22,blue,300,dome (after the slip ring)
+W122,SPI-SCLK,SR1,rotor wire 9,DS5,SCK,22,blue,300,dome (after the slip ring)
+W123,TFT-CS,SR1,rotor wire 10,DS5,CS,22,green,300,dome (after the slip ring)
+W124,TFT-DC,SR1,rotor wire 11,DS5,DC,22,white,300,dome (after the slip ring)
+W125,TFT-RST,SR1,rotor wire 12,DS5,RST,22,yellow,300,dome (after the slip ring)
+W126,5V-DOME,SR1,rotor wire 1,DS5,VIN,22,red,300,dome (after the slip ring)
+W127,GND,SR1,rotor wire 3,DS5,GND,22,black,300,dome (after the slip ring)
+W128,5V-DOME,SR1,rotor wire 1,R1,100 ohm leg 1,22,red,300,dome (after the slip ring)
+W129,TFT-BL,R1,100 ohm leg 2,DS5,LITE (backlight),22,white,30,dome (after the slip ring)
+W130,AUDIO-L,A1,"3.5 mm jack, tip (left)",R4A,10k leg 1,22,white,260,body_upper tray (short shielded lead)
+W131,AUDIO-R,A1,"3.5 mm jack, ring (right)",R4B,10k leg 1,22,yellow,260,body_upper tray
+W132,AUDIO-SUM,R4A,10k leg 2,U8,A+,22,white,40,body_upper tray
+W133,AUDIO-SUM,R4B,10k leg 2,U8,A+,22,yellow,40,body_upper tray
+W134,GND,A1,"3.5 mm jack, sleeve",U8,A-,22,black,260,body_upper tray
+W135,SPK+,U8,OUT+,LS1,+ tab,22,yellow,420,body_upper tray -> front vent of body_lower
+W136,SPK-,U8,OUT-,LS1,- tab,22,blue,420,body_upper tray -> front vent of body_lower

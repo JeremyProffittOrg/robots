@@ -82,31 +82,34 @@ re-litigated mid-run):
 ## Workstreams
 
 ### image-review — thirty-plus R2-D2 reference images, joints and movement documented
-- [ ] image-set — at least 30 downloaded images in `research/images/`, each viewed
-- [ ] image-review-doc — `research/image-review.md` lists every image, source, joints/movement
-  seen; done when `python scripts/verify.py --images` reports >= 30 entries with files present.
+- [x] image-set — 59 files in `research/images/` (45 distinct source photographs after
+  duplicate detection, see `research/critique.md`), each viewed by the reviewing agent
+- [x] image-review-doc — `research/image-review-dome.md`, `-legs.md`, `-body.md` list every
+  image, source URL, joints/movement seen, and "Key findings for CAD"
 
 ### component-research — verified purchased parts with sources
-- [ ] electronics-facts — `research/components-electronics.md`
-- [ ] mechanical-facts — `research/components-mechanical.md`
-- [ ] proportions — `research/proportions.md` scaled dimensions from club drawings
-- [ ] load-calculations — `research/loads.md`
+- [x] electronics-facts — `research/components-electronics.md` (30 primary parts, URLs, prices)
+- [x] mechanical-facts — `research/components-mechanical.md` (36 primary parts)
+- [x] proportions — `research/proportions.md` (47 scaled parameters from club drawings)
+- [x] load-calculations — `research/loads.md` (13.3 kg nominal mass, 3.6x drive margin at
+  Crr 0.02, 2.5 h mixed runtime, 9.4 N.m per shoulder)
 
 ### cad — parametric OpenSCAD, fewest STLs, H2D-fit, strong
-- [ ] params — `cad/params.scad` single source of dimensions
-- [ ] dome — one-piece detailed dome with display cutouts
-- [ ] body — stacked rings, battery bay, electronics tray, shoulder bosses, head ring
-- [ ] legs — outer legs (two prints each) and centre leg with caster ankle
-- [ ] feet — three feet, two motors and four wheels each
-- [ ] head-drive — tensioned friction drive and slip-ring carrier
+- [x] params — `cad/params.scad` single source of dimensions
+- [~] dome — one-piece detailed dome with display cutouts (workflow wf_91a1b56a-6fd)
+- [~] body — stacked rings, battery bay, electronics tray, shoulder bosses, head ring
+- [~] legs — outer legs (two prints each) and centre leg with caster ankle
+- [~] feet — three feet, two motors and four wheels each
+- [~] head-drive — tensioned friction drive under the top plate
 - [ ] export-validate — `python scripts/export_cad.py` passes: watertight, one component,
   inside 322 x 317 x 320 mm; `python scripts/slice_check.py` passes on every STL.
 
 ### documents — drawings, BOM, manual, wiring, firmware, video
 - [ ] drawings — `python scripts/draw_robot.py` writes MATLAB-style PNG set
 - [ ] bom-xlsx — `python scripts/build_bom.py` writes `bom/bill-of-materials.xlsx`
-- [ ] wiring — `python scripts/electronics.py` writes SVG sheets and `electronics/wiring.csv`
-- [ ] firmware — Pi control server and KB2040 CircuitPython; syntax checks pass
+- [~] wiring — `python scripts/electronics.py` writes SVG sheets and `electronics/wiring.csv`
+- [x] firmware — Pi control server and KB2040 CircuitPython; 47 + 44 unit tests pass
+  (`docs/firmware.md`); display update to four 8x8 matrices in progress
 - [ ] manual — `python scripts/build_manual.py` writes `output/pdf/r2d2-assembly-manual.pdf`
 - [ ] video — `python scripts/render_video.py` writes `output/video/r2d2-assembly-and-operation.mp4`
 - [ ] verify-all — `python scripts/verify.py` passes; commit and push to main
@@ -117,3 +120,11 @@ re-litigated mid-run):
 
 ## Execution log
 - 2026-09-12 03:15 Scouted sibling packages, verified H2D profile and Adafruit parts.
+- 2026-09-12 03:35 Research workflow wf_58c4116a-0e9 (8 agents) completed: 59 images,
+  proportions, electronics, mechanical, loads, critique (only alternate rows lack prices).
+- 2026-09-12 03:40 Firmware agent completed; 47 KB2040 protocol tests and 44 Pi mixing tests
+  pass; pin map corrected for RP2040 PWM slice sharing (docs/firmware.md section 4).
+- 2026-09-12 04:12 Commit 9d7290e (research, firmware, params, tooling). Installed portable
+  OpenSCAD nightly 2026.09.11 at C:/Users/Jeremy/tools/openscad-nightly (manifold backend).
+- 2026-09-12 04:20 CAD workflow wf_91a1b56a-6fd launched (5 builders, integrate, 10 reviews,
+  fix, verify). Electronics/BOM agent and firmware display update launched in parallel.

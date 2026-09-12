@@ -1,0 +1,21 @@
+{
+  "all_pass": true,
+  "checks": [
+    {
+      "check": "images",
+      "pass": true,
+      "detail": "59 listed files present, 54 distinct by hash (>= 30 required)"
+    },
+    {
+      "check": "firmware",
+      "pass": true,
+      "detail": "OK; OK; app.js syntax OK"
+    },
+    {
+      "check": "audio",
+      "pass": true,
+      "detail": "12 clips, mismatches=[]"
+    }
+  ],
+  "physical_validation": false
+}

@@ -1,0 +1,158 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1680" height="1120" viewBox="0 0 1680 1120">
+<rect width="1680" height="1120" fill="#ffffff"/>
+<text x="36" y="46" font-family="Arial, Helvetica, sans-serif" font-size="27" font-weight="bold" fill="#12283d" text-anchor="start">03  Head electronics: slip ring, PSIs, holoprojectors, logic matrices, radar eye</text>
+<text x="36" y="74" font-family="Arial, Helvetica, sans-serif" font-size="16" font-weight="normal" fill="#5b7c99" text-anchor="start">Twelve slip-ring wires carry everything into the dome. No multiplexer: the four backpacks use four addresses on Pi I2C-1.</text>
+<line x1="36" y1="88" x2="1644" y2="88" stroke="#5b7c99" stroke-width="1.2"/>
+<rect x="36" y="120" width="760" height="312" rx="7" fill="#ffffff" stroke="#ad1457" stroke-width="1.6"/>
+<text x="50" y="150" font-family="Arial, Helvetica, sans-serif" font-size="19" font-weight="bold" fill="#12283d" text-anchor="start">SR1  Adafruit 1195 slip ring, 12 wires, 2 A each</text>
+<text x="50" y="176" font-family="Consolas, monospace" font-size="14" font-weight="normal" fill="#00507f" text-anchor="start"> 1  5V-DOME</text>
+<text x="212" y="176" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" fill="#12283d" text-anchor="start">5 V dome feed, leg 1 of 2  &lt;-  F6 fuse output (5 V rail)</text>
+<line x1="50" y1="183" x2="782" y2="183" stroke="#dde7ef" stroke-width="1.2"/>
+<text x="50" y="198" font-family="Consolas, monospace" font-size="14" font-weight="normal" fill="#00507f" text-anchor="start"> 2  5V-DOME</text>
+<text x="212" y="198" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" fill="#12283d" text-anchor="start">5 V dome feed, leg 2 of 2  &lt;-  F6 fuse output (5 V rail)</text>
+<line x1="50" y1="205" x2="782" y2="205" stroke="#dde7ef" stroke-width="1.2"/>
+<text x="50" y="220" font-family="Consolas, monospace" font-size="14" font-weight="normal" fill="#00507f" text-anchor="start"> 3  GND</text>
+<text x="212" y="220" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" fill="#12283d" text-anchor="start">dome return, leg 1 of 2  &lt;-  star ground TB2</text>
+<line x1="50" y1="227" x2="782" y2="227" stroke="#dde7ef" stroke-width="1.2"/>
+<text x="50" y="242" font-family="Consolas, monospace" font-size="14" font-weight="normal" fill="#00507f" text-anchor="start"> 4  GND</text>
+<text x="212" y="242" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" fill="#12283d" text-anchor="start">dome return, leg 2 of 2  &lt;-  star ground TB2</text>
+<line x1="50" y1="249" x2="782" y2="249" stroke="#dde7ef" stroke-width="1.2"/>
+<text x="50" y="264" font-family="Consolas, monospace" font-size="14" font-weight="normal" fill="#00507f" text-anchor="start"> 5  NEOPIXEL</text>
+<text x="212" y="264" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" fill="#12283d" text-anchor="start">NeoPixel data to LED1  &lt;-  KB2040 A2</text>
+<line x1="50" y1="271" x2="782" y2="271" stroke="#dde7ef" stroke-width="1.2"/>
+<text x="50" y="286" font-family="Consolas, monospace" font-size="14" font-weight="normal" fill="#00507f" text-anchor="start"> 6  SDA</text>
+<text x="212" y="286" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" fill="#12283d" text-anchor="start">I2C-1 data, four backpacks  &lt;-  Pi GPIO2 (header pin 3)</text>
+<line x1="50" y1="293" x2="782" y2="293" stroke="#dde7ef" stroke-width="1.2"/>
+<text x="50" y="308" font-family="Consolas, monospace" font-size="14" font-weight="normal" fill="#00507f" text-anchor="start"> 7  SCL</text>
+<text x="212" y="308" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" fill="#12283d" text-anchor="start">I2C-1 clock, four backpacks  &lt;-  Pi GPIO3 (header pin 5)</text>
+<line x1="50" y1="315" x2="782" y2="315" stroke="#dde7ef" stroke-width="1.2"/>
+<text x="50" y="330" font-family="Consolas, monospace" font-size="14" font-weight="normal" fill="#00507f" text-anchor="start"> 8  SPI-MOSI</text>
+<text x="212" y="330" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" fill="#12283d" text-anchor="start">SPI0 MOSI to the TFT  &lt;-  Pi GPIO10 (header pin 19)</text>
+<line x1="50" y1="337" x2="782" y2="337" stroke="#dde7ef" stroke-width="1.2"/>
+<text x="50" y="352" font-family="Consolas, monospace" font-size="14" font-weight="normal" fill="#00507f" text-anchor="start"> 9  SPI-SCLK</text>
+<text x="212" y="352" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" fill="#12283d" text-anchor="start">SPI0 clock to the TFT  &lt;-  Pi GPIO11 (header pin 23)</text>
+<line x1="50" y1="359" x2="782" y2="359" stroke="#dde7ef" stroke-width="1.2"/>
+<text x="50" y="374" font-family="Consolas, monospace" font-size="14" font-weight="normal" fill="#00507f" text-anchor="start">10  TFT-CS</text>
+<text x="212" y="374" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" fill="#12283d" text-anchor="start">SPI0 CE0 chip select  &lt;-  Pi GPIO8 (header pin 24)</text>
+<line x1="50" y1="381" x2="782" y2="381" stroke="#dde7ef" stroke-width="1.2"/>
+<text x="50" y="396" font-family="Consolas, monospace" font-size="14" font-weight="normal" fill="#00507f" text-anchor="start">11  TFT-DC</text>
+<text x="212" y="396" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" fill="#12283d" text-anchor="start">TFT data/command  &lt;-  Pi GPIO25 (header pin 22)</text>
+<line x1="50" y1="403" x2="782" y2="403" stroke="#dde7ef" stroke-width="1.2"/>
+<text x="50" y="418" font-family="Consolas, monospace" font-size="14" font-weight="normal" fill="#00507f" text-anchor="start">12  TFT-RST</text>
+<text x="212" y="418" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" fill="#12283d" text-anchor="start">TFT reset  &lt;-  Pi GPIO24 (header pin 18)</text>
+<rect x="816" y="120" width="400" height="228" rx="7" fill="#f2f7fb" stroke="#5b7c99" stroke-width="1.6"/>
+<rect x="816" y="120" width="6" height="228" rx="3" fill="#5b7c99"/>
+<text x="836" y="150" font-family="Arial, Helvetica, sans-serif" font-size="19" font-weight="bold" fill="#12283d" text-anchor="start">SR1 mechanical</text>
+<text x="836" y="174" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" fill="#12283d" text-anchor="start">Body 12.4 mm dia x 19.5 mm, no flange.</text>
+<text x="836" y="194" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" fill="#12283d" text-anchor="start">Clamped in the printed post on the</text>
+<text x="836" y="214" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" fill="#12283d" text-anchor="start">body top plate; rotor stub 4 mm.</text>
+<text x="836" y="234" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" fill="#12283d" text-anchor="start">Stator (body) leads: 6 in / 150 mm.</text>
+<text x="836" y="254" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" fill="#12283d" text-anchor="start">Rotor (dome) leads: 6 in / 150 mm.</text>
+<text x="836" y="274" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" fill="#12283d" text-anchor="start">300 RPM maximum; the head drive</text>
+<text x="836" y="294" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" fill="#12283d" text-anchor="start">turns the dome far slower than that.</text>
+<text x="836" y="314" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" fill="#12283d" text-anchor="start">Strain-relieve both bundles with a</text>
+<text x="836" y="334" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" fill="#12283d" text-anchor="start">cable tie within 40 mm of the body.</text>
+<rect x="1236" y="120" width="408" height="228" rx="7" fill="#f2f7fb" stroke="#ad1457" stroke-width="1.6"/>
+<rect x="1236" y="120" width="6" height="228" rx="3" fill="#ad1457"/>
+<text x="1256" y="150" font-family="Arial, Helvetica, sans-serif" font-size="19" font-weight="bold" fill="#12283d" text-anchor="start">Current budget in the dome</text>
+<text x="1256" y="174" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" fill="#12283d" text-anchor="start">17 NeoPixels, worst case white</text>
+<text x="1256" y="194" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" fill="#12283d" text-anchor="start">at 60 mA each: 1.02 A</text>
+<text x="1256" y="214" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" fill="#12283d" text-anchor="start">(firmware caps brightness at 0.4,</text>
+<text x="1256" y="234" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" fill="#12283d" text-anchor="start">so about 0.41 A in practice).</text>
+<text x="1256" y="254" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" fill="#12283d" text-anchor="start">Four HT16K33 backpacks: 0.50 A.</text>
+<text x="1256" y="274" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" fill="#12283d" text-anchor="start">Radar-eye TFT: 0.10 A.</text>
+<text x="1256" y="294" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" fill="#12283d" text-anchor="start">Total worst case 1.62 A on F6 2 A.</text>
+<text x="1256" y="314" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" fill="#12283d" text-anchor="start">Two wires carry 5 V and two carry</text>
+<text x="1256" y="334" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" fill="#12283d" text-anchor="start">the return: 4 A of slip-ring capacity.</text>
+<text x="36" y="466" font-family="Arial, Helvetica, sans-serif" font-size="19" font-weight="bold" fill="#12283d" text-anchor="start">A.  NeoPixel chain, one data wire, five devices</text>
+<text x="36" y="526" font-family="Consolas, monospace" font-size="14" font-weight="normal" fill="#00507f" text-anchor="start">KB2040 A2</text>
+<line x1="36" y1="560" x2="150" y2="560" stroke="#2e7d32" stroke-width="2.2" stroke-linecap="round"/>
+<path d="M139,554 L150,560 L139,566" fill="none" stroke="#2e7d32" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+<rect x="150" y="539" width="96" height="42" rx="5" fill="#ffffff" stroke="#ad1457" stroke-width="2"/>
+<text x="198" y="565" font-family="Consolas, monospace" font-size="14" font-weight="normal" fill="#00507f" text-anchor="middle">SR1 w5</text>
+<line x1="246" y1="560" x2="312" y2="560" stroke="#2e7d32" stroke-width="2.2" stroke-linecap="round"/>
+<path d="M301,554 L312,560 L301,566" fill="none" stroke="#2e7d32" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+<rect x="312" y="529" width="180" height="62" rx="6" fill="#f2f7fb" stroke="#5b7c99" stroke-width="1.6"/>
+<text x="324" y="552" font-family="Arial, Helvetica, sans-serif" font-size="15" font-weight="normal" fill="#12283d" text-anchor="start">LED1  front PSI</text>
+<text x="324" y="576" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" fill="#12283d" text-anchor="start">jewel, 7 px, 0-6</text>
+<line x1="492" y1="560" x2="558" y2="560" stroke="#2e7d32" stroke-width="2.2" stroke-linecap="round"/>
+<path d="M547,554 L558,560 L547,566" fill="none" stroke="#2e7d32" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+<rect x="558" y="529" width="180" height="62" rx="6" fill="#f2f7fb" stroke="#5b7c99" stroke-width="1.6"/>
+<text x="570" y="552" font-family="Arial, Helvetica, sans-serif" font-size="15" font-weight="normal" fill="#12283d" text-anchor="start">LED2  rear PSI</text>
+<text x="570" y="576" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" fill="#12283d" text-anchor="start">jewel, 7 px, 7-13</text>
+<line x1="738" y1="560" x2="804" y2="560" stroke="#2e7d32" stroke-width="2.2" stroke-linecap="round"/>
+<path d="M793,554 L804,560 L793,566" fill="none" stroke="#2e7d32" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+<rect x="804" y="529" width="180" height="62" rx="6" fill="#f2f7fb" stroke="#5b7c99" stroke-width="1.6"/>
+<text x="816" y="552" font-family="Arial, Helvetica, sans-serif" font-size="15" font-weight="normal" fill="#12283d" text-anchor="start">LED3  HP1</text>
+<text x="816" y="576" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" fill="#12283d" text-anchor="start">8 mm, px 14</text>
+<line x1="984" y1="560" x2="1050" y2="560" stroke="#2e7d32" stroke-width="2.2" stroke-linecap="round"/>
+<path d="M1039,554 L1050,560 L1039,566" fill="none" stroke="#2e7d32" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+<rect x="1050" y="529" width="180" height="62" rx="6" fill="#f2f7fb" stroke="#5b7c99" stroke-width="1.6"/>
+<text x="1062" y="552" font-family="Arial, Helvetica, sans-serif" font-size="15" font-weight="normal" fill="#12283d" text-anchor="start">LED4  HP2</text>
+<text x="1062" y="576" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" fill="#12283d" text-anchor="start">8 mm, px 15</text>
+<line x1="1230" y1="560" x2="1296" y2="560" stroke="#2e7d32" stroke-width="2.2" stroke-linecap="round"/>
+<path d="M1285,554 L1296,560 L1285,566" fill="none" stroke="#2e7d32" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+<rect x="1296" y="529" width="180" height="62" rx="6" fill="#f2f7fb" stroke="#5b7c99" stroke-width="1.6"/>
+<text x="1308" y="552" font-family="Arial, Helvetica, sans-serif" font-size="15" font-weight="normal" fill="#12283d" text-anchor="start">LED5  HP3</text>
+<text x="1308" y="576" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" fill="#12283d" text-anchor="start">8 mm, px 16</text>
+<text x="36" y="626" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" fill="#5b7c99" text-anchor="start">DIN to DOUT in that order. 5 V and ground for every device come from the dome 5 V bus (slip-ring wires 1-4), never from the data wire&#x27;s neighbour.</text>
+<text x="36" y="658" font-family="Arial, Helvetica, sans-serif" font-size="19" font-weight="bold" fill="#12283d" text-anchor="start">B.  Logic matrices on Pi I2C-1 and the radar-eye TFT on Pi SPI0</text>
+<rect x="36" y="668" width="760" height="136" rx="7" fill="#ffffff" stroke="#2e7d32" stroke-width="1.6"/>
+<text x="50" y="698" font-family="Arial, Helvetica, sans-serif" font-size="19" font-weight="bold" fill="#12283d" text-anchor="start">DS1-DS4  Adafruit 0.8 inch 8x8 HT16K33 backpacks</text>
+<text x="50" y="724" font-family="Consolas, monospace" font-size="14" font-weight="normal" fill="#00507f" text-anchor="start">0x70  DS1</text>
+<text x="212" y="724" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" fill="#12283d" text-anchor="start">front logic, upper window  -  address jumpers: none bridged</text>
+<line x1="50" y1="731" x2="782" y2="731" stroke="#dde7ef" stroke-width="1.2"/>
+<text x="50" y="746" font-family="Consolas, monospace" font-size="14" font-weight="normal" fill="#00507f" text-anchor="start">0x71  DS2</text>
+<text x="212" y="746" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" fill="#12283d" text-anchor="start">front logic, lower window  -  address jumpers: A0 bridged</text>
+<line x1="50" y1="753" x2="782" y2="753" stroke="#dde7ef" stroke-width="1.2"/>
+<text x="50" y="768" font-family="Consolas, monospace" font-size="14" font-weight="normal" fill="#00507f" text-anchor="start">0x72  DS3</text>
+<text x="212" y="768" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" fill="#12283d" text-anchor="start">rear logic, left half  -  address jumpers: A1 bridged</text>
+<line x1="50" y1="775" x2="782" y2="775" stroke="#dde7ef" stroke-width="1.2"/>
+<text x="50" y="790" font-family="Consolas, monospace" font-size="14" font-weight="normal" fill="#00507f" text-anchor="start">0x73  DS4</text>
+<text x="212" y="790" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" fill="#12283d" text-anchor="start">rear logic, right half  -  address jumpers: A0 and A1 bridged</text>
+<rect x="36" y="824" width="760" height="168" rx="7" fill="#f2f7fb" stroke="#2e7d32" stroke-width="1.6"/>
+<rect x="36" y="824" width="6" height="168" rx="3" fill="#2e7d32"/>
+<text x="56" y="854" font-family="Arial, Helvetica, sans-serif" font-size="19" font-weight="bold" fill="#12283d" text-anchor="start">Matrix wiring</text>
+<text x="56" y="878" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" fill="#12283d" text-anchor="start">All four share slip-ring wires 6 (SDA) and 7 (SCL), daisy-chained backpack to</text>
+<text x="56" y="898" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" fill="#12283d" text-anchor="start">backpack inside the dome, plus 5 V (wire 2) and ground (wire 4).</text>
+<text x="56" y="918" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" fill="#12283d" text-anchor="start">The HT16K33 has its own 3.3 V-tolerant I2C and runs from 5 V: no level shifter.</text>
+<text x="56" y="938" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" fill="#12283d" text-anchor="start">Bridge the address pads with solder BEFORE the backpacks go behind the windows.</text>
+<text x="56" y="958" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" fill="#12283d" text-anchor="start">firmware/pi/displays.py drives 0x70/0x71 as two independent front windows and</text>
+<text x="56" y="978" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" fill="#12283d" text-anchor="start">0x72/0x73 as one 16 x 8 rear strip that scrolls across the seam.</text>
+<rect x="816" y="668" width="828" height="224" rx="7" fill="#ffffff" stroke="#1565c0" stroke-width="1.6"/>
+<text x="830" y="698" font-family="Arial, Helvetica, sans-serif" font-size="19" font-weight="bold" fill="#12283d" text-anchor="start">DS5  Adafruit 6178 round TFT (GC9A01A) behind the radar lens</text>
+<text x="830" y="724" font-family="Consolas, monospace" font-size="14" font-weight="normal" fill="#00507f" text-anchor="start">VIN</text>
+<text x="944" y="724" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" fill="#12283d" text-anchor="start">slip-ring wire 1, dome 5 V bus</text>
+<line x1="830" y1="731" x2="1630" y2="731" stroke="#dde7ef" stroke-width="1.2"/>
+<text x="830" y="746" font-family="Consolas, monospace" font-size="14" font-weight="normal" fill="#00507f" text-anchor="start">GND</text>
+<text x="944" y="746" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" fill="#12283d" text-anchor="start">slip-ring wire 3, dome ground</text>
+<line x1="830" y1="753" x2="1630" y2="753" stroke="#dde7ef" stroke-width="1.2"/>
+<text x="830" y="768" font-family="Consolas, monospace" font-size="14" font-weight="normal" fill="#00507f" text-anchor="start">MOSI</text>
+<text x="944" y="768" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" fill="#12283d" text-anchor="start">slip-ring wire 8  &lt;-  Pi GPIO10, header pin 19</text>
+<line x1="830" y1="775" x2="1630" y2="775" stroke="#dde7ef" stroke-width="1.2"/>
+<text x="830" y="790" font-family="Consolas, monospace" font-size="14" font-weight="normal" fill="#00507f" text-anchor="start">SCK</text>
+<text x="944" y="790" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" fill="#12283d" text-anchor="start">slip-ring wire 9  &lt;-  Pi GPIO11, header pin 23</text>
+<line x1="830" y1="797" x2="1630" y2="797" stroke="#dde7ef" stroke-width="1.2"/>
+<text x="830" y="812" font-family="Consolas, monospace" font-size="14" font-weight="normal" fill="#00507f" text-anchor="start">CS</text>
+<text x="944" y="812" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" fill="#12283d" text-anchor="start">slip-ring wire 10  &lt;-  Pi GPIO8 (CE0), header pin 24</text>
+<line x1="830" y1="819" x2="1630" y2="819" stroke="#dde7ef" stroke-width="1.2"/>
+<text x="830" y="834" font-family="Consolas, monospace" font-size="14" font-weight="normal" fill="#00507f" text-anchor="start">DC</text>
+<text x="944" y="834" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" fill="#12283d" text-anchor="start">slip-ring wire 11  &lt;-  Pi GPIO25, header pin 22</text>
+<line x1="830" y1="841" x2="1630" y2="841" stroke="#dde7ef" stroke-width="1.2"/>
+<text x="830" y="856" font-family="Consolas, monospace" font-size="14" font-weight="normal" fill="#00507f" text-anchor="start">RST</text>
+<text x="944" y="856" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" fill="#12283d" text-anchor="start">slip-ring wire 12  &lt;-  Pi GPIO24, header pin 18</text>
+<line x1="830" y1="863" x2="1630" y2="863" stroke="#dde7ef" stroke-width="1.2"/>
+<text x="830" y="878" font-family="Consolas, monospace" font-size="14" font-weight="normal" fill="#00507f" text-anchor="start">LITE</text>
+<text x="944" y="878" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" fill="#12283d" text-anchor="start">R1 100 ohm to the dome 5 V bus: always on</text>
+<rect x="816" y="900" width="828" height="168" rx="7" fill="#f2f7fb" stroke="#5b7c99" stroke-width="1.6"/>
+<rect x="816" y="900" width="6" height="168" rx="3" fill="#5b7c99"/>
+<text x="836" y="930" font-family="Arial, Helvetica, sans-serif" font-size="19" font-weight="bold" fill="#12283d" text-anchor="start">Backlight: tied on, not switched</text>
+<text x="836" y="954" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" fill="#12283d" text-anchor="start">There is no thirteenth slip-ring wire, so the backlight is not switched from</text>
+<text x="836" y="974" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" fill="#12283d" text-anchor="start">the Pi. LITE goes to 5 V through R1 (100 ohm), which sets a steady, slightly</text>
+<text x="836" y="994" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" fill="#12283d" text-anchor="start">reduced brightness and survives the dome turning. firmware/pi/displays.py still</text>
+<text x="836" y="1014" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" fill="#12283d" text-anchor="start">drives GPIO18 as its backlight pin; with the resistor fitted that pin controls</text>
+<text x="836" y="1034" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" fill="#12283d" text-anchor="start">nothing and can be left unconnected. If a dimmable backlight is wanted later,</text>
+<text x="836" y="1054" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" fill="#12283d" text-anchor="start">give up the dome index sensor wire or move to a 2-wire dome controller.</text>
+<line x1="36" y1="1076" x2="1644" y2="1076" stroke="#5b7c99" stroke-width="1.2"/>
+<text x="36" y="1098" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" fill="#5b7c99" text-anchor="start">fable-r2d2 electrical set, 2026-09-12  |  sheets 01-04 and electronics/wiring.csv are one drawing set  |  pin names are the final firmware names in firmware/kb2040/code.py  |  not yet validated on hardware</text>
+</svg>
