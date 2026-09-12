@@ -12,6 +12,10 @@
 
 2026-09-12: "Fewer than 100 individual pieces"
 
+2026-09-12: "Use the integrated DFRobot controller"
+
+Controller selection is now locked: DFRobot Romeo ESP32-S3 DFR0994, retaining the specified Adafruit3777 motors and3766 wheels. Do not request this approval again. Stock current limits and VIN/VM isolation remain engineering checks, not renewed permission gates. Next bounded milestone: turn the researched physical-piece ledger into a machine-counted candidate, expose all quantity gaps, and enforce99 before freezing the wiring/firmware design. Files: r2d2/bom/development-purchased.csv, existing scripts/verify.py, the resulting count report, development status and this plan. Proof:99 passes arithmetic checks;100, invalid quantities, duplicate IDs and unresolved counts fail. This does not certify an exhaustive or physically validated robot assembly.
+
 The confirmed ceiling is99 total purchased pieces, NOT99 part types. Count every installed screw, nut, washer, bearing, cut rail, motor and wheel separately; count factory-assembled boards and terminated cable assemblies as purchased assemblies, without concealing loose hardware in kit/allowance rows. List consumables and any uncertain counting boundaries explicitly. The preliminary separate upper/lower frame and bolted shoulder-carrier architecture is not a compliant final design. Consolidate the printed chassis and eliminate unnecessary purchased joints before freezing CAD or the purchase manifest.
 
 This supersedes the custom machined/welded frame. Revision D uses printed structural modules, 2020 extrusion reinforcement and purchased shafts/bearings/fasteners. The confirmed ceiling above applies to total physical quantities, including each small fastener; the earlier part-type interpretation is superseded. Integrated exterior relief must be visibly richer in front/rear/side and component closeups. Preserve whole stackable body sections and whole side-leg prints. Outcome of this amendment: actual printable frame geometry, detailed exterior and a counted purchase manifest. Non-goals: purchasing, physical strength claims or unrelated robot edits. Reuse current CAD/export/BOM tools. Proof: actual exported solids, assembly clearance checks, source-matched drawings and explicit purchase count <=99.
@@ -652,3 +656,15 @@ re-verified from this machine afterwards: PDF HTTP 200 hashing
 `cfe949556188b6bbc4187c1e694a56a29c779c34441bd1b3df40446d293dcc8c` and MP4 HTTP 200 hashing
 `4e09b3fd9cbb536f41f893be14d688fdf65702b2a8aa730bfe4348857681e9a6`. doorbot revision A is
 delivered. Unrelated `fable-r2d2/` and `r2d2/` worktree changes were left untouched throughout.
+
+2026-09-12: Consolidated purchase list added on request: `doorbot/bom/shopping-list.xlsx` and
+`shopping-list.csv`, grouped by supplier with subtotals, one clickable buy link per row and a
+`Print this` sheet for the printed parts. `scripts/shopping_list.py --check-links` fetches every
+link and records what it answered.
+
+That check found a real defect in already-published work: the Bambu Lab filament URL cited in
+the BOM, in `check_mechanism.py` and in the build guide, `https://bambulab.com/en/filament/pla-tough`,
+answers HTTP 404. Replaced everywhere with `https://us.store.bambulab.com/collections/pla`,
+which answers HTTP 200. All 23 buy links now answer HTTP 200; 9 of them are vendor searches
+rather than single listings, and the list marks those as `search` rather than implying a
+specific part.

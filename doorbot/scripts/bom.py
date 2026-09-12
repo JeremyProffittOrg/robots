@@ -84,7 +84,7 @@ HARDWARE = [
      "the T-Display and the driver board into their printed bosses", ""),
     ("Bambu Lab", "pla-tough-plus", "PLA Tough+ filament, 1 kg spool", 1, 27.99,
      "every structural part; 245 g of it at 100% infill, so one spool covers several builds",
-     "https://bambulab.com/en/filament/pla-tough"),
+     "https://us.store.bambulab.com/collections/pla"),
 ]
 
 PRINTED = [

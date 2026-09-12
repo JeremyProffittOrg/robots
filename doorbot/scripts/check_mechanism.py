@@ -26,7 +26,8 @@ Sourced constants (each carries the primary source it came from):
   material Bambu Lab PLA Tough+ TDS: 20.9 MPa tensile in Z, 1860 MPa modulus. Allowables
            here are that scatter divided by 4 (5 MPa across layers, 8 MPa in plane) and by 6
            for cyclic gear teeth (3.3 / 5.5 MPa).
-           https://bambulab.com/en/filament/pla-tough
+           https://us.store.bambulab.com/collections/pla (the TDS link Bambu
+           published earlier, bambulab.com/en/filament/pla-tough, now answers 404)
   door     ADA 404.2.7 (22.2 N at the door edge) and ANSI/BHMA A156.19 (>= 1.5 s from 10 deg
            to closed; 1.69 J energy cap). Hinge friction has no published figure for plain
            residential butt hinges and is modelled, not measured - see HINGE_FRICTION_NM.

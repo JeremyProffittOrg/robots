@@ -1,0 +1,155 @@
+{
+  "line_items": 23,
+  "pieces": 46,
+  "total_usd": 124.49,
+  "filament_g": 255.9,
+  "by_supplier": {
+    "adafruit.com - one cart": 61.6,
+    "LilyGO, AliExpress or Amazon": 15.0,
+    "kjmagnetics.com": 8.12,
+    "Bambu Lab store": 27.99,
+    "any hardware shop or Amazon": 11.78
+  },
+  "links": [
+    {
+      "sku": "5396",
+      "buy": "https://www.adafruit.com/product/5396",
+      "is_search": false,
+      "check": "HTTP 200"
+    },
+    {
+      "sku": "3967",
+      "buy": "https://www.adafruit.com/product/3967",
+      "is_search": false,
+      "check": "HTTP 200"
+    },
+    {
+      "sku": "3297",
+      "buy": "https://www.adafruit.com/product/3297",
+      "is_search": false,
+      "check": "HTTP 200"
+    },
+    {
+      "sku": "2809",
+      "buy": "https://www.adafruit.com/product/2809",
+      "is_search": false,
+      "check": "HTTP 200"
+    },
+    {
+      "sku": "3564",
+      "buy": "https://www.adafruit.com/product/3564",
+      "is_search": false,
+      "check": "HTTP 200"
+    },
+    {
+      "sku": "4298",
+      "buy": "https://www.adafruit.com/product/4298",
+      "is_search": false,
+      "check": "HTTP 200"
+    },
+    {
+      "sku": "3986",
+      "buy": "https://www.adafruit.com/product/3986",
+      "is_search": false,
+      "check": "HTTP 200"
+    },
+    {
+      "sku": "4399",
+      "buy": "https://www.adafruit.com/product/4399",
+      "is_search": false,
+      "check": "HTTP 200"
+    },
+    {
+      "sku": "3777",
+      "buy": "https://www.adafruit.com/product/3777",
+      "is_search": false,
+      "check": "HTTP 200"
+    },
+    {
+      "sku": "3782",
+      "buy": "https://www.adafruit.com/product/3782",
+      "is_search": false,
+      "check": "HTTP 200"
+    },
+    {
+      "sku": "1536",
+      "buy": "https://www.adafruit.com/product/1536",
+      "is_search": false,
+      "check": "HTTP 200"
+    },
+    {
+      "sku": "753",
+      "buy": "https://www.adafruit.com/product/753",
+      "is_search": false,
+      "check": "HTTP 200"
+    },
+    {
+      "sku": "753-c",
+      "buy": "https://www.adafruit.com/product/753",
+      "is_search": false,
+      "check": "HTTP 200"
+    },
+    {
+      "sku": "T-Display",
+      "buy": "https://www.amazon.com/s?k=TTGO+T-Display+ESP32+1.14+ST7789",
+      "is_search": true,
+      "check": "HTTP 200"
+    },
+    {
+      "sku": "D84",
+      "buy": "https://www.kjmagnetics.com/proddetail.asp?prod=D84",
+      "is_search": false,
+      "check": "HTTP 200"
+    },
+    {
+      "sku": "pla-tough-plus",
+      "buy": "https://us.store.bambulab.com/collections/pla",
+      "is_search": true,
+      "check": "HTTP 200"
+    },
+    {
+      "sku": "dyneema-150",
+      "buy": "https://www.amazon.com/s?k=braided+dyneema+fishing+line+150+lb+1.2+mm",
+      "is_search": true,
+      "check": "HTTP 200"
+    },
+    {
+      "sku": "dowel-4x35",
+      "buy": "https://www.amazon.com/s?k=4mm+x+35mm+steel+dowel+pin",
+      "is_search": true,
+      "check": "HTTP 200"
+    },
+    {
+      "sku": "m3x10",
+      "buy": "https://www.amazon.com/s?k=M3+x+10+mm+self+tapping+screw+plastic",
+      "is_search": true,
+      "check": "HTTP 200"
+    },
+    {
+      "sku": "screw-6x20",
+      "buy": "https://www.amazon.com/s?k=%236+x+3%2F4+in+countersunk+wood+screw",
+      "is_search": true,
+      "check": "HTTP 200"
+    },
+    {
+      "sku": "screw-8x32",
+      "buy": "https://www.amazon.com/s?k=%238+x+1-1%2F4+in+countersunk+wood+screw",
+      "is_search": true,
+      "check": "HTTP 200"
+    },
+    {
+      "sku": "screw-8x25",
+      "buy": "https://www.amazon.com/s?k=%238+x+1+in+countersunk+wood+screw",
+      "is_search": true,
+      "check": "HTTP 200"
+    },
+    {
+      "sku": "m3x8",
+      "buy": "https://www.amazon.com/s?k=M3+x+8+mm+self+tapping+screw+plastic",
+      "is_search": true,
+      "check": "HTTP 200"
+    }
+  ],
+  "csv": "bom/shopping-list.csv",
+  "xlsx": "bom/shopping-list.xlsx"
+}

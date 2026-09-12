@@ -7,4 +7,4 @@ generic,screw-8x25,"Wood screw, #8 x 25 mm, countersunk",3,0.15,0.45,holds the c
 generic,screw-6x20,"Wood screw, #6 x 20 mm, countersunk",4,0.12,0.48,two per magnet pod,
 generic,m3x10,M3 x 10 mm self-tapping screw,8,0.10,0.80,"four for the cover, two per time-of-flight board into their printed bosses",
 generic,m3x8,M3 x 8 mm self-tapping screw,4,0.10,0.40,the T-Display and the driver board into their printed bosses,
-Bambu Lab,pla-tough-plus,"PLA Tough+ filament, 1 kg spool",1,27.99,27.99,"every structural part; 245 g of it at 100% infill, so one spool covers several builds",https://bambulab.com/en/filament/pla-tough
+Bambu Lab,pla-tough-plus,"PLA Tough+ filament, 1 kg spool",1,27.99,27.99,"every structural part; 245 g of it at 100% infill, so one spool covers several builds",https://us.store.bambulab.com/collections/pla

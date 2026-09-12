@@ -67,7 +67,8 @@ def main():
         if not base.exists():
             continue
         files += [q for q in base.rglob("*") if q.is_file()
-                  and not any(x in q.parts for x in [".pio", "__pycache__", "tmp"])]
+                  and not any(x in q.parts for x in [".pio", "__pycache__", "tmp"])
+                  and not q.name.startswith("~$")]   # Office lock files while a sheet is open
     for name in ["README.md", ".gitignore", ".gitattributes"]:
         if (ROOT / name).exists():
             files.append(ROOT / name)
