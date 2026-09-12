@@ -646,3 +646,9 @@ right-aligns numeric columns and never truncates them. Final PDF hash
 `cfe949556188b6bbc4187c1e694a56a29c779c34441bd1b3df40446d293dcc8c`. This is published so the
 live link serves the best artefact; the attachment on the correction email is that one
 cosmetic render behind, which is stated to the operator directly rather than by a third email.
+
+2026-09-12: Final publication run `34719710725` finished `completed success`. Both links
+re-verified from this machine afterwards: PDF HTTP 200 hashing
+`cfe949556188b6bbc4187c1e694a56a29c779c34441bd1b3df40446d293dcc8c` and MP4 HTTP 200 hashing
+`4e09b3fd9cbb536f41f893be14d688fdf65702b2a8aa730bfe4348857681e9a6`. doorbot revision A is
+delivered. Unrelated `fable-r2d2/` and `r2d2/` worktree changes were left untouched throughout.
