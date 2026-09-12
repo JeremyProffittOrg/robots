@@ -99,7 +99,7 @@
 <path d="M1310,574 L1330,574" stroke="#155a85" stroke-width="2" fill="none"/>
 <path d="M1316,581 L1324,581" stroke="#155a85" stroke-width="2" fill="none"/>
 <text x="825" y="620" font-family="Arial, sans-serif" font-size="15" font-weight="normal" fill="#10263a">5V x15/(10+15) =3.0V; low means physical power OFF</text>
-<text x="40" y="690" font-family="Arial, sans-serif" font-size="20" font-weight="bold" fill="#10263a">D. Motor output circuit (repeat for all4 motors)</text>
+<text x="40" y="690" font-family="Arial, sans-serif" font-size="20" font-weight="bold" fill="#10263a">D. Motor output circuit (repeat for all5 motors)</text>
 <rect x="40" y="755" width="320" height="180" rx="6" fill="#f1f7fb" stroke="#46677d" stroke-width="1.5"/>
 <text x="55" y="783" font-family="Arial, sans-serif" font-size="20" font-weight="bold" fill="#10263a">U5 DRV8833 / bridge A</text>
 <text x="55" y="811" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">VMotor =5V_MOTOR</text>
@@ -125,14 +125,14 @@
 <circle cx="660" cy="835" r="25" fill="white" stroke="#155a85" stroke-width="2"/>
 <text x="650" y="841" font-family="Arial, sans-serif" font-size="20" font-weight="bold" fill="#10263a">M</text>
 <text x="585" y="960" font-family="monospace" font-size="16" font-weight="normal" fill="#004879">LEFT FRONT TT3777</text>
-<text x="40" y="1010" font-family="Arial, sans-serif" font-size="15" font-weight="normal" fill="#10263a">U5 bridgeB -&gt;LEFT REAR; U6 bridgeA -&gt;RIGHT FRONT; U6 bridgeB -&gt;RIGHT REAR.</text>
+<text x="40" y="1010" font-family="Arial, sans-serif" font-size="15" font-weight="normal" fill="#10263a">U5.B -&gt;LEFT REAR; U6.A/B -&gt;RIGHT FRONT/REAR; U11.A -&gt;HEAD (routing on sheet03).</text>
 <text x="40" y="1040" font-family="Arial, sans-serif" font-size="15" font-weight="normal" fill="#10263a">Bridge outputs never join one another. The only shared connections are INPUTS and supplies.</text>
 <text x="870" y="690" font-family="Arial, sans-serif" font-size="20" font-weight="bold" fill="#10263a">E. Reset default states</text>
 <text x="870" y="760" font-family="monospace" font-size="16" font-weight="normal" fill="#004879">GPIO12</text>
 <path d="M965,755 L1130,755" stroke="#155a85" stroke-width="2" fill="none"/>
 <circle cx="1130" cy="755" r="4" fill="#155a85"/>
 <path d="M1130,755 L1300,755" stroke="#155a85" stroke-width="2" fill="none"/>
-<text x="1310" y="760" font-family="monospace" font-size="16" font-weight="normal" fill="#004879">U5/U6.SLP</text>
+<text x="1310" y="760" font-family="monospace" font-size="16" font-weight="normal" fill="#004879">U5/U6/U11.SLP</text>
 <path d="M1130,755 L1130,767" stroke="#155a85" stroke-width="2" fill="none"/>
 <rect x="1123" y="767" width="14" height="35" fill="white" stroke="#155a85" stroke-width="2"/>
 <path d="M1130,802 L1130,815" stroke="#155a85" stroke-width="2" fill="none"/>
@@ -151,9 +151,9 @@
 <circle cx="1130" cy="895" r="4" fill="#155a85"/>
 <text x="1170" y="900" font-family="monospace" font-size="16" font-weight="normal" fill="#004879">SERVO_DISABLE</text>
 <path d="M1130,895 L1130,955" stroke="#155a85" stroke-width="2" fill="none"/>
-<text x="920" y="980" font-family="monospace" font-size="16" font-weight="normal" fill="#004879">GPIO27 / U10.OE / buffer /OE</text>
+<text x="920" y="980" font-family="monospace" font-size="16" font-weight="normal" fill="#004879">GPIO27 / U10.OE / U8 /OE</text>
 <text x="870" y="1040" font-family="Arial, sans-serif" font-size="15" font-weight="normal" fill="#10263a">Remove originalPCAOE pull-down.</text>
-<text x="870" y="1070" font-family="Arial, sans-serif" font-size="15" font-weight="normal" fill="#10263a">Repeat10k pull-down on each drive input.</text>
+<text x="870" y="1070" font-family="Arial, sans-serif" font-size="15" font-weight="normal" fill="#10263a">GPIO2 and head AIN1/AIN2:10k pull-downs.</text>
 <text x="40" y="1140" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">POWER NOTES: F2/F3=3A; F4=1A. Correct capacitor polarity. All connection values also appear in sheets01-03.</text>
-<text x="35" y="1226" font-family="Arial, sans-serif" font-size="15" font-weight="normal" fill="#10263a">DALEK R1 | 2026-09-11 | Circuit + wiring.csv form one drawing set | Build validation is required</text>
+<text x="35" y="1226" font-family="Arial, sans-serif" font-size="15" font-weight="normal" fill="#10263a">DALEK ROUND / FRICTION | 2026-09-12 | Circuit + wiring.csv form one drawing set | Physical validation required</text>
 </svg>

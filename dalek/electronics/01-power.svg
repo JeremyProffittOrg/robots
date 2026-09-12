@@ -27,22 +27,22 @@
 <text x="50" y="358" font-family="Arial, sans-serif" font-size="20" font-weight="bold" fill="#10263a">U2 / MOTOR 5V</text>
 <text x="50" y="386" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">ACT_IN -&gt; F2 3A -&gt; MOTOR_IN -&gt; VIN</text>
 <text x="50" y="410" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">Pololu D36V50F5 #4091</text>
-<text x="50" y="434" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">VOUT -&gt; 5V_MOTOR -&gt; U5/U6.VMotor</text>
+<text x="50" y="434" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">VOUT -&gt; U5/U6/U11.VMotor + U9.14</text>
 <text x="50" y="458" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">C1 220uF/25V: VIN(+) to GND(-)</text>
-<text x="50" y="482" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">C4/C5 470uF/10V: one at each driver</text>
+<text x="50" y="482" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">C4/C5/C12 470uF: one per driver</text>
 <text x="50" y="506" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">R15 100ohm/1W: output to GND</text>
-<text x="50" y="530" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">EN, PG and VRP: no connection</text>
+<text x="50" y="530" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">5A motor allowance + 0.05A bleed</text>
 <text x="50" y="554" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">Ground return: 18AWG to star</text>
 <rect x="555" y="330" width="475" height="255" rx="6" fill="#f1f7fb" stroke="#46677d" stroke-width="1.5"/>
 <text x="570" y="358" font-family="Arial, sans-serif" font-size="20" font-weight="bold" fill="#10263a">U3 / SERVO 5V</text>
 <text x="570" y="386" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">ACT_IN -&gt; F3 3A -&gt; SERVO_IN -&gt; VIN</text>
 <text x="570" y="410" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">Pololu D36V50F5 #4091</text>
-<text x="570" y="434" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">VOUT -&gt; 5V_SERVO -&gt; distribution block</text>
+<text x="570" y="434" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">VOUT -&gt; servo distribution + U8.14</text>
 <text x="570" y="458" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">C2 220uF/25V: VIN(+) to GND(-)</text>
 <text x="570" y="482" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">C6 1000uF/10V at distribution block</text>
 <text x="570" y="506" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">R16 100ohm/1W: output to GND</text>
-<text x="570" y="530" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">EN, PG and VRP: no connection</text>
-<text x="570" y="554" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">5 separate 22AWG servo branches</text>
+<text x="570" y="530" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">4A allowance + 0.05A bleed</text>
+<text x="570" y="554" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">4 separate 22AWG servo branches</text>
 <rect x="1075" y="330" width="475" height="255" rx="6" fill="#f1f7fb" stroke="#46677d" stroke-width="1.5"/>
 <text x="1090" y="358" font-family="Arial, sans-serif" font-size="20" font-weight="bold" fill="#10263a">U4 / LOGIC 5V</text>
 <text x="1090" y="386" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">PACK_SW -&gt; F4 1A -&gt; LOGIC_IN -&gt; IN</text>
@@ -79,5 +79,5 @@
 <text x="815" y="929" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">26AWG: signals. Twisted pairs: each motor; speaker output.</text>
 <text x="815" y="953" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">No solderless breadboard for power. Insulate every joint.</text>
 <text x="815" y="977" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">Two DC switches are disconnects; this is not a certified E-stop.</text>
-<text x="35" y="1076" font-family="Arial, sans-serif" font-size="15" font-weight="normal" fill="#10263a">DALEK R1 | 2026-09-11 | Circuit + wiring.csv form one drawing set | Build validation is required</text>
+<text x="35" y="1076" font-family="Arial, sans-serif" font-size="15" font-weight="normal" fill="#10263a">DALEK ROUND / FRICTION | 2026-09-12 | Circuit + wiring.csv form one drawing set | Physical validation required</text>
 </svg>

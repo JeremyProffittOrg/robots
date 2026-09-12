@@ -237,7 +237,7 @@ void routes() {
     long lease, sequence, left, right, head, arms, radius, frequency;
     bool parsed = number("lease", 1, 0x7fffffffL, lease) && number("sequence", 1, 0x7fffffffL, sequence) &&
       number("left", -dalek::DRIVE_LIMIT, dalek::DRIVE_LIMIT, left) && number("right", -dalek::DRIVE_LIMIT, dalek::DRIVE_LIMIT, right) &&
-      number("head", -100, 100, head) && number("arms", 0, 1, arms) && number("radius", 0, 12, radius) && number("frequency", 10, 80, frequency);
+      number("head", -100, 100, head) && number("arms", 0, 1, arms) && number("radius", 0, dalek::ARM_RADIUS_LIMIT, radius) && number("frequency", 10, 80, frequency);
     if (!parsed || server.args() != 8) { disarm(); reply(400, "{\"error\":\"Invalid complete command; disarmed\"}"); return; }
     dalek::Command command;
     command.left = left; command.right = right; command.head = head;

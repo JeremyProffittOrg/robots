@@ -8,6 +8,7 @@ namespace dalek {
 constexpr uint32_t DEADMAN_MS = 500;
 constexpr int DRIVE_LIMIT = 150; // 150/255, deliberately reduced commissioning speed.
 constexpr int HEAD_LIMIT = 100; // 100/255 maximum; no speed feedback.
+constexpr int ARM_RADIUS_LIMIT = 8; // Concealed gimbal clearance limit in degrees.
 
 inline bool parseInteger(const char *text, long low, long high, long &value) {
   if (!text || !*text || isspace(static_cast<unsigned char>(*text))) return false;
@@ -22,7 +23,7 @@ inline bool parseInteger(const char *text, long low, long high, long &value) {
 struct Command {
   int left = 0, right = 0, head = 0;
   bool arms = false;
-  int radius = 8; // degrees, software bounded to 0..12.
+  int radius = 8; // degrees, software bounded to 0..8.
   int frequency = 40; // hundredths of Hz, 10..80.
 };
 
@@ -30,7 +31,7 @@ inline bool valid(const Command &c) {
   return c.left >= -DRIVE_LIMIT && c.left <= DRIVE_LIMIT &&
          c.right >= -DRIVE_LIMIT && c.right <= DRIVE_LIMIT &&
          c.head >= -100 && c.head <= 100 &&
-         c.radius >= 0 && c.radius <= 12 &&
+         c.radius >= 0 && c.radius <= ARM_RADIUS_LIMIT &&
          c.frequency >= 10 && c.frequency <= 80;
 }
 

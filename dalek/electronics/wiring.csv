@@ -11,10 +11,11 @@ SERVO_IN,F3.OUT,U3.VIN,18,orange,F3 3A
 LOGIC_IN,F4.OUT,U4.IN,22,red,F4 1A
 5V_MOTOR,U2.VOUT,U5.VMotor,18,orange,
 5V_MOTOR,U2.VOUT,U6.VMotor,18,orange,
+5V_MOTOR,U2.VOUT,U11.VMotor,18,orange,
+5V_MOTOR,U2.VOUT,U9.14,18,orange,
 5V_MOTOR,U2.VOUT,R12.1,18,orange,
-5V_SERVO,U3.VOUT,J_SERVO.2,18,red,Five separate servo branches; never feed through PCA9685 V+ traces
-5V_SERVO,U3.VOUT,U8.14,18,red,Five separate servo branches; never feed through PCA9685 V+ traces
-5V_SERVO,U3.VOUT,U9.14,18,red,Five separate servo branches; never feed through PCA9685 V+ traces
+5V_SERVO,U3.VOUT,J_SERVO.2,18,red,Four separate arm-servo branches; never feed through PCA9685 V+ traces
+5V_SERVO,U3.VOUT,U8.14,18,red,Four separate arm-servo branches; never feed through PCA9685 V+ traces
 5V_LOGIC,U4.OUT,J_USB_ISO.1,22,red,
 5V_LOGIC,U4.OUT,U7.VIN,22,red,
 5V_LOGIC,U4.OUT,R14.1,22,red,
@@ -26,6 +27,7 @@ GND,B1.PP30-,U3.GND,18,black,Star ground; power returns do not pass through ESP3
 GND,B1.PP30-,U4.GND,18,black,Star ground; power returns do not pass through ESP32 or PCA board
 GND,B1.PP30-,U5.GND,18,black,Star ground; power returns do not pass through ESP32 or PCA board
 GND,B1.PP30-,U6.GND,18,black,Star ground; power returns do not pass through ESP32 or PCA board
+GND,B1.PP30-,U11.GND,18,black,Star ground; power returns do not pass through ESP32 or PCA board
 GND,B1.PP30-,J_SERVO.1,18,black,Star ground; power returns do not pass through ESP32 or PCA board
 GND,GROUND_STAR,U1.GND,22,black,
 GND,GROUND_STAR,U7.GND,22,black,
@@ -53,15 +55,15 @@ MOTOR_ENABLE,MOTOR_ENABLE,R5.1,component,,10k 1% 0.25W pull-down
 GND,GND,R5.2,component,,10k 1% 0.25W pull-down
 MOTOR_ENABLE,U1.GPIO12,U5.SLP,26,signal,
 MOTOR_ENABLE,U1.GPIO12,U6.SLP,26,signal,
+MOTOR_ENABLE,U1.GPIO12,U11.SLP,26,signal,
 SDA,U1.GPIO21,U10.SDA,26,signal,
 SCL,U1.GPIO22,U10.SCL,26,signal,
-SERVO_DISABLE,U1.GPIO27,U10.OE,26,signal,R6 10k to3V3; REMOVE PCA board OE pull-down
-SERVO_DISABLE,U1.GPIO27,R6.2,26,signal,R6 10k to3V3; REMOVE PCA board OE pull-down
-SERVO_DISABLE,U1.GPIO27,U8.1,26,signal,R6 10k to3V3; REMOVE PCA board OE pull-down
-SERVO_DISABLE,U1.GPIO27,U8.4,26,signal,R6 10k to3V3; REMOVE PCA board OE pull-down
-SERVO_DISABLE,U1.GPIO27,U8.10,26,signal,R6 10k to3V3; REMOVE PCA board OE pull-down
-SERVO_DISABLE,U1.GPIO27,U8.13,26,signal,R6 10k to3V3; REMOVE PCA board OE pull-down
-SERVO_DISABLE,U1.GPIO27,U9.1,26,signal,R6 10k to3V3; REMOVE PCA board OE pull-down
+SERVO_DISABLE,U1.GPIO27,U10.OE,26,signal,R6 10k to3V3; REMOVE PCA board OE pull-down; U9 uses separate direction enables
+SERVO_DISABLE,U1.GPIO27,R6.2,26,signal,R6 10k to3V3; REMOVE PCA board OE pull-down; U9 uses separate direction enables
+SERVO_DISABLE,U1.GPIO27,U8.1,26,signal,R6 10k to3V3; REMOVE PCA board OE pull-down; U9 uses separate direction enables
+SERVO_DISABLE,U1.GPIO27,U8.4,26,signal,R6 10k to3V3; REMOVE PCA board OE pull-down; U9 uses separate direction enables
+SERVO_DISABLE,U1.GPIO27,U8.10,26,signal,R6 10k to3V3; REMOVE PCA board OE pull-down; U9 uses separate direction enables
+SERVO_DISABLE,U1.GPIO27,U8.13,26,signal,R6 10k to3V3; REMOVE PCA board OE pull-down; U9 uses separate direction enables
 I2S_BCLK,U1.GPIO17,U7.BCLK,26,signal,
 I2S_LRC,U1.GPIO13,U7.LRC,26,signal,
 I2S_DATA,U1.GPIO15,U7.DIN,26,signal,GPIO15 strap: amplifier INPUT only; no pull-up/down added
@@ -130,21 +132,34 @@ SERVO_RIGHT_PITCH,SERVO_RIGHT_PITCH,R43.1,component,,10k pull-down at servo sign
 GND,GND,R43.2,component,,10k pull-down at servo signal
 5V_SERVO,J_SERVO.2,SV3.RED,22,red,Individual branch; retain servo plug center positive
 GND,J_SERVO.1,SV3.GND,22,black/brown,
-PWM4,U10.PWM4,U9.2,26,signal,
-PWM4,PWM4,R24.1,component,,10k pull-down at buffer input
-GND,GND,R24.2,component,,10k pull-down at buffer input
-PWM5V_4,U9.3,R34.1,26,signal,
-SERVO_HEAD,R34.2,SV4.SIGNAL,26,signal,220ohm series resistor
-SERVO_HEAD,SERVO_HEAD,R44.1,component,,10k pull-down at servo signal
-GND,GND,R44.2,component,,10k pull-down at servo signal
-5V_SERVO,J_SERVO.2,SV4.RED,22,red,Individual branch; retain servo plug center positive
-GND,J_SERVO.1,SV4.GND,22,black/brown,
-GND,GROUND_STAR,U9.5,26,black,Unused buffer INPUT tied low
+HEAD_PWM,U1.GPIO2,U9.2,26,signal,20kHz 8bit PWM; low before direction updates; cap100/255
+HEAD_PWM,U1.GPIO2,U9.5,26,signal,20kHz 8bit PWM; low before direction updates; cap100/255
+HEAD_PWM,HEAD_PWM,R24.1,component,,10k pull-down: GPIO2 boot-safe and head PWM off on reset
+GND,GND,R24.2,component,,10k pull-down: GPIO2 boot-safe and head PWM off on reset
+HEAD_DISABLE1,U10.PWM4,U9.1,26,signal,STATIC HIGH disables this gate; LOW enables; never servo pulses
+HEAD_DISABLE1,HEAD_DISABLE1,R7.1,component,,10k pull-up to3V3; AHCT TTL threshold
+3V3,3V3,R7.2,component,,10k pull-up to3V3; AHCT TTL threshold
+HEAD_BUFFER1,U9.3,R34.1,26,signal,
+HEAD_IN1,R34.2,U11.AIN1,26,signal,220ohm series resistor; only one input gets PWM
+HEAD_IN1,HEAD_IN1,R44.1,component,,10k pull-down at driver input
+GND,GND,R44.2,component,,10k pull-down at driver input
+HEAD_DISABLE2,U10.PWM5,U9.4,26,signal,STATIC HIGH disables this gate; LOW enables; never servo pulses
+HEAD_DISABLE2,HEAD_DISABLE2,R8.1,component,,10k pull-up to3V3; AHCT TTL threshold
+3V3,3V3,R8.2,component,,10k pull-up to3V3; AHCT TTL threshold
+HEAD_BUFFER2,U9.6,R35.1,26,signal,
+HEAD_IN2,R35.2,U11.AIN2,26,signal,220ohm series resistor; only one input gets PWM
+HEAD_IN2,HEAD_IN2,R45.1,component,,10k pull-down at driver input
+GND,GND,R45.2,component,,10k pull-down at driver input
+GND,GROUND_STAR,U11.BIN1,26,signal,Unused bridge B inputs low; BOUT1/BOUT2 unconnected
+GND,GROUND_STAR,U11.BIN2,26,signal,Unused bridge B inputs low; BOUT1/BOUT2 unconnected
+HEAD_MOTOR+,U11.AOUT1,M_HEAD.+,22,yellow,
+HEAD_MOTOR-,U11.AOUT2,M_HEAD.-,22,blue,
+HEAD_MOTOR+,HEAD_MOTOR+,C_HEAD.1,component,,100nF ceramic >=25V across MOTOR tabs
+HEAD_MOTOR-,HEAD_MOTOR-,C_HEAD.2,component,,100nF ceramic >=25V across MOTOR tabs
 GND,GROUND_STAR,U9.9,26,black,Unused buffer INPUT tied low
 GND,GROUND_STAR,U9.12,26,black,Unused buffer INPUT tied low
-5V_SERVO,U3.VOUT,U9.4,26,red,Unused buffer OE high
-5V_SERVO,U3.VOUT,U9.10,26,red,Unused buffer OE high
-5V_SERVO,U3.VOUT,U9.13,26,red,Unused buffer OE high
+5V_MOTOR,U2.VOUT,U9.10,26,orange,Unused buffer OE high
+5V_MOTOR,U2.VOUT,U9.13,26,orange,Unused buffer OE high
 MOTOR_IN,MOTOR_IN,C1.1,component,,220uF 25V low-ESR
 GND,GND,C1.2,component,,220uF 25V low-ESR
 SERVO_IN,SERVO_IN,C2.1,component,,220uF 25V low-ESR
@@ -161,8 +176,10 @@ GND,GND,C6.2,component,,1000uF 10V low-ESR
 GND,GND,C7.2,component,,470uF 10V low-ESR
 5V_SERVO,5V_SERVO,C8.1,component,,100nF ceramic
 GND,GND,C8.2,component,,100nF ceramic
-5V_SERVO,5V_SERVO,C9.1,component,,100nF ceramic
+5V_MOTOR,5V_MOTOR,C9.1,component,,100nF ceramic
 GND,GND,C9.2,component,,100nF ceramic
+5V_MOTOR,5V_MOTOR,C12.1,component,,470uF 10V low-ESR at head driver
+GND,GND,C12.2,component,,470uF 10V low-ESR at head driver
 5V_MOTOR,5V_MOTOR,R15.1,component,,100ohm 1W discharge resistor
 GND,GND,R15.2,component,,100ohm 1W discharge resistor
 5V_SERVO,5V_SERVO,R16.1,component,,100ohm 1W discharge resistor

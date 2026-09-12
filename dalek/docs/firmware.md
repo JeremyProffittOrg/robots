@@ -45,7 +45,7 @@ Press the rear GPIO35 button to disarm. Hold it for five seconds to erase only t
 
 Press Arm controls, then hold a movement button. Forward uses PWM 110/255, reverse 90/255 and turns use 50/255 on the inside wheel pair and 120/255 on the outside pair. Release disarms. Arm again for the next movement. Tight pivots are omitted from the supplied interface because four rubber wheels can scrub heavily against the floor. The requested TT motors have limited torque. Use a smooth, level indoor floor and gentle arcs.
 
-The arm checkbox enables two-axis circles. The radius is 0–12 degrees and frequency is 0.10–0.80 Hz. The default is 8 degrees at 0.40 Hz. One side runs half a cycle behind the other. The head slider commands continuous rotation speed, with zero at the calibrated stop pulse. Hold Arms / head only to animate without wheel movement. These animation settings also apply while a drive button is held. Sliders by themselves do not cause movement.
+The arm checkbox enables two-axis circles. Radius is 0–8 degrees and frequency is 0.10–0.80 Hz. The default is 8 degrees at 0.40 Hz. Eight degrees is the concealed gimbal's clearance limit; the browser and API reject a larger radius. One side runs half a cycle behind the other. The head slider commands the TT friction motor's drive level and direction; zero removes PWM. Displayed 100% maps to the conservative 100/255 PWM ceiling. It is not a measured speed. Hold Arms / head only to animate without ground-wheel movement. These settings also apply while a drive button is held. Sliders alone do not cause movement.
 
 Speak plays a selected MP3 locally. Silence stops the decoder. Audio operates while the robot is disarmed. All audio stays in the fixed body, so the head can turn indefinitely without twisting an electrical cable. There is no head position sensor or automatic front-facing home position.
 
@@ -58,18 +58,23 @@ Read [electronics-research.md](electronics-research.md) and [the power circuit](
 | Function | ESP32 GPIO | Connection |
 | --- | --- | --- |
 | I2C data / clock | 21 / 22 | PCA9685 SDA / SCL, logic VCC 3.3 V |
-| Servo disable | 27 | PCA9685 OE and all used 74AHCT125 active-low output enables |
+| Servo disable | 27 | PCA9685 OE and U8 arm-buffer active-low output enables; U9 uses PCA4/5 |
 | Left forward / reverse | 25 / 26 | Left DRV8833 AIN1+BIN1 / AIN2+BIN2 |
 | Right forward / reverse | 32 / 33 | Right DRV8833 AIN1+BIN1 / AIN2+BIN2 |
-| Motor enable | 12 | Both DRV8833 SLP pins; 10 kΩ pull-down |
+| Motor enable | 12 | All three DRV8833 SLP pins; 10 kΩ pull-down |
+| Head PWM | 2 | 20 kHz to U9 inputs2/5;10 kΩ pull-down |
 | Audio bit clock / word clock / data | 17 / 13 / 15 | MAX98357A BCLK / LRC / DIN |
 | Actuator power sense | 36 | 5 V actuator rail through 10 kΩ top / 15 kΩ bottom divider |
 | Battery voltage sense | 39 | Battery through 100 kΩ top / 22 kΩ bottom divider, 100 nF from ADC to ground |
 | Stop / forget router | 35 | Existing rear board button |
 
-The PCA9685 address is 0x40. Servo channels are 0 left yaw, 1 left pitch, 2 right yaw, 3 right pitch and 4 continuous head servo. Unused servo connectors remain empty. Each DRV8833 controls one motor on bridge A and one on bridge B. Only its input signals are paired. Never parallel the bridge output terminals.
+PCA9685 address is0x40. Servo channels0–3 are left yaw, left pitch, right yaw and right pitch. Channels4/5 are static active-low head gate enables, not servo connectors. U8 buffers the four servo signals from5V_SERVO. U9, powered from5V_MOTOR, routes GPIO2 PWM to the selected U11 bridge input. PCA4/5 HIGH disables the corresponding U9 gate; LOW enables it. Each gate has a10k pull-up to3V3. U9 outputs reach U11 AIN1/AIN2 through220ohm resistors, with10k pull-downs at the driver. See circuit sheet03 for physical DIP pins. The PCA stays at50Hz; the motor receives20kHz hardware PWM from the ESP32.
 
-GPIO27 needs a 10 kΩ pull-up to 3.3 V. Remove the PCA9685 breakout's onboard OE pull-down as specified in the electronics guide; equal opposing 10 kΩ resistors do not produce a reliable HIGH. GPIO12 needs its 10 kΩ pull-down because it is also a boot strap pin. GPIO15 is a boot strap pin connected only to the amplifier's DIN input. Do not add an external pull-up or pull-down there. GPIO36 and GPIO39 are input-only and need the external dividers.
+U5/U6 each run two ground motors, with input pairs joined. U11 bridgeA runs the head; tie BIN1/BIN2 low and leave BOUT1/BOUT2 open. Every used bridge retains its stock1A current limit. Never parallel bridge outputs.
+
+Startup writes and verifies PCA MODE2=0x06: OUTDRV=1 and OUTNE=10. Global OE HIGH then makes PCA outputs high-impedance. R7/R8 pull both head-gate enables HIGH. The default OUTNE=00 would instead enable both active-low gates. A failed write or readback prevents arming. Keep this setting when changing PCA libraries.
+
+GPIO27 needs a10k pull-up to3.3V. Remove the PCA breakout's onboard OE pull-down as specified in the electronics guide. GPIO12 and GPIO2 each need10k pull-downs because they are boot strap pins and must default to disabled motion. GPIO15 connects only to the amplifier DIN input without external bias. GPIO36/39 are input-only and use the specified dividers.
 
 The firmware reserves GPIO5/16/18/19/23/4 for the integrated display. GPIO0 is the existing BOOT button. GPIO34/14 remain reserved for the board's original battery measurement circuitry. The robot's external 12 V pack does not connect to the board's single-cell battery socket.
 
@@ -81,7 +86,9 @@ A command lease is granted only after explicit arming. The robot requires a comp
 
 Ordinary wheel speed changes ramp by at most five PWM counts per nominal 10 ms. A requested reversal first ramps to zero, waits 100 ms, then ramps the other way. A stop, fault or disarm immediately drives SLP low and both inputs low; it does not wait for the ramp. This lets the wheels coast. It does not provide a mechanical brake, and stopping distance must be measured with the final mass.
 
-The PCA9685 receives five checked writes every 20 ms. A failed write latches an I2C fault and disables all motion. Fix the wiring and reboot to clear it. Missing PCA9685 at boot prevents arming. No automatic motion recovery follows a power, I2C, Wi-Fi or battery fault. On normal disarm, the arm channels turn off and the head receives its neutral pulse for up to 100 ms before OE disables all pulse outputs. This stops a continuous servo that might otherwise retain its speed after pulse loss. Physical power loss or an I2C fault disables OE immediately. Servo stop behavior and neutral calibration must still be tested. The physical switch is the dependable means to remove torque.
+The head motor uses the same five-count ramp step with a100/255 ceiling. Direction reversal ramps to zero, coasts for100ms, then ramps up. A brief zero command or quick disarm/re-arm cannot bypass that interval. A zero head command immediately removes head PWM. Before changing the selected U9 gate, firmware sets GPIO2 PWM to zero, disables both gates using checked I2C writes, enables one gate and then restores bounded PWM. The shared SLP line is held steady during operation; PWM never drives SLP.
+
+The PCA receives four checked servo writes every20ms and checked static-gate writes when head direction changes. Any failed write latches an I2C fault, sets head PWM zero, sets all driver SLP pins low and disables servo OE. Missing PCA at boot prevents arming. No automatic motion recovery follows power, I2C, Wi-Fi or battery faults. Head PWM stops immediately on software disarm; the old head-servo neutral pulse is removed. All motors coast after electrical disable. Physical stopping distance and head coast angle still need measurement.
 
 The specified battery is the Bioenno BLF-1206A 12 V nominal 6 Ah LiFePO4 pack. The software multiplies the ADC voltage by (100 + 22) / 22 = 5.54545 to recover pack voltage. It smooths readings at 10 Hz. Below 11.2 V for one second, it disarms; voltage must recover to at least 12.0 V before re-arming is allowed. A disconnected ADC or an implausible voltage also prevents arming. These thresholds are conservative operating limits, not a battery state-of-charge meter, a charger or a replacement for the pack's protection circuit. Calibrate the ADC against a multimeter before use.
 
@@ -89,12 +96,12 @@ The specified battery is the Bioenno BLF-1206A 12 V nominal 6 Ah LiFePO4 pack. T
 
 All calibration values are in `firmware/include/config.h`. Keep the wheels lifted and the servo horns removed for initial checks.
 
-1. Check 5 V rails with actuator power disabled. Verify that neither DRV8833 SLP nor PCA OE can enable motors during ESP32 reset.
+1. Check5V rails with actuator power disabled. During ESP32 reset verify all three SLP pins and GPIO2 are low, and PCA OE is high.
 2. Measure battery voltage with a multimeter. Read the displayed voltage. Set `PACK_ADC_CORRECTION` to measured voltage divided by displayed voltage, rebuild, and recheck at two battery voltages. Do not lower a cutoff to hide a wiring error.
 3. Leave arm and head commands at zero. Enable actuator power, arm, and hold Arms / head only. The four positional servos must settle near their centres. Fit each horn with its joint centred and no mechanical load, then stop before fitting links. The initial centres are 1500 μs; change `ARM_CENTER_US` in small steps only if needed.
-4. With the head drive belt/linkage disconnected, keep head speed zero and hold Arms / head only. If the head servo creeps, adjust its physical neutral trimmer if present. Otherwise adjust `HEAD_NEUTRAL_US` in 5 μs steps until rotation stops. Disarm between changes. Couple the head only after this check.
+4. Keep the head tyre clear of its track and command zero. GPIO2 and both U11 bridge inputs must remain low. Before attaching the motor, scope AIN1/AIN2 at a low head setting: only one input may carry20kHz PWM. Check both directions and a reversal interval of at least100ms with no PWM. There is no neutral pulse or neutral trimmer.
 5. Start arm circles at radius 2 degrees and 0.10 Hz. Confirm that yaw and pitch are both active. Confirm that neither joint touches a stop. Increase to 8 degrees and 0.40 Hz. The pulse envelope stays within 1200–1800 μs, but mechanical clearance is the limiting factor. Reduce the maximum radius if the actual links require it.
-6. Increase head speed slowly in each direction. `HEAD_MAX_DELTA_US` is 180 μs; the control maps −100…100 to neutral ±180 μs. `HEAD_DIRECTION` reverses the sign. The servo is a speed actuator; the slider is not an angle command.
+6. Turn power off. Set the head mount to light tyre contact, then test in each direction. Increase pressure only enough to turn the freely rotating head. Preserve slip if obstructed. `HEAD_DIRECTION` reverses the sign and `dalek::HEAD_LIMIT` is100/255. Do not raise this ceiling to overcome a jam. The slider is a drive-level command, not an angle or measured speed.
 7. Lift all wheels. A forward command must rotate all four wheels toward forward travel. If one motor is reversed, swap only that motor's two output wires. `LEFT_DIRECTION` and `RIGHT_DIRECTION` reverse an entire side if necessary. Stop and remove actuator power before rewiring.
 8. Play a phrase. The fixed digital gain is 0.28, below the design ceiling of 0.35. MAX98357A hardware gain must be 3 dB as specified in the circuit guide. Do not raise gain above 0.35 with the 8 Ω 1 W speaker and specified logic supply. Digital gain is not a calibrated wattmeter; verify clean sound, supply stability and acceptable speaker temperature.
 
@@ -129,7 +136,7 @@ g++ -std=c++11 -Wall -Wextra -Werror -I include test/test_control.cpp -o $env:TE
 & $env:TEMP\dalek-control-test.exe
 ```
 
-The host C++ test runs the same control-state code used by the ESP32. It checks strict input parsing, boot lockout, expired and replayed leases, reconnect behavior, unhealthy-input disarm, millisecond rollover and reversal delay. The Node test exercises the actual browser script with a simulated DOM and transport. It does not replace a real browser or robot commissioning test.
+The host C++ test runs the same control-state code used by the ESP32. It covers strict parsing, boot lockout, expired/replayed leases, reconnects, unhealthy-input disarm and millisecond rollover. It accepts an 8-degree arm radius and rejects 9 degrees. Head regressions check the PWM ceiling, immediate zero/fault stop, and reversal delay through zero, re-arm and clock rollover. The Node test exercises the actual browser script with a simulated DOM and transport. Hardware routing, timing and stopping still need physical commissioning.
 
 ## Sources
 

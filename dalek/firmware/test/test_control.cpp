@@ -11,6 +11,11 @@ int main() {
     assert(!parseInteger(bad, -150, 150, parsed));
   Controller c;
   Command moving;
+  Command armBoundary;
+  armBoundary.radius = 8;
+  assert(valid(armBoundary));
+  armBoundary.radius = 9;
+  assert(!valid(armBoundary)); // The concealed linkage is only cleared through 8 degrees.
   moving.left = 100;
   moving.head = 75;
   assert(!c.accept(0, 123, 1, moving, true));
@@ -66,5 +71,5 @@ int main() {
   assert(head.tick(100, 0x54u, true) == 5); // Dead time across millis rollover.
   for (uint32_t t = 1000; t < 2000; t += 10) assert(head.tick(1000, t, true) <= HEAD_LIMIT);
   assert(head.ramp.value == HEAD_LIMIT); // Defense in depth for internal callers.
-  puts("PASS: parsing, boot lockout, lease replay, timeout, reconnect, fault interlock, rollover, ramp/reversal; head PWM cap, immediate stop, dead time through zero/re-arm/rollover");
+  puts("PASS: parsing, boot lockout, lease replay, timeout, reconnect, fault interlock, rollover, ramp/reversal; head PWM cap, immediate stop, dead time through zero/re-arm/rollover; concealed arm radius capped at 8 degrees");
 }

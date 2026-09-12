@@ -44,25 +44,25 @@
 <text x="55" y="461" font-family="monospace" font-size="16" font-weight="normal" fill="#004879">GPIO36 (SVP)</text>
 <path d="M315,455 L545,455" stroke="#155a85" stroke-width="2" fill="none"/>
 <text x="555" y="461" font-family="monospace" font-size="16" font-weight="normal" fill="#004879">ACT_OK</text>
-<text x="55" y="485" font-family="monospace" font-size="16" font-weight="normal" fill="#004879">3V3 / GND</text>
+<text x="55" y="485" font-family="monospace" font-size="16" font-weight="normal" fill="#004879">GPIO2</text>
 <path d="M315,479 L545,479" stroke="#155a85" stroke-width="2" fill="none"/>
-<text x="555" y="485" font-family="monospace" font-size="16" font-weight="normal" fill="#004879">U10.VCC / common GND</text>
+<text x="555" y="485" font-family="monospace" font-size="16" font-weight="normal" fill="#004879">HEAD_PWM -&gt; U9.2 + .5</text>
 <rect x="825" y="115" width="725" height="195" rx="6" fill="#f1f7fb" stroke="#46677d" stroke-width="1.5"/>
 <text x="840" y="143" font-family="Arial, sans-serif" font-size="20" font-weight="bold" fill="#10263a">Reserved board connections</text>
 <text x="840" y="171" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">TFT: MOSI19, SCLK18, CS5, DC16, RST23, BL4</text>
 <text x="840" y="195" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">Buttons: GPIO0 and GPIO35; reserve both.</text>
 <text x="840" y="219" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">Onboard battery ADC34 and power14 are NOT pack sense.</text>
-<text x="840" y="243" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">GPIO12 has 10k pull-down: required low boot strap state.</text>
+<text x="840" y="243" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">GPIO12 and GPIO2 each have a 10k boot-safe pull-down.</text>
 <text x="840" y="267" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">GPIO15 connects only to amplifier DIN; no external bias.</text>
-<text x="840" y="291" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">GPIO2, 37, 38 and UART pins: no external connection.</text>
+<text x="840" y="291" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">GPIO37, 38 and UART pins: no external connection.</text>
 <rect x="825" y="340" width="725" height="195" rx="6" fill="#f1f7fb" stroke="#46677d" stroke-width="1.5"/>
 <text x="840" y="368" font-family="Arial, sans-serif" font-size="20" font-weight="bold" fill="#10263a">Hardware stopped on reset</text>
-<text x="840" y="396" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">R1..R4: 10k from each motor input net to GND.</text>
-<text x="840" y="420" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">R5: 10k MOTOR_ENABLE to GND; both SLP pins join it.</text>
-<text x="840" y="444" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">R6: 10k SERVO_DISABLE to3V3 (see sheet03).</text>
-<text x="840" y="468" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">Firmware: SLP low, inputs low, OE high before devices init.</text>
-<text x="840" y="492" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">Arm only after voltage, link and physical switch checks.</text>
-<text x="840" y="516" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">Physical power OFF works even if firmware stops responding.</text>
+<text x="840" y="396" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">R1..R4: 10k from each wheel input net to GND.</text>
+<text x="840" y="420" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">R5: 10k MOTOR_ENABLE to GND; ALL THREE SLP pins join.</text>
+<text x="840" y="444" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">R6: 10k SERVO_DISABLE to3V3; R24: HEAD_PWM to GND.</text>
+<text x="840" y="468" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">Firmware: SLP low, PWM low, OE high before devices init.</text>
+<text x="840" y="492" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">U1.3V3 -&gt; U10.VCC; all GND pins join common ground.</text>
+<text x="840" y="516" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">Physical power OFF removes wheel, head and arm power.</text>
 <rect x="35" y="585" width="725" height="255" rx="6" fill="#f1f7fb" stroke="#46677d" stroke-width="1.5"/>
 <text x="50" y="613" font-family="Arial, sans-serif" font-size="20" font-weight="bold" fill="#10263a">U5 / Adafruit DRV8833 #3297</text>
 <text x="50" y="641" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">LEFT_IN1 -&gt; AIN1 AND BIN1 (INPUTS ONLY)</text>
@@ -101,5 +101,5 @@
 <text x="840" y="1042" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">Swap that motor&#x27;s two leads if its direction is wrong.</text>
 <text x="840" y="1066" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">1A limit protects the driver, not indefinite motor stalls.</text>
 <text x="840" y="1090" font-family="Arial, sans-serif" font-size="17" font-weight="normal" fill="#10263a">Indoor flat surface; no carpet, stairs or sustained wheel jams.</text>
-<text x="35" y="1226" font-family="Arial, sans-serif" font-size="15" font-weight="normal" fill="#10263a">DALEK R1 | 2026-09-11 | Circuit + wiring.csv form one drawing set | Build validation is required</text>
+<text x="35" y="1226" font-family="Arial, sans-serif" font-size="15" font-weight="normal" fill="#10263a">DALEK ROUND / FRICTION | 2026-09-12 | Circuit + wiring.csv form one drawing set | Physical validation required</text>
 </svg>
