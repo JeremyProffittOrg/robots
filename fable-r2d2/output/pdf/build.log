@@ -1,0 +1,5 @@
+PASS: 99 pages, 14,257,116 bytes, 33 figures embedded, 0 missing, 99/99 pages rendered at 60 dpi
+text checks: 317=ok, lazy susan=ok, KB2040=ok, charge port=ok, tip-back=ok
+C:\dev\robots\fable-r2d2\output\pdf\r2d2-assembly-manual.pdf
+sha256 ce78f5a2aeaf0b43763d7b17d1eabc60285eb507cae2b08dcca3f16b9bcfdf66
+MANUAL_EXIT=0

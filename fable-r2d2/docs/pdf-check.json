@@ -1,6 +1,6 @@
 {
-  "pages": 98,
-  "sha256": "a4436b34a3715a5eea5b583e978fa4172e226e5fe07d820798f038d5c3888be2",
+  "pages": 99,
+  "sha256": "ce78f5a2aeaf0b43763d7b17d1eabc60285eb507cae2b08dcca3f16b9bcfdf66",
   "all_pass": true,
   "figures_embedded": [
     "cad/assembly.png",
@@ -45,9 +45,9 @@
     "charge port": true,
     "tip-back": true
   },
-  "bytes": 14233280,
-  "text_characters": 200319,
-  "pages_rendered": 98,
+  "bytes": 14257116,
+  "text_characters": 200328,
+  "pages_rendered": 99,
   "render_dpi": 60,
   "render_errors": [],
   "blank_pages": [],

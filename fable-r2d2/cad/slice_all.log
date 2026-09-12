@@ -1,1 +1,34 @@
 PASS dome: 1243 g, 35.4 h, Success. 
+PASS body_upper: 3115 g, 107.6 h, Success. 
+PASS body_lower: 1939 g, 59.2 h, Success. 
+PASS leg_upper: 612 g, 20.0 h, Success. 
+PASS leg_lower: 315 g, 11.2 h, Success. 
+PASS foot_outer: 681 g, 19.6 h, Success. 
+PASS leg_center: 128 g, 4.2 h, Success. 
+PASS foot_center: 331 g, 9.5 h, Success. 
+PASS head_drive: 81 g, 3.0 h, Success. 
+{
+  "checked_at_utc": "2026-09-12T22:45:18.118579+00:00",
+  "test_type": "Local Bambu Studio CLI slicing of package meshes; no printer connection or physical print",
+  "profiles": {
+    "machine": "Bambu Lab H2D 0.4 nozzle, trimmed to single-nozzle mode (325 x 320 x 320)",
+    "process": "0.20mm Standard @BBL H2D",
+    "overrides": {
+      "wall_loops": "5",
+      "top_shell_layers": "6",
+      "bottom_shell_layers": "6",
+      "sparse_infill_density": "30%",
+      "sparse_infill_pattern": "gyroid",
+      "enable_support": "1",
+      "support_type": "tree(auto)",
+      "support_on_build_plate_only": "0",
+      "brim_type": "no_brim",
+      "skirt_loops": "0"
+    },
+    "bed": "Textured PEI Plate"
+  },
+  "all_pass": true,
+  "total_predicted_mass_g": 10053.9,
+  "total_predicted_time_h": 320.6
+}
+SLICE_EXIT=0

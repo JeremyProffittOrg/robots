@@ -115,24 +115,21 @@ re-litigated mid-run):
 - [x] head-drive — friction drive, spring tension, thumb nut, lift stop, 7 deg release
 - [x] stance — centre leg moved 45 mm behind the body axis and caster trail 35 mm after
   `scripts/stability.py` measured only 3.9 deg of tip-back margin
-- [ ] export-validate — `python scripts/export_cad.py` passes (9/9 PASS as of 12:46);
-  `python scripts/slice_check.py` passes on every STL (body_upper still failing the
-  multi-extruder bed rule; bed centring under test)
+- [x] export-validate — `python scripts/export_cad.py` passes 9/9; `python scripts/slice_check.py`
+  passes 9/9 with no warnings: 10,053.9 g of filament and 320.6 h across the twelve pieces
 
 ### documents — drawings, BOM, manual, wiring, firmware, video
-- [~] drawings — `python scripts/draw_robot.py` writes 25 MATLAB-style PNGs and the ZIP;
-  re-run needed after the body fix, and two defects to correct (piece count says eleven,
-  outer-foot wheels not drawn)
+- [x] drawings — `python scripts/draw_robot.py` writes 25 MATLAB-style PNGs and the ZIP
 - [x] bom-xlsx — `python scripts/build_bom.py` writes `bom/bill-of-materials.xlsx`
   (6 sheets, live formulas, 54 electronics + 33 hardware rows)
 - [~] wiring — `python scripts/electronics.py` writes SVG sheets and `electronics/wiring.csv`
 - [x] firmware — Pi control server and KB2040 CircuitPython; 47 + 44 unit tests pass
   (`docs/firmware.md`); display update to four 8x8 matrices in progress
-- [~] manual — `python scripts/build_manual.py` writes a 98-page
-  `output/pdf/r2d2-assembly-manual.pdf`, all figures embedded; re-run after the body fix
-- [~] video — `python scripts/render_video.py` writes a verified 170 s 1920x1080 H.264+AAC
-  `output/video/r2d2-assembly-and-operation.mp4`; re-run after the body fix
-- [ ] verify-all — `python scripts/verify.py` passes; commit and push to main
+- [x] manual — `python scripts/build_manual.py` writes a 99-page
+  `output/pdf/r2d2-assembly-manual.pdf`, 33 figures embedded, every page rendered
+- [x] video — `python scripts/render_video.py` writes a verified 170 s 1920x1080 H.264+AAC
+  `output/video/r2d2-assembly-and-operation.mp4`
+- [x] verify-all — `python scripts/verify.py` ALL PASS on all nine checks
 - [ ] deliver — upload the video to S3, presign 7 days, email it with the PDF attached
 
 ## Stop conditions (only these)
@@ -162,3 +159,10 @@ re-litigated mid-run):
   three need one more run against the final meshes.
 - 2026-09-12 15:15 Session limit reset. Body review fixes and the slicer bed-centring are the
   remaining blockers before the final regeneration.
+- 2026-09-12 17:20 Body review fixes landed (4 blockers, 14 majors, plus two faults the fix
+  itself found: deleted rod columns and plugged floor openings). Corrected a sign error in the
+  centre-leg flange plane that put the flange 27.8 mm inside the body floor, and clipped the
+  leg collar clear of the caster stem. All seven interference checks empty or zero-volume.
+- 2026-09-12 18:20 Full regeneration against the final meshes: 9/9 export, 9/9 slice with no
+  warnings (10,053.9 g / 320.6 h), 25 drawings, 170 s video, 99-page manual, BOM spreadsheet.
+  `python scripts/verify.py` ALL PASS.
