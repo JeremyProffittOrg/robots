@@ -630,16 +630,16 @@ simulated hardware.
 
 ```
 $ python -m unittest discover -s firmware/kb2040
-Ran 119 tests in 0.621s
+Ran 120 tests in 1.225s
 OK
 $ python -m unittest discover -s firmware/pi
-Ran 66 tests in 0.046s
+Ran 66 tests in 0.060s
 OK
 $ python scripts/electronics.py
 PASS: 5 SVG sheets parse, wiring.csv has 184 wires, all 20 KB2040 signal pins match firmware/kb2040/code.py, and the RP2040 PWM/ADC plan is legal
 $ python -c "import sys; sys.path.insert(0, 'scripts'); import verify; verify.check_wiring(); verify.check_firmware()"
 PASS wiring: 184 wires; KB2040 pins in wiring not in code.py: []
-PASS firmware: firmware/kb2040: Ran 119 tests in 0.619s, exit 0; firmware/pi: Ran 66 tests in 0.046s, exit 0; app.js syntax OK
+PASS firmware: firmware/kb2040: Ran 120 tests in 0.849s, exit 0; firmware/pi: Ran 66 tests in 0.071s, exit 0; app.js syntax OK
 ```
 
 The original 47 KB2040 and 44 Pi tests are unchanged and still pass inside those
@@ -654,9 +654,10 @@ open or both closed, one lock not seated at a parked endpoint, a seated reading
 between receivers, and a lock released while lifting; drive and dome refused
 during a change, on two feet, and in fault and unknown states; fault latch, clear
 refused while inconsistent, and no restart without a fresh press; the KB2040 pin
-plan; and the centre-foot feed (wheel speed within 5 % of the CAD rolling travel
-over each tilt, backward on retract and forward on deploy, zero while the foot is
-in the air, after a hold, and after a stall).
+plan; and the centre-foot feed (burst-driven wheel travel within 10 % of the CAD
+rolling travel over each tilt and never more than 20 mm ahead or behind, never
+below 150 permille, backward on retract and forward on deploy, zero while the foot
+is in the air, after a hold, and after a stall).
 
 Not verified: nothing here has driven an actuator, moved a servo or read a real
 switch. The mechanism constants come from the stance-mechanism CAD values of
@@ -698,8 +699,8 @@ values (section 11.4).
 
 A 12 V Actuonix P16-100-256-12-P, parallel to the centre-leg guide, sets the
 stroke `s` (mm from fully closed): **5.0 mm** two feet (wheels 25 mm up, tilt 0),
-**31.6 mm** centre-foot touchdown (tilt still 0), **65.1 mm** three feet (tilt 18
-deg; hard mechanical stop at 68.0 mm). Two shoulder locks, left and right, each have a spring-return pin in the body
+**33.9 mm** centre-foot touchdown (tilt still 0), **81.3 mm** three feet (tilt 18
+deg; hard mechanical stop at 86.0 mm). Two shoulder locks, left and right, each have a spring-return pin in the body
 and two receivers in the leg: tilt 0 (seated for every `s` up to touchdown) and tilt
 18. An MG995 servo per lock pulls its pin; an Omron SS-01GL per lock, wired NO + NC,
 reads "seated". The lock state comes only from those switches. All values live in
@@ -709,28 +710,31 @@ the `MECHANISM CONSTANTS` block of `firmware/kb2040/stance.py`.
 
 | State | Meaning | Ground drive | Dome |
 | ----- | ------- | ------------ | ---- |
-| `THREE_FOOT` | at 65.1 mm, both locks seated | allowed | allowed |
+| `THREE_FOOT` | at 81.3 mm, both locks seated | allowed | allowed |
 | `TWO_FOOT` | at 5.0 mm, both locks seated, stationary | refused | allowed |
 | `RETRACTING` / `DEPLOYING` | a change in progress | refused | refused |
 | `HELD` | stopped between stances, or not yet confirmed | refused | refused |
 | `FAULT` | latched; needs `C` | refused | refused |
 
 Retract: `UNLOCKING` (actuator stopped, both releases pulled, wait until neither
-switch reads seated) -> `TILT` (full duty toward 32.8 mm; the releases drop once
-`s` <= 45.9 mm so the pins ride the ring face) -> `LOCKING` (150 ms settle, then a
-20 % creep through 31.6 mm until both switches read seated) -> `LIFT` (both locks
+switch reads seated) -> `TILT` (full duty toward 35.1 mm; the releases drop once
+`s` <= 54.5 mm so the pins ride the ring face) -> `LOCKING` (150 ms settle, then a
+20 % creep through 33.9 mm until both switches read seated) -> `LIFT` (both locks
 must stay seated, full duty to 5.0 mm) -> `TWO_FOOT`.
 
-Deploy: `LOWER` (locked, to 31.6 mm) -> `UNLOCKING` -> `TILT` (releases held until
-`s` >= 38.7 mm) -> `LOCKING` (creep through 65.1 mm) -> `THREE_FOOT`.
+Deploy: `LOWER` (locked, to 33.9 mm) -> `UNLOCKING` -> `TILT` (releases held until
+`s` >= 44.4 mm) -> `LOCKING` (creep through 81.3 mm) -> `THREE_FOOT`.
 
 **Centre-foot feed.** Between touchdown and three feet the centre foot rolls on the
-floor: 124.9 mm of travel over the 33.5 mm tilt stroke, 10.3 mm per mm of stroke
-just past touchdown and 2.4 mm per mm at three feet (table `CENTRE_FOOT_TRAVEL`,
+floor: 138.7 mm of travel over the 47.4 mm tilt stroke, 6.5 mm per mm of stroke
+just past touchdown and 2.0 mm per mm at three feet (table `CENTRE_FOOT_TRAVEL`,
 from the CAD kinematics). The mechanism force check assumes almost no floor drag,
 so during `TILT` and `LOCKING` the KB2040 drives the centre-foot motors at
 `dy/ds x measured actuator speed`, forward while deploying and backward while
-retracting, and stops them at once whenever the actuator stops. The operator's
+retracting, and stops them at once whenever the actuator stops. That command is
+about 10-47 permille, below the 150 permille at which a TT gearbox reliably turns,
+so it goes out as 100 ms bursts at 150 permille with the same average speed
+(`BurstFeed`). The mechanism tolerates about 8 % floor drag between bursts. The operator's
 centre channel stays refused; the feed is reported in the `st` line.
 
 ### 11.3 Interlocks and faults
@@ -749,8 +753,8 @@ centre channel stays refused; the feed is reported in the `st` line.
   raised without both locks seated, a lock seated between receivers, a parked
   stance without both locks, or a lock released while lifting), `LOCK_TIMEOUT`
   (pins not out within 400 ms, or not seated 3 s after the creep), `STALL` (under
-  0.3 mm in 1 s while driven), `TRAVEL_TIMEOUT` (LIFT/LOWER 16 s, TILT/LOCKING 21 s),
-  `DRIFT`, `OVERTRAVEL` (beyond 3.5 or 66.6 mm), `REVERSED_FEEDBACK`.
+  0.3 mm in 1 s while driven), `TRAVEL_TIMEOUT` (LIFT/LOWER 18 s, TILT/LOCKING 29 s),
+  `DRIFT`, `OVERTRAVEL` (beyond 3.5 or 82.8 mm), `REVERSED_FEEDBACK`.
 * `C` succeeds only when fresh sensors are consistent, and the stance control must
   still be released and pressed again.
 
@@ -760,14 +764,15 @@ centre channel stays refused; the feed is reported in the `st` line.
    `POT_ZERO_MV` and `POT_FULL_MV` (the pot tolerance is +/-50 %).
 2. Calibrate `RELEASE_US` per side on the built lock (nominal 16.3 deg, 1321 us left
    and 1679 us right): 5.8 mm of pin pull with no servo stall; keep `ENGAGE_US` with
-   the horn parked 1 mm clear of the knob. The release force needs the servo's 6.0 V
-   rating: measure rail B at the servo plug under the pull.
+   the horn parked 1 mm clear of the knob. At 6.0 V the release has 19 % force
+   margin, and the check still passes at 4.8 V; measure rail B at the servo plug under
+   the pull and keep it at or below 6.0 V.
 3. Check each SS-01GL at 3.3 V and 1 mA (below Omron's 5 V 1 mA reference load):
    `ss` must read `EE` seated and `RR` pulled, and `X` with either wire unplugged.
 4. With the wheels off the floor, time one creep through each receiver. If a pin
    does not catch, lower `SEEK_DUTY_PERCENT`; if the creep trips `STALL`, raise it.
-5. Centre-foot feed. The kinematic command is only 12-75 permille (1.2-7.5 % duty),
-   below the 15 % minimum duty at which a TT gearbox reliably turns (`mixing.MIN_DUTY`).
-   On a real floor, watch the centre wheels during a deploy: if they do not roll,
-   the foot is dragged and the force check assumption is not met. Trim
-   `CENTRE_FEED_GAIN`, or stop and revisit the mechanism, before regular use.
+5. Centre-foot feed. The kinematic command is about 10-47 permille, so it goes out
+   as 100 ms bursts at 150 permille (`WHEEL_MIN_PERMILLE`, `WHEEL_BURST_MS`). On a real
+   floor, watch the centre wheels during a deploy: every burst must turn them. The
+   mechanism tolerates about 8 % floor drag between bursts and jams above about 14 %.
+   Trim `CENTRE_FEED_GAIN` or the burst values before regular use.

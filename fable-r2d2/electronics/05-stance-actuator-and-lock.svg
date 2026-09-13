@@ -28,8 +28,8 @@
 <rect x="826" y="150" width="6" height="108" rx="3" fill="#c62828"/>
 <text x="846" y="180" font-family="Arial, Helvetica, sans-serif" font-size="19" font-weight="bold" fill="#12283d" text-anchor="start">ACT1  Actuonix P16-100-256-12-P</text>
 <text x="846" y="204" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" fill="#12283d" text-anchor="start">100 mm stroke, 12 V, 1.0 A stall, 20 % duty</text>
-<text x="846" y="224" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" fill="#12283d" text-anchor="start">two-foot 5.0, touchdown 31.6, three-foot 65.1 mm</text>
-<text x="846" y="244" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" fill="#12283d" text-anchor="start">4.8 mm/s no load: 13 s per change</text>
+<text x="846" y="224" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" fill="#12283d" text-anchor="start">two-foot 5.0, touchdown 33.9, three-foot 81.3 mm</text>
+<text x="846" y="244" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" fill="#12283d" text-anchor="start">4.8 mm/s no load: 16 s per change</text>
 <rect x="36" y="320" width="780" height="334" rx="7" fill="#ffffff" stroke="#2e7d32" stroke-width="1.6"/>
 <text x="50" y="350" font-family="Arial, Helvetica, sans-serif" font-size="19" font-weight="bold" fill="#12283d" text-anchor="start">A2  KB2040 pins used by the stance change</text>
 <text x="50" y="376" font-family="Consolas, monospace" font-size="14" font-weight="normal" fill="#00507f" text-anchor="start">D8</text>
@@ -107,7 +107,7 @@
 <text x="56" y="994" font-family="Arial, Helvetica, sans-serif" font-size="15" font-weight="normal" fill="#12283d" text-anchor="start">Servo V+ (red) &lt;- U7 6 V rail B; servo GND (brown) -&gt; TB2 star ground.</text>
 <text x="56" y="1016" font-family="Arial, Helvetica, sans-serif" font-size="15" font-weight="normal" fill="#12283d" text-anchor="start">Engage 1500/1500 us; release 1321 us left, 1679 us right (mirrored); no pulse after 1000 ms.</text>
 <text x="56" y="1038" font-family="Arial, Helvetica, sans-serif" font-size="15" font-weight="normal" fill="#12283d" text-anchor="start">The pins are spring return: losing servo power or signal lets them seat.</text>
-<text x="56" y="1060" font-family="Arial, Helvetica, sans-serif" font-size="15" font-weight="normal" fill="#12283d" text-anchor="start">Needs 6.0 V at the plug (10 kg-cm rating).  Calibrate for 5.8 mm of pin pull.</text>
+<text x="56" y="1060" font-family="Arial, Helvetica, sans-serif" font-size="15" font-weight="normal" fill="#12283d" text-anchor="start">6.0 V: 19 % release-force margin (passes at 4.8 V).  Calibrate for 5.8 mm of pull.</text>
 <rect x="856" y="894" width="788" height="180" rx="7" fill="#f2f7fb" stroke="#1565c0" stroke-width="1.6"/>
 <rect x="856" y="894" width="6" height="180" rx="3" fill="#1565c0"/>
 <text x="876" y="924" font-family="Arial, Helvetica, sans-serif" font-size="19" font-weight="bold" fill="#12283d" text-anchor="start">R9 / R10  KB2040 battery sense on A1</text>
@@ -125,7 +125,7 @@
 <text x="56" y="1198" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" fill="#12283d" text-anchor="start">Hold-to-run: the page repeats T 2 or T 3 every 50 ms.  Letting go, a 0.5 s phone or Pi heartbeat loss, S or E 0 stops the actuator and holds.</text>
 <text x="56" y="1218" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" fill="#12283d" text-anchor="start">Latched faults: POWER, FEEDBACK, LOCK_SENSOR, LOCK_DISAGREES, STALL, TRAVEL_TIMEOUT, LOCK_TIMEOUT, DRIFT, OVERTRAVEL, REVERSED_FEEDBACK.  Clear with C.</text>
 <text x="56" y="1238" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" fill="#12283d" text-anchor="start">A clear succeeds only if fresh sensors are consistent, and the stance control must be released and pressed again.  Nothing ever restarts by itself.</text>
-<text x="56" y="1258" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" fill="#12283d" text-anchor="start">Centre-foot feed: during TILT and LOCKING the centre wheels roll at the CAD ground speed (dy/ds x measured actuator speed); they stop when the actuator stops.</text>
+<text x="56" y="1258" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" fill="#12283d" text-anchor="start">Centre-foot feed: during TILT and LOCKING the centre wheels roll at the CAD ground speed (dy/ds x measured actuator speed), as 100 ms bursts at 15 % duty below that; they stop with the actuator.</text>
 <text x="56" y="1278" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" fill="#12283d" text-anchor="start">Budget: F7 carries 1.0 A stall.  Rail B carries 3 A of servo stall only while its motors are refused.  3V3 pad load under 3 mA.</text>
 <line x1="36" y1="1416" x2="1644" y2="1416" stroke="#5b7c99" stroke-width="1.2"/>
 <text x="36" y="1438" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" fill="#5b7c99" text-anchor="start">fable-r2d2 electrical set, revision D, 2026-09-12  |  sheets 01-05 and electronics/wiring.csv are one drawing set  |  pin names are the final firmware names in firmware/kb2040/code.py  |  not yet validated on hardware</text>

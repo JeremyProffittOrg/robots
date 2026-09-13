@@ -1151,7 +1151,7 @@ def sheet_stance():
         "Engage {0}/{1} us; release {2} us left, {3} us right (mirrored); no pulse after {4} ms.".format(
             fw.ENGAGE_US[0], fw.ENGAGE_US[1], fw.RELEASE_US[0], fw.RELEASE_US[1], fw.ENGAGE_HOLD_MS),
         "The pins are spring return: losing servo power or signal lets them seat.",
-        "Needs 6.0 V at the plug (10 kg-cm rating).  Calibrate for 5.8 mm of pin pull.",
+        "6.0 V: 19 % release-force margin (passes at 4.8 V).  Calibrate for 5.8 mm of pull.",
     ], COLOURS["6v"])
     ratio = (fw.BATTERY_TOP_OHMS + fw.BATTERY_BOTTOM_OHMS) / float(fw.BATTERY_BOTTOM_OHMS)
     s.box(856, top, 788, "R9 / R10  KB2040 battery sense on A1", [
@@ -1178,7 +1178,7 @@ def sheet_stance():
         "A clear succeeds only if fresh sensors are consistent, and the stance control must be released and "
         "pressed again.  Nothing ever restarts by itself.",
         "Centre-foot feed: during TILT and LOCKING the centre wheels roll at the CAD ground speed "
-        "(dy/ds x measured actuator speed); they stop when the actuator stops.",
+        "(dy/ds x measured actuator speed), as 100 ms bursts at 15 % duty below that; they stop with the actuator.",
         "Budget: F7 carries 1.0 A stall.  Rail B carries 3 A of servo stall only while its motors are refused.  "
         "3V3 pad load under 3 mA.",
     ], COLOURS["12v"], style="small")
@@ -1326,9 +1326,12 @@ def calculations():
                 fw.foot_ground_rate(fw.CONTACT_MM + 0.1), fw.ACTUATOR_NO_LOAD_SPEED_MM_S, 1),
             "permille_at_three_feet_150N": fw.centre_feed_permille(
                 fw.foot_ground_rate(fw.THREE_FOOT_MM - 0.1), 3.4, 1),
-            "pi_minimum_moving_permille": 150,
-            "note": "The kinematic command is below the TT gearbox minimum duty; whether the wheels "
-                    "turn at it is a commissioning check, not a verified result.",
+            "burst_permille": fw.WHEEL_MIN_PERMILLE,
+            "burst_ms": fw.WHEEL_BURST_MS,
+            "mechanism_drag_tolerance_percent": 8,
+            "note": "Below the TT gearbox minimum duty the feed goes out as bursts at that duty with the "
+                    "same average; whether each burst turns the wheels on a real floor is a commissioning "
+                    "check, not a verified result.",
         },
         "transition_worst_case_draw_from_12V_A": transition_from_12V_A,
         "U7_rail_note": "Rail B carries 3 A of motors or, during a stance change, 3 A of servo "

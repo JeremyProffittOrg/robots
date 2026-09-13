@@ -12,6 +12,8 @@ Between touchdown and three feet the centre foot rolls forward on the floor.
 The tilt force check assumes almost no floor drag, so the centre wheels are
 driven at the kinematic ground speed (CAD table below times the measured
 actuator speed) during TILT and LOCKING, and stop whenever the actuator stops.
+A command below the TT gearbox's minimum turning duty is delivered as short
+bursts at that duty with the same average speed (``BurstFeed``).
 
 Two shoulder locks, one per outer leg, mirror images.  Each is a spring-return
 plunger pin in the body with two receivers in its leg: one at tilt 0 (seated for
@@ -42,7 +44,8 @@ state machine in fable-r2d3 ``firmware/include/stance.h`` to two locks.
 """
 
 # ===== MECHANISM CONSTANTS =====
-# Source: stance-mechanism design values for the fable-r2d2 CAD, 2026-09-12
+# Source: stance-mechanism design values for the fable-r2d2 CAD, 2026-09-12,
+# third geometry (30 deg guide, stowed hinge at y 34).
 # (actuator datasheet Actuonix P16 Rev B, Omron SS series, Adafruit 1142).
 # Replace every value in this block together if the CAD changes them.
 
@@ -53,11 +56,11 @@ ACTUATOR_STALL_A = 1.0              # at 12 V
 ACTUATOR_REST_PER_RUN = 4           # 20 % duty: 4 ms rest per ms of travel
 
 TWO_FOOT_MM = 5.0                   # two-foot stance: wheels 25 mm above the floor
-CONTACT_MM = 31.6                   # centre-foot touchdown at tilt 0; tilt-0 receivers
-THREE_FOOT_MM = 65.1                # tilt 18.00 deg (CAD 65.07); tilt-18 receivers
+CONTACT_MM = 33.9                   # centre-foot touchdown at tilt 0 (CAD 33.87); tilt-0 receivers
+THREE_FOOT_MM = 81.3                # tilt 18.00 deg (CAD 81.29); tilt-18 receivers
 COMMAND_MIN_MM = 0.7                # never command outside 0.7 .. 99.3 mm
 COMMAND_MAX_MM = 99.3
-HARD_STOP_MM = 68.0                 # carriage on the bottom shaft boss
+HARD_STOP_MM = 86.0                 # carriage on the bottom shaft bosses
 TWO_FOOT_TILT_DEG = 0.0
 THREE_FOOT_TILT_DEG = 18.0
 
@@ -72,12 +75,12 @@ LOCK_WINDOW_MM = 1.5                # band round each receiver where either lock
 SEEK_MM = 1.2                       # TILT stops this far before the far receiver
 OVERSHOOT_MM = 1.0                  # LOCKING creeps this far past the nominal receiver
 OVERTRAVEL_MM = 1.5                 # beyond an endpoint by more than this is a fault
-RELEASE_DROP_DEPLOY_MM = 38.7       # deploy: pins clear of the tilt-0 bores at or above this
-RELEASE_DROP_RETRACT_MM = 45.9      # retract: pins clear of the tilt-18 bores at or below this
+RELEASE_DROP_DEPLOY_MM = 44.4       # deploy: pins clear of the tilt-0 bores at or above this
+RELEASE_DROP_RETRACT_MM = 54.5      # retract: pins clear of the tilt-18 bores at or below this
 PROGRESS_MM = 0.3                   # stall: less than this ...
 PROGRESS_MS = 1000                  # ... within this many ms while driven
-LIFT_TIMEOUT_MS = 16000             # LIFT / LOWER phase, 26.6 mm at 2.5 mm/s x 1.5
-TILT_TIMEOUT_MS = 21000             # TILT and LOCKING phase, 33.5 mm at 2.5 mm/s x 1.5 = 20.1 s
+LIFT_TIMEOUT_MS = 18000             # LIFT / LOWER phase, 28.9 mm at 2.5 mm/s x 1.5 = 17.3 s
+TILT_TIMEOUT_MS = 29000             # TILT and LOCKING phase, 47.4 mm at 2.5 mm/s x 1.5 = 28.4 s
 LOCK_SETTLE_MS = 150                # pin drop time before the LOCKING creep starts
 LOCK_RELEASE_TIMEOUT_MS = 400       # 0.3 s pin pull plus the switch debounce
 LOCK_SEAT_TIMEOUT_MS = 3000         # after the creep ends, both pins must read seated
@@ -93,22 +96,24 @@ ENGAGE_US = (1500, 1500)            # left, right: horn parked 1 mm clear of the
 RELEASE_US = (1321, 1679)           # left, right: 16.3 deg toward the knob at ~11 us/deg, mirrored
 ENGAGE_HOLD_MS = 1000               # engage pulse is held this long, then no pulse
 SERVO_PERIOD_US = 20000             # 50 Hz
-SERVO_SUPPLY_V = 6.0                # release-force check uses the MG995 10 kg-cm rating at 6 V
+SERVO_SUPPLY_V = 6.0                # 19 % release-force margin at 6.0 V; the check still passes at 4.8 V
 
 # Centre-foot ground travel, from the CAD kinematics (scripts/stability.py
 # Stance.at_center_foot, caster yaw 0, geometry of 2026-09-12): (stroke mm,
-# foot world y mm).  124.9 mm of rolling over the 33.5 mm tilt stroke; dy/ds is
-# 10.3 just past touchdown and 2.4 at three feet.
+# foot world y mm).  138.7 mm of rolling over the 47.4 mm tilt stroke; dy/ds is
+# 6.5 just past touchdown and 2.0 at three feet.
 CENTRE_FOOT_TRAVEL = (
-    (31.604, -3.901), (31.854, -1.333), (32.104, 1.054), (32.604, 5.412), (33.104, 9.349),
-    (33.604, 12.970), (34.604, 19.507), (35.604, 25.357), (37.604, 35.661), (39.604, 44.692),
-    (42.604, 56.667), (45.604, 67.336), (49.604, 80.154), (53.604, 91.808), (57.604, 102.594),
-    (61.604, 112.703), (65.070, 121.014),
+    (33.868, 13.437), (34.118, 15.066), (34.368, 16.645), (34.868, 19.670), (35.368, 22.540),
+    (35.868, 25.278), (36.868, 30.423), (37.868, 35.205), (39.868, 43.944), (41.868, 51.853),
+    (44.868, 62.598), (47.868, 72.356), (51.868, 84.248), (55.868, 95.180), (59.868, 105.376),
+    (63.868, 114.987), (68.868, 126.336), (73.868, 137.083), (77.868, 145.320), (81.290, 152.147),
 )
 WHEEL_DIAMETER_MM = 63.0            # Adafruit 3766 wheel
 TT_NO_LOAD_RPM = 200.0              # Adafruit 3777 TT motor at 6 V
 CENTRE_FEED_GAIN = 1.0              # commissioning trim on the kinematic wheel command
 SPEED_WINDOW_MS = 250               # actuator speed is measured over this window
+WHEEL_MIN_PERMILLE = 150            # TT gearbox minimum turning duty (firmware/pi/mixing.py MIN_DUTY)
+WHEEL_BURST_MS = 100                # below that duty, the feed is sent as bursts this long
 
 # ===== END MECHANISM CONSTANTS =====
 
@@ -314,6 +319,57 @@ def centre_feed_permille(rate, speed_mm_s, direction, gain=CENTRE_FEED_GAIN,
     if value < -1000:
         return -1000
     return value
+
+
+class BurstFeed:
+    """Delivers a small wheel command as bursts at the minimum turning duty.
+
+    A command at or above ``minimum`` permille passes straight through.  Below
+    it, the command is integrated, and each time a full burst's worth has built
+    up the output runs at ``minimum`` for ``burst_ms``: the average matches the
+    command, and the gearbox never sits at a duty too low to turn.  A zero
+    command or a reversal stops the output at once and starts over.
+    """
+
+    def __init__(self, minimum=WHEEL_MIN_PERMILLE, burst_ms=WHEEL_BURST_MS):
+        self.minimum = minimum
+        self.burst_ms = burst_ms
+        self.output = 0
+        self._sign = 0
+        self._debt = 0.0
+        self._burst_left = 0
+
+    def reset(self):
+        self.output = 0
+        self._sign = 0
+        self._debt = 0.0
+        self._burst_left = 0
+
+    def update(self, wanted, dt_ms):
+        if wanted == 0:
+            self.reset()
+            return 0
+        sign = 1 if wanted > 0 else -1
+        if sign != self._sign:
+            self.reset()
+            self._sign = sign
+        magnitude = abs(wanted)
+        if magnitude >= self.minimum:
+            self._debt = 0.0
+            self._burst_left = 0
+            self.output = wanted
+            return self.output
+        self._debt += magnitude * dt_ms
+        quantum = self.minimum * self.burst_ms
+        if self._burst_left <= 0 and self._debt >= quantum:
+            self._burst_left = self.burst_ms
+            self._debt -= quantum
+        if self._burst_left > 0:
+            self._burst_left -= dt_ms
+            self.output = sign * self.minimum
+        else:
+            self.output = 0
+        return self.output
 
 
 class ContactPair:

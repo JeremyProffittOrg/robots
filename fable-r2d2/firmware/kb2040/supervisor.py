@@ -60,6 +60,8 @@ class Supervisor:
         self.last_status_ms = now - STATUS_PERIOD_MS
         self.drive_idle = True
         self.centre_feed = 0
+        self.burst = stance.BurstFeed()
+        self._last_tick_ms = now
         self.outputs = [0, 0, 0, 0]
         self.hal.set_enabled(False)
 
@@ -180,6 +182,7 @@ class Supervisor:
             outputs[CENTRE] = self.centre_feed
         else:
             self.centre_feed = 0
+            self.burst.reset()
         if not self.enabled:
             outputs = [0, 0, 0, 0]
         self.outputs = outputs
@@ -197,6 +200,12 @@ class Supervisor:
 
     def tick(self, now):
         """One 10 ms control tick.  Serial input must already have been fed."""
+        dt = now - self._last_tick_ms
+        self._last_tick_ms = now
+        if dt < 0:
+            dt = 0
+        elif dt > 50:
+            dt = 50
         position = stance.pot_position_mm(self.hal.read_position_mv(), self.limits)
         self.lock.update(now, self.hal.read_lock_contacts())
         power = self.battery.update(now, self.hal.read_battery_mv())
@@ -220,17 +229,16 @@ class Supervisor:
                 self.timed_out = True
                 self.drive.hard_stop()
                 self.centre_feed = 0
+                self.burst.reset()
                 self.outputs = [0, 0, 0, 0]
                 self.hal.coast_all()
                 self.send(protocol.format_error("heartbeat timeout, motors coasted"))
         else:
             self._gate_drive()
             self.drive.tick()
-            wanted = self.stance.centre_permille
-            if wanted == 0:
-                self.centre_feed = 0  # the wheels stop at once when the actuator stops
-            else:
-                self.centre_feed = protocol.ramp_step(self.centre_feed, wanted, protocol.RAMP_STEP)
+            # Below the gearbox minimum duty the feed goes out as bursts; it stops
+            # at once when the actuator stops.
+            self.centre_feed = self.burst.update(self.stance.centre_permille, dt)
             self._push_drive()
 
         self.hal.drive_actuator(self.stance.actuator)

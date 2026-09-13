@@ -25,8 +25,8 @@ L = stance.Limits()
 TWO_FOOT_POS = L.two_foot_mm
 CONTACT_POS = L.contact_mm
 RECEIVER_THREE = L.three_foot_mm + 0.2  # real receiver slightly off nominal: exercises the seek
-BAND_CONTACT = 0.05  # 0.1 mm radial pin clearance at 2.2 deg/mm
-BAND_THREE = 0.3     # the same clearance at 0.31 deg/mm
+BAND_CONTACT = 0.1   # 0.1 mm radial pin clearance (0.10 deg) at 1.0 deg/mm
+BAND_THREE = 0.5     # the same clearance at 0.20 deg/mm
 
 
 class Pin:
@@ -480,7 +480,7 @@ class TestBoot(unittest.TestCase):
         rig.run(stance.ENGAGE_HOLD_MS)
         self.assertEqual(rig.plant.release_us, [0, 0])
         status = rig.last_status()
-        self.assertTrue(status.startswith("ss THREE_FOOT NONE NONE 653 EE 12600 1 1 1 0 "), status)
+        self.assertTrue(status.startswith("ss THREE_FOOT NONE NONE 815 EE 12600 1 1 1 0 "), status)
         self.assertEqual(rig.s.tilt_deg(), 18.0)
 
     def test_boot_on_two_feet(self):
@@ -625,12 +625,12 @@ class TestTransitions(unittest.TestCase):
 class TestCentreFootFeed(unittest.TestCase):
     def test_ground_rate_follows_the_cad_table(self):
         table = stance.CENTRE_FOOT_TRAVEL
-        self.assertEqual(stance.foot_ground_rate(31.0), 0.0)
+        self.assertEqual(stance.foot_ground_rate(33.0), 0.0)
         self.assertEqual(stance.foot_ground_rate(None), 0.0)
-        self.assertAlmostEqual(stance.foot_ground_rate(31.7), 10.27, places=2)
-        self.assertAlmostEqual(stance.foot_ground_rate(64.0), 2.40, places=2)
-        self.assertAlmostEqual(stance.foot_ground_rate(66.0), 2.40, places=2)  # creep past the end
-        self.assertAlmostEqual(table[-1][1] - table[0][1], 124.9, places=1)
+        self.assertAlmostEqual(stance.foot_ground_rate(34.0), 6.52, delta=0.01)
+        self.assertAlmostEqual(stance.foot_ground_rate(80.0), 1.995, delta=0.01)
+        self.assertAlmostEqual(stance.foot_ground_rate(82.5), 1.995, delta=0.01)  # creep past the end
+        self.assertAlmostEqual(table[-1][1] - table[0][1], 138.7, places=1)
         self.assertAlmostEqual(stance.FOOT_FULL_SPEED_MM_S, 659.7, places=1)
 
     def test_feed_permille(self):
@@ -639,18 +639,35 @@ class TestCentreFootFeed(unittest.TestCase):
         self.assertEqual(stance.centre_feed_permille(10.0, 0.0, 1), 0)
         self.assertEqual(stance.centre_feed_permille(500.0, 100.0, 1), 1000)
 
+    def test_burst_feed_averages_below_the_minimum_duty(self):
+        burst = stance.BurstFeed(150, 100)
+        outputs = [burst.update(32, 10) for _ in range(1000)]
+        self.assertEqual(set(outputs), {0, 150})
+        self.assertAlmostEqual(sum(outputs) / len(outputs), 32, delta=1.5)
+        self.assertEqual(burst.update(-40, 10), 0)        # a reversal starts over
+        self.assertEqual(burst.update(0, 10), 0)
+        self.assertEqual(burst.update(220, 10), 220)      # at or above the minimum: continuous
+        self.assertEqual(burst.update(-1000, 10), -1000)
+        for _ in range(20):
+            burst.update(140, 10)
+        self.assertEqual(burst.update(0, 10), 0)          # stops at once
+
     def check_tracking(self, rig, sign):
         steady = [sample for sample in rig.plant.feed_samples
                   if sample[0] == stance.TILT and abs(sample[2]) > 1.0]
         self.assertGreater(len(steady), 500)
-        steady = steady[40:]  # skip the speed window and the ramp at the start of TILT
+        steady = steady[40:]  # skip the speed window at the start of TILT
+        minimum = stance.WHEEL_MIN_PERMILLE * stance.FOOT_FULL_SPEED_MM_S / 1000.0
+        wheel_mm = kinematic_mm = gap = 0.0
         for _phase, wheel, kinematic in steady:
-            self.assertEqual(wheel > 0, sign > 0)
-        wheel_travel = sum(sample[1] for sample in steady)
-        kinematic_travel = sum(sample[2] for sample in steady)
-        self.assertAlmostEqual(wheel_travel / kinematic_travel, 1.0, delta=0.05)
-        worst = max(abs(wheel - kinematic) for _phase, wheel, kinematic in steady)
-        self.assertLess(worst, 12.0)  # mm/s; wheel command resolution is 0.66 mm/s per permille
+            if wheel:
+                self.assertEqual(wheel > 0, sign > 0)
+                self.assertGreaterEqual(abs(wheel), minimum - 0.01)  # never a stalling duty
+            wheel_mm += wheel / 100.0
+            kinematic_mm += kinematic / 100.0
+            gap = max(gap, abs(wheel_mm - kinematic_mm))
+        self.assertAlmostEqual(wheel_mm / kinematic_mm, 1.0, delta=0.10)
+        self.assertLess(gap, 20.0)  # mm: within about two 100 ms bursts (9.9 mm each)
 
     def test_centre_wheels_roll_back_while_retracting(self):
         rig = Rig()
@@ -673,10 +690,11 @@ class TestCentreFootFeed(unittest.TestCase):
         rig.request = stance.REQUEST_TWO_FOOT
         self.assertTrue(rig.until_phase(stance.TILT, 2000))
         rig.run(3000)
-        feed = rig.plant.channels[2]
-        self.assertLess(feed, 0)
-        status = [text for text in rig.lines if text.startswith("st ")][-1].split()
-        self.assertLess(int(status[4]), 0)
+        self.assertTrue(rig.run_until(lambda: rig.plant.channels[2] != 0, 2000))
+        self.assertLess(rig.plant.channels[2], 0)
+        rig.core.send_status(rig.t)
+        fields = [text for text in rig.lines if text.startswith("st ")][-1].split()
+        self.assertEqual(int(fields[4]), rig.plant.channels[2])
         rig.plant.stalled = True
         rig.run(L.progress_ms + 30)
         self.assertEqual(rig.s.fault, stance.STALL)
@@ -726,6 +744,7 @@ class TestCommandLoss(unittest.TestCase):
         rig.request = stance.REQUEST_TWO_FOOT
         self.assertTrue(rig.until_phase(stance.TILT, 2000))
         rig.run(2000)
+        self.assertTrue(rig.run_until(lambda: rig.plant.channels[2] != 0, 2000))
         self.assertLess(rig.plant.channels[2], 0)           # centre wheels rolling back with the tilt
         rig.link = False
         rig.run(protocol.HEARTBEAT_MS + 60)
