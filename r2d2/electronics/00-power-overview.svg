@@ -8,7 +8,7 @@
 <text x="105.0" y="176" font-family="sans-serif" font-size="18" text-anchor="middle" fill="#142337">LiFePO4</text>
 <rect x="240" y="115" width="100" height="70" rx="5" fill="#e5effb" stroke="#173e73" stroke-width="2"/>
 <text x="290.0" y="138" font-family="sans-serif" font-size="18" text-anchor="middle" fill="#142337">F1</text>
-<text x="290.0" y="162" font-family="sans-serif" font-size="18" text-anchor="middle" fill="#142337">7.5 A</text>
+<text x="290.0" y="162" font-family="sans-serif" font-size="18" text-anchor="middle" fill="#142337">10 A</text>
 <rect x="390" y="115" width="100" height="70" rx="5" fill="#e5effb" stroke="#173e73" stroke-width="2"/>
 <text x="440.0" y="138" font-family="sans-serif" font-size="18" text-anchor="middle" fill="#142337">S1</text>
 <text x="440.0" y="162" font-family="sans-serif" font-size="18" text-anchor="middle" fill="#142337">MAIN</text>
@@ -26,7 +26,7 @@
 <circle cx="740" cy="360" r="4" fill="#173e73"/>
 <path d="M1030 360 H1080" fill="none" stroke="#173e73" stroke-width="3"/>
 <rect x="790" y="330" width="240" height="60" rx="5" fill="#e5effb" stroke="#173e73" stroke-width="2"/>
-<text x="910.0" y="353" font-family="sans-serif" font-size="18" text-anchor="middle" fill="#142337">F2 5 A + P1 ICStation 11060</text>
+<text x="910.0" y="353" font-family="sans-serif" font-size="18" text-anchor="middle" fill="#142337">F2 10 A + P1 ICStation 11060</text>
 <text x="910.0" y="377" font-family="sans-serif" font-size="18" text-anchor="middle" fill="#142337">5.70 V motor rail (RUN)</text>
 <rect x="1080" y="330" width="300" height="60" rx="5" fill="#e5effb" stroke="#173e73" stroke-width="2"/>
 <text x="1230.0" y="353" font-family="sans-serif" font-size="18" text-anchor="middle" fill="#142337">Romeo VM (P22): four DRV8876</text>
@@ -41,13 +41,13 @@
 <text x="1230.0" y="463" font-family="sans-serif" font-size="18" text-anchor="middle" fill="#142337">D5 DRV8871, ILIM 71.5k</text>
 <text x="1230.0" y="487" font-family="sans-serif" font-size="18" text-anchor="middle" fill="#142337">Actuonix P16-100-256-12-P</text>
 <circle cx="540" cy="150" r="4" fill="#173e73"/>
-<text x="1380" y="420" font-family="sans-serif" font-size="15" text-anchor="end" fill="#142337">5.70 V rail also feeds SV1 steering and SV2 lock-release MG995 power</text>
+<text x="1380" y="420" font-family="sans-serif" font-size="15" text-anchor="end" fill="#142337">P3 Pololu5573: separate6V servo rail, supplied after F2</text>
 <text x="135" y="560" font-family="sans-serif" font-size="18" text-anchor="start" fill="#142337">Remove the Romeo JP6 VIN/VM link: VIN stays on MAIN, VM only on RUN.</text>
 <text x="135" y="598" font-family="sans-serif" font-size="18" text-anchor="start" fill="#142337">Fit the PMODE link: DRV8876 PH/EN mode (EN = PWM, PH = direction).</text>
 <text x="135" y="636" font-family="sans-serif" font-size="18" text-anchor="start" fill="#142337">Replace R9 20k with 5.60k and R10 1k with 2.00k: pair trip 1.73 A, head 0.86 A.</text>
 <text x="135" y="674" font-family="sans-serif" font-size="18" text-anchor="start" fill="#142337">Romeo 5V_Servo is the 2 A logic buck; servos never draw from it.</text>
 <text x="135" y="712" font-family="sans-serif" font-size="18" text-anchor="start" fill="#142337">NC travel limits gate the 74AHCT125 enables; opening one disables that direction.</text>
-<text x="135" y="750" font-family="sans-serif" font-size="18" text-anchor="start" fill="#142337">Two SS-01GL lock switches separately sense engaged and fully withdrawn; each reads NO and NC.</text>
+<text x="135" y="750" font-family="sans-serif" font-size="18" text-anchor="start" fill="#142337">Two SS-01 lock switches separately sense engaged and fully withdrawn; each reads NO and NC.</text>
 <text x="135" y="788" font-family="sans-serif" font-size="18" text-anchor="start" fill="#142337">P16 pot on 3.3 V through 2.2k; open wiper or reference faults the stance.</text>
 <text x="135" y="826" font-family="sans-serif" font-size="18" text-anchor="start" fill="#142337">Ground drive runs only on three feet with the lock sensed seated.</text>
 <path d="M105 195 V870 H1360" fill="none" stroke="#173e73" stroke-width="3"/>

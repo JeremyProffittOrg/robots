@@ -1,154 +1,63 @@
-# Revision D controls: DFR0994 migration and interlocked stance change
+# Revision D controls and commissioning
 
-Status 2026-09-12: digital design and host verification complete. No hardware was purchased,
-flashed, wired or driven. Mechanism constants are provisional until
-`scripts/check_kinematics.py` passes on the committed CAD. They live in one block,
-`PROVISIONAL MECHANISM CONSTANTS`, in `firmware/include/config.h`.
+Status2026-09-13: host control tests and the ESP32-S3 firmware/filesystem builds pass. No hardware has been wired, flashed or operated. Firmware deliberately starts with potentiometer calibration uncommissioned and refuses arming until actual measurements are entered. A compiled binary is not proof of physical operation.
 
-## Controller: DFRobot Romeo ESP32-S3 (DFR0994)
+## Controller and power
 
-Primary sources: [wiki](https://wiki.dfrobot.com/dfr0994/),
-[product page](https://www.dfrobot.com/product-2743.html),
-[schematic V1.1.0](https://dfimg.dfrobot.com/wiki/22811/DFR0994_romeo-esp32-s3_schematics_V1.1.zip), dated 2025-09-08.
+Use DFRobot Romeo ESP32-S3 DFR0994, schematic V1.1.0. Its four DRV8876 channels run in PH/EN mode. Remove the VIN/VM link JP6 and fit PMODE. VIN receives the MAIN battery branch; VM receives only the regulated RUN motor branch. The official wiki calls the VIN/VM link JP1; identify it from the delivered schematic and meter continuity before applying power.
 
-- ESP32-S3-WROOM-1U-N16R8: 16 MB flash, 8 MB PSRAM. PlatformIO board `dfrobot_romeo_esp32s3`, `espressif32@6.5.0`.
-- Four onboard TI DRV8876 H-bridges, U1-U4, on one shared VREF: 5.1k over 20k from 3.3 V, 2.629 V, which gives a nominal 2.629 A trip. IPROPI is 1k per channel. nFAULT and IPROPI are not routed to the MCU. nSLEEP is pulled high.
-- VIN (P23) is 7-24 V into the SCT2650 buck, through onboard FUSE1, 3 A. VM (P22) is 5-24 V. **JP6** joins them when fitted. The wiki page labels this link "JP1".
-- `5V_Servo` is the same SCT2650 5 V logic rail (2 A), fed through diode D14. The servos therefore do not use it.
-- No IMU, accelerometer or gyroscope is fitted or listed.
-- PMODE link fitted: PH/EN mode (EN = PWM, PH = direction).
+Replace Romeo R9 with5.60k1% and R10 with2.00k1%. The intended nominal current trips are approximately1.73A for each ground pair and0.86A for the head. Confirm the delivered board revision and footprints before rework. Neither nFAULT nor IPROPI provides MCU motor-jam feedback in this design. Parallel motors share a channel current limit, not equal current.
 
-Required board setup: **remove JP6** (VIN on MAIN, VM on the RUN-switched 5.70 V rail). **Fit PMODE.**
-**Replace R9 20k with 5.60k 1% and R10 1k with 2.00k 1%.** Match the footprint on the delivered board; it has not been checked.
+Power path: BioennoBLF-1206A → F1 10A → MAIN switch. MAIN feeds Romeo VIN and RUN switch. RUN feeds F2 10A, which supplies both the ICStation11060 motor regulator and Pololu5573 six-volt servo regulator. RUN also feeds F3 2A → Pololu4984 twelve-volt regulator → Adafruit3190 DRV8871 → P16 actuator. Replace the DRV8871 ILIM resistor with71.5k1%; calculated current limit0.82–0.98A. Use the exact returns and gauges in electronics/wiring.csv.
 
-### Channel and current check
+Set the motor rail to5.70V before connecting Romeo VM; accept5.50–6.00V at VM during commissioning. The two goBILDA2000-0025-0002 servos use the separate6V Pololu5573. Do not connect their positive supply to Romeo5V_Servo. Both may draw approximately2.5A each at stall according to their supplier; verify actual aggregate input current, rail sag and temperature with this wiring and battery. Regulator headline ratings and fuse values do not replace the loaded test.
 
-| Load | Supply | Stall current | Driver | Protection |
-|---|---|---|---|---|
-| Left foot: two Adafruit 3777 in parallel | 5.70 V VM | ≤1.5 A each at 6 V, ≈2.85 A pair at 5.7 V | DRV8876 M1 | 1.73 A trip after R9 rework (stock 2.63 A does not limit a stalled pair) |
-| Right foot pair | 5.70 V VM | ≈2.85 A | M2 | 1.73 A |
-| Centre foot pair | 5.70 V VM | ≈2.85 A | M3 | 1.73 A |
-| Head 3777 | 5.70 V VM | ≈1.43 A | M4 | 0.86 A after R10 rework |
-| Actuonix P16-100-256-12-P | 12 V | 1.0 A | **extra** Adafruit DRV8871 (3190) | ILIM 71.5k: 0.82-0.98 A |
+MAIN off isolates loads for charging through the battery's charger lead. Use the matching Bioenno charger and do not operate while charging. The final access route and lead fit must be verified on the assembled body.
 
-The four onboard channels are enough for the three foot pairs and the head. The 12 V actuator needs the minimum extra driver hardware:
-one DRV8871 breakout, whose terminal blocks come pre-soldered, and one 71.5k ILIM resistor.
-The DRV8876 short-circuit OCP is at least 3.5 A, so a stalled pair does not nuisance-trip it.
-Parallel motors share a trip, not equal current. Loaded wheel-jam temperature tests remain a commissioning gate.
+## Connections and input truth
 
-Motor-rail budget, ICStation 11060 rated 8 A: with the rework, three pairs + head = 6.05 A, plus the steering MG995 ≈1.2 A, gives ≈7.25 A.
-Firmware allows the lock-release servo to move only while wheels and head are idle.
-Without the rework the four trips alone total 10.5 A.
+Motor EN/PH pairs: left12/13, right14/21, centre9/10, head47/11. I2S BCLK/LRC/DIN are15/16/17. Steering and lock pulses are40/41. Post extend/retract are38/42 through separate74AHCT125 channels. Hardware limit-open inputs are7/8. Engaged NO/NC are18/5; withdrawn NO/NC are43/44; floor NO is48. Post ADC is4, battery ADC6, RUN sense39.
 
-## Pin map (firmware/include/config.h)
+Use OmronSS-01 direct-plunger switches for both lock endpoints, both travel limits and the floor probe. Each lock switch has COM grounded and separate3.3k pull-ups on NO/NC. GPIO43 is ROM UART TX during reset: put the1k series resistor between the MCU and the switch-side pull-up. Do not connect it directly to the grounded switch. Camera, GDI and microSD must remain disconnected. Physical header locations are documented in printed-frame-research.md and must be checked against the delivered board.
 
-| Function | GPIO | Path |
-|---|---|---|
-| Left pair EN / PH | 12 / 13 | onboard M1 |
-| Right pair EN / PH | 14 / 21 | onboard M2 |
-| Centre pair EN / PH | 9 / 10 | onboard M3 |
-| Head EN / PH | 47 / 11 | onboard M4 |
-| I2S BCLK / LRC / DIN | 15 / 16 / 17 | MAX98357A |
-| Steering servo | 40 | 74AHCT125 gate 3 → SV1 |
-| Lock-release servo | 41 | 74AHCT125 gate 4 → SV2 |
-| Post extend / retract | 38 / 42 | AHCT125 gates 1/2 → DRV8871 IN1/IN2 |
-| Extend / retract limit open | 7 / 8 | NC limit on the gate OE node, 10k to 3.3 V |
-| Lock NO / NC | 18 / 5 | SS-01GL, COM to GND, 3.3k pull-ups |
-| Post position | 4 (ADC1_CH3) | P16 wiper; ref+ through 2.2k to 3.3 V; 470k pulldown |
-| Battery | 6 (ADC1_CH5) | 100k/22k divider |
-| RUN rail present | 39 | 10k/10k from the 5.70 V rail |
+The two travel switches use NC contacts. Closed means permitted travel. Opening one contact, including a broken cable, raises its74AHCT125 OE and disables that direction in hardware. Adjust cutoffs to0.8mm retracted and99.2mm extended. Software endpoints are2 and98mm.
 
-The map avoids strapping pins (0, 3, 45, 46), USB (19, 20), UART0 (43, 44), and flash/PSRAM (26-37).
-Camera, GDI display and microSD functions are unused. `verify.py --firmware-only` checks
-that every configured GPIO matches `electronics/wiring.csv`.
+P16 yellow reference+ receives3.3V through2.2k; orange reference− returns through1k to ground. Purple wiper goes to ADC4 with470k pull-down. The bottom resistor gives valid retraction a nonzero voltage. An open wiper or reference+ reads near zero; open reference− tends high. Verify each fault physically. Battery sensing is100k/22k; RUN sensing10k/10k.
 
-## Power and wiring
+The floor probe is an independent NO input. It must indicate support before withdrawing the shoulder lock and throughout tilt. Actuator position alone does not establish contact with the floor.
 
-`python scripts/electronics.py` writes `electronics/wiring.csv` (98 connections), seven connection sheets and
-`00-power-overview.svg`. The layout: B1 → F1 7.5 A → S1 MAIN. MAIN feeds Romeo VIN (logic, audio,
-buffer) and S2 RUN. RUN feeds F2 5 A → ICStation 11060 at 5.70 V (Romeo VM plus both MG995 servos), and
-F3 2 A → Pololu S13V25F12 at 12 V (DRV8871 → P16). RUN off removes all motor, servo and actuator power.
+## State sequence
 
-The NC travel limits, set at about 0.3 and 99.7 mm, hold each 74AHCT125 enable low while closed. An open switch
-or a broken wire disables that actuator direction in hardware. The MCU also reads both nodes.
+The guide is35degrees. Upright floor contact is45.038373mm, stationary two-foot endpoint2mm and deployed endpoint98mm. The GN817 pin locks both upright and deployed shoulder positions at45mm radius. The deployed angle is12.832480degrees.
 
-## Stance state machine (firmware/include/stance.h)
+Retracting begins only with wheels/head stopped and steering centred. UNLOCKING stops the post and waits for the independent withdrawn signal. TILT keeps the pin withdrawn while retracting toward upright contact. LOCKING stops, returns the servo, waits400ms, then searches slowly within the defined receiver window until the engaged signal is stable. LIFT retracts to2mm only while the shoulder remains engaged.
 
-States: `THREE_FOOT`, `RETRACTING`, `DEPLOYING`, `TWO_FOOT`, `HELD`, `FAULT`. The logic is pure C++11 behind
-`StanceHal`: position feedback, lock-engaged sensor, travel limits, power, heartbeat, actuator drive and
-lock release. The same code runs in the host tests and on the ESP32-S3.
+Deploying reverses that order: LOWER with the upright shoulder locked; confirm floor probe; UNLOCKING until withdrawn; TILT toward deployment; LOCKING to the deployed receiver. Neither loss of the engaged signal nor post position permits tilt by itself.
 
-Post stroke s in mm: two-foot 2, upright floor contact 36.647 (the 0° receiver), three-foot 98 (the 16.163° receiver).
-The GN 412 spring plunger seats in a receiver at **both** endpoints: GN 412.2 bushings at pin radius 55 mm.
-The sensed lock geometry is `cad/stance-lock-sensed.scad`, using the `SL_` constants. It is not yet in the assembly.
-Until it is, `cad/stance-lock.scad` holds a different GN817 study that this firmware does not model.
+Wheel drive is disabled throughout transitions, in HELD/FAULT and in TWO_FOOT. Head motion is allowed only in a recognised stable stance. Command expiry, release, opposite stance command or conflicting drive input stops a transition. A restart requires a fresh deliberate command after interlocks and cooldown permit it. No automatic resume or re-arm is implemented.
 
-Three feet to two feet (`RETRACTING`):
-1. UNLOCKING: post stopped, release servo pulls the pin, wait for the sensor to read out.
-2. TILT: retract at 100%. The release is held until the pin has swept 7.2 mm of arc (bore + 1 mm) off the receiver, at s ≤ 62. It then drops so the pin rides the ring face.
-3. LOCKING at contact + 1.5: settle 400 ms, then creep at 60% duty toward contact − 0.8 until the sensor reads seated.
-4. LIFT: retract to 2 mm, only while the sensor reads seated → `TWO_FOOT`.
+Ground drive starts with a35% hardware ceiling and a ramp of1percentage point per20ms. The head ceiling is25%. PH/EN commands scale percent to8-bit PWM. Reversal preserves previous direction across STOP and enforces100ms off time; the output waits for PWM to go low before changing PH. EN=0 brakes on these onboard drivers.
 
-Two feet to three feet (`DEPLOYING`): LOWER to contact with the pin seated → UNLOCKING → TILT (release
-dropped at s ≥ 60) → LOCKING creep through 98 → pin seated → `THREE_FOOT`.
+Actuator movement requires0.5mm progress within750ms; wrong-way feedback, timeout, limits, power and sensor disagreements latch faults. Runtime cooldown is four milliseconds per millisecond of actuator operation, consistent with20% duty. That runtime history is not persisted across power loss. After a reboot following movement, leave RUN off for at least10minutes before another stance change; firmware does not measure actuator temperature. Physical power-loss holding and cooldown qualification remain required.
 
-Interlocks:
-- Lock state comes only from the SS-01GL NO/NC pair. Exactly one closed contact is valid; the reading is debounced 30 ms, and an invalid pair must persist 150 ms before it counts. Post position never implies a lock state.
-- A seated reading is required whenever s < contact − 2.5. A seated reading between the two receiver windows is a fault.
-- Ground drive only in `THREE_FOOT`. Head only in `THREE_FOOT` or `TWO_FOOT`. The API refuses drive/head commands in other states, and the motion task gates outputs again.
-- A start needs RUN power and a valid battery reading, a fresh armed heartbeat, wheels and head stopped with steering centred, a fresh button press, and the actuator cooldown elapsed. The P16 is rated 20% duty, so 4 ms of rest follows each ms of travel.
-- The stance change is hold-to-run. Releasing the button, losing the 500 ms command heartbeat, reversing the request or sending a drive/head/steer command stops the actuator immediately in `HELD`. The lock command is left unchanged. Recovery never restarts automatically.
-- These faults stop the actuator and latch `FAULT`: `POWER` (lost mid-change), `FEEDBACK` (pot out of window or band), `LOCK_SENSOR`, `TRAVEL_LIMIT`, `OVERTRAVEL`, `STALL` (less than 0.5 mm in 750 ms), `TRAVEL_TIMEOUT` (40 s per phase), `LOCK_TIMEOUT` (pin not in or out within 1.5 s), `LOCK_DISAGREES`, `DRIFT`, `REVERSED_FEEDBACK`. A new fault disarms the phone. Clearing requires an armed lease, and succeeds only if fresh sensors describe a consistent mechanism. Clearing never moves the lock.
-- The spring-return lock re-seats itself when release power is lost.
+## Calibration and first electrical run
 
-## Posture estimate (firmware/include/posture.h)
+1. Support the body and lift all wheels. Disconnect actuator drive and both servo horns. Leave RUN off. Confirm VIN/VM isolation, fuse values, ground continuity and every power polarity with a meter.
+2. Test regulators with dummy loads before connecting electronics. Record motor, servo and actuator rails and pack current. Inspect all solder joints and reworked resistors.
+3. Verify both lock contact pairs, all illegal contact combinations and each open wire. Calibrate actual make and release points for engaged and withdrawn. Each asserted state must imply the required physical pin overlap or clearance. Adjust switch mounts, not nominal OP assumptions.
+4. Verify the floor switch changes at the wheel tangent plane and remains protected by the probe's hard stop. Verify hardware travel limits disable the correct direction without software assistance.
+5. With the P16 mechanically disconnected, use a restrained current-limited fixture to measure actual stroke and raw ADC millivolts at both ends and at intermediate measured positions. The phone status reports raw millivolts even while calibration is uncommissioned. Do not infer stroke from elapsed time.
+6. Enter measured zeroMv/fullMv in calibration::POT, verify direction and interpolation error, then set commissioned=true. The nominal232/2777mV values are estimates only. Repeat open-reference and open-wiper tests. Rebuild both firmware and filesystem after source changes.
+7. Configure steering with its horn off. Apply1500us, fit the trimmed horn at the documented neutral angle and set the link to62.096699mm centres. Confirm±8degree yaw without binding.
+8. Configure the lock servo with the mechanism unloaded. The nominal1500us engaged and1734us withdrawn pulses require physical calibration. Confirm full6mm pull and free spring-only return; never use the switch as a hard mechanical stop.
+9. Flash using the existing PlatformIO romeo environment only after the preceding checks. Connect USB, run pio run -d firmware -t upload, then pio run -d firmware -t uploadfs. These are manual commissioning commands; this design session has not executed them.
+10. Join the robot's phone Wi-Fi interface. Test arming, lease expiry, stop, disconnect and every fault with wheels lifted. Verify left/right/centre direction before any floor test. Use external body restraint for the first stance transfer.
+11. Measure current, voltage and temperature during progressively loaded motion. Confirm positive pin engagement, centre-foot contact, static stability and no drift after power loss. Test one failure at a time. Reject any binding, brownout, overheating or load-path damage.
 
-The board has no IMU, so the estimate is **state-based**:
-- Pin seated at contact or below: the body is held at 0° by the 0° receiver ("shoulder lock geometry").
-- Centre foot on the floor with the pin out, or seated in the three-foot receiver: pitch comes from the three-foot kinematics in `cad/kinematics.scad` ("three-foot post kinematics"). At 98 mm this gives 16.163°.
-- Fault, invalid sensor, or a contradiction (foot raised without a seated pin, or a seated reading between receivers): `unknown`.
+## Verification evidence
 
-The lifted foot rests on its heel stop at +1°. That is foot pitch, not body pitch, and does not change the estimate.
-The estimate cannot detect a tip-over or an external push. Stationary two-foot standing only.
+python -m unittest discover -s tests -p test_firmware*.py -v passes the three host tests, including367 stance assertions. node --test firmware/test/ui_test.js passes the phone-control test suite. pio run -d firmware and pio run -d firmware -t buildfs both succeeded on2026-09-13. Firmware uses45516 bytes RAM and912221 bytes flash in that build. Commit d12fee5 contains the calibration gate, floor interlocks and phone status changes.
 
-## Phone UI and API
+Sixteen original MP3s are included in the filesystem image. They are synthetic robot sounds, not movie recordings. Circuit source is scripts/electronics.py; generated wiring has113 point-to-point rows. Build success and simulated faults do not verify motors, current limits, sensors, radio range, thermal behaviour or physical strength.
 
-`/api/status` reports `stance`, `phase`, `fault`, `reason`, `post_mm`, `lock_valid`, `lock_engaged`, `limits_closed`,
-`pitch_deg`, `pitch_source`, `drive_allowed`, `head_allowed`, `can_two_foot`, `can_three_foot` and the blocking interlock text.
-`/api/command` accepts `stance` values -1, 2 or 3. A stance request must carry zero speed, turn and head.
-`/api/stance/clear` needs the current lease.
-The page greys out stance, drive and head buttons whenever an interlock forbids them and shows why.
-The held stance button stays enabled during its own change.
-
-## Verification (2026-09-12)
-
-```
-pio run -d C:/dev/robots/r2d2/firmware                 -> exit 0, Flash 44.9%, RAM 13.9%
-pio run -d C:/dev/robots/r2d2/firmware -t buildfs      -> exit 0
-python scripts/verify.py --firmware-only               -> exit 0
-python -m unittest discover -s tests -p "test_firmware*.py"   -> OK (3 tests)
-python -m unittest discover -s tests -p "test_ui*.py"         -> OK (3 tests)
-```
-
-`firmware/test/stance_test.cpp` (1087 checks) runs the real state machine against a plant model:
-a non-backdrivable post and a spring pin with two receivers. It covers:
-- both normal transitions;
-- command loss in LIFT, TILT and UNLOCKING, and operator release;
-- power loss, feedback loss, travel-limit open and reversed feedback;
-- actuator stall, travel timeout, and a pin stuck in either receiver;
-- a pin that never seats at contact or at three-foot;
-- lock-sensor disagreement at both endpoints and mid-change;
-- drive requested during a transition, and reversal;
-- `millis()` wraparound, NO/NC debounce, pot open-circuit windows, and posture geometry.
-
-`firmware/test/ui_test.js` executes the real `app.js` against a simulated DOM and network.
-
-## Commissioning gates and open items
-
-- Bind the final mechanism constants when `check_kinematics.py` passes, then rerun `verify.py --firmware-only`.
-- Measure `POT.zeroMv`/`fullMv` on the detached P16; its pot tolerance is ±50%. Calibrate `LOCK_RELEASE_US`/`LOCK_ENGAGE_US` on the lever.
-- Lock seek: at contact the pin crosses its 0.1 mm clearance in about 0.15 s at 60% duty. If the pin does not catch, lower `seekDutyPercent`; try 40% first.
-- Check SS-01GL contact reliability at 3.3 V/1 mA, below Omron's 5 V/1 mA reference point.
-- Before connecting VM, measure the 5.70 V rail (accept 5.50-6.00 V, including braking transients), all four DRV8876 trips after rework, and the DRV8871 limit.
-- Test open-wire behaviour on each NC limit and the lock contacts, reset/brown-out with the actuator loaded, and loaded wheel-jam temperatures.
-- `scripts/build_manual.py` still asserts revision C electrical text ("220 wiring connections", "DRV8833"). The integration step must update it before a revision D manual build.
+Primary electrical and mechanical source evidence is retained in printed-frame-research.md. The factory-assembly candidate and its purchase-count boundary are described in control-assembly-specification.md.

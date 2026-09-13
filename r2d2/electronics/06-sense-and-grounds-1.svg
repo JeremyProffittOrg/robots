@@ -1,64 +1,76 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="510" viewBox="0 0 1100 510"><rect width="1100" height="510" fill="white"/>
+<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="586" viewBox="0 0 1100 586"><rect width="1100" height="586" fill="white"/>
 <text x="30" y="34" font-family="sans-serif" font-size="22" fill="#122439">R2-24 revision D circuit: sense-and-grounds / 1</text>
 <text x="30" y="65" font-family="sans-serif" font-size="14" fill="#374151">Each horizontal line is one connection. Identical named nets join across sheets. See wiring.csv for notes.</text>
-<text x="30" y="100" font-family="monospace" font-size="14" fill="#142337">U1 3V3 header</text>
+<text x="30" y="100" font-family="monospace" font-size="14" fill="#142337">R_UART43 pin2</text>
 <path d="M 365 95 H 725" stroke="#163d72" stroke-width="2" fill="none"/>
 <circle cx="365" cy="95" r="3" fill="#163d72"/><circle cx="725" cy="95" r="3" fill="#163d72"/>
 <rect x="420" y="83" width="260" height="22" fill="white"/>
-<text x="550" y="100" text-anchor="middle" font-family="monospace" font-size="13" fill="#163d72">3V3 (26 AWG)</text>
-<text x="744" y="100" font-family="monospace" font-size="14" fill="#142337">R_WITHDRAWN_NO pin2</text>
+<text x="550" y="100" text-anchor="middle" font-family="monospace" font-size="13" fill="#163d72">GPIO43_SENSE (26 AWG)</text>
+<text x="744" y="100" font-family="monospace" font-size="14" fill="#142337">U1 GPIO43</text>
 <text x="30" y="138" font-family="monospace" font-size="14" fill="#142337">U1 3V3 header</text>
 <path d="M 365 133 H 725" stroke="#163d72" stroke-width="2" fill="none"/>
 <circle cx="365" cy="133" r="3" fill="#163d72"/><circle cx="725" cy="133" r="3" fill="#163d72"/>
 <rect x="420" y="121" width="260" height="22" fill="white"/>
 <text x="550" y="138" text-anchor="middle" font-family="monospace" font-size="13" fill="#163d72">3V3 (26 AWG)</text>
-<text x="744" y="138" font-family="monospace" font-size="14" fill="#142337">R_WITHDRAWN_NC pin2</text>
-<text x="30" y="176" font-family="monospace" font-size="14" fill="#142337">P1 OUT+</text>
+<text x="744" y="138" font-family="monospace" font-size="14" fill="#142337">R_WITHDRAWN_NO pin2</text>
+<text x="30" y="176" font-family="monospace" font-size="14" fill="#142337">U1 3V3 header</text>
 <path d="M 365 171 H 725" stroke="#163d72" stroke-width="2" fill="none"/>
 <circle cx="365" cy="171" r="3" fill="#163d72"/><circle cx="725" cy="171" r="3" fill="#163d72"/>
 <rect x="420" y="159" width="260" height="22" fill="white"/>
-<text x="550" y="176" text-anchor="middle" font-family="monospace" font-size="13" fill="#163d72">5V7_MOTOR (26 AWG)</text>
-<text x="744" y="176" font-family="monospace" font-size="14" fill="#142337">R_RUN_TOP 10k pin1</text>
-<text x="30" y="214" font-family="monospace" font-size="14" fill="#142337">R_RUN_TOP 10k pin2</text>
+<text x="550" y="176" text-anchor="middle" font-family="monospace" font-size="13" fill="#163d72">3V3 (26 AWG)</text>
+<text x="744" y="176" font-family="monospace" font-size="14" fill="#142337">R_WITHDRAWN_NC pin2</text>
+<text x="30" y="214" font-family="monospace" font-size="14" fill="#142337">U1 3V3 header</text>
 <path d="M 365 209 H 725" stroke="#163d72" stroke-width="2" fill="none"/>
 <circle cx="365" cy="209" r="3" fill="#163d72"/><circle cx="725" cy="209" r="3" fill="#163d72"/>
 <rect x="420" y="197" width="260" height="22" fill="white"/>
-<text x="550" y="214" text-anchor="middle" font-family="monospace" font-size="13" fill="#163d72">RUN_SENSE (26 AWG)</text>
-<text x="744" y="214" font-family="monospace" font-size="14" fill="#142337">U1 GPIO39</text>
-<text x="30" y="252" font-family="monospace" font-size="14" fill="#142337">R_RUN_TOP 10k pin2</text>
+<text x="550" y="214" text-anchor="middle" font-family="monospace" font-size="13" fill="#163d72">3V3 (26 AWG)</text>
+<text x="744" y="214" font-family="monospace" font-size="14" fill="#142337">R_FLOOR pin2</text>
+<text x="30" y="252" font-family="monospace" font-size="14" fill="#142337">P1 OUT+</text>
 <path d="M 365 247 H 725" stroke="#163d72" stroke-width="2" fill="none"/>
 <circle cx="365" cy="247" r="3" fill="#163d72"/><circle cx="725" cy="247" r="3" fill="#163d72"/>
 <rect x="420" y="235" width="260" height="22" fill="white"/>
-<text x="550" y="252" text-anchor="middle" font-family="monospace" font-size="13" fill="#163d72">RUN_SENSE (26 AWG)</text>
-<text x="744" y="252" font-family="monospace" font-size="14" fill="#142337">R_RUN_BOTTOM 10k pin1</text>
-<text x="30" y="290" font-family="monospace" font-size="14" fill="#142337">B1 PP30 -</text>
+<text x="550" y="252" text-anchor="middle" font-family="monospace" font-size="13" fill="#163d72">5V7_MOTOR (26 AWG)</text>
+<text x="744" y="252" font-family="monospace" font-size="14" fill="#142337">R_RUN_TOP 10k pin1</text>
+<text x="30" y="290" font-family="monospace" font-size="14" fill="#142337">R_RUN_TOP 10k pin2</text>
 <path d="M 365 285 H 725" stroke="#163d72" stroke-width="2" fill="none"/>
 <circle cx="365" cy="285" r="3" fill="#163d72"/><circle cx="725" cy="285" r="3" fill="#163d72"/>
 <rect x="420" y="273" width="260" height="22" fill="white"/>
-<text x="550" y="290" text-anchor="middle" font-family="monospace" font-size="13" fill="#163d72">GND (26 AWG)</text>
-<text x="744" y="290" font-family="monospace" font-size="14" fill="#142337">R_RUN_BOTTOM pin2</text>
-<text x="30" y="328" font-family="monospace" font-size="14" fill="#142337">R_PACK_TOP 100k pin2</text>
+<text x="550" y="290" text-anchor="middle" font-family="monospace" font-size="13" fill="#163d72">RUN_SENSE (26 AWG)</text>
+<text x="744" y="290" font-family="monospace" font-size="14" fill="#142337">U1 GPIO39</text>
+<text x="30" y="328" font-family="monospace" font-size="14" fill="#142337">R_RUN_TOP 10k pin2</text>
 <path d="M 365 323 H 725" stroke="#163d72" stroke-width="2" fill="none"/>
 <circle cx="365" cy="323" r="3" fill="#163d72"/><circle cx="725" cy="323" r="3" fill="#163d72"/>
 <rect x="420" y="311" width="260" height="22" fill="white"/>
-<text x="550" y="328" text-anchor="middle" font-family="monospace" font-size="13" fill="#163d72">PACK_ADC (26 AWG)</text>
-<text x="744" y="328" font-family="monospace" font-size="14" fill="#142337">U1 GPIO6</text>
-<text x="30" y="366" font-family="monospace" font-size="14" fill="#142337">R_PACK_TOP 100k pin2</text>
+<text x="550" y="328" text-anchor="middle" font-family="monospace" font-size="13" fill="#163d72">RUN_SENSE (26 AWG)</text>
+<text x="744" y="328" font-family="monospace" font-size="14" fill="#142337">R_RUN_BOTTOM 10k pin1</text>
+<text x="30" y="366" font-family="monospace" font-size="14" fill="#142337">B1 PP30 -</text>
 <path d="M 365 361 H 725" stroke="#163d72" stroke-width="2" fill="none"/>
 <circle cx="365" cy="361" r="3" fill="#163d72"/><circle cx="725" cy="361" r="3" fill="#163d72"/>
 <rect x="420" y="349" width="260" height="22" fill="white"/>
-<text x="550" y="366" text-anchor="middle" font-family="monospace" font-size="13" fill="#163d72">PACK_ADC (26 AWG)</text>
-<text x="744" y="366" font-family="monospace" font-size="14" fill="#142337">R_PACK_BOTTOM 22k pin1</text>
-<text x="30" y="404" font-family="monospace" font-size="14" fill="#142337">B1 PP30 -</text>
+<text x="550" y="366" text-anchor="middle" font-family="monospace" font-size="13" fill="#163d72">GND (26 AWG)</text>
+<text x="744" y="366" font-family="monospace" font-size="14" fill="#142337">R_RUN_BOTTOM pin2</text>
+<text x="30" y="404" font-family="monospace" font-size="14" fill="#142337">R_PACK_TOP 100k pin2</text>
 <path d="M 365 399 H 725" stroke="#163d72" stroke-width="2" fill="none"/>
 <circle cx="365" cy="399" r="3" fill="#163d72"/><circle cx="725" cy="399" r="3" fill="#163d72"/>
 <rect x="420" y="387" width="260" height="22" fill="white"/>
-<text x="550" y="404" text-anchor="middle" font-family="monospace" font-size="13" fill="#163d72">GND (26 AWG)</text>
-<text x="744" y="404" font-family="monospace" font-size="14" fill="#142337">R_PACK_BOTTOM pin2</text>
-<text x="30" y="442" font-family="monospace" font-size="14" fill="#142337">B1 PP30 -</text>
+<text x="550" y="404" text-anchor="middle" font-family="monospace" font-size="13" fill="#163d72">PACK_ADC (26 AWG)</text>
+<text x="744" y="404" font-family="monospace" font-size="14" fill="#142337">U1 GPIO6</text>
+<text x="30" y="442" font-family="monospace" font-size="14" fill="#142337">R_PACK_TOP 100k pin2</text>
 <path d="M 365 437 H 725" stroke="#163d72" stroke-width="2" fill="none"/>
 <circle cx="365" cy="437" r="3" fill="#163d72"/><circle cx="725" cy="437" r="3" fill="#163d72"/>
 <rect x="420" y="425" width="260" height="22" fill="white"/>
-<text x="550" y="442" text-anchor="middle" font-family="monospace" font-size="13" fill="#163d72">GND (20 AWG)</text>
-<text x="744" y="442" font-family="monospace" font-size="14" fill="#142337">U1 GND header</text>
+<text x="550" y="442" text-anchor="middle" font-family="monospace" font-size="13" fill="#163d72">PACK_ADC (26 AWG)</text>
+<text x="744" y="442" font-family="monospace" font-size="14" fill="#142337">R_PACK_BOTTOM 22k pin1</text>
+<text x="30" y="480" font-family="monospace" font-size="14" fill="#142337">B1 PP30 -</text>
+<path d="M 365 475 H 725" stroke="#163d72" stroke-width="2" fill="none"/>
+<circle cx="365" cy="475" r="3" fill="#163d72"/><circle cx="725" cy="475" r="3" fill="#163d72"/>
+<rect x="420" y="463" width="260" height="22" fill="white"/>
+<text x="550" y="480" text-anchor="middle" font-family="monospace" font-size="13" fill="#163d72">GND (26 AWG)</text>
+<text x="744" y="480" font-family="monospace" font-size="14" fill="#142337">R_PACK_BOTTOM pin2</text>
+<text x="30" y="518" font-family="monospace" font-size="14" fill="#142337">B1 PP30 -</text>
+<path d="M 365 513 H 725" stroke="#163d72" stroke-width="2" fill="none"/>
+<circle cx="365" cy="513" r="3" fill="#163d72"/><circle cx="725" cy="513" r="3" fill="#163d72"/>
+<rect x="420" y="501" width="260" height="22" fill="white"/>
+<text x="550" y="518" text-anchor="middle" font-family="monospace" font-size="13" fill="#163d72">GND (20 AWG)</text>
+<text x="744" y="518" font-family="monospace" font-size="14" fill="#142337">U1 GND header</text>
 </svg>

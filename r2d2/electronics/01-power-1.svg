@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="852" viewBox="0 0 1100 852"><rect width="1100" height="852" fill="white"/>
+<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="928" viewBox="0 0 1100 928"><rect width="1100" height="928" fill="white"/>
 <text x="30" y="34" font-family="sans-serif" font-size="22" fill="#122439">R2-24 revision D circuit: power / 1</text>
 <text x="30" y="65" font-family="sans-serif" font-size="14" fill="#374151">Each horizontal line is one connection. Identical named nets join across sheets. See wiring.csv for notes.</text>
 <text x="30" y="100" font-family="monospace" font-size="14" fill="#142337">B1 PP30 +</text>
@@ -6,7 +6,7 @@
 <circle cx="365" cy="95" r="3" fill="#163d72"/><circle cx="725" cy="95" r="3" fill="#163d72"/>
 <rect x="420" y="83" width="260" height="22" fill="white"/>
 <text x="550" y="100" text-anchor="middle" font-family="monospace" font-size="13" fill="#163d72">PACK+ (18 AWG)</text>
-<text x="744" y="100" font-family="monospace" font-size="14" fill="#142337">F1 7.5A input</text>
+<text x="744" y="100" font-family="monospace" font-size="14" fill="#142337">F1 10A input</text>
 <text x="30" y="138" font-family="monospace" font-size="14" fill="#142337">F1 output</text>
 <path d="M 365 133 H 725" stroke="#163d72" stroke-width="2" fill="none"/>
 <circle cx="365" cy="133" r="3" fill="#163d72"/><circle cx="725" cy="133" r="3" fill="#163d72"/>
@@ -36,7 +36,7 @@
 <circle cx="365" cy="285" r="3" fill="#163d72"/><circle cx="725" cy="285" r="3" fill="#163d72"/>
 <rect x="420" y="273" width="260" height="22" fill="white"/>
 <text x="550" y="290" text-anchor="middle" font-family="monospace" font-size="13" fill="#163d72">RUN+ (18 AWG)</text>
-<text x="744" y="290" font-family="monospace" font-size="14" fill="#142337">F2 5A input</text>
+<text x="744" y="290" font-family="monospace" font-size="14" fill="#142337">F2 10A input</text>
 <text x="30" y="328" font-family="monospace" font-size="14" fill="#142337">F2 output</text>
 <path d="M 365 323 H 725" stroke="#163d72" stroke-width="2" fill="none"/>
 <circle cx="365" cy="323" r="3" fill="#163d72"/><circle cx="725" cy="323" r="3" fill="#163d72"/>
@@ -91,28 +91,40 @@
 <rect x="420" y="615" width="260" height="22" fill="white"/>
 <text x="550" y="632" text-anchor="middle" font-family="monospace" font-size="13" fill="#163d72">GND (20 AWG)</text>
 <text x="744" y="632" font-family="monospace" font-size="14" fill="#142337">D5 GND</text>
-<text x="30" y="670" font-family="monospace" font-size="14" fill="#142337">S1 output</text>
+<text x="30" y="670" font-family="monospace" font-size="14" fill="#142337">F2 output</text>
 <path d="M 365 665 H 725" stroke="#163d72" stroke-width="2" fill="none"/>
 <circle cx="365" cy="665" r="3" fill="#163d72"/><circle cx="725" cy="665" r="3" fill="#163d72"/>
 <rect x="420" y="653" width="260" height="22" fill="white"/>
-<text x="550" y="670" text-anchor="middle" font-family="monospace" font-size="13" fill="#163d72">MAIN+ (26 AWG)</text>
-<text x="744" y="670" font-family="monospace" font-size="14" fill="#142337">R_PACK_TOP 100k pin1</text>
-<text x="30" y="708" font-family="monospace" font-size="14" fill="#142337">U1 5V header</text>
+<text x="550" y="670" text-anchor="middle" font-family="monospace" font-size="13" fill="#163d72">SERVO_BUCK_IN (18 AWG)</text>
+<text x="744" y="670" font-family="monospace" font-size="14" fill="#142337">P3 Pololu5573 VIN</text>
+<text x="30" y="708" font-family="monospace" font-size="14" fill="#142337">B1 PP30 -</text>
 <path d="M 365 703 H 725" stroke="#163d72" stroke-width="2" fill="none"/>
 <circle cx="365" cy="703" r="3" fill="#163d72"/><circle cx="725" cy="703" r="3" fill="#163d72"/>
 <rect x="420" y="691" width="260" height="22" fill="white"/>
-<text x="550" y="708" text-anchor="middle" font-family="monospace" font-size="13" fill="#163d72">5V_LOGIC (22 AWG)</text>
-<text x="744" y="708" font-family="monospace" font-size="14" fill="#142337">U8 MAX98357A VIN</text>
-<text x="30" y="746" font-family="monospace" font-size="14" fill="#142337">U8 speaker +</text>
+<text x="550" y="708" text-anchor="middle" font-family="monospace" font-size="13" fill="#163d72">GND (18 AWG)</text>
+<text x="744" y="708" font-family="monospace" font-size="14" fill="#142337">P3 GND</text>
+<text x="30" y="746" font-family="monospace" font-size="14" fill="#142337">S1 output</text>
 <path d="M 365 741 H 725" stroke="#163d72" stroke-width="2" fill="none"/>
 <circle cx="365" cy="741" r="3" fill="#163d72"/><circle cx="725" cy="741" r="3" fill="#163d72"/>
 <rect x="420" y="729" width="260" height="22" fill="white"/>
-<text x="550" y="746" text-anchor="middle" font-family="monospace" font-size="13" fill="#163d72">SPK+ (22 AWG)</text>
-<text x="744" y="746" font-family="monospace" font-size="14" fill="#142337">SP1 +</text>
-<text x="30" y="784" font-family="monospace" font-size="14" fill="#142337">U8 speaker -</text>
+<text x="550" y="746" text-anchor="middle" font-family="monospace" font-size="13" fill="#163d72">MAIN+ (26 AWG)</text>
+<text x="744" y="746" font-family="monospace" font-size="14" fill="#142337">R_PACK_TOP 100k pin1</text>
+<text x="30" y="784" font-family="monospace" font-size="14" fill="#142337">U1 5V header</text>
 <path d="M 365 779 H 725" stroke="#163d72" stroke-width="2" fill="none"/>
 <circle cx="365" cy="779" r="3" fill="#163d72"/><circle cx="725" cy="779" r="3" fill="#163d72"/>
 <rect x="420" y="767" width="260" height="22" fill="white"/>
-<text x="550" y="784" text-anchor="middle" font-family="monospace" font-size="13" fill="#163d72">SPK- (22 AWG)</text>
-<text x="744" y="784" font-family="monospace" font-size="14" fill="#142337">SP1 -</text>
+<text x="550" y="784" text-anchor="middle" font-family="monospace" font-size="13" fill="#163d72">5V_LOGIC (22 AWG)</text>
+<text x="744" y="784" font-family="monospace" font-size="14" fill="#142337">U8 MAX98357A VIN</text>
+<text x="30" y="822" font-family="monospace" font-size="14" fill="#142337">U8 speaker +</text>
+<path d="M 365 817 H 725" stroke="#163d72" stroke-width="2" fill="none"/>
+<circle cx="365" cy="817" r="3" fill="#163d72"/><circle cx="725" cy="817" r="3" fill="#163d72"/>
+<rect x="420" y="805" width="260" height="22" fill="white"/>
+<text x="550" y="822" text-anchor="middle" font-family="monospace" font-size="13" fill="#163d72">SPK+ (22 AWG)</text>
+<text x="744" y="822" font-family="monospace" font-size="14" fill="#142337">SP1 +</text>
+<text x="30" y="860" font-family="monospace" font-size="14" fill="#142337">U8 speaker -</text>
+<path d="M 365 855 H 725" stroke="#163d72" stroke-width="2" fill="none"/>
+<circle cx="365" cy="855" r="3" fill="#163d72"/><circle cx="725" cy="855" r="3" fill="#163d72"/>
+<rect x="420" y="843" width="260" height="22" fill="white"/>
+<text x="550" y="860" text-anchor="middle" font-family="monospace" font-size="13" fill="#163d72">SPK- (22 AWG)</text>
+<text x="744" y="860" font-family="monospace" font-size="14" fill="#142337">SP1 -</text>
 </svg>

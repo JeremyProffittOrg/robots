@@ -1,0 +1,22 @@
+id,item,quantity,count_status,basis
+CONTROLLER,DFRobot RomeoDFR0994,1,counted,Current mechanical/electrical design quantity; exact procurement and mounting review still pending
+ANTENNA,Romeo external antenna assembly,1,counted,Current mechanical/electrical design quantity; exact procurement and mounting review still pending
+MOTOR_BUCK,ICStation11060 motor regulator,1,counted,Current mechanical/electrical design quantity; exact procurement and mounting review still pending
+POST_BUCK,Pololu4984 S13V25F12,1,counted,Current mechanical/electrical design quantity; exact procurement and mounting review still pending
+SERVO_BUCK,Pololu5573 D42V55F6,1,counted,Current mechanical/electrical design quantity; exact procurement and mounting review still pending
+POST_DRIVER,Adafruit3190 DRV8871,1,counted,Current mechanical/electrical design quantity; exact procurement and mounting review still pending
+AMP,Adafruit3006 MAX98357A,1,counted,Current mechanical/electrical design quantity; exact procurement and mounting review still pending
+SPEAKER,Adafruit1313 speaker,1,counted,Current mechanical/electrical design quantity; exact procurement and mounting review still pending
+BUFFER_IC,Adafruit1787 74AHCT125,1,counted,Current mechanical/electrical design quantity; exact procurement and mounting review still pending
+BUFFER_PCB,Adafruit1609 solderable board,1,counted,Current mechanical/electrical design quantity; exact procurement and mounting review still pending
+POWER_SWITCH,NKK S1A,2,counted,Current mechanical/electrical design quantity; exact procurement and mounting review still pending
+POWER_SWITCH_KNURLED_NUT,NKK AT504M supplied loose,2,counted,Current mechanical/electrical design quantity; exact procurement and mounting review still pending
+POWER_SWITCH_LOCK_WASHER,NKK AT508 supplied loose,2,counted,Current mechanical/electrical design quantity; exact procurement and mounting review still pending
+POWER_SWITCH_BACKUP_NUT,NKK AT527M supplied loose,2,counted,Current mechanical/electrical design quantity; exact procurement and mounting review still pending
+FUSE_HOLDER,Littelfuse0FHA0001ZXJ with factory16AWG leads,3,counted,Current mechanical/electrical design quantity; exact procurement and mounting review still pending
+FUSE_MAIN,10A ATO fuse,1,counted,Current mechanical/electrical design quantity; exact procurement and mounting review still pending
+FUSE_MOTOR_SERVO,10A ATO fuse,1,counted,Current mechanical/electrical design quantity; exact procurement and mounting review still pending
+FUSE_POST,2A ATO fuse,1,counted,Current mechanical/electrical design quantity; exact procurement and mounting review still pending
+RESISTOR,Discrete buffer/pot/switch/pack/RUN/ROM-interface resistor,19,counted,Current mechanical/electrical design quantity; exact procurement and mounting review still pending
+BYPASS_CAP,Logic and sense bypass capacitor,4,counted,Current mechanical/electrical design quantity; exact procurement and mounting review still pending
+REWORK_RESISTOR,RomeoR9/R10 and DRV8871 ILIM replacement,3,counted,Current mechanical/electrical design quantity; exact procurement and mounting review still pending

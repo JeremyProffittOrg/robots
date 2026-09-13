@@ -1,0 +1,75 @@
+id,item,quantity,count_status,basis
+MOTOR,Adafruit3777 motor assembly with factory-installed100nF terminal suppression and terminated lead,7,counted,Requires an actual finished supplied motor assembly; internal capacitor listed separately
+WHEEL,Adafruit3766 wheel;12 ground plus1 head,13,counted,Current mechanical/electrical design quantity; exact procurement and mounting review still pending
+BODY_RAIL,MISUMI HFS5-2020 cut228mm,4,counted,Current mechanical/electrical design quantity; exact procurement and mounting review still pending
+LEG_RAIL,MISUMI HFS5-2020 cut180mm,2,counted,Current mechanical/electrical design quantity; exact procurement and mounting review still pending
+POST_RAIL,MISUMI HFS5-2020 cut296mm,1,counted,Current mechanical/electrical design quantity; exact procurement and mounting review still pending
+SHOULDER_SHAFT,12mm steel shaft cut366mm,1,counted,Current mechanical/electrical design quantity; exact procurement and mounting review still pending
+SHOULDER_BEARING,SKF6201 bearing,4,counted,Current mechanical/electrical design quantity; exact procurement and mounting review still pending
+HUB,goBILDA1301-0016-0012 clamping hub assembly,2,counted,Current mechanical/electrical design quantity; exact procurement and mounting review still pending
+HUB_SCREW,M4 hub fixing screw,8,counted,Current mechanical/electrical design quantity; exact procurement and mounting review still pending
+COLLAR,12mm split shaft collar with factory clamp screw,2,counted,Current mechanical/electrical design quantity; exact procurement and mounting review still pending
+SHOULDER_SPACER,12.7ID16OD steel spacer6.5mm,2,counted,Current mechanical/electrical design quantity; exact procurement and mounting review still pending
+BEARING_CAP_SCREW,M4 shoulder-cap through screw,4,counted,Current mechanical/electrical design quantity; exact procurement and mounting review still pending
+BEARING_CAP_NUT,M4 captive shoulder-cap nut,4,counted,Current mechanical/electrical design quantity; exact procurement and mounting review still pending
+ANKLE_SCREW,Flanged M5x40 ankle screw,4,counted,Current mechanical/electrical design quantity; exact procurement and mounting review still pending
+ANKLE_NUT,Flanged M5 locking nut,4,counted,Current mechanical/electrical design quantity; exact procurement and mounting review still pending
+HEAD_BEARING,608 bearing8x22x7mm,2,counted,Current mechanical/electrical design quantity; exact procurement and mounting review still pending
+HEAD_BOLT,M8x45 hex bolt; stationary head spindle,1,counted,Current mechanical/electrical design quantity; exact procurement and mounting review still pending
+HEAD_NUT,M8 all-metal locking nut,1,counted,Current mechanical/electrical design quantity; exact procurement and mounting review still pending
+HEAD_BASE_WASHER,8.4ID24OD1.6mm steel washer,1,counted,Current mechanical/electrical design quantity; exact procurement and mounting review still pending
+HEAD_TOP_WASHER,8.2ID11.5OD1.6mm steel washer,1,counted,Current mechanical/electrical design quantity; exact procurement and mounting review still pending
+HEAD_BASE_SPACER,8.2ID11.5OD4mm steel spacer,1,counted,Current mechanical/electrical design quantity; exact procurement and mounting review still pending
+HEAD_INNER_SPACER,8.2ID11.5OD12mm steel spacer,1,counted,Current mechanical/electrical design quantity; exact procurement and mounting review still pending
+HEAD_CAP_SCREW,M3 dome-bearing cap screw,3,counted,Current mechanical/electrical design quantity; exact procurement and mounting review still pending
+FOOT_COVER_SCREW,M3x20 foot cover screw,3,counted,Current mechanical/electrical design quantity; exact procurement and mounting review still pending
+BODY_BASE_SCREW,M3x12 lower-body screw,1,counted,Current mechanical/electrical design quantity; exact procurement and mounting review still pending
+BODY_SEAM_SCREW,M3x16 body seam screw,1,counted,Current mechanical/electrical design quantity; exact procurement and mounting review still pending
+LEG_COVER_SCREW,M3x8 hub access cover screw,2,counted,Current mechanical/electrical design quantity; exact procurement and mounting review still pending
+ACTUATOR,Actuonix P16-100-256-12-P,1,counted,Current mechanical/electrical design quantity; exact procurement and mounting review still pending
+ROD_END,SKF SA12E,1,counted,Current mechanical/electrical design quantity; exact procurement and mounting review still pending
+ROD_NUT,DIN934 M12 full nut,1,counted,Current mechanical/electrical design quantity; exact procurement and mounting review still pending
+CENTER_AXLE,12mm shoulder bolt40mm shoulder/M10x16 thread,1,counted,Current mechanical/electrical design quantity; exact procurement and mounting review still pending
+CENTER_NUT,M10 locking nut,1,counted,Current mechanical/electrical design quantity; exact procurement and mounting review still pending
+CENTER_WASHER,M10 axle washer,1,counted,Current mechanical/electrical design quantity; exact procurement and mounting review still pending
+CENTER_SHIM,12.1ID18OD0.3mm axle shim,1,counted,Current mechanical/electrical design quantity; exact procurement and mounting review still pending
+CENTER_SPACER,12.1ID16OD3mm axle spacer,2,counted,Current mechanical/electrical design quantity; exact procurement and mounting review still pending
+POST_SCREW,M5x50 post-adapter screw,2,counted,Current mechanical/electrical design quantity; exact procurement and mounting review still pending
+POST_NUT,M5 post-adapter locking nut,2,counted,Current mechanical/electrical design quantity; exact procurement and mounting review still pending
+GUIDE_LINER,Acetal strip18x178mm fitted to2.8mm thickness,4,counted,Current mechanical/electrical design quantity; exact procurement and mounting review still pending
+ACTUATOR_PIN,4mm clevis pin; final grip drawing governs length,2,counted,Current mechanical/electrical design quantity; exact procurement and mounting review still pending
+ACTUATOR_CLIP,Clevis-pin R clip,4,counted,Current mechanical/electrical design quantity; exact procurement and mounting review still pending
+ACTUATOR_SHIM,4.3ID9OD1mm moving-eye shim,2,counted,Current mechanical/electrical design quantity; exact procurement and mounting review still pending
+LOCK,GN817-6-6-M12X1.5-GK indexing plunger,1,counted,Current mechanical/electrical design quantity; exact procurement and mounting review still pending
+LOCK_NUT,Separate supplied M12x1.5 mounting nut,1,counted,Current mechanical/electrical design quantity; exact procurement and mounting review still pending
+RECEIVER,Steel receiver12x28x22mm; two6.2mm holes,1,counted,Current mechanical/electrical design quantity; exact procurement and mounting review still pending
+LOCK_MOUNT_SCREW,M4x50 lock mount screw,2,counted,Current mechanical/electrical design quantity; exact procurement and mounting review still pending
+LOCK_MOUNT_NUT,M4 captive lock mount nut,2,counted,Current mechanical/electrical design quantity; exact procurement and mounting review still pending
+RECEIVER_SCREW,M3 receiver keeper screw,2,counted,Current mechanical/electrical design quantity; exact procurement and mounting review still pending
+PULL_NUT,M5 ISO4035 thin nut2.7mm,1,counted,Current mechanical/electrical design quantity; exact procurement and mounting review still pending
+PULL_WASHER,M5 thin draw-stud washer,1,counted,Current mechanical/electrical design quantity; exact procurement and mounting review still pending
+CAM_SHORT_SCREW,M4x12 cam screw,1,counted,Current mechanical/electrical design quantity; exact procurement and mounting review still pending
+CAM_LONG_SCREW,M4x25 cam follower screw,1,counted,Current mechanical/electrical design quantity; exact procurement and mounting review still pending
+CAM_NUT,M4 locking cam nut,2,counted,Current mechanical/electrical design quantity; exact procurement and mounting review still pending
+SERVO,goBILDA2000-0025-0002 with factory lead,2,counted,Current mechanical/electrical design quantity; exact procurement and mounting review still pending
+HORN,goBILDA1900-0025-0104; trim at20mm radius,2,counted,Current mechanical/electrical design quantity; exact procurement and mounting review still pending
+HORN_SCREW,M3x6 horn retaining screw,2,counted,Current mechanical/electrical design quantity; exact procurement and mounting review still pending
+SERVO_SCREW,M4x10 servo-flange screw,8,counted,Current mechanical/electrical design quantity; exact procurement and mounting review still pending
+LINK_END,igus KBRM-03-MH rod end,2,counted,Current mechanical/electrical design quantity; exact procurement and mounting review still pending
+LINK_ROD,M3 threaded steering rod; fitted62.0967mm link centers,1,counted,Current mechanical/electrical design quantity; exact procurement and mounting review still pending
+LINK_JAM_NUT,M3 thin link jam nut,2,counted,Current mechanical/electrical design quantity; exact procurement and mounting review still pending
+LINK_SCREW,M3x20 steering pivot screw,2,counted,Current mechanical/electrical design quantity; exact procurement and mounting review still pending
+LINK_NUT,M3 locking pivot nut,2,counted,Current mechanical/electrical design quantity; exact procurement and mounting review still pending
+LINK_WASHER,M3 small0.5mm washer,6,counted,Current mechanical/electrical design quantity; exact procurement and mounting review still pending
+HORN_SLEEVE,K&S9822 brass4OD3.1ID sleeve cut3.8mm,1,counted,Current mechanical/electrical design quantity; exact procurement and mounting review still pending
+MOTOR_TIE,2.5x150mm motor retaining cable tie,14,counted,Current mechanical/electrical design quantity; exact procurement and mounting review still pending
+BATTERY_STRAP,450mm hook-and-loop battery strap assembly,1,counted,Current mechanical/electrical design quantity; exact procurement and mounting review still pending
+SWITCH,OmronSS-01;2 lock/2 travel/1 foot contact,5,counted,Current mechanical/electrical design quantity; exact procurement and mounting review still pending
+SWITCH_SCREW,M2 switch mounting screw,10,counted,Current mechanical/electrical design quantity; exact procurement and mounting review still pending
+SWITCH_NUT,M2 switch locking nut,10,counted,Current mechanical/electrical design quantity; exact procurement and mounting review still pending
+BATTERY,BioennoBLF-1206A,1,counted,Current mechanical/electrical design quantity; exact procurement and mounting review still pending
+CHARGER,BioennoBPC-1502DC,1,counted,Current mechanical/electrical design quantity; exact procurement and mounting review still pending
+CONTROL_ASSEMBLY,Factory-wired control assembly to docs/control-assembly-specification.md,1,counted,Procurement candidate; physical fit and supplier assembly acceptance pending
+LIMIT_FLAG_SCREW,M5x16 post travel-flag retaining screw,1,counted,Procurement candidate; physical fit and supplier assembly acceptance pending
+GROUND_ECLIP,"SEEGER-Orbis RA3,2 DIN6799 floor-probe E-clip",1,counted,Procurement candidate; physical fit and supplier assembly acceptance pending
+CARRIER_SCREW,M3x16 carrier retaining screw,2,counted,Procurement candidate; physical fit and supplier assembly acceptance pending

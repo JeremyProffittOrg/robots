@@ -1,10 +1,10 @@
 net,source,target,awg,note
-PACK+,B1 PP30 +,F1 7.5A input,18,Fuse within 100mm of pack plug
+PACK+,B1 PP30 +,F1 10A input,18,Fuse within 100mm of pack plug
 FUSED+,F1 output,S1 MAIN input,18,
 MAIN+,S1 output,S2 RUN input,18,
 MAIN+,S1 output,U1 VIN+ / P23 pin1,20,"Romeo logic input 7-24 V, onboard FUSE1 3 A; remove the JP6 VIN/VM link"
 GND,B1 PP30 -,U1 VIN- / P23 pin2,20,
-RUN+,S2 output,F2 5A input,18,
+RUN+,S2 output,F2 10A input,18,
 MOTOR_BUCK_IN,F2 output,P1 ICStation 11060 IN+,18,
 GND,B1 PP30 -,P1 IN-,18,
 5V7_MOTOR,P1 OUT+,U1 VM+ / P22 pin1,18,Set 5.70 V with a meter before connecting; accept 5.50-6.00 V at VM
@@ -28,9 +28,11 @@ CENTER+,U1 M3 OUT1,M6 red,22,
 CENTER-,U1 M3 OUT2,M6 black,22,
 HEAD+,U1 M4 OUT1,M7 red,22,
 HEAD-,U1 M4 OUT2,M7 black,22,
-5V7_MOTOR,P1 OUT+,SV1 steering red,22,MG995 4.8-7.2 V
+SERVO_BUCK_IN,F2 output,P3 Pololu5573 VIN,18,
+GND,B1 PP30 -,P3 GND,18,
+6V_SERVO,P3 VOUT,SV1 steering red,22,goBILDA2000-0025-0002; separate6V supply
 GND,B1 PP30 -,SV1 brown,22,
-5V7_MOTOR,P1 OUT+,SV2 lock release red,22,MG995 4.8-7.2 V
+6V_SERVO,P3 VOUT,SV2 lock release red,22,goBILDA2000-0025-0002; separate6V supply
 GND,B1 PP30 -,SV2 brown,22,
 5V_LOGIC,U1 5V header,U7 74AHCT125 pin14 / VCC,26,
 GND,U1 GND header,U7 pin7 / GND,26,
@@ -70,24 +72,30 @@ POST_RED,D5 OUT1,ACT red / pin3,22,
 POST_BLACK,D5 OUT2,ACT black / pin4,22,
 3V3,U1 3V3 header,R_POT_TOP 2.2k pin1,26,
 POT_REF+,R_POT_TOP 2.2k pin2,ACT yellow / pin5,26,Keeps the full-stroke wiper below 3.0 V for pot tolerance +/-50%
-GND,B1 PP30 -,ACT orange / pin1,26,
+POT_REF-,ACT orange / pin1,R_POT_BOTTOM 1k pin1,26,
+GND,B1 PP30 -,R_POT_BOTTOM pin2,26,
 POST_ADC,ACT purple / pin2,U1 GPIO4,26,
 POST_ADC,ACT purple / pin2,R_POT_FAIL 470k pin1,26,Open wiper reads 0 mV: feedback fault
 GND,B1 PP30 -,R_POT_FAIL pin2,26,
-GND,B1 PP30 -,LS_LOCK SS-01GL COM,26,Independent GN817 endpoint: engaged or full6mm withdrawal
+GND,B1 PP30 -,LS_LOCK SS-01 COM,26,Independent GN817 endpoint: engaged or full6mm withdrawal
 LOCK_NO,LS_LOCK NO,U1 GPIO18,26,
 LOCK_NO,LS_LOCK NO,R_LOCK_NO 3.3k pin1,26,About1mA closed-contact current
 3V3,U1 3V3 header,R_LOCK_NO pin2,26,
 LOCK_NC,LS_LOCK NC,U1 GPIO5,26,
 LOCK_NC,LS_LOCK NC,R_LOCK_NC 3.3k pin1,26,About1mA closed-contact current
 3V3,U1 3V3 header,R_LOCK_NC pin2,26,
-GND,B1 PP30 -,LS_WITHDRAWN SS-01GL COM,26,Independent GN817 endpoint: engaged or full6mm withdrawal
-WITHDRAWN_NO,LS_WITHDRAWN NO,U1 GPIO43,26,
+GND,B1 PP30 -,LS_WITHDRAWN SS-01 COM,26,Independent GN817 endpoint: engaged or full6mm withdrawal
+WITHDRAWN_NO,LS_WITHDRAWN NO,R_UART43 1k pin1,26,Pullup is on switch side; limits ROM UART output current
+GPIO43_SENSE,R_UART43 pin2,U1 GPIO43,26,
 WITHDRAWN_NO,LS_WITHDRAWN NO,R_WITHDRAWN_NO 3.3k pin1,26,About1mA closed-contact current
 3V3,U1 3V3 header,R_WITHDRAWN_NO pin2,26,
 WITHDRAWN_NC,LS_WITHDRAWN NC,U1 GPIO44,26,
 WITHDRAWN_NC,LS_WITHDRAWN NC,R_WITHDRAWN_NC 3.3k pin1,26,About1mA closed-contact current
 3V3,U1 3V3 header,R_WITHDRAWN_NC pin2,26,
+GND,B1 PP30 -,LS_FLOOR SS-01 COM,26,
+FOOT_CONTACT,LS_FLOOR NO,U1 GPIO48,26,P18 pin7; camera remains unplugged
+FOOT_CONTACT,LS_FLOOR NO,R_FLOOR 3.3k pin1,26,
+3V3,U1 3V3 header,R_FLOOR pin2,26,
 5V7_MOTOR,P1 OUT+,R_RUN_TOP 10k pin1,26,
 RUN_SENSE,R_RUN_TOP 10k pin2,U1 GPIO39,26,5.5-6.0 V rail gives 2.75-3.00 V
 RUN_SENSE,R_RUN_TOP 10k pin2,R_RUN_BOTTOM 10k pin1,26,

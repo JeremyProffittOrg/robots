@@ -27,23 +27,23 @@ def power_overview():
  label(30,70,'Architecture view. Follow wiring.csv and the connection sheets for exact pins and returns.',17,'start')
  path('M190 150 H240 M340 150 H390 M490 150 H600 M700 150 H740 V470 M540 150 V250 H790')
  box(20,105,170,90,['Protected B1','12 V / 6 Ah','LiFePO4'])
- box(240,115,100,70,['F1','7.5 A']);box(390,115,100,70,['S1','MAIN']);box(600,115,100,70,['S2','RUN'])
+ box(240,115,100,70,['F1','10 A']);box(390,115,100,70,['S1','MAIN']);box(600,115,100,70,['S2','RUN'])
  branches=[
   (250,['Romeo VIN (P23)','7-24 V, onboard 3 A fuse'],['ESP32-S3, 5 V/2 A logic rail','MAX98357A audio, 74AHCT125']),
-  (360,['F2 5 A + P1 ICStation 11060','5.70 V motor rail (RUN)'],['Romeo VM (P22): four DRV8876','M1 left, M2 right, M3 centre, M4 head']),
+  (360,['F2 10 A + P1 ICStation 11060','5.70 V motor rail (RUN)'],['Romeo VM (P22): four DRV8876','M1 left, M2 right, M3 centre, M4 head']),
   (470,['F3 2 A + P2 S13V25F12','12 V post rail (RUN)'],['D5 DRV8871, ILIM 71.5k','Actuonix P16-100-256-12-P'])]
  for y,reg,load in branches:
   if y!=250:
    path(f'M740 {y} H790');svg.append(f'<circle cx="740" cy="{y}" r="4" fill="#173e73"/>')
   path(f'M1030 {y} H1080');box(790,y-30,240,60,reg);box(1080,y-30,300,60,load)
  svg.append('<circle cx="540" cy="150" r="4" fill="#173e73"/>')
- label(1380,420,'5.70 V rail also feeds SV1 steering and SV2 lock-release MG995 power',15,'end')
+ label(1380,420,'P3 Pololu5573: separate6V servo rail, supplied after F2',15,'end')
  notes=['Remove the Romeo JP6 VIN/VM link: VIN stays on MAIN, VM only on RUN.',
   'Fit the PMODE link: DRV8876 PH/EN mode (EN = PWM, PH = direction).',
   'Replace R9 20k with 5.60k and R10 1k with 2.00k: pair trip 1.73 A, head 0.86 A.',
   'Romeo 5V_Servo is the 2 A logic buck; servos never draw from it.',
   'NC travel limits gate the 74AHCT125 enables; opening one disables that direction.',
-  'Two SS-01GL lock switches separately sense engaged and fully withdrawn; each reads NO and NC.',
+  'Two SS-01 lock switches separately sense engaged and fully withdrawn; each reads NO and NC.',
   'P16 pot on 3.3 V through 2.2k; open wiper or reference faults the stance.',
   'Ground drive runs only on three feet with the lock sensed seated.']
  for i,line in enumerate(notes):label(135,560+i*38,line,18,'start')
@@ -54,13 +54,13 @@ def power_overview():
 def main():
  (ROOT/'electronics').mkdir(exist_ok=True)
  # Main switch, fuse and Romeo logic input.
- wire('PACK+','B1 PP30 +','F1 7.5A input','18','Fuse within 100mm of pack plug')
+ wire('PACK+','B1 PP30 +','F1 10A input','18','Fuse within 100mm of pack plug')
  wire('FUSED+','F1 output','S1 MAIN input','18')
  wire('MAIN+','S1 output','S2 RUN input','18')
  wire('MAIN+','S1 output','U1 VIN+ / P23 pin1','20','Romeo logic input 7-24 V, onboard FUSE1 3 A; remove the JP6 VIN/VM link')
  wire('GND',GND,'U1 VIN- / P23 pin2','20')
- # RUN-switched 5.70 V motor rail for the four onboard DRV8876 channels and both servos.
- wire('RUN+','S2 output','F2 5A input','18')
+ # RUN-switched motor and servo regulator inputs; outputs stay separate.
+ wire('RUN+','S2 output','F2 10A input','18')
  wire('MOTOR_BUCK_IN','F2 output','P1 ICStation 11060 IN+','18')
  wire('GND',GND,'P1 IN-','18')
  wire('5V7_MOTOR','P1 OUT+','U1 VM+ / P22 pin1','18','Set 5.70 V with a meter before connecting; accept 5.50-6.00 V at VM')
@@ -77,9 +77,12 @@ def main():
    note='Two motors in parallel on one channel' if len(motors)>1 and m==motors[0] else ''
    wire(f'{side}+',f'U1 M{channel} OUT1',f'M{m} red','22',note)
    wire(f'{side}-',f'U1 M{channel} OUT2',f'M{m} black','22')
- # Servo power from the motor rail; Romeo 5V_Servo is its 2 A logic buck.
+ # Independent6V supply; do not connect this output to the motor regulator.
+ wire('SERVO_BUCK_IN','F2 output','P3 Pololu5573 VIN','18')
+ wire('GND',GND,'P3 GND','18')
+ # Factory servo leads are22AWG; common supply trunk is18AWG.
  for sv,name in [(1,'steering'),(2,'lock release')]:
-  wire('5V7_MOTOR','P1 OUT+',f'SV{sv} {name} red','22','MG995 4.8-7.2 V')
+  wire('6V_SERVO','P3 VOUT',f'SV{sv} {name} red','22','goBILDA2000-0025-0002; separate6V supply')
   wire('GND',GND,f'SV{sv} brown','22')
  # 74AHCT125 level shifter: 3.3 V GPIO to 5 V servo and DRV8871 inputs.
  wire('5V_LOGIC','U1 5V header','U7 74AHCT125 pin14 / VCC')
@@ -107,19 +110,27 @@ def main():
  wire('POST_BLACK','D5 OUT2','ACT black / pin4','22')
  wire('3V3','U1 3V3 header','R_POT_TOP 2.2k pin1')
  wire('POT_REF+','R_POT_TOP 2.2k pin2','ACT yellow / pin5','26','Keeps the full-stroke wiper below 3.0 V for pot tolerance +/-50%')
- wire('GND',GND,'ACT orange / pin1')
+ wire('POT_REF-','ACT orange / pin1','R_POT_BOTTOM 1k pin1')
+ wire('GND',GND,'R_POT_BOTTOM pin2')
  wire('POST_ADC','ACT purple / pin2','U1 GPIO4')
  wire('POST_ADC','ACT purple / pin2','R_POT_FAIL 470k pin1','26','Open wiper reads 0 mV: feedback fault')
  wire('GND',GND,'R_POT_FAIL pin2')
- # Shoulder lock sensor: Omron SS-01GL, both contacts read.
+ # Shoulder lock sensor: Omron SS-01, both contacts read.
  for switch,net,contacts in [('LS_LOCK','LOCK',[('NO',18),('NC',5)]),
                              ('LS_WITHDRAWN','WITHDRAWN',[('NO',43),('NC',44)])]:
-  wire('GND',GND,f'{switch} SS-01GL COM','26','Independent GN817 endpoint: engaged or full6mm withdrawal')
+  wire('GND',GND,f'{switch} SS-01 COM','26','Independent GN817 endpoint: engaged or full6mm withdrawal')
   for contact,gpio in contacts:
    resistor=f'R_{net}_{contact}'
-   wire(net+'_'+contact,f'{switch} {contact}',f'U1 GPIO{gpio}')
+   if gpio==43:
+    wire(net+'_'+contact,f'{switch} {contact}','R_UART43 1k pin1','26','Pullup is on switch side; limits ROM UART output current')
+    wire('GPIO43_SENSE','R_UART43 pin2','U1 GPIO43')
+   else:wire(net+'_'+contact,f'{switch} {contact}',f'U1 GPIO{gpio}')
    wire(net+'_'+contact,f'{switch} {contact}',f'{resistor} 3.3k pin1','26','About1mA closed-contact current')
    wire('3V3','U1 3V3 header',f'{resistor} pin2')
+ wire('GND',GND,'LS_FLOOR SS-01 COM')
+ wire('FOOT_CONTACT','LS_FLOOR NO','U1 GPIO48','26','P18 pin7; camera remains unplugged')
+ wire('FOOT_CONTACT','LS_FLOOR NO','R_FLOOR 3.3k pin1')
+ wire('3V3','U1 3V3 header','R_FLOOR pin2')
  # RUN presence and battery voltage.
  wire('5V7_MOTOR','P1 OUT+','R_RUN_TOP 10k pin1')
  wire('RUN_SENSE','R_RUN_TOP 10k pin2','U1 GPIO39','26','5.5-6.0 V rail gives 2.75-3.00 V')
@@ -138,7 +149,7 @@ def main():
  wire('GND',GND,'U1 GND header','20','Common ground point for logic-level returns')
  write_csv(ROOT/'electronics/wiring.csv',rows)
 
- rules=[('01-power',lambda r:r['net'] in ('PACK+','FUSED+','MAIN+','RUN+','MOTOR_BUCK_IN','POST_BUCK_IN','12V_POST') or any(k in r['target'] for k in ['VIN','VM','P1 ','P2 ','D5 GND'])),
+ rules=[('01-power',lambda r:r['net'] in ('PACK+','FUSED+','MAIN+','RUN+','MOTOR_BUCK_IN','POST_BUCK_IN','12V_POST') or any(k in r['target'] for k in ['VIN','VM','P1 ','P2 ','P3 ','D5 GND'])),
   ('02-drive',lambda r:r['net'].rstrip('+-') in ('LEFT','RIGHT','CENTER','HEAD')),
   ('03-buffer-and-servos',lambda r:'U7' in r['source']+r['target'] or 'SV' in r['target'] or 'R_PD' in r['target']),
   ('04-stance-actuator-and-lock',lambda r:any(k in r['source']+r['target'] for k in ['ACT','LS_','R_POT','R_ILIM','R_LIM','R_LOCK','D5'])),
