@@ -1,12 +1,15 @@
 param(
     [Parameter(Mandatory = $true)]
-    [string]$OutputPath
+    [string]$OutputPath,
+    [string]$StoryboardPath = ''
 )
 
 # Builds the fable-r2d2 video soundtrack: Windows System.Speech narration for each storyboard
 # chapter, mixed with the original robot WAV clips in firmware/pi/sounds. Local only: no
 # network, no account and no scheduled task. Fails loudly if a narration line does not fit its
 # chapter window or if two clips would overlap.
+# scripts/render_video.py passes -StoryboardPath: a copy of video_storyboard.json whose {TOKENS}
+# are already filled from scripts/parts.json, so the narration never speaks a raw token.
 
 $ErrorActionPreference = 'Stop'
 $projectRoot = [System.IO.Path]::GetFullPath((Join-Path $PSScriptRoot '..'))
@@ -25,7 +28,20 @@ if (-not (Test-Path -LiteralPath (Split-Path $outputFile -Parent) -PathType Cont
 }
 $ffmpeg = (Get-Command ffmpeg -ErrorAction Stop).Source
 $ffprobe = (Get-Command ffprobe -ErrorAction Stop).Source
-$story = Get-Content -LiteralPath (Join-Path $PSScriptRoot 'video_storyboard.json') -Raw | ConvertFrom-Json
+if ($StoryboardPath) {
+    if (-not [System.IO.Path]::IsPathRooted($StoryboardPath) -or -not (Test-Path -LiteralPath $StoryboardPath -PathType Leaf)) {
+        throw 'StoryboardPath must be an absolute path to an existing JSON file.'
+    }
+    $storyFile = $StoryboardPath
+} else {
+    $storyFile = Join-Path $PSScriptRoot 'video_storyboard.json'
+}
+$story = Get-Content -LiteralPath $storyFile -Raw | ConvertFrom-Json
+foreach ($chapter in $story.chapters) {
+    if ($chapter.narration -match '\{[A-Z_]+\}') {
+        throw "Narration still contains a token; run scripts/render_video.py, which fills them: $($chapter.name)"
+    }
+}
 $culture = [System.Globalization.CultureInfo]::InvariantCulture
 $total = [double]$story.total_seconds
 $soundDirectory = Join-Path $projectRoot $story.sound_directory

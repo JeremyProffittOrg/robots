@@ -1,8 +1,11 @@
-"""MATLAB-style engineering drawing set for the fable-r2d2 printed R2-D2 package.
+"""MATLAB-style engineering drawing set for the fable-r2d2 revision D printed R2-D2 package.
 
 Every surface comes from the exported STL files placed by scripts/assembly_layout.py.
 Purchased parts (motors, wheels, battery, lazy susan, slip ring, boards, bolts, rods,
-bearings, springs) are nominal envelopes built from the cad/params.scad values.
+bearings, springs, the P16 actuator, guide shafts and shoulder locks) are nominal envelopes
+built from the cad/params.scad values. Sheet 17 shows both stances and the transition, posed
+by the actuator stroke `stance_s` through the kinematics cad/stance.scad uses. Part lists and
+counts come from scripts/parts.json.
 
 Writes output/drawings/NN_*.png, output/drawings/components/<part>.png,
 output/drawings/drawing-manifest.json and r2d2-matlab-style-drawings.zip.
@@ -33,7 +36,7 @@ import numpy as np
 import trimesh
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from assembly_layout import Layout, T, R, MX, _read_scad_assignments  # noqa: E402
+from assembly_layout import REVISION, STANCE_PARAMETER, Layout, T, R, MX, _read_scad_assignments, number_word  # noqa: E402
 
 ROOT = Path(__file__).resolve().parents[1]
 OUT = ROOT / "output/drawings"
@@ -44,11 +47,12 @@ LEGS = LAY.legs
 FEET = LAY.feet
 HEAD = LAY.head
 PARTS = json.loads((ROOT / "scripts/parts.json").read_text(encoding="utf-8"))["parts"]
-ORDER = ["dome", "body_upper", "body_lower", "leg_upper", "leg_lower",
-         "leg_center", "foot_outer", "foot_center", "head_drive"]
+ORDER = list(PARTS)
+DESIGNS = len(PARTS)
+PIECES = sum(int(row["quantity"]) for row in PARTS.values())
 TITLES = {"dome": "Dome", "body_upper": "Body upper ring", "body_lower": "Body lower ring",
           "leg_upper": "Outer leg, upper", "leg_lower": "Outer leg, lower",
-          "leg_center": "Centre leg", "foot_outer": "Outer foot",
+          "leg_center": "Centre-leg housing", "leg_carriage": "Centre-leg carriage", "foot_outer": "Outer foot",
           "foot_center": "Centre foot", "head_drive": "Head friction drive"}
 
 # ---------------------------------------------------------------- palette
@@ -60,12 +64,17 @@ PRINTED = "#E1E7EC"          # printed PETG in the finish views
 DOME_SILVER = "#C5CDD6"
 PART_COLOR = {"dome": BLUE, "body_upper": CYAN, "body_lower": "#2F6E9E",
               "leg_upper": GREEN, "leg_lower": "#4B8B22", "leg_center": "#1AA08F",
-              "foot_outer": PURPLE, "foot_center": "#B45CC4", "head_drive": "#D95398"}
+              "leg_carriage": "#0E6E8C", "foot_outer": PURPLE, "foot_center": "#B45CC4",
+              "head_drive": "#D95398"}
 MOTOR, WHEEL, BATTERY = GOLD, ORANGE, "#23282E"
 STEEL, BEARING, SUSAN = "#93A1AE", "#5F6B77", "#A9B4BF"
 BOARD, SLIPRING, SPRING = "#2E7D57", MAROON, "#6E7B8B"
 SPEAKER, TFT, LEDC, JEWEL = "#3A3F45", "#1F3B57", "#39B54A", "#2A9BD8"
-FOOTER_TEXT = ("STL-derived geometry; purchased parts are nominal envelopes; "
+ACTUATOR, BRONZE = "#2B3440", "#B0873A"
+_UNNAMED = [name for name in ORDER if name not in TITLES or name not in PART_COLOR]
+if _UNNAMED:
+    raise SystemExit(f"scripts/parts.json lists parts with no drawing title or colour: {_UNNAMED}")
+FOOTER_TEXT = (f"Revision {REVISION}: STL-derived geometry; purchased parts are nominal envelopes; "
                "no physical build")
 LIGHT = np.array([-.35, -.55, 1.0])
 LIGHT /= np.linalg.norm(LIGHT)
@@ -539,7 +548,7 @@ def title_block(fig, number, name, parts, sizes, scale, note=None):
     fig.add_artist(Line2D([x0, x0 + w], [y0 + h * .655] * 2, transform=fig.transFigure,
                           color="#63788C", linewidth=.7, zorder=6))
     limit = int(fig.get_figwidth() * 11.5)
-    fig.text(x0 + .008, y0 + h * .82, "fable-r2d2  /  printable R2-D2  /  MATLAB-style drawing set",
+    fig.text(x0 + .008, y0 + h * .82, f"fable-r2d2 revision {REVISION}  /  printable R2-D2  /  MATLAB-style drawings",
              fontsize=8.4, color="#1B2733", va="center", zorder=6)
     fig.text(x0 + w - .008, y0 + h * .82, f"SHEET {number}", fontsize=9, color="#1B2733",
              ha="right", va="center", zorder=6)
@@ -614,9 +623,9 @@ def save(fig, relative):
 
 
 # ---------------------------------------------------------------- assembly scenes
-def printed_items(finish=True, explode=None):
+def printed_items(finish=True, explode=None, lay=None):
     items = []
-    for inst in LAY.instances():
+    for inst in (lay or LAY).instances():
         if not have(inst["part"]):
             continue
         offset = (explode or {}).get(inst["name"], (0, 0, 0))
@@ -629,25 +638,26 @@ def printed_items(finish=True, explode=None):
     return items
 
 
-def drive_items(explode=None):
+def drive_items(explode=None, lay=None):
     """Motors and wheels in all three feet, from the Layout helpers."""
+    lay = lay or LAY
     items = []
     shift = explode or {}
-    feet = [(LAY.at_foot(1), shift.get("foot_outer_right", (0, 0, 0)), False),
-            (LAY.at_foot(-1), shift.get("foot_outer_left", (0, 0, 0)), False),
-            (LAY.at_center_foot(), shift.get("foot_center", (0, 0, 0)), True)]
+    feet = [(lay.at_foot(1), shift.get("foot_outer_right", (0, 0, 0)), False),
+            (lay.at_foot(-1), shift.get("foot_outer_left", (0, 0, 0)), False),
+            (lay.at_center_foot(), shift.get("foot_center", (0, 0, 0)), True)]
     for matrix, offset, center in feet:
-        for m in LAY.motor_matrices(matrix, center=center):
+        for m in lay.motor_matrices(matrix, center=center):
             items.append((moved(tt_motor_mesh(m), offset), MOTOR, "TT motor"))
-        for m in LAY.wheel_matrices(matrix):
+        for m in lay.wheel_matrices(matrix):
             items.append((moved(wheel_mesh(m), offset), WHEEL, "Wheel"))
     return items
 
 
-def body_hardware(explode=None):
+def body_hardware(explode=None, lay=None):
     """Purchased envelopes carried by the body, in the assembly frame."""
     shift = explode or {}
-    body = LAY.at_body()
+    body = (lay or LAY).at_body()
     lower = np.asarray(shift.get("body_lower", (0, 0, 0)), float)
     upper = np.asarray(shift.get("body_upper", (0, 0, 0)), float)
     items = []
@@ -698,43 +708,100 @@ def head_drive_items(frame_matrix, explode=(0, 0, 0)):
                             matrix=frame_matrix), explode), WHEEL, "Friction wheel 3766")]
 
 
+def lock_items(frame, travel=0.0):
+    """GN 412 plunger, MG995 release servo and SS-01GL switch envelopes in a cad/stance.scad lock
+    frame (origin at the pin-exit face, +X outward). The knob underside at X -22 and the switch
+    operating position 8.8 mm are the st_gn412 / st_ss01gl constants of cad/stance.scad."""
+    f, hx, kn = P["st_flange"], P["st_hex"], P["st_knob"]
+    sx = -22 + P["st_horn_rest_gap"] + P["st_horn_tip_r"] - P["st_horn_arm"][0]
+    sz = -12 - P["st_horn_arm"][1]
+    w, h, l, e = P["st_servo_w"], P["st_servo_h"], P["st_servo_l"], P["st_servo_shaft_end"]
+    xh = -22 + 8.8 + P["st_switch_ot"]
+    return [(prim_box((f[0], f[1], f[2]), (-f[0] / 2, 0, 0), frame), STEEL, "GN 412 plunger"),
+            (prim_cyl(P["st_pin_d"], f[0] + hx[0] + P["st_pin_ext"],
+                      ((-f[0] - hx[0] + P["st_pin_ext"]) / 2 - travel, 0, 0), axis="x", matrix=frame), STEEL, "Lock pin"),
+            (prim_cyl(kn[1], kn[0], (-f[0] - hx[0] - kn[0] / 2 - travel, 0, 0), axis="x", matrix=frame),
+             ACTUATOR, "Lock knob"),
+            (prim_box((w, h, l), (sx, 7 + h / 2, sz + e - l / 2), frame), ACTUATOR, "MG995 servo"),
+            (prim_box((10.2, 6.4, 19.8), (xh - 2.2, 0, 23.4), frame), BOARD, "SS-01GL switch")]
+
+
+def stance_items(explode=None, lay=None):
+    """Stance-mechanism purchased envelopes at the Layout's pose: guide shafts, P16 actuator,
+    LM12LUU bearings, both shoulder locks and the four leg receivers."""
+    lay = lay or LAY
+    shift = explode or {}
+    lower = np.asarray(shift.get("body_lower", (0, 0, 0)), float)
+    upper = np.asarray(shift.get("body_upper", (0, 0, 0)), float)
+    carriage = np.asarray(shift.get("leg_carriage", (0, 0, 0)), float)
+    mech = lay.mechanism()
+    items = []
+    span = P["st_shaft_t"][1] - P["st_shaft_t"][0]
+    for m in mech["shafts"]:
+        items.append((moved(prim_cyl(P["st_shaft_d"], span, (0, 0, span / 2), matrix=m), lower), STEEL, "Guide shaft"))
+    c0, c1 = P["st_act_case_t"]
+    reach = P["st_act_closed"] + lay.s
+    act = mech["actuator"]
+    items.append((moved(prim_box((P["st_act_case"][0], P["st_act_case"][1], c1 - c0), (0, 0, -(c0 + c1) / 2), act),
+                        upper), ACTUATOR, "P16 actuator"))
+    items.append((moved(prim_cyl(P["st_act_rod_d"], reach - c1, (0, 0, -(reach + c1) / 2), matrix=act), upper),
+                  STEEL, "P16 rod"))
+    for m in mech["bearings"]:
+        items.append((moved(prim_cyl(P["st_brg"][1], P["st_brg"][2], (0, 0, P["st_brg"][2] / 2), matrix=m), carriage),
+                      BEARING, "LM12LUU bearing"))
+    travel = 0.0 if lay.locks_seated_cad() else P["st_pin_ext"] - P["st_land_gap"]
+    for side, m in sorted(mech["locks"].items()):
+        items += [(moved(mesh, upper), color, label) for mesh, color, label in lock_items(m, travel)]
+    for r in mech["receivers"]:
+        leg = np.asarray(shift.get("leg_upper_right" if r["side"] > 0 else "leg_upper_left", (0, 0, 0)), float)
+        items.append((moved(prim_cyl(P["st_recv"][1], P["st_recv"][0], (P["st_recv"][0] / 2, 0, 0), axis="x",
+                                     matrix=r["matrix"]), leg), BRONZE, "GN 412.2 receiver"))
+    return items
+
+
 # ---------------------------------------------------------------- sheets
 def sheet_01():
-    items = printed_items(finish=True) + drive_items() + body_hardware()
+    items = printed_items(finish=True) + drive_items() + body_hardware() + stance_items()
     hd = LAY.at_head_drive()
     items += head_drive_items(hd)
+    motors = sum(1 for _, _, label in items if label.startswith("TT motor"))
+    wheels = sum(1 for _, _, label in items if label.startswith(("Wheel", "Friction wheel")))
     fig = plt.figure(figsize=(16, 13))
     ax = fig.add_axes([.11, .13, .60, .75], projection="3d")
     draw_meshes(ax, items)
     lo, hi = items_bounds(items, pad=0)
     setup_3d(ax, ([-265, lo[1] - 15, 0], [265, hi[1] + 15, hi[2] + 15]), elev=20, azim=-60,
              tick_step=100, zoom=1.12)
-    heading(fig, "fable-r2d2 / assembled robot, three-leg stance",
-            f"Nine printed designs / twelve printed pieces | Overall height "
-            f"{hi[2]:.1f} mm | Body diameter {P['body_od']:.0f} mm | Foot track "
-            f"{P['leg_track']:.1f} mm")
+    heading(fig, f"fable-r2d2 revision {REVISION} / assembled robot, three-leg stance",
+            f"{number_word(DESIGNS).capitalize()} printed designs / {number_word(PIECES)} printed pieces | Overall height "
+            f"{hi[2]:.1f} mm | Body diameter {P['body_od']:.0f} mm | {STANCE_PARAMETER} {LAY.s:.2f} mm, "
+            f"tilt {LAY.tilt:.1f} deg")
     def point(label):
         return anchor_of(items, label, 20, -60)
-    entries = [(point("dome"), "Dome, one piece\nPETG, 199.1 mm tall", "L"),
-               (point("body_upper"), "Body upper ring\nintegral electronics deck", "R"),
-               (point("body_lower"), "Body lower ring\nbattery bay and skirt", "R"),
+    dome_h = stl("dome").extents[2] if have("dome") else 0.0
+    entries = [(point("dome"), f"Dome, one piece\nPETG, {dome_h:.1f} mm tall", "L"),
+               (point("body_upper"), "Body upper ring\ndeck and sensed shoulder locks", "R"),
+               (point("body_lower"), "Body lower ring\nbattery bay and guide shafts", "R"),
                (point("leg_upper_right"), "Outer leg upper\nshoulder pivot M12", "L"),
                (point("leg_lower_right"), "Outer leg lower\nspliced on two M8 rods", "L"),
                (point("foot_outer_right"), "Outer foot\ntwo motors, four wheels", "R"),
-               (point("leg_center"), "Centre leg on caster\nbearings, behind the skirt", "L"),
+               (point("leg_carriage"), f"Centre-leg carriage\nP16 actuator, {P['st_guide_angle']:.0f} deg guide", "L"),
+               (point("leg_center"), "Centre-leg housing\ncaster on two 6001 bearings", "L"),
                (point("foot_center"), "Centre foot\ntwo motors, four wheels", "R"),
+               (point("GN 412 plunger"), "Sensed shoulder lock\nGN 412, MG995, SS-01GL", "R"),
                (point("head_drive"), "Head friction drive\nunder the top plate", "R")]
     callouts(fig, ax, [e for e in entries if e[0] is not None],
              left_x=.030, right_x=.745, top=.860, bottom=.30, auto=True)
     legend(fig, [("Printed PETG parts", PRINTED), ("Dome (printed, silver finish)", DOME_SILVER),
                  ("Wheels, Adafruit 3766", WHEEL), ("TT motors, Adafruit 3777", MOTOR),
-                 ("Battery 12 V 7 Ah SLA", BATTERY), ("Steel rods, straps, bolts", STEEL),
-                 ("Lazy susan ring bearing", SUSAN), ("Electronics boards", BOARD)],
+                 ("Battery 12 V 7 Ah SLA", BATTERY), ("Steel rods, shafts, bolts", STEEL),
+                 ("Lazy susan ring bearing", SUSAN), ("Electronics boards", BOARD),
+                 ("Actuator, lock knobs, servos", ACTUATOR), ("Lock receivers", BRONZE)],
            position=(.050, .095), ncol=2, loc="lower left", fontsize=9)
-    footer(fig, "Seven TT motors and thirteen wheels: two motors and four wheels per foot, plus the head friction drive.")
+    footer(fig, f"{number_word(motors).capitalize()} TT motors and {number_word(wheels)} wheels: two motors and four "
+                "wheels per foot, plus the head friction drive.")
     title_block(fig, "01", "Assembled robot / isometric",
-                "dome, body_upper, body_lower, leg_upper x2, leg_lower x2, leg_center, "
-                "foot_outer x2, foot_center, head_drive",
+                ", ".join(name + (f" x{row['quantity']}" if int(row["quantity"]) > 1 else "") for name, row in PARTS.items()),
                 f"Height {hi[2]:.1f} mm, track {P['leg_track']:.1f} mm",
                 "Scale: fit to sheet, axes in mm")
     frame(fig)
@@ -746,12 +813,12 @@ EXPLODE = {"dome": (0, 0, 300), "body_upper": (0, 0, 170), "body_lower": (0, 0, 
            "leg_upper_right": (250, 0, 60), "leg_upper_left": (-250, 0, 60),
            "leg_lower_right": (310, 60, -50), "leg_lower_left": (-310, 60, -50),
            "foot_outer_right": (350, 130, 0), "foot_outer_left": (-350, 130, 0),
-           "leg_center": (0, 250, 90), "foot_center": (0, 320, 0)}
+           "leg_carriage": (0, 330, 190), "leg_center": (0, 250, 90), "foot_center": (0, 320, 0)}
 
 
 def sheet_02():
     items = printed_items(finish=False, explode=EXPLODE) + drive_items(EXPLODE) \
-        + body_hardware(EXPLODE)
+        + body_hardware(EXPLODE) + stance_items(EXPLODE)
     items += head_drive_items(LAY.at_head_drive(), EXPLODE["head_drive"])
     fig = plt.figure(figsize=(17, 13))
     ax = fig.add_axes([.10, .22, .62, .68], projection="3d")
@@ -759,29 +826,30 @@ def sheet_02():
     lo, hi = items_bounds(items, pad=.03)
     setup_3d(ax, ([lo[0], lo[1], 0], [hi[0], hi[1], hi[2]]), elev=18, azim=-60, tick_step=200,
              zoom=1.05)
-    heading(fig, "fable-r2d2 / exploded assembly",
+    heading(fig, f"fable-r2d2 revision {REVISION} / exploded assembly",
             "Separated along the axis each joint is assembled on | Vertical stack for the body "
-            "and dome, outboard for the legs and feet, rearward for the head drive")
+            "and dome, outboard for the legs and feet, forward for the centre leg and carriage")
     def point(label):
         return anchor_of(items, label, 18, -60)
     entries = [(point("dome"), "Dome\nlazy susan and slip ring below", "L"),
-               (point("body_upper"), "Body upper ring\ndeck, shoulder bosses, top plate", "R"),
-               (point("body_lower"), "Body lower ring\nbattery bay and skirt", "R"),
+               (point("body_upper"), "Body upper ring\ndeck, lock blocks, top plate", "R"),
+               (point("body_lower"), "Body lower ring\nbattery bay and shaft bosses", "R"),
                (point("head_drive"), "Head friction drive\nmount, motor and wheel", "R"),
                (point("leg_upper_right"), "Outer leg upper x2\nmirror for the second", "L"),
                (point("leg_lower_right"), "Outer leg lower x2\nM8 rods through both", "L"),
                (point("foot_outer_right"), "Outer foot x2\nmirror for the second", "R"),
-               (point("leg_center"), "Centre leg\n6001 bearings, M12 caster bolt", "L"),
-               (point("foot_center"), "Centre foot\ncaster stem into the leg", "R")]
+               (point("leg_carriage"), "Centre-leg carriage\ntwo LM12LUU, M8 pitch hinge", "L"),
+               (point("leg_center"), "Centre-leg housing\n6001 bearings, M12 caster bolt", "L"),
+               (point("foot_center"), "Centre foot\ncaster stem into the housing", "R")]
     callouts(fig, ax, [e for e in entries if e[0] is not None],
              left_x=.028, right_x=.735, top=.86, bottom=.30, auto=True)
     legend(fig, [(TITLES[name], PART_COLOR[name]) for name in ORDER]
            + [("TT motors", MOTOR), ("Wheels", WHEEL), ("Battery", BATTERY),
-              ("Steel hardware", STEEL)], position=(.33, .105), title_text="Printed parts",
-           ncol=5, loc="lower center", fontsize=9)
+              ("Steel hardware", STEEL), ("Actuator and locks", ACTUATOR)], position=(.33, .105),
+           title_text="Printed parts", ncol=5, loc="lower center", fontsize=9)
     footer(fig, "Explosion offsets are for clarity only; assembled positions are on sheet 01.")
     title_block(fig, "02", "Exploded assembly / isometric",
-                "all nine printed designs plus purchased envelopes",
+                f"all {number_word(DESIGNS)} printed designs plus purchased envelopes",
                 "Explosion 45-350 mm along the joint axes",
                 "Scale: fit to sheet, axes in mm")
     frame(fig)
@@ -789,7 +857,7 @@ def sheet_02():
 
 
 def sheet_03():
-    items = printed_items(finish=True) + drive_items() + body_hardware()
+    items = printed_items(finish=True) + drive_items() + body_hardware() + stance_items()
     items += head_drive_items(LAY.at_head_drive())
     lo, hi = items_bounds(items, pad=0)
     height = hi[2]
@@ -824,13 +892,13 @@ def sheet_03():
     dimension(front, (P["leg_offset_x"], -35), (-P["leg_offset_x"], -35),
               f"Track {P['leg_track']:.1f} mm")
     dimension(side, (lo[1], -35), (hi[1], -35), f"Overall depth {depth:.1f} mm")
-    dimension(side, (hi[1] + 55, 0), (hi[1] + 55, P["shoulder_z_three_leg"]),
-              f"Shoulder axis {P['shoulder_z_three_leg']:.1f} mm", rotation=90)
+    dimension(side, (hi[1] + 55, 0), (hi[1] + 55, LAY.shoulder_z_world),
+              f"Shoulder axis {LAY.shoulder_z_world:.1f} mm", rotation=90)
     dimension(top, (-P["body_r"], hi[1] + 30), (P["body_r"], hi[1] + 30),
               f"Body dia {P['body_od']:.1f} mm")
     dimension(top, (hi[0] + 45, -P["leg_offset_x"] * 0 + lo[1]), (hi[0] + 45, hi[1]),
               f"Footprint depth {depth:.1f} mm", rotation=90)
-    heading(fig, "fable-r2d2 / orthographic drawings",
+    heading(fig, f"fable-r2d2 revision {REVISION} / orthographic drawings, three-leg stance",
             "Three principal views of the same STL assembly | All three panels share one scale "
             f"({span:.0f} mm across each panel) | Dimensions read from the assembly bounds")
     footer(fig, "Datum: floor Z = 0, body axis X = Y = 0, +Y is the front of the droid.")
@@ -843,9 +911,11 @@ def sheet_03():
 
 
 def sheet_04():
-    fig = plt.figure(figsize=(19, 13))
+    columns = 4 if len(ORDER) > 9 else 3
+    rows = math.ceil(len(ORDER) / columns)
+    fig = plt.figure(figsize=(6.33 * columns, 4.33 * rows))
     for index, name in enumerate(ORDER):
-        ax = fig.add_subplot(3, 3, index + 1, projection="3d")
+        ax = fig.add_subplot(rows, columns, index + 1, projection="3d")
         row = PARTS[name]
         if not have(name):
             ax.set_axis_off()
@@ -867,8 +937,8 @@ def sheet_04():
                              f"{row['orientation']}", transform=ax.transAxes, ha="center",
                   fontsize=8.8, color=MUTED)
     fig.subplots_adjust(left=.02, right=.98, bottom=.19, top=.87, wspace=.04, hspace=.26)
-    heading(fig, "fable-r2d2 / printed components",
-            "Nine STL designs, twelve printed pieces | Each part shown in its print orientation "
+    heading(fig, f"fable-r2d2 revision {REVISION} / printed components",
+            f"{number_word(DESIGNS).capitalize()} STL designs, {number_word(PIECES)} printed pieces | Each part shown in its print orientation "
             "on the plate (Z up) | Each panel has its own scale")
     footer(fig, "Bounding boxes are the exported STL extents. H2D left-extruder field "
                 f"{P['env_x']:.0f} x {P['env_y']:.0f} x {P['env_z']:.0f} mm.")
@@ -923,7 +993,7 @@ def sheet_05():
                         "Battery shelf Z %.0f mm\n%.0f x %.0f x %.0f mm bay"
                         % (P["battery_shelf_z"], *P["battery"])),
                        ((0, 0, P["floor_t"] / 2),
-                        "Skirt floor plate %.0f mm\ncentre-leg flange bolts" % P["floor_t"]),
+                        "Skirt floor plate %.0f mm\ncut for the carriage sweep" % P["floor_t"]),
                        ((0, -P["rod_r"], height * .62),
                         "M8 rod boss dia %.0f mm\nfour on R%.0f mm" % (P["rod_boss_d"], P["rod_r"])),
                        ((0, -P["skirt_flat_y"], 18),
@@ -937,7 +1007,7 @@ def sheet_05():
             entries = [((0, 0, P["tray_z_upper"]),
                         "Integral electronics deck\nZ %.0f mm above the seam" % P["tray_z_upper"]),
                        ((P["body_r"] - 24, 0, P["shoulder_z_upper"]),
-                        "Shoulder boss dia %.0f mm\nM%d pivot + index pins"
+                        "Shoulder boss dia %.0f mm\nM%d pivot + sensed lock"
                         % (P["shoulder_boss_d"], P["shoulder_bolt_m"])),
                        ((0, 0, height - P["body_lip_h"]),
                         "Lazy-susan seat %.1f mm\ntop plate %.0f mm thick"
@@ -1090,10 +1160,10 @@ def sheet_07():
                         "Lower 6001 bearing\nseat 28 x 12 x 8 mm"),
                        ((0, 0, LEGS["lg_bearing2_z"]),
                         "Upper 6001 bearing\ncentres %.0f mm apart" % LEGS["lg_bearing_cc"]),
-                       ((0, 0, LEGS["lg_center_plane_z"] + P["center_leg_flange"][2]),
-                        "Body flange %.0f x %.0f\n4 x M%d into the floor"
-                        % (P["center_leg_flange"][0], P["center_leg_flange"][1],
-                           P["center_leg_bolt_m"])),
+                       ((0, 0, P["st_hinge_up"]),
+                        "Pitch hinge Z %.0f mm\n2 x M8 from the carriage" % P["st_hinge_up"]),
+                       ((0, LEGS["lg_center_col"][1] / 2, P["st_hinge_up"] + 12),
+                        "Heel and toe stops\ntoe %.1f deg" % P["st_toe_stop"]),
                        ((0, 0, LEGS["lg_center_bottom_z"]),
                         "Caster bore M%d\nfoot stem from below" % P["caster_bolt_m"]),
                        ((0, -LEGS["lg_stop_r"], LEGS["lg_center_bottom_z"] + 8),
@@ -1101,9 +1171,9 @@ def sheet_07():
         side_callouts(fig, side, entries, LEG_LABEL_X[column], .430, .155, fontsize=8.0)
     heading(fig, "fable-r2d2 / legs",
             "Outer leg %.1f mm shoulder to ankle, printed in two pieces and spliced over two M8 "
-            "rods | The centre leg carries the caster ankle" % P["leg_len"])
-    footer(fig, "Leg frame: Z = 0 at the shoulder axis, +Y forward, the leg leaning %.0f deg in "
-                "the three-leg stance." % P["leg_lean"])
+            "rods | The centre-leg housing carries the caster and the pitch hinge" % P["leg_len"])
+    footer(fig, "Leg frame: Z = 0 at the shoulder axis, +Y forward. Revision %s stands the outer legs "
+                "vertical (leg_lean %.0f deg) in both stances." % (REVISION, P["leg_lean"]))
     title_block(fig, "07", "Legs / isometric and side views",
                 "leg_upper (x2, mirrored), leg_lower (x2, mirrored), leg_center",
                 "Leg length %.1f mm, split at Z %.0f mm" % (P["leg_len"], P["leg_split_z"]),
@@ -1412,35 +1482,48 @@ def sheet_11():
 def sheet_12():
     fig = plt.figure(figsize=(16, 12.5))
     ax = fig.add_axes([.10, .14, .58, .73], projection="3d")
+    to_housing = np.linalg.inv(LAY.at_center_leg())
+    carriage = to_housing @ LAY.at_carriage()
+    lift = 170.0
+    up = T(0, 0, lift)
     items = []
     if have("leg_center"):
-        items.append((placed("leg_center", LAY.print_inverse("leg_center")),
-                      PART_COLOR["leg_center"], "leg_center"))
+        items.append((placed("leg_center", LAY.print_inverse("leg_center")), PART_COLOR["leg_center"], "leg_center"))
+    if have("leg_carriage"):
+        items.append((placed("leg_carriage", up @ carriage @ LAY.print_inverse("leg_carriage")),
+                      PART_COLOR["leg_carriage"], "leg_carriage"))
+    for m in LAY.mechanism()["bearings"]:
+        seat = up @ to_housing @ m @ T(0, 0, 90)
+        items.append((prim_cyl(P["st_brg"][1], P["st_brg"][2], (0, 0, P["st_brg"][2] / 2), matrix=seat),
+                      BEARING, "LM12LUU bearing"))
+    heads = []
+    for sx in (-1, 1):
+        sleeve = up @ carriage @ T(sx * (P["st_cheek_in"] + P["st_cheek_t"] / 2 + 60), 0, 0)
+        items.append((prim_ring(12, 8, 12, axis="x", matrix=sleeve), BRONZE, "Bronze hinge sleeve"))
+        head = up @ carriage @ T(sx * (P["st_cheek_in"] + P["st_cheek_t"] + 110), 0, 0)
+        heads.append(head[:3, 3])
+        items.append((bolt_mesh(8, 35, (0, 0, 0), axis="x", sign=-sx, matrix=head), STEEL, "M8 x 35 hinge bolt"))
     for index, z in enumerate((LEGS["lg_bearing1_z"], LEGS["lg_bearing2_z"])):
         items.append((prim_ring(P["caster_bearing_od"], 12, P["caster_bearing_t"],
                                 (0, -110 - index * 45, z + P["caster_bearing_t"] / 2)),
                       BEARING, "6001 bearing"))
     items.append((bolt_mesh(P["caster_bolt_m"], 80, (0, 0, LEGS["lg_center_bottom_z"] - 120),
                             axis="z", sign=1), STEEL, "M12 caster bolt"))
-    for x, y in P["center_leg_bolts"]:
-        items.append((bolt_mesh(P["center_leg_bolt_m"], 30,
-                                (x, y, LEGS["lg_center_plane_z"] + P["center_leg_flange"][2] + 70),
-                                axis="z", sign=-1), STEEL, "M8 flange bolt"))
     if have("foot_center"):
-        foot = np.linalg.inv(LAY.at_center_leg()) @ LAY.at_center_foot()
-        items.append((placed("foot_center", foot, (0, 0, -150)), PART_COLOR["foot_center"],
-                      "foot_center"))
-    if not items:
-        missing_banner(ax, ["leg_center.stl"])
+        foot = to_housing @ LAY.at_center_foot()
+        items.append((placed("foot_center", foot, (0, 0, -150)), PART_COLOR["foot_center"], "foot_center"))
+    if not any(label in ("leg_center", "leg_carriage") for _, _, label in items):
+        missing_banner(ax, ["leg_center.stl", "leg_carriage.stl"])
     else:
         draw_meshes(ax, items)
         lo, hi = items_bounds(items, pad=.06)
         setup_3d(ax, (lo, hi), elev=18, azim=-60, tick_step=50)
-        entries = [((0, 0, LEGS["lg_center_plane_z"] + P["center_leg_flange"][2] + 70),
-                    f"4 x M{int(P['center_leg_bolt_m'])} flange bolts\ninto the body floor plate", "R"),
-                   ((0, 0, LEGS["lg_center_plane_z"]),
-                    f"Body flange {P['center_leg_flange'][0]:.0f} x "
-                    f"{P['center_leg_flange'][1]:.0f} x {P['center_leg_flange'][2]:.0f} mm", "L"),
+        web = (up @ carriage @ np.array([0, 0, P["st_top"][0], 1.0]))[:3]
+        bearing = (up @ to_housing @ LAY.mechanism()["bearings"][1] @ np.array([0, 0, 90 + P["st_brg"][2], 1.0]))[:3]
+        entries = [(tuple(web), f"leg_carriage: cheeks straddle\nthe housing, P16 eye {P['st_eye_up']:.0f} mm up", "R"),
+                   (tuple(bearing), f"Two LM12LUU bearings\n{P['st_brg'][1]:.0f} x {P['st_brg'][2]:.0f} mm, slit clamps", "R"),
+                   (tuple(heads[0]), "Pitch hinge: 2 x M8 x 35\nin 8 x 12 x 12 bronze sleeves", "L"),
+                   ((0, 0, P["st_hinge_up"]), f"Hinge axis {P['st_hinge_up']:.0f} mm above\nthe foot top plane", "L"),
                    ((0, -110, LEGS["lg_bearing1_z"] + 4), "Two 6001 bearings\n28 x 12 x 8 mm, "
                                                           f"{LEGS['lg_bearing_cc']:.0f} mm apart", "L"),
                    ((0, 0, LEGS["lg_center_bottom_z"] - 120),
@@ -1448,16 +1531,18 @@ def sheet_12():
                    ((0, 0, -120), f"Centre foot stem\ntrail {P['caster_trail']:.0f} mm, stops "
                                   f"+/- {P['caster_stop_deg']:.0f} deg", "R")]
         callouts(fig, ax, entries, left_x=.028, right_x=.705, top=.80, bottom=.24, fontsize=9)
-    legend(fig, [("leg_center", PART_COLOR["leg_center"]), ("foot_center", PART_COLOR["foot_center"]),
-                 ("6001 bearings", BEARING), ("Steel bolts", STEEL)], position=(.775, .55),
-           title_text=None)
-    heading(fig, "fable-r2d2 / centre leg exploded",
-            "Vertical caster ankle on two 6001 ball bearings so the six fixed-axle drive wheels "
-            "can steer the robot without scrubbing the centre foot")
-    footer(fig, "The centre leg is fully retracted in the three-leg stance; the flange bolts up "
-                "into the skirt floor plate.")
-    title_block(fig, "12", "Centre leg exploded / caster ankle", "leg_center, foot_center",
-                f"Bearings 28 x 12 x 8 mm, M{int(P['caster_bolt_m'])} bolt",
+    legend(fig, [("leg_center", PART_COLOR["leg_center"]), ("leg_carriage", PART_COLOR["leg_carriage"]),
+                 ("foot_center", PART_COLOR["foot_center"]), ("Bearings", BEARING), ("Bronze sleeves", BRONZE),
+                 ("Steel bolts", STEEL)], position=(.775, .55), title_text=None)
+    ends = LAY.endpoints()
+    heading(fig, f"fable-r2d2 revision {REVISION} / centre leg, carriage and caster exploded",
+            f"The printed carriage rides two {P['st_shaft_d']:.0f} mm guide shafts at {P['st_guide_angle']:.0f} deg on "
+            "LM12LUU bearings and pivots on the housing; the caster lets the drive wheels steer")
+    footer(fig, f"The P16 actuator moves the carriage from {ends['two_foot']:.1f} to {ends['three_leg']:.1f} mm "
+                f"({STANCE_PARAMETER}); the housing and foot stay level while the body pitches.")
+    title_block(fig, "12", "Centre leg exploded / carriage, pitch hinge, caster",
+                "leg_center, leg_carriage, foot_center",
+                f"Bearings LM12LUU and 6001, M{int(P['caster_bolt_m'])} caster bolt",
                 "Scale: fit to sheet, axes in mm")
     frame(fig)
     save(fig, "12_exploded_center_leg.png")
@@ -1498,12 +1583,13 @@ def sheet_13():
         items.append((bolt_mesh(P["shoulder_bolt_m"], 120,
                                 (sign * (P["body_r"] + 190), 0, P["shoulder_z"] + lift),
                                 axis="x", sign=-sign), STEEL, "M12 shoulder bolt"))
-        for angle in P["shoulder_index_angles"]:
-            a = math.radians(angle)
-            items.append((prim_cyl(6, 22, (sign * (P["body_r"] + 120),
-                                           P["shoulder_index_r"] * math.sin(a),
-                                           P["shoulder_z"] + lift + P["shoulder_index_r"] * math.cos(a)),
-                                   axis="x"), STEEL, "Index pin"))
+        # sensed shoulder lock, drawn 60 mm inboard of its pocket in body_upper
+        items += lock_items(T(0, 0, lift) @ LAY.stance.lock_frame(sign) @ T(-60, 0, 0))
+    to_body = np.linalg.inv(LAY.at_body())
+    span = P["st_shaft_t"][1] - P["st_shaft_t"][0]
+    for shaft in LAY.mechanism()["shafts"]:
+        items.append((prim_cyl(P["st_shaft_d"], span, (0, 0, span / 2), matrix=T(0, 0, 150) @ to_body @ shaft),
+                      STEEL, "Guide shaft"))
     if not any(label.startswith("body") for _, _, label in items):
         missing_banner(ax, ["body_lower.stl", "body_upper.stl"])
     else:
@@ -1523,18 +1609,19 @@ def sheet_13():
                    ((P["rod_r"] * .7, P["rod_r"] * .7, lift + 520),
                     f"{int(P['rod_n'])} x M8 rods on R{P['rod_r']:.0f} mm\ntie both rings together", "R"),
                    ((P["body_r"] + 190, 0, P["shoulder_z"] + lift),
-                    f"M{int(P['shoulder_bolt_m'])} shoulder bolt\nplus two 6 mm index pins", "L")]
+                    f"M{int(P['shoulder_bolt_m'])} shoulder bolt; sensed lock:\nGN 412 pin, MG995, SS-01GL", "L")]
         callouts(fig, ax, entries, left_x=.026, right_x=.715, top=.83, bottom=.20, fontsize=9)
     legend(fig, [("body_lower", PART_COLOR["body_lower"]), ("body_upper", PART_COLOR["body_upper"]),
-                 ("Battery", BATTERY), ("Speaker", SPEAKER), ("Steel hardware", STEEL)],
+                 ("Battery", BATTERY), ("Speaker", SPEAKER), ("Steel hardware", STEEL),
+                 ("Lock knobs and servos", ACTUATOR)],
            position=(.785, .55), title_text=None)
-    heading(fig, "fable-r2d2 / body exploded",
+    heading(fig, f"fable-r2d2 revision {REVISION} / body exploded",
             "Two printed rings, the 12 V 7 Ah battery on its shelf, the seam bolts, the four M8 "
             "tie rods and the shoulder pivots")
-    footer(fig, "Fit the battery and its straps before closing the rings; the shoulder bolts and "
-                "index pins set the two-leg or three-leg stance angle.")
+    footer(fig, "Fit the battery and its straps before closing the rings; the M12 shoulder bolts carry "
+                "the legs and the sensed GN 412 locks hold each stance.")
     title_block(fig, "13", "Body exploded / battery, seam and shoulders",
-                "body_lower, body_upper + battery, straps, speaker, rods, bolts, pins",
+                "body_lower, body_upper + battery, straps, speaker, rods, bolts, locks, shafts",
                 f"Battery {bx:.0f} x {by:.0f} x {bz:.0f} mm on shelf Z "
                 f"{P['battery_shelf_z']:.0f} mm", "Scale: fit to sheet, axes in mm")
     frame(fig)
@@ -1703,20 +1790,26 @@ def sheet_15():
     save(fig, "15_exploded_dome.png")
 
 
-TABLE = [("1", "dome", "1", "PETG", "printed"),
-         ("2", "body_upper", "1", "PETG", "printed"),
-         ("3", "body_lower", "1", "PETG", "printed"),
-         ("4", "leg_upper", "2", "PETG", "mirrored"),
-         ("5", "leg_lower", "2", "PETG", "mirrored"),
-         ("6", "foot_outer", "2", "PETG", "mirrored"),
-         ("7", "leg_center", "1", "PETG", "printed"),
-         ("8", "foot_center", "1", "PETG", "printed"),
-         ("9", "head_drive", "1", "PETG", "printed"),
-         ("10", "Battery 12 V 7 Ah", "1", "bought", "151x94x65"),
-         ("11", "TT motor 3777", "7", "bought", "70x22x19"),
-         ("12", "Wheel 3766", "14", "bought", "63x29"),
-         ("13", "Lazy susan bearing", "1", "bought", "228.6 dia"),
-         ("14", "Slip ring 1195", "1", "bought", "12.5 dia")]
+def parts_table():
+    """Parts-table rows (No, part, qty, material, note, anchor label): every printed part from
+    scripts/parts.json, then the major purchased items counted from the assembly layout."""
+    rows = [(name, str(row["quantity"]), row["material"], "mirrored" if row.get("mirror") else "printed",
+             f"{name}_right" if row.get("mirror") else name) for name, row in PARTS.items()]
+    feet = ((LAY.at_foot(1), False), (LAY.at_foot(-1), False), (LAY.at_center_foot(), True))
+    motors = sum(len(LAY.motor_matrices(m, center=c)) for m, c in feet) + 1      # + the head drive
+    wheels = sum(len(LAY.wheel_matrices(m)) for m, _ in feet) + 1               # + the head drive
+    mech = LAY.mechanism()
+    rows += [("Battery 12 V 7 Ah", "1", "bought", "%.0fx%.0fx%.0f" % tuple(P["battery"]), "Battery 12 V 7 Ah"),
+             ("TT motor 3777", str(motors), "bought", "%.0fx%.0fx%.0f" % (P["tt_len"], P["tt_thick"], P["tt_gear_h"]),
+              "TT motor"),
+             ("Wheel 3766", str(wheels), "bought", "%.0fx%.0f" % (P["wheel_d"], P["wheel_w"]), "Wheel"),
+             ("Lazy susan bearing", "1", "bought", "%.1f dia" % P["susan_od"], "Lazy susan"),
+             ("Slip ring 1195", "1", "bought", "%.1f dia" % P["slip_ring_d"], "Slip ring"),
+             ("P16-100 actuator", "1", "bought", "%.0f stroke" % P["st_act_stroke"], "P16 actuator"),
+             ("LM12LUU bearing", str(len(mech["bearings"])), "bought",
+              "%.0fx%.0f" % (P["st_brg"][1], P["st_brg"][2]), "LM12LUU bearing"),
+             ("GN 412 lock, MG995", str(len(mech["locks"])), "bought", "%.0f mm pin" % P["st_pin_d"], "GN 412 plunger")]
+    return [(str(index),) + row for index, row in enumerate(rows, 1)]
 
 
 def sheet_16():
@@ -1725,8 +1818,9 @@ def sheet_16():
             "leg_upper_right": (120, 0, 190), "leg_upper_left": (-120, 0, 190),
             "leg_lower_right": (150, 40, 90), "leg_lower_left": (-150, 40, 90),
             "foot_outer_right": (170, 80, 0), "foot_outer_left": (-170, 80, 0),
-            "leg_center": (0, 120, 120), "foot_center": (0, 170, 0)}
-    items = printed_items(finish=False, explode=tall) + drive_items(tall) + body_hardware(tall)
+            "leg_carriage": (0, 260, 170), "leg_center": (0, 170, 120), "foot_center": (0, 220, 0)}
+    table = parts_table()
+    items = printed_items(finish=False, explode=tall) + drive_items(tall) + body_hardware(tall) + stance_items(tall)
     items += head_drive_items(LAY.at_head_drive(), tall["head_drive"])
     fig = plt.figure(figsize=(18, 13.5))
     ax = fig.add_axes([.045, .13, .52, .75], projection="3d")
@@ -1735,27 +1829,25 @@ def sheet_16():
     setup_3d(ax, ([lo[0], lo[1], 0], [hi[0], hi[1], hi[2]]), elev=16, azim=-62, tick_step=200,
              zoom=1.08)
     fig.canvas.draw()
-    names = {"1": "dome", "2": "body_upper", "3": "body_lower", "4": "leg_upper_right",
-             "5": "leg_lower_right", "6": "foot_outer_right", "7": "leg_center",
-             "8": "foot_center", "9": "head_drive", "10": "Battery 12 V 7 Ah",
-             "11": "TT motor", "12": "Wheel", "13": "Lazy susan", "14": "Slip ring"}
-    left = ["4", "5", "6", "7", "8"]
-    right = ["1", "2", "3", "9", "13", "14", "10", "11", "12"]
-    for group, x, top, bottom in ((left, .050, .84, .30), (right, .600, .87, .30)):
+    left_parts = {"leg_upper", "leg_lower", "foot_outer", "leg_center", "leg_carriage", "foot_center"}
+    anchors = {row[0]: row[5] for row in table}
+    left = [row[0] for row in table if row[1] in left_parts]
+    right = [row[0] for row in table if row[1] not in left_parts]
+    for group, x, top, bottom in ((left, .050, .84, .30), (right, .600, .87, .22)):
         rows = []
         for number in group:
-            point = anchor_of(items, names[number], 16, -62)
+            point = anchor_of(items, anchors[number], 16, -62)
             if point is not None:
                 rows.append((number, point))
         rows.sort(key=lambda row: -project_figure(fig, ax, row[1])[1])
         step = (top - bottom) / max(len(rows) - 1, 1)
         for index, (number, point) in enumerate(rows):
             balloon(fig, ax, point, number, (x, top - index * step))
-    x0, y0 = .655, .150
+    x0, y0 = .655, .120
     widths = [.028, .132, .028, .056, .066]
     headers = ["No", "Part", "Qty", "Material", "Size / note"]
-    rows = len(TABLE) + 1
-    row_h = .0325
+    rows = len(table) + 1
+    row_h = min(.0325, .72 / rows)
     top = y0 + rows * row_h
     fig.add_artist(Rectangle((x0, y0), sum(widths), rows * row_h, transform=fig.transFigure,
                              facecolor="white", edgecolor="#63788C", linewidth=1.0, zorder=5))
@@ -1769,24 +1861,101 @@ def sheet_16():
     for index, header in enumerate(headers):
         fig.text(x0 + sum(widths[:index]) + .005, top - row_h / 2, header, fontsize=8.6,
                  color="#1B2733", va="center", zorder=6)
-    for row, entry in enumerate(TABLE):
+    for row, entry in enumerate(table):
         y = top - row_h * (row + 1.5)
-        for index, value in enumerate(entry):
+        for index, value in enumerate(entry[:5]):
             fig.text(x0 + sum(widths[:index]) + .005, y, value, fontsize=8.0, color=INK,
                      va="center", zorder=6)
-    fig.text(x0, top + .011, "Parts table", fontsize=11, color=INK)
+    fig.text(x0, top + .011, "Parts table (quantities per robot)", fontsize=11, color=INK)
     true_lo, true_hi = items_bounds(printed_items(finish=True) + drive_items(), pad=0)
-    heading(fig, "fable-r2d2 / complete exploded robot",
+    heading(fig, f"fable-r2d2 revision {REVISION} / complete exploded robot",
             "Every printed piece and the major purchased items, exploded vertically | Balloon "
             "numbers match the parts table on the right")
-    footer(fig, "Twelve printed pieces from nine STL designs; purchased quantities are the totals "
-                "for one robot.")
+    footer(fig, f"{number_word(PIECES).capitalize()} printed pieces from {number_word(DESIGNS)} STL designs; "
+                "purchased quantities are the counts in one robot.")
     title_block(fig, "16", "Complete exploded robot / balloons and parts table",
                 "all printed and major purchased items",
                 "Assembled height %.1f mm, track %.1f mm" % (true_hi[2], P["leg_track"]),
                 "Scale: fit to sheet, axes in mm")
     frame(fig)
     save(fig, "16_exploded_robot.png")
+
+
+def sheet_17():
+    ends = LAY.endpoints()
+    half = LAY.stance.stroke_for_tilt(P["body_tilt"] / 2)
+    poses = [("Three-leg stance", ends["three_leg"]), ("Unlocked, tilting", half),
+             ("Touchdown, locks re-seated", ends["contact"]), ("Two-foot stance", ends["two_foot"])]
+    fig = plt.figure(figsize=(20, 13))
+    for index, (title, stroke) in enumerate(poses):
+        pose = LAY.at_stroke(stroke)
+        printed = printed_items(finish=True, lay=pose)
+        items = printed + drive_items(lay=pose) + stance_items(lay=pose)
+        ax = fig.add_axes([.040 + index * .238, .40, .215, .48])
+        if not printed:
+            missing_banner(ax, [f"{name}.stl" for name in ORDER])
+            continue
+        draw_meshes(ax, items)
+        setup_ortho(ax, "right", (-360, 420), (-30, 820),
+                    f"{title}\n{STANCE_PARAMETER} {stroke:.1f} mm | tilt {pose.tilt:.1f} deg")
+        lock = "both locks seated" if pose.locks_seated_cad() else "locks released"
+        ax.text(.5, -.14, f"Centre foot {pose.centre_foot_lift():.0f} mm up | {lock}", transform=ax.transAxes,
+                ha="center", fontsize=10.5, color=MUTED)
+    strokes = np.linspace(ends["two_foot"], ends["three_leg"], 240)
+    tilts = np.array([LAY.stance.tilt(s) for s in strokes])
+    lifts = np.array([LAY.centre_foot_lift(s) for s in strokes])
+    plot = fig.add_axes([.07, .16, .40, .16])
+    plot.axvspan(ends["contact"], ends["three_leg"], color="#FDECEA", alpha=.7, label="Unlocked tilt range")
+    plot.plot(strokes, tilts, color=BLUE, linewidth=2, label="Body tilt (deg)")
+    plot.set_xlabel(f"Actuator stroke {STANCE_PARAMETER} (mm)")
+    plot.set_ylabel("Body tilt (deg)", color=BLUE)
+    for label, stroke in ends.items():
+        plot.axvline(stroke, color="#8FA0B0", linewidth=.8, linestyle="--")
+        plot.text(stroke, tilts.max() * 1.08, label.replace("_", "-"), ha="center", fontsize=8.5, color=MUTED)
+    plot.set_ylim(-1, tilts.max() * 1.2)
+    plot.grid(True)
+    twin = plot.twinx()
+    twin.plot(strokes, lifts, color=ORANGE, linewidth=2, label="Centre-foot lift (mm)")
+    twin.set_ylabel("Centre-foot lift (mm)", color=ORANGE)
+    plot.legend(loc="upper left", fontsize=8.5)
+    twin.legend(loc="center right", fontsize=8.5)
+    sequence = [
+        "Retract, three-leg to two-foot (docs/firmware.md section 11.2):",
+        f"1  UNLOCKING at {ends['three_leg']:.1f} mm: both release servos pull the pins",
+        f"2  TILT to {ends['contact']:.1f} mm: the body rights itself; the centre foot rolls back",
+        "3  LOCKING: creep until both SS-01GL switches read seated",
+        f"4  LIFT to {ends['two_foot']:.1f} mm: centre wheels {LAY.centre_foot_lift(ends['two_foot']):.0f} mm clear",
+        "Deploy runs in reverse: LOWER, UNLOCKING, TILT, LOCKING.",
+        "Ground drive only in the three-leg stance with both locks seated;",
+        "refused during a change, on two feet and in any fault (section 11.3).",
+    ]
+    fig.text(.545, .33, "\n".join(sequence), fontsize=10.5, color=INK, va="top", linespacing=1.5)
+    heading(fig, f"fable-r2d2 revision {REVISION} / stance change",
+            "Right-side views at four actuator strokes, posed by the kinematics of cad/stance.scad | "
+            "The outer legs stay vertical; the body pitches about the shoulders")
+    footer(fig, f"Stroke {ends['two_foot']:.1f} to {ends['three_leg']:.1f} mm on a {P['st_guide_angle']:.0f} deg guide; "
+                f"touchdown at {ends['contact']:.1f} mm. Lock states as cad/stance.scad draws them.")
+    title_block(fig, "17", "Stance change / both stances and the transition",
+                "all printed parts + actuator, shafts, locks",
+                f"Tilt 0 to {LAY.stance.tilt(ends['three_leg']):.1f} deg", "Scale: equal on the four views, axes in mm")
+    frame(fig)
+    save(fig, "17_stance_change.png")
+
+
+def source_hashes():
+    """Every CAD source and exported STL the drawings were made from."""
+    hashes = {path.relative_to(ROOT).as_posix(): digest(path) for path in sorted((ROOT / "cad").glob("*.scad"))}
+    hashes.update({f"stl/{name}.stl": digest(ROOT / f"stl/{name}.stl") for name in ORDER if have(name)})
+    return hashes
+
+
+def stance_heights():
+    """Overall height of the printed assembly at each stance endpoint, mm."""
+    heights = {}
+    for label, stroke in LAY.endpoints().items():
+        items = printed_items(finish=True, lay=LAY.at_stroke(stroke))
+        heights[label] = round(float(items_bounds(items, pad=0)[1][2]), 1) if items else None
+    return heights
 
 
 def component_sheets():
@@ -1838,7 +2007,7 @@ def component_sheets():
 SHEETS = {"01": sheet_01, "02": sheet_02, "03": sheet_03, "04": sheet_04, "05": sheet_05,
           "06": sheet_06, "07": sheet_07, "08": sheet_08, "09": sheet_09, "10": sheet_10,
           "11": sheet_11, "12": sheet_12, "13": sheet_13, "14": sheet_14, "15": sheet_15,
-          "16": sheet_16, "components": component_sheets}
+          "16": sheet_16, "17": sheet_17, "components": component_sheets}
 
 
 def write_manifest(generated):
@@ -1855,12 +2024,17 @@ def write_manifest(generated):
         "generated": generated,
         "units": "mm",
         "dpi": DPI,
+        "revision": REVISION,
+        "stance_parameter": STANCE_PARAMETER,
+        "stance_endpoints_mm": LAY.endpoints(),
+        "stance_heights_mm": stance_heights(),
         "printed_designs": len(PARTS),
         "printed_pieces": sum(int(row["quantity"]) for row in PARTS.values()),
         "purchased_parts": "nominal envelopes from cad/params.scad; not manufacturer CAD",
         "missing_stl": MISSING,
         "sources": {f"stl/{name}.stl": digest(ROOT / f"stl/{name}.stl")
                     for name in ORDER if have(name)},
+        "source_sha256": source_hashes(),
         "pngs": records}
     path = OUT / "drawing-manifest.json"
     path.write_text(json.dumps(manifest, indent=2) + "\n", encoding="utf-8")

@@ -1,6 +1,8 @@
 # fable-r2d2 assembly sequence
 
-Written 2026-09-12. Eleven stages, in order. Each stage ends with a check you can fail.
+Revision D, written 2026-09-12. The stages run in order, and each one ends with a check you can
+fail. Stages 4B and 5B build the revision D stance mechanism: the guide, the carriage, the
+actuator and the sensed shoulder locks (docs/mechanical.md sections 1.3, 3.5 and 3.9).
 
 Read [mechanical.md](mechanical.md) first. It has the print settings, the support notes, the
 print order and every fit. This document does not repeat them.
@@ -37,6 +39,10 @@ Torques marked "estimated" are design judgement, not test results.
 | Dial indicator | Motor shaft play, before and after |
 | IR thermometer | Motor case temperature |
 | Tilt board and protractor, or a phone inclinometer | The tip-back test |
+| Hacksaw with a fine blade, flat file, deburring tool | Cutting and chamfering the two 12 mm guide shafts |
+| Bench power supply, 12 V, current limit 1 A | Stroking the P16 actuator off the robot |
+| Continuity tester or multimeter | Reading each SS-01GL lock switch as its pin seats |
+| Drill with a 3 mm bit | The tip-pin hole in each MG995 horn |
 
 ## Consumables
 
@@ -54,6 +60,7 @@ Torques marked "estimated" are design judgement, not test results.
 | Isopropyl alcohol | 500 ml | Cleaning before paint and before gluing lenses |
 | Acrylic cement or clear epoxy | 1 tube | Three lens discs |
 | Filler primer, white, blue, silver paint | as needed | See mechanical.md section 7 |
+| Light grease | 1 small tube | The two lock pins; the check assumes greased pins (mechanical.md section 3.9) |
 
 The full purchased list with part numbers, prices and sources is `bom/hardware.csv` and
 `bom/electronics.csv`.
@@ -62,8 +69,8 @@ The full purchased list with part numbers, prices and sources is `bom/hardware.c
 
 ## Insert pressing schedule
 
-Press every insert before any painting and before any wiring. Twenty-one inserts in four
-sizes. Pocket sizes come from `cad/lib.scad` and are listed in mechanical.md section 4.2.
+Press every insert before any painting and before any wiring. Pocket sizes come from
+`cad/lib.scad` and are listed in mechanical.md section 4.2.
 
 | Insert | Count | Part | Where exactly | Pocket |
 | --- | --- | --- | --- | --- |
@@ -77,15 +84,19 @@ sizes. Pocket sizes come from `cad/lib.scad` and are listed in mechanical.md sec
 | M2.5 brass | 4 | `body_upper` deck | Raspberry Pi 4 bosses, on the `pi4_holes` pattern | 3.7 mm x 5.2 mm |
 | M2.5 brass | 2 | `body_upper` deck | ADS1115 bosses | 3.7 mm x 4.0 mm |
 | M2 brass | 10 | `body_upper` deck | KB2040 (2) and the four DRV8833 boards (2 each) | 3.2 mm x 4.0 mm |
+| M4 x 8.1 brass | 4 | `body_upper` shoulder pads | Two behind each GN 412 lock flange pocket (`bom/hardware.csv` H22) | 5.6 mm x 8 mm |
+| M4 x 8.1 brass | 2 | `body_lower` top shaft bosses | One per guide-shaft set screw (H22, H43) | 5.6 mm x 8 mm |
+| M3 brass | 8 | `body_upper` lock blocks | Four per MG995 release servo, behind the ears (H24) | 4.0 mm x 6 mm |
 
-That is 41 inserts: 9 x M5, 4 x M4, 4 x M3, 8 x M2.5 and 16 x M2. Press each one square, with
+That is 55 inserts: 9 x M5, 10 x M4, 12 x M3, 8 x M2.5 and 16 x M2. Press each one square, with
 the iron set to about 250 C for PETG, and stop when the insert face is flush. An insert pressed
 at an angle cannot be straightened.
 
-**No inserts go in the feet, the legs, the centre leg or `body_lower`.** Those parts use
-through-bolts with captive nuts in printed pockets. This is deliberate: a nut in a pocket does
-not pull out of a printed part under preload the way an insert can. It is also why the four
-M8 body rods and the four centre-leg bolts land in hex pockets, not inserts.
+**No inserts go in the feet, the legs, the centre-leg housing or the carriage, and
+`body_lower` takes only the two set-screw inserts.** Those parts use through-bolts with
+captive nuts in printed pockets. This is deliberate: a nut in a pocket does not pull out of a
+printed part under preload the way an insert can. It is also why the four M8 body rods and the
+two pitch-hinge bolts land in hex pockets, not inserts.
 
 ---
 
@@ -165,12 +176,12 @@ bolts.*
    6.3 mm above the shell top and push the **M8 x 80 pivot bolt** through both block cheeks and
    the tongue, head outboard. The nut sits in the pocket in the inboard boss. Run it down until
    the play is gone **but the tongue still swings by hand.** Do not torque it.
-9. **Set the stance with the lock bolt.** The tongue's two lock holes lie on the same 40 mm
-   arc about the pivot as the foot's single lock bore, so swinging the leg brings each in turn
-   onto it. Swing to the 18 degree lean and fit the **M8 x 90** lock bolt through the foot's
-   lock bore into tongue hole **B** at (y +38.04, z -12.36). Hole **A** at (y +40, z 0) is the
-   two-leg display stance. Add threadlocker. Tighten until firm, **about 6 N.m (estimated)**;
-   this bolt takes the ankle moment.
+9. **Stand the leg vertical with the lock bolt.** The tongue's two lock holes lie on the same
+   40 mm arc about the pivot as the foot's single lock bore. Stand the leg straight up and fit
+   the **M8 x 90** lock bolt through the foot's lock bore into tongue hole **A** at (y +40, z 0).
+   Revision D keeps the outer legs vertical in both stances (`leg_lean` = 0, mechanical.md
+   section 1.3), so hole **B**, the revision C 18 degree lean, is not used. Add threadlocker.
+   Tighten until firm, **about 6 N.m (estimated)**; this bolt takes the ankle moment.
 10. **Pull the motor leads up the leg.** The wire route enters the ankle underside at (35, -38),
     runs diagonally into the strut centre, up the 9 mm bore, and exits the inboard face at
     z -75, which is below the shoulder pad. Leave 300 mm of slack at the top.
@@ -179,11 +190,11 @@ bolts.*
 
 Repeat, mirrored, for the second leg.
 
-## Stage 3 — centre leg and caster
+## Stage 3 — centre-leg housing and caster
 
 ![Exploded view of the centre leg and its caster](../output/drawings/12_exploded_center_leg.png)
-*Figure 12 — centre leg exploded: leg, two 6001-2RS bearings, spacer tube, M12 x 70, stop pin,
-centre foot.*
+*Figure 12 — centre leg exploded: housing, carriage, two LM12LUU bearings, pitch hinge, two
+6001-2RS bearings, M12 caster bolt, centre foot.*
 
 1. **Check both bearing seats with calipers.** They are 28.2 mm (`caster_bearing_od` plus
    0.2 mm). The lower seat opens to the bottom face at z 26 to 34.2 mm; the upper opens into
@@ -196,49 +207,49 @@ centre foot.*
    (X 0, Y `caster_trail` + 22), which is 22 mm ahead of the caster axis. That is the radius
    of the leg's arc groove (`ft_stop_r` = `lg_stop_r` = 22), and it lands on solid stem-block
    material.
-5. **Set the leg on the foot** and drop the **M12 x 70 hex bolt** down from above: head into the
+5. **Set the housing on the foot** and drop the **M12 x 70 hex bolt** down from above: head into the
    28 mm counterbore, washer, upper bearing, spacer tube, lower bearing, washer, 1 mm thrust
    washer, into the M12 nut already captive in the foot.
-6. **Tighten the M12 from above, now.** Once `body_lower` is on the flange you cannot reach it.
+6. **Tighten the M12 from above, now.** Once the carriage is hinged on (stage 4B) it is hard to reach.
    Tighten until the spacer tube is solidly clamped, **about 8 N.m (estimated)**. Add
    threadlocker.
-7. **Check the swivel:** the leg must turn freely and stop at 60 degrees each way against the
-   pin. If the caster is stiff, the spacer tube is too short or a bearing is not square.
+7. **Check the swivel:** the foot must turn freely and stop at 30 degrees each way against the
+   pin (`caster_stop_deg`). If the caster is stiff, the spacer tube is too short or a bearing is
+   not square.
 8. **Route the centre-foot motor leads** up through the foot's 8 mm wire hole at
-   (X 0, Y `caster_trail` - 21) = (0, -1), into the arc slot in the leg's bottom face (radius
-   16.5 to 22.5 mm), into the 12 x 12.5 mm vertical channel, and out of the flange top at
-   body-frame (0, -22). The hole sits at leg-frame radius 21, on the slot at **every** swivel
-   angle. Leave 400 mm of slack: this bundle must survive 120 degrees of swivel.
+   (X 0, Y `caster_trail` - 21) = (0, -1), into the arc slot in the housing's bottom face
+   (radius 16.5 to 22.5 mm) and up its vertical wire channel. The hole sits on the slot at
+   **every** swivel angle. Leave 400 mm of slack: this bundle must survive 60 degrees of swivel
+   and the full actuator stroke. It is dressed along the carriage in stage 4B.
 
 ## Stage 4 — lower body ring
 
 ![Exploded view of the body](../output/drawings/13_exploded_body.png)
 *Figure 13 — body exploded: lower ring, upper ring, seam lip, eight M4, four M8 rods, battery,
-centre leg.*
+guide shafts, shoulder locks.*
 
 Work with the ring on the bench, skirt down.
 
-**Order matters here.** The four M8 rod nuts and the four centre-leg nuts are both reached from
-inside, and the battery shelf covers part of the floor. Do steps 1 to 3 before the battery goes
-in.
+**Order matters here.** The four M8 rod nuts are reached from inside, and the battery shelf
+covers part of the floor. Do steps 1 to 3 before the battery goes in.
 
 1. **Load the four captive M8 rod nuts.** Each rod column starts on the **battery shelf**, not
    on the floor: radius 138 mm lies outside the skirt-bottom plate, whose maximum radius is
    116.6 mm. The nut is a hex trap at **z 46**, opened downward with a slot facing the body
    axis. Slide an M8 nut into each of the four traps and check it cannot rotate.
-2. **Bolt the centre leg on.** The floor has four M8 clearance holes at (+/-50, +/-32) mm with
-   **hex nut pockets on its top face**. Drop an M8 nut into each pocket. Fit four **M8 x 30**
-   bolts from below, heads in the 19 mm socket notches through the collar corners. Torque to
-   **2 N.m (estimated)** — about 3 MPa on the printed floor, under the 6.6 MPa at which
-   `research/loads.md` warns of creep. Go round twice. The battery shelf carries **four 26 mm
-   socket windows** over these nuts, so you can reach them again later with a socket.
-3. **Feed the centre-leg wire bundle** up through the 60 x 40 mm cable opening in the floor,
-   centred at Y = -60, and out through the rear harness slot in the battery shelf.
+2. **Check the carriage sweep is clear.** Revision D does not bolt the centre leg to the floor.
+   The floor and the battery shelf are cut by the swept envelope of the carriage and the housing
+   with 2 mm clearance (mechanical.md section 3.5). Remove every support string from that cut and
+   from the two shaft bosses; a string left there will jam the carriage.
+3. **Check both shaft bosses with calipers.** The bottom boss is blind and the top boss is open;
+   both take the 12 mm shaft on the guide line. Clear a tight bore with a 12 mm drill turned by
+   hand, never under power.
 4. **Line the battery shelf with foam tape**, inside the printed curb. The shelf is a 4 mm
-   plate at z 41 to 45 and its curb stands 8 mm proud, 3 mm clear of the battery all round.
+   plate whose top is at `battery_shelf_z` (mechanical.md section 3.5) and its curb stands 8 mm
+   proud, 3 mm clear of the battery all round.
 5. **Lay the battery on its side** inside the curb: 151 mm along X, 94 mm along Y, 65 mm tall.
-   The pocket centre is at `battery_y` = **15 mm forward** of the body axis, which is
-   deliberate — see mechanical.md section 5.4. Terminals must face where the harness reaches
+   The pocket centre is at `battery_y`, forward of the body axis and clear of the sloping
+   carriage face, which is deliberate — see mechanical.md sections 3.5 and 5.4. Terminals must face where the harness reaches
    them and must not touch a rod column.
 6. **Strap the battery down** with two 25 mm hook-and-loop cinch straps, threaded through the
    four 3 mm strap slots in the shelf and cinched across the top. One strap does not reach
@@ -260,38 +271,124 @@ in.
 11. **Check:** the battery does not move when the ring is tipped 45 degrees in any direction.
     All four rods stand parallel and clear the shelf, the curb and the skin.
 
+## Stage 4B — stance guide, carriage and actuator
+
+Revision D. The centre leg rides a printed carriage on two guide shafts inside `body_lower`, and
+an Actuonix P16 actuator moves it (mechanical.md sections 3.5 and 3.9). Do this stage with the
+lower ring on the bench, skirt down, before the upper ring goes on.
+
+![Stance change: both stances and the transition](../output/drawings/17_stance_change.png)
+*Figure 17 — stance change: the three-leg stance, an unlocked tilt, touchdown and the two-foot
+stance, with body tilt and centre-foot lift against actuator stroke.*
+
+1. **Lay out the parts.** Two 12 mm hardened guide shafts (`bom/hardware.csv` H40), two LM12LUU
+   bearings (H38), the printed `leg_carriage`, two 8 x 12 x 12 mm bronze sleeves (H37), two
+   M8 x 35 hinge bolts with M8 washers (H36, H12), four M4 x 25 clamp screws with nuts (H39, H20),
+   two M4 x 8 cup-point set screws (H43), one M4 x 45 rod-eye pin with an M4 nyloc (H42, H45), and
+   the actuator ACT1 (`bom/electronics.csv`).
+2. **Cut the two guide shafts.** H40 says cut each 200 mm shaft to 160 mm. mechanical.md section
+   3.5 and the `st_shaft_t` span in `cad/params.scad` give 182 mm. **Measure from the bottom of the
+   blind boss to the top face of the open boss on your printed `body_lower` and cut to that.**
+   Deburr and chamfer both ends.
+3. **Fit the bearings to the carriage.** Push each LM12LUU into its seat until it sits on the
+   bottom lip. Fit two M4 x 25 screws across each clamp slit, with the nut in its printed pocket.
+   Snug them until the bearing cannot turn in the seat. Do not crush the housing.
+4. **Hinge the carriage to the housing.** Slide a bronze sleeve into each carriage cheek. Straddle
+   the `leg_center` housing with the cheeks and fit an M8 x 35 bolt, with an M8 washer under the
+   head, through each sleeve into the captive M8 nut in the housing. Tighten until the sleeve is
+   clamped. The cheek must still turn on the sleeve by hand: the sleeve stands 0.5 mm proud to
+   give that running clearance.
+5. **Check the pitch stops.** Rock the housing on the hinge. It must stop on its heel face with the
+   foot level under the stowed carriage, and on its toe face at `st_toe_stop` (19.5 degrees)
+   relative to the carriage. Nothing else may touch.
+6. **Install the carriage.** Lower the carriage, with the housing and the centre foot hanging from
+   it, into `body_lower` so the two bearings line up with the shaft bosses on the 30 degree guide
+   (`st_guide_angle`). Push each shaft down through its top boss and both bearings into the blind
+   bottom boss. Drive the M4 set screw into the top-boss insert against the shaft, snug.
+7. **Check the slide.** With the actuator not yet fitted, the carriage must run the whole guide
+   by hand with no tight spot. At the bottom, the bearing housings land on the bottom shaft bosses:
+   that is the hard stop at 86 mm of stroke. No part of the carriage, the housing or the foot may
+   touch the floor plate or the battery shelf anywhere on the travel.
+8. **Close the actuator.** On the bench, run the P16 fully closed from a 12 V supply limited to
+   1 A on its red and black leads (swap them if it extends). Leave the pot leads free.
+9. **Pin the rod eye.** Hold the rod eye in the slot of the carriage cross-web and fit the M4 x 45
+   pin with its head in the -X counterbore and the M4 nyloc in the +X pocket. Snug only: the eye
+   must pivot. The fixed eye is pinned to the deck cheeks in stage 7, when the upper ring goes on.
+10. **Dress the harness.** Tie the centre-foot motor bundle and the actuator's five-wire lead along
+    the carriage with slack for the full stroke, and lead both to the rear harness gap.
+11. **Check:** the carriage slides freely end to end, the housing pitches between its two stops,
+    and neither bundle pulls tight anywhere on the travel.
+
 ## Stage 5 — upper body ring, shoulders and legs
 
 The legs go on the upper ring while it is still separate and open at both ends. Every shoulder
 fastener is reachable from inside. **Do not do this after the rings are joined.**
 
 1. **Press the inserts** listed in the schedule: four M5 into the top plate from **above**, for
-   the lazy-susan bottom race; four M3 into the rear access lip; and the deck inserts (four
-   M2.5 for the Pi, two M2.5 for the ADS1115, ten M2 for the KB2040 and the four drivers).
+   the lazy-susan bottom race; four M3 into the rear access lip; four M4 behind the two lock
+   flange pockets; eight M3 in the two lock blocks; and the deck inserts (four M2.5 for the Pi,
+   two M2.5 for the ADS1115, ten M2 for the KB2040 and the four drivers).
 2. **Fit a steel crush sleeve** through each 30 mm shoulder boss. `research/loads.md` section 7
    is explicit: do not clamp printed faces with a torqued M12. The sleeve makes the clamp
    steel to steel.
 3. **Fit the two flanged bronze bushings** (12 mm bore, 16 mm OD, 20 mm long, 20 mm flange)
    into the leg hub bore, one from each side.
-4. **Support the leg.** With its foot it weighs about 2.8 kg and it will fall.
-5. **Offer the leg up to the pad** with the 8 mm spacer stack (bushing flange plus washer)
-   between the flat pad and the flat inboard face of the leg plate.
-6. **Fit the M12 x 130 class 8.8 bolt** from the leg side. The head goes into the 26 mm
+4. **Build both shoulder locks now, stage 5B.** The lock flange screws go in from the leg side,
+   so each lock must be complete before its leg is offered up.
+5. **Support the leg.** With its foot it weighs about 2.8 kg and it will fall.
+6. **Offer the leg up to the pad** with the 8 mm spacer stack (bushing flange plus washer)
+   between the flat pad and the flat inboard face of the leg plate. Pull the lock knob as the leg
+   goes on so the pin does not drag across the leg face.
+7. **Fit the M12 x 130 class 8.8 bolt** from the leg side. The head goes into the 26 mm
    counterbore in the leg hub, 10 mm deep. Add M12 fender washers (37 mm) under the head and
    the nut. The M12 nyloc drops into its hex pocket inside the ring, 13 mm deep.
-7. **Torque to 5 N.m.** That is about 2.1 kN of preload and about 1.9 MPa of face pressure. Do
+8. **Torque to 5 N.m.** That is about 2.1 kN of preload and about 1.9 MPa of face pressure. Do
    not go higher: a smaller washer or more torque makes the PETG creep.
-8. **Set the stance with the index dowels.** The body pad carries **two** 6.2 mm holes, 20 mm
-   deep, at radius 45 mm, placed toward the **front**; the leg carries two at the same radius
-   placed toward the **rear**. Rotate the leg forward 18 degrees. Two pairs line up at once:
-   leg hole 18 on body hole 0, and leg hole 0 on body hole 18. **Fit both 6 x 30 mm steel
-   dowels**, pushed in from **outboard** through the booster cover and the plate. Light taps,
-   not a hammer. In the two-leg display stance only one pair lines up, and one dowel is used.
-9. **Check:** with both dowels in, the leg cannot rotate. With them out and the M12 at 5 N.m,
-   the leg turns with firm hand pressure. If it turns freely with a dowel in, the hole has been
-   drilled oversize and the pin will not carry the 9.4 N.m shoulder moment.
-10. Repeat for the second leg.
-11. **Pull both leg wire bundles** in through the shoulder area and up into the ring.
+9. **Seat the lock in the tilt-0 receiver.** With the ring upright on the bench and the leg
+   hanging straight down, the leg's 261 degree receiver lines up with the pin. Swing the leg
+   gently until the pin drops fully home. The spring does the work; never tap the knob.
+10. **Check:** with the pin seated the leg cannot swing, and the SS-01GL reads closed between COM
+    and NO. With the knob held pulled, the switch reads open and the leg turns with firm hand
+    pressure against the 5 N.m clamp. If the pin will not enter, the receiver is not square: back
+    it out and run it in again.
+11. Repeat for the second leg.
+12. **Pull both leg wire bundles** in through the shoulder area and up into the ring, with the two
+    servo leads and the two lock-switch leads.
+
+## Stage 5B — sensed shoulder locks
+
+Revision D. One lock per shoulder: a spring plunger in the body pad, two receivers in the leg,
+an SS-01GL switch that reads the pin and an MG995 servo that pulls it (mechanical.md section 3.9,
+electrical.md section 11). Build both locks with the legs off.
+
+1. **Parts per shoulder.** One J.W. Winco GN 412-6-35-B-1 plunger (`bom/hardware.csv` H34), two
+   GN 412.2-M12X1.5-B6.2 receivers (H35), two M4 x 16 socket cap screws (H41), one Omron SS-01GL
+   switch (SW2 or SW3), one MG995 servo (SV1 or SV2) with four M3 x 10 ear screws and one more
+   M3 x 10 as the horn tip pin (H23).
+2. **Receivers into the leg.** Screw two receivers into the inboard face of each `leg_upper`, at
+   50 mm radius, at 261 and 279 degrees (`st_lock_r`, `st_lock_angle`), into the 11.0 mm
+   thread-forming bores until the 13 mm hex seats in its pocket. Start each one square by hand;
+   a crooked receiver will not take the pin. Their retention in PETG is not tested.
+3. **Plunger into the pad.** From outside the ring, set the GN 412 flange into its pocket in the
+   shoulder-pad land boss: it sits 5 mm deep and stands 7 mm proud. Fit the two M4 x 16 screws
+   through the flange counterbores into the M4 inserts. Grease the pin lightly.
+4. **Check the pin face.** With the pin fully forward, its face must sit 1 mm inside the leg face
+   plane (`st_land_gap`), so the pin engages the receiver by 5 mm.
+5. **Fit the SS-01GL** in its pocket in the lock block, lever under the knob, with two M2 screws.
+   With the pin seated, the lever is pressed 0.9 +/- 0.2 mm past its operating point
+   (`st_switch_ot`). A closed switch then guarantees at least 3.1 mm of pin in the receiver.
+6. **Drill the servo horn** 3 mm at the arm position in `st_horn_arm` (12.5 mm across and 22.5 mm
+   up from the spline centre) and fit the M3 x 10 tip pin.
+7. **Fit the MG995** in its pocket with the four M3 x 10 ear screws into the inserts, driving them
+   through the access bores in the -Y face of the block. Park the servo at its engage pulse
+   (`ENGAGE_US`, docs/firmware.md section 11.4) before the horn goes on, then fit the horn with
+   the tip pin 1 mm below the knob rim (`st_horn_rest_gap`).
+8. **Wire it.** Lead the servo cable to its J13 extension and the switch COM, NO and NC wires to
+   the KB2040 per electrical.md section 11: the left lock SW2 to SCK and MISO, the right lock SW3
+   through J14 to GP12 and GP13.
+9. **Check:** pull the knob 5.8 mm by hand and the switch opens; let go and the spring returns the
+   pin and the switch closes. The release pulse is calibrated in stage 10; it must pull the pin
+   5.8 mm without the servo stalling.
 
 ## Stage 6 — electronics deck
 
@@ -321,12 +418,16 @@ Each board has its own printed seat, and each seat is labelled in the print.
    deck edge.
 4. **Bring the seven motor pairs up** through the 40 mm rear harness gap: two from each outer
    leg, two from the centre leg, and the head-drive pair. Land each at its driver output on a
-   JST-XH pair.
+   JST-XH pair. Bring the actuator lead, both servo extensions and both lock-switch leads up
+   the same way.
 5. **Cable-tie everything to adhesive mounts** on the inside of the ring. Keep the harness out
    of the head-drive keep-out: |x| up to 66 mm, y -160 to -70 mm, body-frame z 160 to 378 mm.
    A cable tie in that space will be cut by the friction wheel.
 6. **Fit no fuses yet.** They go in during the rail checks in stage 10.
-7. **The rear access opening** (120 x 90 mm, body-frame z 165.1 to 255.1) is how you reach this
+7. **Mount the stance boards:** U10 (DRV8871 actuator driver) with R5 fitted in place of its
+   factory current-limit resistor, U11 (BSS138 level shifter) and fuse holder FH7 for F7, per
+   electrical.md section 11. Leave F7 out.
+8. **The rear access opening** (120 x 90 mm, body-frame z 165.1 to 255.1) is how you reach this
    deck once the robot is together. Leave its cover off until stage 10 is finished, then fit it
    with four M3 screws into the lip inserts.
 
@@ -336,19 +437,23 @@ Each board has its own printed seat, and each seat is labelled in the print.
    tall, with a 15 degree lead-in chamfer on its top outer edge. The socket in the upper ring
    is radius 151.3 to 154.9, so there is 0.3 mm of clearance each side. Do not sand it.
 2. **Lower the upper ring onto the lower ring**, feeding the four M8 rods through the upper
-   ring's rod bosses as it goes. Two people, or a strap. Watch the leg wire bundles.
+   ring's rod bosses and the actuator case up through the deck slot as it goes. Two people, or
+   a strap. Watch the leg wire bundles.
 3. **Seat the lip fully.** No gap anywhere round the joint line.
-4. **Fit the eight M4 x 20 socket cap screws from above**, through both internal flanges on the
+4. **Pin the actuator's fixed eye** between the two cheeks under the deck with the M4 x 60 pin
+   (`bom/hardware.csv` H44) and an M4 nyloc (H45). Snug only: the eye must pivot. The actuator
+   is parallel to the guide, so it carries no side load.
+5. **Fit the eight M4 x 20 socket cap screws from above**, through both internal flanges on the
    radius 148.9 mm bolt circle at 22.5, 67.5, 112.5 and so on. The hex nut pockets open
    downward under the lower flange, so the nuts drop in and stay put. Add a washer under each
    head. Torque to **1.5 N.m (estimated)**, going round in a star pattern, twice.
-5. **Fit the four M8 rod nuts at the top plate**, each in its 18 mm x 4 mm counterbore with a
+6. **Fit the four M8 rod nuts at the top plate**, each in its 18 mm x 4 mm counterbore with a
    washer. Torque each to **1.6 N.m** (about 1 kN of preload). Work them in a cross pattern in
    two passes. These rods put the whole body in compression from the battery shelf to the top
    plate and carry the dome, the head drive and the shoulder reaction. Each nut then stands
    2.8 mm proud and clears the dome plate by 5.1 mm.
-6. **Do this before the lazy susan goes on.** The bottom race covers the rod counterbores.
-7. **Check:** the body is one column. Lift it by the top plate — nothing at the seam moves.
+7. **Do this before the lazy susan goes on.** The bottom race covers the rod counterbores.
+8. **Check:** the body is one column. Lift it by the top plate — nothing at the seam moves.
    Re-check the eight M4 after the rods are torqued; the rods will have pulled the seam tighter.
 
 ## Stage 8 — head drive
@@ -465,24 +570,32 @@ holder on a pack that can deliver about 457 A into a short is how harnesses catc
 8. **Head drive:** run it at 50 percent PWM. The dome should turn at about 8 to 9 RPM. Below
    35 percent it stalls.
 9. **Check the control page**, firmware.md section 7.
+10. **Commission the stance change before any powered change**, firmware.md section 11.4, with
+    the robot on blocks and the centre wheels clear of the floor: measure the pot endpoints, set
+    `RELEASE_US` per side, check each SS-01GL at 3.3 V and 1 mA, time one creep through each
+    receiver, and watch the centre-foot feed.
+11. **First powered change, still on blocks.** Hold the stance control through one retract and
+    one deploy. Every phase in firmware.md section 11.2 must be reported in order, and letting
+    go of the control must stop the actuator and hold.
 
 ## Stage 11 — acceptance tests
 
 These are the five ranked tests from `research/loads.md` section 8, plus the head-drive rim
-test from section 5 and a stopping check. Run them in this order. Each has a pass criterion,
+test from section 5, a stopping check and the revision D stance-change test (11.9). Run them in this order. Each has a pass criterion,
 and a failure is a real failure, not a note.
 
 ![Exploded view of the whole robot](../output/drawings/16_exploded_robot.png)
-*Figure 16 — whole robot exploded: dome, two body rings, head drive, two legs, centre leg,
-three feet.*
+*Figure 16 — whole robot exploded: dome, two body rings, head drive, two legs, centre-leg
+housing and carriage, three feet.*
 
 ### 11.1 Mass
 
 Weigh the whole robot on the bathroom scale.
 
-- **Expected:** **11.7 kg**, from the CAD screening in `docs/stability.json` (6,046.9 g printed
-  plus 5,658.6 g purchased). The wider range from `research/loads.md` section 1 is 11.6 to
-  15.0 kg.
+- **Expected:** **13.2 kg**, from the CAD screening in `docs/stability.json`
+  (6,552.1 g printed plus 6,644.2 g purchased). The wider range from
+  `research/loads.md` section 1 is 11.6 to 15.0 kg; revision D adds the actuator, the guide, the
+  carriage and the locks.
 - **Pass:** the reading is inside that range and the running total of printed masses matches
   the group budgets in mechanical.md section 5.1.
 - **If over:** every extra kilogram cuts drive margin and runtime and raises turning scrub. The
@@ -494,16 +607,14 @@ Stand the robot in the three-leg stance with the centre foot on the bathroom sca
 outer feet on packers of the same height.
 
 - **Pass:** the centre foot carries **at least 28 percent of total mass**.
-- **Expect to exceed it, by a lot.** `docs/stability.json` puts the centre of gravity at
-  y 52.3 mm, which is *behind* the centre-foot axle line at y 77.0 mm, and gives a static
-  share of **1.63** on the two-line model. In plain terms: the robot sits back on the centre
-  foot and the outer feet are lightly loaded. That is the same problem as 11.3, seen from the
-  other side.
-- **If the outer feet read near zero:** the centre of gravity must move forward before the
-  robot drives. Differential drive needs load on the outer wheels.
-- **Note:** the built geometry puts the centre foot 39.2 mm *behind* the outer-foot line,
-  where `research/loads.md` assumed it 290 mm ahead. This test is the first real measurement
-  of that share.
+- **Expected:** `docs/stability.json` puts the three-leg centre of gravity at y
+  44.2 mm, between the outer-foot axle line at y 0.0 mm and
+  the centre-foot axle line at y 152.1 mm, and gives a static share of
+  **0.29** on the two-line model.
+- **If the outer feet read near zero:** the centre of gravity must move before the robot
+  drives. Differential drive needs load on the outer wheels.
+- **Note:** revision D puts the centre foot ahead of the outer feet, as `research/loads.md`
+  assumed. This test is the first real measurement of that share.
 
 ### 11.3 Tilt test
 
@@ -511,15 +622,15 @@ Put the robot on a tilt board and raise the front until the centre foot lifts.
 
 - **Pass:** the robot reaches **15 degrees or more** of backward tilt before the centre foot
   lifts.
-- **Expect to fail as modelled.** `docs/stability.json` gives a tip-back margin of **20.3 mm**
-  and an angle of **3.9 degrees**, against the 15 degree criterion. Tip-forward is 19.8 degrees
-  and side tip 34.2 degrees, so only backward tipping is at risk.
-- **If under:** the centre of gravity must move forward. The battery is already at
-  `battery_y` = 15 mm forward inside its curb. The remaining moves, in order of effect, are:
-  rake the outer legs further forward, lower the shoulder axis in the body, and move the deck
-  load forward off the rear chord. Re-run 11.2 after any change.
-- **Do not skip to 11.4 on a failure.** A robot that rocks back 4 degrees will tip on its first
-  threshold.
+- **Expected:** `docs/stability.json` gives a three-leg tip-back margin of
+  **89.2 mm** and an angle of **15.6 degrees**, against the 15 degree
+  criterion. Tip-forward is 25.5 degrees and side tip 32.7 degrees. The
+  two-foot support margin is 34.5 mm (6.2 degrees): the two-foot stance is
+  for standing still, never for a tilt board.
+- **If under:** the centre of gravity must move forward. The remaining moves, in order of
+  effect, are: move the battery forward on its shelf (`battery_y`), lower the shoulder axis in
+  the body, and move the deck load forward. Re-run 11.2 after any change.
+- **Do not skip to 11.4 on a failure.**
 
 ### 11.4 Traction and turning
 
@@ -572,6 +683,26 @@ Run one loaded foot, or the whole robot, through an hour of figure-8 driving.
   **0.3 mm or less**, and every wheel is still on its paint-pen mark.
 - **Then:** re-torque every M8 nut. New prints bed in and the preload drops.
 
+### 11.9 Stance change
+
+Only after stage 10 steps 10 and 11 have passed on blocks. On the floor, keep a hand near the
+dome, not on it.
+
+- **Repeatability.** Run five retracts and five deploys. **Pass:** every change ends in the
+  target stance with both SS-01GL switches reading seated, and none trips `STALL`,
+  `TRAVEL_TIMEOUT` or `LOCK_TIMEOUT` (firmware.md section 11.3).
+- **Interlocks.** Each of these must be refused or stop the actuator and hold: a drive command
+  on two feet; a drive or dome command during a change; letting go of the stance control
+  mid-change; closing the control page mid-change (stop within 0.5 s); one lock-switch lead
+  unplugged (`LOCK_SENSOR`). **Pass:** every one, every time, with no restart until a fresh
+  press.
+- **Centre-foot feed.** Watch the centre wheels during a deploy on the target floor. **Pass:**
+  they roll with the foot. If they are dragged, stop and follow firmware.md section 11.4 step 5.
+- **Pin engagement.** After each change, pull each knob by hand. **Pass:** the pin was fully home.
+- **Two-foot stance.** Stand the robot on two feet on a level floor. **Pass:** the centre wheels
+  stay clear of the floor, about 25 mm (`docs/stability.json`), and the robot does
+  not rock.
+
 ---
 
 ## Figures
@@ -583,11 +714,13 @@ them from `output/drawings/`.
 | --- | --- | --- |
 | 10 | `output/drawings/10_exploded_feet.png` | Outer foot exploded: shell, two TT motors, four wheels, tab bolts, cable ties |
 | 11 | `output/drawings/11_exploded_leg.png` | Outer leg exploded: upper, lower, comb joint, four M4 x 80, two M8 rods, ankle bolts |
-| 12 | `output/drawings/12_exploded_center_leg.png` | Centre leg exploded: leg, two 6001-2RS bearings, spacer tube, M12 x 70, stop pin, centre foot |
-| 13 | `output/drawings/13_exploded_body.png` | Body exploded: lower ring, upper ring, seam lip, eight M4, four M8 rods, battery, centre leg |
+| 12 | `output/drawings/12_exploded_center_leg.png` | Centre leg exploded: housing, carriage, two LM12LUU bearings, pitch hinge, two 6001-2RS bearings, M12 caster bolt, centre foot |
+| 13 | `output/drawings/13_exploded_body.png` | Body exploded: lower ring, upper ring, seam lip, eight M4, four M8 rods, battery, guide shafts, shoulder locks |
 | 14 | `output/drawings/14_exploded_head_drive.png` | Head-drive exploded: base, arm, motor, wheel, M5 tension bolt, spring, thumb nut, lift stop |
 | 15 | `output/drawings/15_exploded_dome.png` | Dome exploded: dome, TFT, four matrix backpacks, two jewels, three holoprojector pixels, lens discs, lazy susan, slip ring |
-| 16 | `output/drawings/16_exploded_robot.png` | Whole robot exploded: dome, two body rings, head drive, two legs, centre leg, three feet |
+| 16 | `output/drawings/16_exploded_robot.png` | Whole robot exploded: dome, two body rings, head drive, two legs, centre-leg housing and carriage, three feet |
+| 17 | `output/drawings/17_stance_change.png` | Stance change: both stances and the transition, with tilt and centre-foot lift against actuator stroke |
+| 00 | `output/drawings/00_final_build_mockup.png` | Mock-up: the three-leg and two-foot stances and three transition poses |
 
 ---
 
@@ -603,7 +736,12 @@ judgement; the two unmarked values come from `research/loads.md` section 7.
 | M12 x 70 | Centre caster, against the spacer tube | 8 N.m (estimated) |
 | M8 x 80 | Ankle lock bolt | 6 N.m (estimated) |
 | M8 x 80 | Ankle pivot bolt | Snug only, the tongue must swing |
-| M8 x 30 | Centre-leg flange, four off | 2 N.m (estimated) |
+| M8 x 35 | Pitch hinge, two off | Clamp the bronze sleeve; the cheek must still turn |
+| M4 x 25 | LM12LUU clamps, four off | Snug; the bearing must not turn in its seat |
+| M4 x 16 | GN 412 lock flanges, four off, into inserts | Snug; no value set |
+| M4 x 45, M4 x 60 | Actuator eye pins, nyloc | Snug only, the eyes must pivot |
+| M4 x 8 set screw | Guide shafts, two off | Snug against the shaft |
+| M3 x 10 | MG995 ears, eight off, into inserts | Finger tight plus a quarter turn |
 | M4 x 80 | Leg splice, four per leg | 1.5 N.m (estimated) |
 | M4 | Ring seam, eight off | 1.5 N.m (estimated) |
 | M5 x 12 | Lazy susan, eight off, into inserts | 2 N.m (estimated) |
@@ -624,13 +762,17 @@ judgement; the two unmarked values come from `research/loads.md` section 7.
 | 12 mm ID x 9.8 mm spacer tube | 1 | Centre caster |
 | Flanged bronze bushing, 12 x 16 x 20 | 4 | Shoulders, two each |
 | Steel crush sleeve, 30 mm | 2 | Shoulder bosses |
-| 6 x 30 mm steel dowel | 4 | Shoulder index pins, two per shoulder in the three-leg stance |
+| J.W. Winco GN 412-6-35-B-1 indexing plunger | 2 | Shoulder locks, one per shoulder |
+| J.W. Winco GN 412.2-M12X1.5-B6.2 receiver | 4 | Leg inboard faces, two per leg |
+| 12 mm hardened guide shaft | 2 | Centre-leg guide in `body_lower` |
+| LM12LUU linear bearing | 2 | Carriage |
+| 8 x 12 x 12 mm bronze sleeve | 2 | Pitch hinge |
 | 6 x 8 mm pin | 1 | Caster swivel stop |
 | M8 threaded rod, 385 mm | 4 | Body |
 | M8 threaded rod, 390 mm | 4 | Legs, two each |
 | M8 x 80 hex bolt and nut | 2 | Ankle pivot, one per outer foot |
 | M8 x 90 hex bolt and nut | 2 | Ankle lock, one per outer foot |
-| M8 x 30 bolt and nut | 4 | Centre-leg flange |
+| M8 x 35 hex bolt, washer, captive nut | 2 | Pitch hinge |
 | M8 nut, captive in a trap | 4 | Leg rod tops |
 | M8 nut and fender washer | 12 | Rod ends |
 | M5 x 12 socket cap | 8 | Lazy susan, four per race |
@@ -641,10 +783,17 @@ judgement; the two unmarked values come from `research/loads.md` section 7.
 | M4 x 20 socket cap and nut | 8 | Ring seam, screws from above, nuts under the lower flange |
 | M4 x 12 countersunk | 4 | Head-drive mount |
 | M4 x 70 socket head and nyloc | 1 | Head-drive hinge |
-| M4 heat-set insert | 4 | Head-drive base |
+| M4 x 25 socket cap and nut | 4 | Carriage bearing clamps |
+| M4 x 16 socket cap | 4 | GN 412 lock flanges |
+| M4 x 45 and M4 x 60 socket cap, nyloc | 2 | Actuator rod eye and fixed eye |
+| M4 x 8 cup-point set screw | 2 | Guide shafts |
+| M4 heat-set insert | 10 | Head-drive base 4, lock flanges 4, shaft bosses 2 |
 | M3 x 35 bolt and nut | 4 | Outer-foot motor tabs |
 | M3 x 30 button head and nut | 2 | Head-drive motor |
 | M3 heat-set insert and screw | 4 | Rear access cover |
+| M3 heat-set insert and M3 x 10 screw | 8 | MG995 ears |
+| M3 x 10 screw as a horn tip pin | 2 | MG995 horns |
+| M2 screw | 4 | SS-01GL lock switches |
 | M2.5 heat-set insert and screw | 2 | Dome TFT strap |
 | M2.5 heat-set insert and screw | 6 | Deck: Raspberry Pi 4 (4), ADS1115 (2) |
 | M2 heat-set insert and screw | 6 | Dome display straps |

@@ -1,10 +1,12 @@
 #!/usr/bin/env python3
-"""Build the illustrated fable-r2d2 fabrication and assembly manual.
+"""Build the illustrated fable-r2d2 revision D fabrication and assembly manual.
 
 Every page is generated from the checked-in package sources at run time: the Markdown
 documents in docs/, the bills of material in bom/, the CAD reports in cad/, the circuit
 sheets in electronics/ and the MATLAB-style drawing set in output/drawings/. Nothing in
-this file hard-codes design content.
+this file hard-codes design content. Chapter numbers come from CHAPTER_ORDER, counts from
+scripts/parts.json and the drawing manifest, and the revision D change list from git (the
+frozen revision named in docs/revision-c.json).
 
 Outputs:
     output/pdf/r2d2-assembly-manual.pdf
@@ -44,15 +46,26 @@ from reportlab.platypus import (BaseDocTemplate, Flowable, Frame, Image, KeepTog
                                 Preformatted, Spacer, Table, TableStyle)
 from reportlab.platypus.tableofcontents import TableOfContents
 
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from assembly_layout import REVISION, STANCE_PARAMETER, Layout, number_word, package_counts  # noqa: E402
+from build_bom import baseline, printed_delta, purchased_delta, stock_notes  # noqa: E402
+from verify import manual_sources  # noqa: E402
+
 ROOT = Path(__file__).resolve().parents[1]
 OUT = ROOT / 'output/pdf/r2d2-assembly-manual.pdf'
 RENDER_DIR = ROOT / 'output/pdf/rendered'
 SVG_DIR = RENDER_DIR / '_svg'
 CHECK_JSON = ROOT / 'docs/pdf-check.json'
 
-TITLE = 'fable-r2d2 - R2-D2 fabrication and assembly manual'
-FOOTER_NOTE = 'CAD design; not physically validated'
-REQUIRED_TEXT = ['317', 'lazy susan', 'KB2040', 'charge port', 'tip-back']
+TITLE = f'fable-r2d2 revision {REVISION} - R2-D2 fabrication and assembly manual'
+FOOTER_NOTE = f'Revision {REVISION}. CAD design; not physically validated'
+REQUIRED_TEXT = ['317', 'lazy susan', 'KB2040', 'charge port', 'tip-back', f'Revision {REVISION}',
+                 'two-foot', 'SS-01GL', 'MG995', 'P16', 'out of stock', 'not physically validated']
+CHAPTER_ORDER = ['overview', 'printing', 'purchased', 'mechanical', 'stance', 'electrical', 'assembly',
+                 'firmware', 'tests', 'verification']
+CHAPTER = {name: number for number, name in enumerate(CHAPTER_ORDER, 1)}
+STANCE_DESIGNATORS = ('ACT1', 'U10', 'U11', 'SW2', 'SW3', 'SV1', 'SV2', 'J13A', 'J13B', 'J14', 'R5', 'R6A',
+                      'R6B', 'R6C', 'R6D', 'R7', 'R8', 'R9', 'R10', 'F7', 'FH7')
 MIN_PAGES = 40
 RENDER_DPI = 60
 
@@ -359,6 +372,29 @@ def starts_with(*prefixes):
     return lambda title: title.startswith(prefixes)
 
 
+def pick_subsections(lines: list[str], prefixes, level: int = 3, drop: bool = False) -> list[str]:
+    """Keep (or, with drop=True, remove) the level-`level` Markdown sections whose titles start with
+    one of `prefixes`. A section runs to the next heading of the same or a higher level."""
+    out: list[str] = []
+    keep = drop
+    matched = False
+    for line in lines:
+        heading = re.match(r'^(#{1,6}) ', line)
+        if heading and len(heading.group(1)) <= level:
+            depth = len(heading.group(1))
+            if depth == level:
+                hit = line[depth + 1:].strip().startswith(tuple(prefixes))
+                matched |= hit
+                keep = hit != drop
+            else:
+                keep = drop
+        if keep:
+            out.append(line)
+    if not matched:
+        raise ValueError(f'no level-{level} section starts with {prefixes}')
+    return out
+
+
 def render_markdown(lines: list[str], figures: Figures, width: float,
                     source_dir: Path, skip_images: frozenset[str] = frozenset(),
                     image_width: float | None = None) -> list:
@@ -516,6 +552,39 @@ def linked(text: str, url: str) -> str:
     return f'{text} [source]({url})'
 
 
+def value_rows(data: dict, prefix: str = '') -> list[list[str]]:
+    """Flatten a JSON object into (`key.path`, value) table rows."""
+    rows = []
+    for key, value in data.items():
+        if isinstance(value, dict):
+            rows += value_rows(value, f'{prefix}{key}.')
+        elif isinstance(value, list):
+            rows.append([f'`{prefix}{key}`', ', '.join(str(v) for v in value)])
+        else:
+            rows.append([f'`{prefix}{key}`', str(value)])
+    return rows
+
+
+def bom_rows(filename: str, references) -> list[list[str]]:
+    """(Ref, Qty, item with part number and supplier, notes with source) for the listed references."""
+    wanted = list(references)
+    rows = [r for r in read_csv(ROOT / 'bom' / filename) if r.get('reference') in wanted]
+    missing = sorted(set(wanted) - {r['reference'] for r in rows})
+    if missing:
+        raise RuntimeError(f'bom/{filename} has no row for {missing}')
+    table = []
+    for row in rows:
+        origin = ' - '.join(x for x in (str(row.get('part_number', '')).strip(), str(row.get('supplier', '')).strip()) if x)
+        table.append([row['reference'], f"{number(row.get('quantity')):g}",
+                      str(row.get('item', '')) + ('\n*' + origin.replace('*', '') + '*' if origin else ''),
+                      linked(str(row.get('notes', '')), row.get('url', ''))])
+    return table
+
+
+def sha256_file(path: Path) -> str:
+    return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
 def human_bytes(size: int) -> str:
     for unit, scale in (('MB', 1 << 20), ('kB', 1 << 10)):
         if size >= scale:
@@ -606,16 +675,34 @@ def cover(figures: Figures, validation: dict, stability: dict, manifest: dict,
     stl_count = validation.get('unique_stl_files', len(validation.get('parts', [])))
     pieces = validation.get('printed_piece_count')
     diameter = max(number(p.get('x_mm')) for p in validation['parts'])
+    if 'stance_heights_mm' not in manifest:
+        raise RuntimeError('output/drawings/drawing-manifest.json has no stance_heights_mm; '
+                           'run python scripts/draw_robot.py before the manual')
+    heights = manifest['stance_heights_mm']
+    lay = Layout(ROOT)
+    ends = lay.endpoints()
+    two = stability['stances']['two_foot']
+    base = baseline()
+    deltas = [purchased_delta('electronics.csv'), purchased_delta('hardware.csv')]
     key_rows = [
+        ['Revision', f'{REVISION}: motorized, interlocked two-foot / three-leg stance change. Revision '
+                     f'{base["revision"]} is git tag {base["git_tag"]}.'],
         ['Body and dome diameter', f'{diameter:.0f} mm (317 mm body ring, H2D 320 mm bed axis less 3 mm)'],
-        ['Overall height, three-leg driving stance', '713 mm (dome crown above the floor)'],
+        ['Overall height of the printed parts', f'{heights["three_leg"]:.0f} mm in the three-leg stance, '
+                                                f'{heights["two_foot"]:.0f} mm on two feet'],
+        ['Stances', f'two-foot at {STANCE_PARAMETER} {ends["two_foot"]:.1f} mm: body upright, centre wheels '
+                    f'{lay.centre_foot_lift(ends["two_foot"]):.0f} mm up, drive refused. Three-leg at '
+                    f'{ends["three_leg"]:.1f} mm: body tilted {lay.stance.tilt(ends["three_leg"]):.1f} degrees.'],
         ['Printed design files', f'{stl_count} STL files / {pieces} printed pieces'],
         ['Estimated assembled mass', f'{mass_kg:.2f} kg total, of which {printed_kg:.2f} kg is printed'],
         ['Estimated printing', f'{number(slices.get("total_predicted_time_h")):.0f} h and '
                                f'{number(slices.get("total_predicted_mass_g")) / 1000:.1f} kg of filament '
                                'for the sliced parts'],
-        ['Static tip-back margin', f'{number(stability.get("tip_back_margin_mm")):.1f} mm '
-                                   f'({number(stability.get("tip_back_angle_deg")):.1f} degrees)'],
+        ['Static margins', f'three-leg tip-back {number(stability.get("tip_back_margin_mm")):.1f} mm '
+                           f'({number(stability.get("tip_back_angle_deg")):.1f} degrees); two-foot support '
+                           f'{number(two.get("support_margin_mm")):.1f} mm'],
+        ['Purchased pieces added since revision ' + base['revision'],
+         f'{sum(d["pieces"] for d in deltas):g} BOM line pieces, USD {sum(d["usd"] for d in deltas):,.2f}'],
         ['Drawing set', f'{len(manifest.get("pngs", []))} MATLAB-style PNG drawings, '
                         f'generated {str(manifest.get("generated", ""))[:10]}'],
     ]
@@ -623,7 +710,8 @@ def cover(figures: Figures, validation: dict, stability: dict, manifest: dict,
         '<b>Digital design; no physical build or test.</b><br/>Nothing in this package has been '
         'printed, assembled, wired or driven. Every mass, current, runtime, torque and margin in '
         'this manual is arithmetic on CAD geometry and published component ratings. The acceptance '
-        'tests in chapter 8 are the first real measurements, not a confirmation of these numbers.',
+        f'tests in chapter {CHAPTER["tests"]} are the first real measurements, not a confirmation of these numbers. '
+        'No stance change has been powered and no lock has been seated on hardware.',
         ParagraphStyle('notice', fontName='Text', fontSize=9, leading=12.6, textColor=INK))]],
         colWidths=[PORTRAIT_W])
     notice.setStyle(TableStyle([
@@ -635,9 +723,9 @@ def cover(figures: Figures, validation: dict, stability: dict, manifest: dict,
     return [
         Spacer(1, 6),
         P('fable-r2d2', 'CoverTitle'),
-        P('R2-D2 fabrication and assembly manual', 'CoverSub'),
+        P(f'R2-D2 fabrication and assembly manual - revision {REVISION}', 'CoverSub'),
         Rule(thickness=1.1, colour=ACCENT),
-        figures.image('cad/assembly.png', PORTRAIT_W, 300),
+        figures.image('cad/assembly.png', PORTRAIT_W, 280),
         Spacer(1, 10),
         grid_table(['Key number', 'Value'], key_rows, column_widths(
             [['Key number', 'Value']] + key_rows, PORTRAIT_W, floor=14, ceiling=64)),
@@ -655,7 +743,7 @@ def contents_page(toc: TableOfContents) -> list:
 
 
 def chapter_overview(figures: Figures, stability: dict, validation: dict) -> list:
-    flow = [PageBreak(), P('1  Overview and stance', 'H1')]
+    flow = [PageBreak(), P(f'{CHAPTER["overview"]}  Overview and stances', 'H1')]
     readme = ROOT / 'README.md'
     if readme.is_file():
         lines = read_lines(readme)
@@ -686,13 +774,22 @@ def chapter_overview(figures: Figures, stability: dict, validation: dict) -> lis
         ['Centre-foot static load share',
          f'{number(stability["center_foot_static_share"]):.2f} of the total mass '
          '(the rear foot carries more than its geometric share)', 'docs/stability.json'],
+        ['Two-foot centre of gravity, forward of the shoulder axis and above the floor',
+         f'{number(stability["stances"]["two_foot"]["centre_of_gravity_mm"][1]):.1f} mm / '
+         f'{number(stability["stances"]["two_foot"]["centre_of_gravity_mm"][2]):.1f} mm',
+         'docs/stability.json stances.two_foot'],
+        ['Two-foot support margin',
+         f'{number(stability["stances"]["two_foot"]["support_margin_mm"]):.1f} mm / '
+         f'{number(stability["stances"]["two_foot"]["support_tip_angle_deg"]):.1f} degrees',
+         'docs/stability.json stances.two_foot'],
         ['Print envelope check',
          'pass' if validation.get('all_pass') else 'FAIL',
          f'cad/validation.json, envelope {validation.get("envelope_mm")} mm'],
     ]
     flow += [
-        P('1.1 Stance and stability screening', 'H2'),
-        P('These figures come from `docs/stability.json`, which '
+        P(f'{CHAPTER["overview"]}.1 Stability screening in both stances', 'H2'),
+        P('These figures come from `docs/stability.json`. Rows without a stance name are the three-leg '
+          'operating stance. The file '
           'sums the STL volumes at the modelled fill fraction and treats every purchased item as a '
           'point mass. It is a screening calculation, not a weighing. The tip-back margin is the '
           'number that governs how this robot may be handled: it is small, so never push the dome '
@@ -705,7 +802,8 @@ def chapter_overview(figures: Figures, stability: dict, validation: dict) -> lis
     flow += figures.landscape_page(
         'output/drawings/01_robot_assembled.png',
         'Figure 1 - the assembled robot in its three-leg driving stance',
-        'output/drawings/01_robot_assembled.png. Rendered from the nine package STL files with '
+        f'output/drawings/01_robot_assembled.png. Rendered from the {number_word(package_counts(ROOT)["designs"])} '
+        'package STL files with '
         'purchased parts drawn as nominal envelopes. Millimetre axes.')
     flow += figures.landscape_page(
         'output/drawings/02_robot_exploded.png',
@@ -751,19 +849,19 @@ def chapter_printing(figures: Figures, validation: dict, slices: dict) -> list:
     profiles = slices.get('profiles', {})
     overrides = ', '.join(f'{k} = {v}' for k, v in profiles.get('overrides', {}).items())
 
-    flow = [PageBreak(), P('2  Printing', 'H1'),
+    flow = [PageBreak(), P(f'{CHAPTER["printing"]}  Printing', 'H1'),
             P(f'{validation.get("unique_stl_files")} STL files make '
               f'{total_pieces} printed pieces. Solid-material upper bound for the whole set is '
               f'{total_solid / 1000:.2f} kg before infill savings, supports and brim; the sliced '
               'prediction column is the number to buy filament against. Print the one outer foot '
               'first and assemble stage 1 on it before committing the rest.'),
-            P('2.1 Part manifest', 'H2'),
+            P(f'{CHAPTER["printing"]}.1 Part manifest', 'H2'),
             grid_table(header, table_rows, widths),
             P('Source: bom/printed-parts.csv and cad/h2d-slice-check.json.', 'Small')]
 
     unsliced = [r['part'] for r in parts if Path(r['part']).stem not in
                 {Path(s.get('part', '')).stem for s in slices.get('rows', []) if s.get('pass')}]
-    flow += [P('2.2 Slicer profile actually used', 'H2'),
+    flow += [P(f'{CHAPTER["printing"]}.2 Slicer profile actually used', 'H2'),
              P(f'Machine: {profiles.get("machine", "unknown")}. Process: '
                f'{profiles.get("process", "unknown")}. Plate: {profiles.get("bed", "unknown")}.'),
              P(f'Overrides: {overrides}.' if overrides else 'No profile overrides recorded.'),
@@ -778,7 +876,7 @@ def chapter_printing(figures: Figures, validation: dict, slices: dict) -> list:
                       'masses in the manifest as estimates from mesh volume only.'))
 
     mech = ROOT / 'docs/mechanical.md'
-    flow += [PageBreak(), P('2.3 Orientation and support notes', 'H2'),
+    flow += [PageBreak(), P(f'{CHAPTER["printing"]}.3 Orientation and support notes', 'H2'),
              P('Reproduced from docs/mechanical.md section 2.', 'Small')]
     flow += render_markdown(select(mech, keep=starts_with('2.')), figures, PORTRAIT_W, mech.parent)
 
@@ -787,7 +885,7 @@ def chapter_printing(figures: Figures, validation: dict, slices: dict) -> list:
         'Figure 4 - every printed component in the package',
         'output/drawings/04_printed_components.png. One tile per STL file, at a common scale.')
 
-    flow += [PageBreak(), P('2.4 Component sheets', 'H2'),
+    flow += [PageBreak(), P(f'{CHAPTER["printing"]}.4 Component sheets', 'H2'),
              P('One page per STL file: the part as it is modelled, with the numbers the slicer '
                'and the assembly stages need.')]
     # The part list comes from the BOM, never from a directory listing: globbing the
@@ -823,7 +921,7 @@ def chapter_printing(figures: Figures, validation: dict, slices: dict) -> list:
 
 
 def bom_chapter(figures: Figures) -> list:
-    flow = [PageBreak(), P('3  Purchased parts', 'H1'),
+    flow = [PageBreak(), P(f'{CHAPTER["purchased"]}  Purchased parts', 'H1'),
             P('Every item that is not printed. Prices were researched on 2026-09-12 and are '
               'listed per item or per stated pack; they are not quotations. Nothing has been '
               'ordered. Check availability and the exact rating notes before buying, because a '
@@ -831,7 +929,7 @@ def bom_chapter(figures: Figures) -> list:
     grand = 0.0
     for filename, title, blurb in [
         ('electronics.csv', '3.1 Electronics, motors and power',
-         'Reference designators match the four circuit sheets in chapter 5 and '
+         f'Reference designators match the circuit sheets in chapter {CHAPTER["electrical"]} and '
          'electronics/wiring.csv.'),
         ('hardware.csv', '3.2 Mechanical hardware, bearings and fasteners',
          'Steel carries every load path that matters: the shoulder bolts, the threaded rods, '
@@ -865,20 +963,37 @@ def bom_chapter(figures: Figures) -> list:
                             [PORTRAIT_W * f for f in (0.055, 0.045, 0.315, 0.075, 0.075, 0.435)]),
                  P(f'Source: bom/{filename}. Subtotal USD {subtotal:,.2f}, quantity times unit '
                    'price, tax, shipping, tools and filament excluded.', 'Small')]
-    flow += [P('3.3 Purchased-parts total', 'H2'),
+    base = baseline()
+    deltas = [purchased_delta('electronics.csv'), purchased_delta('hardware.csv')]
+    change_rows = [[d['file'].split('/')[-1], r['status'], r['reference'] or r['previous_reference'], r['item'],
+                    f"{r['old_quantity']:g} -> {r['new_quantity']:g}", f"{r['delta_usd']:+,.2f}"]
+                   for d in deltas for r in d['rows']]
+    printed = printed_delta()
+    flow += [PageBreak(), P(f'{CHAPTER["purchased"]}.3 Changes since revision {base["revision"]}', 'H2'),
+             P(f'Computed at build time against git tag `{base["git_tag"]}`. Electronics: '
+               f'{deltas[0]["pieces"]:+g} pieces, USD {deltas[0]["usd"]:+,.2f}. Mechanical hardware: '
+               f'{deltas[1]["pieces"]:+g} BOM line pieces (a pack is one), USD {deltas[1]["usd"]:+,.2f}. '
+               f'Printed designs {printed["designs"]["before"]} -> {printed["designs"]["after"]}, printed '
+               f'pieces {printed["pieces"]["before"]} -> {printed["pieces"]["after"]}. Stock problems are listed in '
+               f'chapter {CHAPTER["stance"]}.'),
+             grid_table(['BOM', 'Status', 'Ref', 'Item', 'Qty', 'USD change'], change_rows,
+                        [PORTRAIT_W * f for f in (0.14, 0.09, 0.1, 0.44, 0.11, 0.12)])]
+    flow += [P(f'{CHAPTER["purchased"]}.4 Purchased-parts total', 'H2'),
              P(f'**USD {grand:,.2f}** for both lists together, computed from the CSV files at '
                'build time. Filament, tools, the printer, paint, tax and shipping are not in that '
-               'number. The consumables table in chapter 6 lists what else you must have on hand.')]
+               f'number. The consumables table in chapter {CHAPTER["assembly"]} lists what else you must have on hand.')]
     return flow
 
 
 def chapter_mechanical(figures: Figures) -> list:
     mech = ROOT / 'docs/mechanical.md'
-    flow = [PageBreak(), P('4  Mechanical design', 'H1'),
+    flow = [PageBreak(), P(f'{CHAPTER["mechanical"]}  Mechanical design', 'H1'),
             P('The design envelope and stance, every load-carrying joint, the fits that make the '
               'printed parts go together, and the load screening. Reproduced from '
-              'docs/mechanical.md sections 1, 3, 4 and 5.', 'Small')]
-    flow += render_markdown(select(mech, keep=starts_with('1.')), figures, PORTRAIT_W, mech.parent)
+              'docs/mechanical.md sections 1, 3, 4 and 5. The stance sections 1.3, 1.4, 3.5 and 3.9 are '
+              f'in chapter {CHAPTER["stance"]}.', 'Small')]
+    flow += render_markdown(pick_subsections(select(mech, keep=starts_with('1.')), ('1.3', '1.4'), drop=True),
+                            figures, PORTRAIT_W, mech.parent)
     for rel, heading, caption in [
         ('cad/section.png', 'Section through the assembly',
          'cad/section.png - the native OpenSCAD model cut on the centre plane. Battery bay, '
@@ -898,7 +1013,7 @@ def chapter_mechanical(figures: Figures) -> list:
                 ('06_dome', 'Figure 6 - the dome',
                  'One-piece dome with the display, holoprojector and PSI cut-outs.'),
                 ('07_legs', 'Figure 7 - the legs',
-                 'Outer leg upper and lower, the comb splice and the centre leg.'),
+                 'Outer leg upper and lower, the comb splice and the centre-leg housing.'),
                 ('08_feet', 'Figure 8 - the feet',
                  'Outer foot and centre foot with the motor pockets and wheel positions.'),
                 ('09_head_drive', 'Figure 9 - the head friction drive',
@@ -906,8 +1021,10 @@ def chapter_mechanical(figures: Figures) -> list:
         ('4.', []), ('5.', []),
     ]:
         flow += [PageBreak()]
-        flow += render_markdown(select(mech, keep=starts_with(section)), figures,
-                                PORTRAIT_W, mech.parent)
+        lines = select(mech, keep=starts_with(section))
+        if section == '3.':
+            lines = pick_subsections(lines, ('3.5', '3.9'), drop=True)
+        flow += render_markdown(lines, figures, PORTRAIT_W, mech.parent)
         for stem, heading, caption in drawings:
             flow += figures.landscape_page(
                 f'output/drawings/{stem}.png', heading,
@@ -916,11 +1033,138 @@ def chapter_mechanical(figures: Figures) -> list:
     return flow
 
 
+def chapter_stance(figures: Figures, manifest: dict) -> list:
+    n = CHAPTER['stance']
+    mech = ROOT / 'docs/mechanical.md'
+    firmware = ROOT / 'docs/firmware.md'
+    electrical = ROOT / 'docs/electrical.md'
+    lay = Layout(ROOT)
+    ends = lay.endpoints()
+    calc = read_json(ROOT / 'electronics/calculations.json')['stance_change']
+    check = read_json(ROOT / 'docs/stance-check.json')
+    mech_1 = select(mech, keep=starts_with('1.'))
+    mech_3 = select(mech, keep=starts_with('3.'))
+    fw_11 = select(firmware, keep=starts_with('11.'))
+    flow = [PageBreak(), P(f'{n}  The stance change (revision {REVISION})', 'H1'),
+            P('Revision D moves the robot between a stationary two-foot stance and the three-leg operating stance '
+              'with a linear actuator, and holds each stance with a sensed shoulder lock. This chapter collects '
+              'the mechanism, what the interlocks refuse, the actuator, the locks, wiring sheet 05, commissioning, '
+              'the purchasing notes and what is not physically validated. Every table is read from the package '
+              'files at build time.')]
+
+    pose_rows = []
+    for label, stroke in ends.items():
+        pose = lay.at_stroke(stroke)
+        pose_rows.append([label.replace('_', '-'), f'{stroke:.2f} mm', f'{pose.tilt:.2f} deg',
+                          f'{pose.centre_foot_lift():.1f} mm', 'seated' if pose.locks_seated_cad() else 'released',
+                          'allowed' if label == 'three_leg' else 'refused'])
+    header = ['Pose', f'Stroke `{STANCE_PARAMETER}`', 'Body tilt', 'Centre-foot lift', 'Locks', 'Ground drive']
+    flow += [P(f'{n}.1 Two stances and the change between them', 'H2'),
+             grid_table(header, pose_rows, column_widths([header] + pose_rows, PORTRAIT_W, floor=8, ceiling=20)),
+             P('Source: scripts/assembly_layout.py over the scripts/stability.py Stance kinematics, which mirror '
+               'cad/stance.scad. Ground drive follows docs/firmware.md section 11.2.', 'Small')]
+    flow += render_markdown(pick_subsections(mech_1, ('1.3', '1.4')), figures, PORTRAIT_W, mech.parent)
+    flow += [PageBreak()] + figures.figure(
+        'output/drawings/00_final_build_mockup.png',
+        f'output/drawings/00_final_build_mockup.png - revision {REVISION} mock-up: the three-leg stance, the '
+        f'two-foot stance and three transition poses, rendered from cad/r2d2.scad with -D {STANCE_PARAMETER}.',
+        PORTRAIT_W, PORTRAIT_H - 60)
+    flow += figures.landscape_page(
+        'output/drawings/17_stance_change.png', 'Figure 17 - the stance change',
+        'output/drawings/17_stance_change.png. Right-side views at four strokes, with body tilt and centre-foot '
+        'lift against actuator stroke.')
+
+    flow += [PageBreak(), P(f'{n}.2 What the interlocks refuse', 'H2'),
+             P('Reproduced from docs/firmware.md sections 11.1 to 11.3.', 'Small')]
+    flow += render_markdown(pick_subsections(fw_11, ('11.1', '11.2', '11.3')), figures, PORTRAIT_W, firmware.parent)
+
+    widths = [PORTRAIT_W * f for f in (0.1, 0.06, 0.34, 0.5)]
+    flow += [PageBreak(), P(f'{n}.3 The actuator and its guide', 'H2')]
+    flow += render_markdown(pick_subsections(mech_3, ('3.5',)), figures, PORTRAIT_W, mech.parent)
+    flow += [grid_table(['Ref', 'Qty', 'Item', 'Rating, fit and source'],
+                        bom_rows('electronics.csv', ('ACT1', 'U10', 'R5', 'R7', 'R8', 'F7')), widths),
+             P('Source: bom/electronics.csv.', 'Small'),
+             grid_table(['Value', 'Setting'],
+                        value_rows({k: calc[k] for k in ('actuator', 'driver', 'potentiometer')}),
+                        [PORTRAIT_W * 0.5, PORTRAIT_W * 0.5]),
+             P('Source: electronics/calculations.json stance_change.', 'Small')]
+
+    flow += [PageBreak(), P(f'{n}.4 Sensed shoulder locks and release servos', 'H2')]
+    lock_lines = pick_subsections(pick_subsections(mech_3, ('3.9',)), ('Not physically validated',), level=4, drop=True)
+    flow += render_markdown(lock_lines, figures, PORTRAIT_W, mech.parent)
+    added_hardware = [r['reference'] for r in purchased_delta('hardware.csv')['rows'] if r['status'] == 'added']
+    flow += [grid_table(['Ref', 'Qty', 'Item', 'Rating, fit and source'],
+                        bom_rows('electronics.csv', ('SW2-SW3', 'SV1-SV2', 'U11', 'J13A-J13B', 'J14', 'R6A-R6D')), widths),
+             P('Source: bom/electronics.csv.', 'Small'),
+             grid_table(['Value', 'Setting'], value_rows({k: calc[k] for k in ('lock_switch', 'release_servo')}),
+                        [PORTRAIT_W * 0.5, PORTRAIT_W * 0.5]),
+             P('Source: electronics/calculations.json stance_change.', 'Small'),
+             P(f'Mechanical hardware added in revision {REVISION}', 'H3'),
+             grid_table(['Ref', 'Qty', 'Item', 'Rating, fit and source'], bom_rows('hardware.csv', added_hardware), widths),
+             P('Source: bom/hardware.csv, the rows that are not in the revision C bill of materials.', 'Small')]
+
+    sheets = sorted((ROOT / 'electronics').glob('05-*.svg'))
+    if len(sheets) != 1:
+        raise RuntimeError(f'electronics/ must hold exactly one sheet 05 SVG, found {len(sheets)}')
+    wiring = read_csv(ROOT / 'electronics/wiring.csv')
+    ends_of = lambda row: {str(row.get('source', '')).split(' ')[0], str(row.get('target', '')).split(' ')[0]}
+    stance_wires = [r for r in wiring if ends_of(r) & set(STANCE_DESIGNATORS)]
+    flow += [PageBreak(), P(f'{n}.5 Wiring sheet 05', 'H2')]
+    flow += render_markdown(select(electrical, keep=starts_with('11.')), figures, PORTRAIT_W, electrical.parent)
+    flow += figures.landscape_page(
+        svg_to_png(sheets[0]), f'Circuit sheet 05 - {sheets[0].stem.split("-", 1)[-1].replace("-", " ")}',
+        f'electronics/{sheets[0].name}. Every wire is a row of electronics/wiring.csv. Nothing here has been built or measured.')
+    if stance_wires:
+        wire_header = list(stance_wires[0].keys())
+        data = [[str(r.get(k, '')) for k in wire_header] for r in stance_wires]
+        flow += [PageBreak(), P(f'Stance-change wires: {len(stance_wires)} of the {len(wiring)} rows in electronics/wiring.csv', 'H3'),
+                 grid_table([h.replace('_', ' ') for h in wire_header], data,
+                            column_widths([wire_header] + data, PORTRAIT_W, floor=5, ceiling=30))]
+
+    flow += [PageBreak(), P(f'{n}.6 Commissioning and calibration', 'H2'),
+             P('Reproduced from docs/firmware.md section 11.4. Do all of it with the robot on blocks before the first '
+               'powered stance change (docs/assembly.md stage 10).', 'Small')]
+    flow += render_markdown(pick_subsections(fw_11, ('11.4',)), figures, PORTRAIT_W, firmware.parent)
+
+    notes = stock_notes()
+    added_refs = {r['reference'] for d in (purchased_delta('electronics.csv'), purchased_delta('hardware.csv'))
+                  for r in d['rows'] if r['new_quantity'] > r['old_quantity']}
+    stance_notes = [x for x in notes if x['reference'] in added_refs]
+    summary = '; '.join(f"{x['reference']} {x['part_number']} ({x['status']})" for x in stance_notes) or 'none'
+    flow += [P(f'{n}.7 Parts out of stock or on back order', 'H2'),
+             P(f'{len(notes)} purchased rows record a stock problem on the supplier page on the date in the note. '
+               f'{len(stance_notes)} of them are parts added in revision {REVISION}: {summary}. Check every page again '
+               'before ordering; nothing has been bought.'),
+             grid_table(['Ref', 'Item', 'Supplier', 'Status', 'What the page read'],
+                        [[x['reference'], x['item'], x['supplier'], x['status'], linked(x['note'], x['url'])] for x in notes],
+                        [PORTRAIT_W * f for f in (0.1, 0.32, 0.12, 0.12, 0.34)]),
+             P('Source: bom/electronics.csv and bom/hardware.csv notes, read by scripts/build_bom.py.', 'Small')]
+
+    firmware_text = firmware.read_text(encoding='utf-8')
+    not_verified = re.search(r'(?ms)^Not verified:.*?(?=\n\s*\n)', firmware_text)
+    if not not_verified:
+        raise RuntimeError('docs/firmware.md has no "Not verified:" paragraph for the stance controls')
+    verification = read_json(ROOT / 'docs/verification.json')
+    flags = [['docs/stance-check.json passed (calculated)', str(check.get('passed'))],
+             ['docs/stance-check.json physical_tested', str(check.get('physical_tested'))],
+             ['docs/stance-check.json printed_strength_verified', str(check.get('printed_strength_verified'))],
+             ['docs/verification.json physical_validation', str(verification.get('physical_validation'))]]
+    flow += [P(f'{n}.8 What is not physically validated', 'H2')]
+    flow += render_markdown(pick_subsections(pick_subsections(mech_3, ('3.9',)), ('Not physically validated',), level=4),
+                            figures, PORTRAIT_W, mech.parent)
+    flow += [P('Firmware, reproduced from docs/firmware.md section 9.9:', 'Small'),
+             P(not_verified.group(0).replace('\n', ' ')),
+             grid_table(['Record', 'Value'], flags, [PORTRAIT_W * 0.62, PORTRAIT_W * 0.38])]
+    return flow
+
+
 def chapter_electrical(figures: Figures) -> list:
     doc = ROOT / 'docs/electrical.md'
-    flow = [PageBreak(), P('5  Electrical', 'H1')]
-    flow += render_markdown(read_lines(doc), figures, PORTRAIT_W, doc.parent)
-    sheets = sorted((ROOT / 'electronics').glob('*.svg'))
+    flow = [PageBreak(), P(f'{CHAPTER["electrical"]}  Electrical', 'H1')]
+    flow += render_markdown(select(doc, drop=starts_with('11.')), figures, PORTRAIT_W, doc.parent)
+    flow.append(P(f'Section 11 and circuit sheet 05, the stance change, are in chapter {CHAPTER["stance"]}.', 'Small'))
+    all_sheets = sorted((ROOT / 'electronics').glob('*.svg'))
+    sheets = [s for s in all_sheets if not s.name.startswith('05-')]
     if not sheets:
         raise RuntimeError('No circuit sheets found in electronics/')
     for sheet in sheets:
@@ -928,16 +1172,16 @@ def chapter_electrical(figures: Figures) -> list:
         title = sheet.stem.split('-', 1)[-1].replace('-', ' ')
         flow += figures.landscape_page(
             rel, f'Circuit sheet {sheet.stem.split("-")[0]} - {title}',
-            f'electronics/{sheet.name}. Named nets join across all four sheets; the wire-by-wire '
+            f'electronics/{sheet.name}. Named nets join across all {len(all_sheets)} sheets; the wire-by-wire '
             'list is electronics/wiring.csv. Nothing here has been built or measured.')
     wiring = ROOT / 'electronics/wiring.csv'
     if wiring.is_file():
         rows = read_csv(wiring)
         header = list(rows[0].keys())
         data = [[str(r.get(k, '')) for k in header] for r in rows]
-        flow += [PageBreak(), P('5.1 Point-to-point wiring schedule', 'H2'),
+        flow += [PageBreak(), P(f'{CHAPTER["electrical"]}.1 Point-to-point wiring schedule', 'H2'),
                  P(f'One row is one connection; {len(rows)} in total. Identical net names join '
-                   'across the four sheets.'),
+                   f'across the {len(all_sheets)} sheets.'),
                  grid_table([h.replace('_', ' ') for h in header], data,
                             column_widths([header] + data, PORTRAIT_W, floor=5, ceiling=30)),
                  P('Source: electronics/wiring.csv.', 'Small')]
@@ -947,20 +1191,20 @@ def chapter_electrical(figures: Figures) -> list:
 def chapter_assembly(figures: Figures) -> list:
     doc = ROOT / 'docs/assembly.md'
     lines = select(doc, drop=lambda t: t.startswith('Stage 11'))
-    flow = [PageBreak(), P('6  Assembly', 'H1')]
+    flow = [PageBreak(), P(f'{CHAPTER["assembly"]}  Assembly', 'H1')]
     flow += render_markdown(lines, figures, PORTRAIT_W, doc.parent,
-                            skip_images=frozenset({'16_exploded_robot.png'}))
+                            skip_images=frozenset({'16_exploded_robot.png', '17_stance_change.png'}))
     flow += figures.landscape_page(
         'output/drawings/16_exploded_robot.png',
         'Figure 16 - the whole robot exploded',
         'output/drawings/16_exploded_robot.png. Dome, two body rings, head drive, two outer legs, '
-        'the centre leg and the three feet, separated along the assembly axes.')
+        'the centre-leg housing and carriage, and the three feet, separated along the assembly axes.')
     return flow
 
 
 def chapter_firmware(figures: Figures) -> list:
     doc = ROOT / 'docs/firmware.md'
-    flow = [PageBreak(), P('7  Firmware and first power-on', 'H1'),
+    flow = [PageBreak(), P(f'{CHAPTER["firmware"]}  Firmware and first power-on', 'H1'),
             P('Reproduced from docs/firmware.md sections 1, 2 and 3 (what runs where, the serial '
               'protocol and the drive mixing) and sections 5 and 6 (flashing the KB2040 and '
               'setting up the Raspberry Pi).', 'Small')]
@@ -974,7 +1218,7 @@ def chapter_firmware(figures: Figures) -> list:
 
 def chapter_tests(figures: Figures) -> list:
     assembly = ROOT / 'docs/assembly.md'
-    flow = [PageBreak(), P('8  Tests and acceptance', 'H1'),
+    flow = [PageBreak(), P(f'{CHAPTER["tests"]}  Tests and acceptance', 'H1'),
             P('These are the first physical measurements made on the robot. Every number '
               'elsewhere in this manual is a calculation waiting to be checked here. Do not skip '
               'a test because the calculation looked comfortable, and do not carry the robot by '
@@ -984,13 +1228,13 @@ def chapter_tests(figures: Figures) -> list:
                             skip_images=frozenset({'16_exploded_robot.png'}))
     loads = ROOT / 'research/loads.md'
     if loads.is_file():
-        flow += [PageBreak(), P('8.1 Ranked risks and the test that retires each', 'H2'),
+        flow += [PageBreak(), P(f'{CHAPTER["tests"]}.1 Ranked risks and the test that retires each', 'H2'),
                  P('Reproduced from research/loads.md section 8.', 'Small')]
         flow += render_markdown(select(loads, keep=starts_with('8.')), figures,
                                 PORTRAIT_W, loads.parent)
     else:
         mech = ROOT / 'docs/mechanical.md'
-        flow += [PageBreak(), P('8.1 Ranked risks', 'H2'),
+        flow += [PageBreak(), P(f'{CHAPTER["tests"]}.1 Ranked risks', 'H2'),
                  P('research/loads.md is not in this package; the ranked risks below come from '
                    'docs/mechanical.md section 5 instead.', 'Small')]
         flow += render_markdown(select(mech, keep=starts_with('5.')), figures,
@@ -1000,7 +1244,7 @@ def chapter_tests(figures: Figures) -> list:
 
 def chapter_verification(figures: Figures, validation: dict, stability: dict,
                          slices: dict) -> list:
-    flow = [PageBreak(), P('9  Verification record', 'H1'),
+    flow = [PageBreak(), P(f'{CHAPTER["verification"]}  Verification record', 'H1'),
             P('What was actually checked by a program, and what was not. Every row below was '
               'produced by a script in scripts/ or electronics/ and written to a file in this '
               'package. No row is a physical measurement.')]
@@ -1010,11 +1254,13 @@ def chapter_verification(figures: Figures, validation: dict, stability: dict,
         record = read_json(verification)
         rows = [[c.get('check', ''), 'pass' if c.get('pass') else 'FAIL', c.get('detail', '')]
                 for c in record.get('checks', [])]
-        flow += [P('9.1 Package checks', 'H2'),
+        flow += [P(f'{CHAPTER["verification"]}.1 Package checks', 'H2'),
                  grid_table(['Check', 'Result', 'Detail'], rows,
                             [PORTRAIT_W * f for f in (0.16, 0.1, 0.74)]),
-                 P(f'docs/verification.json: all_pass = {record.get("all_pass")}, '
-                   f'physical_validation = {record.get("physical_validation")}.', 'Small')]
+                 P(f'docs/verification.json: all_pass = {record.get("all_pass")}, revision = '
+                   f'{record.get("revision")}, firmware tests = {record.get("firmware_tests")}, '
+                   f'physical_validation = {record.get("physical_validation")}. The record is the run made '
+                   'just before this manual was built, so it does not include the check of this PDF.', 'Small')]
 
     parts = validation.get('parts', [])
     mesh_rows = [[f'`{p.get("part")}`', str(p.get('quantity')),
@@ -1023,7 +1269,7 @@ def chapter_verification(figures: Figures, validation: dict, stability: dict,
                   str(p.get('connected_solids')),
                   'yes' if p.get('fits_envelope') else 'NO',
                   'pass' if p.get('pass_check') else 'FAIL'] for p in parts]
-    flow += [P('9.2 CAD and mesh validation', 'H2'),
+    flow += [P(f'{CHAPTER["verification"]}.2 CAD and mesh validation', 'H2'),
              P(f'cad/validation.json: {validation.get("unique_stl_files")} unique STL files, '
                f'{validation.get("printed_piece_count")} printed pieces, print envelope '
                f'{validation.get("envelope_mm")} mm, solid-material upper bound '
@@ -1048,7 +1294,7 @@ def chapter_verification(figures: Figures, validation: dict, stability: dict,
             else:
                 verdict = 'no solid produced; check not evaluated'
             rows.append([f'`{name}`', verdict, line])
-        flow += [P('9.3 Interference checks', 'H2'),
+        flow += [P(f'{CHAPTER["verification"]}.3 Interference checks', 'H2'),
                  P('Each row is a boolean intersection between two mating parts in the assembled '
                    'model. An empty result means the two bodies do not overlap. A check that '
                    'produced no solid at all was not evaluated and is not evidence of clearance.'),
@@ -1063,7 +1309,7 @@ def chapter_verification(figures: Figures, validation: dict, stability: dict,
     mass_rows.append(['**Total**', '', f'**{number(stability.get("total_mass_g")):.1f}**',
                       ', '.join(f'{number(v):.1f}' for v in
                                 stability.get('centre_of_gravity_mm', []))])
-    flow += [PageBreak(), P('9.4 Mass and stability screening', 'H2'),
+    flow += [PageBreak(), P(f'{CHAPTER["verification"]}.4 Mass and stability screening', 'H2'),
              P(f'docs/stability.json. Printed mass {number(stability.get("printed_mass_g")):.0f} g '
                f'at fill fraction {stability.get("fill_fraction")}, purchased mass '
                f'{number(stability.get("purchased_mass_g")):.0f} g, total '
@@ -1077,18 +1323,23 @@ def chapter_verification(figures: Figures, validation: dict, stability: dict,
                    f'{number(r.get("predicted_mass_g")):.1f}' if r.get('pass') else '-',
                    f'{number(r.get("predicted_time_h")):.2f}' if r.get('pass') else '-',
                    str(r.get('error_string', ''))[:70]] for r in slices.get('rows', [])]
-    flow += [P('9.5 Slicer check', 'H2'),
+    flow += [P(f'{CHAPTER["verification"]}.5 Slicer check', 'H2'),
              P(f'cad/h2d-slice-check.json, all_pass = {slices.get("all_pass")}. '
                f'{slices.get("test_type", "")}. A FAIL row means the slicer would not produce '
                'G-code for that mesh in this run; slice it yourself before printing.'),
              grid_table(['Part', 'Result', 'Filament g', 'Hours', 'Slicer message'], slice_rows,
                         [PORTRAIT_W * f for f in (0.2, 0.1, 0.13, 0.1, 0.47)]),
-             P('9.6 What is not verified', 'H2'),
+             P(f'{CHAPTER["verification"]}.6 Stance transition check', 'H2'),
+             P(f'docs/stance-check.json from `python scripts/check_stance.py`: passed = '
+               f'{read_json(ROOT / "docs/stance-check.json").get("passed")}, calculated, not measured.'),
+             grid_table(['Summary value', 'Result'], value_rows(read_json(ROOT / 'docs/stance-check.json')['summary']),
+                        [PORTRAIT_W * 0.6, PORTRAIT_W * 0.4]),
+             P(f'{CHAPTER["verification"]}.7 What is not verified', 'H2'),
              P('No part has been printed. No assembly has been made. No motor has been run, no '
                'current measured, no temperature taken, no distance driven and no mass weighed. '
                'Fit between mating printed parts is checked only as CAD geometry at nominal '
                'dimensions, with no allowance for printer tolerance, warp or shrinkage. Strength, '
-               'traction, runtime, stopping distance and dome-drive slip are calculations against '
+               'traction, runtime, stopping distance, dome-drive slip, actuator force and lock release are calculations against '
                'published ratings. Chapter 8 is where those become measurements.')]
     return flow
 
@@ -1138,6 +1389,7 @@ def build_story(figures: Figures, toc: TableOfContents) -> list:
     story += chapter_printing(figures, validation, slices)
     story += bom_chapter(figures)
     story += chapter_mechanical(figures)
+    story += chapter_stance(figures, manifest)
     story += chapter_electrical(figures)
     story += chapter_assembly(figures)
     story += chapter_firmware(figures)
@@ -1172,6 +1424,7 @@ def main() -> int:
 
     register_fonts()
     build_styles()
+    sources = {rel: sha256_file(ROOT / rel) for rel in manual_sources(ROOT)}
     OUT.parent.mkdir(parents=True, exist_ok=True)
     RENDER_DIR.mkdir(parents=True, exist_ok=True)
 
@@ -1213,6 +1466,7 @@ def main() -> int:
     pdf.close()
 
     digest = hashlib.sha256(OUT.read_bytes()).hexdigest()
+    inputs_unchanged = sources == {rel: sha256_file(ROOT / rel) for rel in manual_sources(ROOT)}
     all_pass = bool(
         not args.allow_missing_figures          # a development build never claims a pass
         and not figures.missing
@@ -1221,8 +1475,10 @@ def main() -> int:
         and pages >= MIN_PAGES
         and all(text_checks.values())
         and not blank_pages
+        and inputs_unchanged
     )
     report = {
+        'revision': REVISION,
         'pages': pages,
         'sha256': digest,
         'all_pass': all_pass,
@@ -1238,10 +1494,12 @@ def main() -> int:
         'min_pages_required': MIN_PAGES,
         'development_build': bool(args.allow_missing_figures),
         'built': date.today().isoformat(),
+        'source_sha256': sources,
+        'inputs_unchanged': inputs_unchanged,
     }
     CHECK_JSON.write_text(json.dumps(report, indent=2) + '\n', encoding='utf-8')
 
-    print(f'{"PASS" if all_pass else "FAIL"}: {pages} pages, {OUT.stat().st_size:,} bytes, '
+    print(f'{"PASS" if all_pass else "FAIL"}: revision {REVISION}, {pages} pages, {OUT.stat().st_size:,} bytes, '
           f'{len(figures.embedded)} figures embedded, {len(figures.missing)} missing, '
           f'{rendered}/{pages} pages rendered at {RENDER_DPI} dpi')
     print(f'text checks: ' + ', '.join(f'{k}={"ok" if v else "MISSING"}'

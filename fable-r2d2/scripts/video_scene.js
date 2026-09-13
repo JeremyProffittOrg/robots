@@ -1,9 +1,13 @@
 'use strict';
-// fable-r2d2 assembly and simulated operation renderer.
+// fable-r2d2 revision D assembly, stance change and simulated operation renderer.
 // Every printed piece is the delivered STL, already transformed into the assembly frame by
 // scripts/render_video.py using scripts/assembly_layout.py (the same placement cad/r2d2.scad
-// uses). Left-hand pieces were re-wound in Python because their Layout matrix has a negative
-// determinant. Purchased hardware is a nominal envelope built from cad/params.scad values.
+// uses) in the three-leg stance. Left-hand pieces were re-wound in Python because their Layout
+// matrix has a negative determinant. Stance poses are the body, carriage, housing and foot
+// matrices render_video.py sampled from the CAD kinematics over the actuator stroke; the
+// storyboard's stance phases pick the stroke per frame. Purchased hardware is a nominal envelope
+// built from cad/params.scad values. The animation code below is written on the assembly
+// ("legacy") timeline; each storyboard chapter says which span of it plays, or where it holds.
 // Nothing here connects to a robot, a printer or a network.
 
 const W = 1920, H = 1080;
@@ -89,6 +93,12 @@ let scene = null, story = null, P = null, F = null, CH = null;
 const meshes = {};
 let globalPose = I(), hero = false, shown = new Set(), labels = [], currentVP = I();
 let cutNote = '', shotAz = 0;
+// Stance delta applied between the drive pose and every mesh (see assemble), and the section
+// used by primitives that do not pass one of their own.
+let groupDelta = I();
+const NO_CUT = { mode: 0, m: I() };
+let primCut = NO_CUT;
+let DELTA = { body: I(), carriage: I(), housing: I(), foot: I() };
 
 // ---------- palette ----------
 const C = {
@@ -99,20 +109,21 @@ const C = {
   battery: [0.20, 0.22, 0.26], strap: [0.30, 0.33, 0.38], green: [0.13, 0.42, 0.26],
   blue: [0.14, 0.45, 0.72], red: [0.78, 0.16, 0.14], amber: [0.99, 0.72, 0.25],
   copper: [0.72, 0.45, 0.22], white: [0.96, 0.97, 0.98], lens: [0.11, 0.16, 0.24],
-  brass: [0.78, 0.62, 0.25],
+  brass: [0.78, 0.62, 0.25], carriage: [0.88, 0.91, 0.95],
 };
 const partColour = { body_lower: C.bodyLower, body_upper: C.bodyUpper, dome: C.dome, head_drive: C.drive,
-  leg_upper: C.leg, leg_lower: C.leg, leg_center: C.leg, foot_outer: C.foot, foot_center: C.foot };
+  leg_upper: C.leg, leg_lower: C.leg, leg_center: C.leg, leg_carriage: C.carriage, foot_outer: C.foot, foot_center: C.foot };
 
 // ---------- draw ----------
 function draw(key, matrix, color, cut, cutM, emissive) {
   const mesh = meshes[key];
   if (!mesh) return;
+  const section = (cut === undefined || cut === null) ? primCut : { mode: cut, m: cutM || I() };
   gl.bindVertexArray(mesh.vao);
-  gl.uniformMatrix4fv(U.model, false, mul(globalPose, matrix));
+  gl.uniformMatrix4fv(U.model, false, mul(globalPose, mul(groupDelta, matrix)));
   gl.uniform3fv(U.color, color);
-  gl.uniform1i(U.cut, cut || 0);
-  gl.uniformMatrix4fv(U.cutM, false, cutM || I());
+  gl.uniform1i(U.cut, section.mode || 0);
+  gl.uniformMatrix4fv(U.cutM, false, section.m || I());
   gl.uniform1f(U.emissive, emissive || 0);
   gl.drawArrays(gl.TRIANGLES, 0, mesh.count);
 }
@@ -151,9 +162,61 @@ function piece(name, t, t0, t1, frameName, offset, extra) {
 function drawPiece(name, t, t0, t1, frameName, offset, extra, cut, cutM) {
   const s = piece(name, t, t0, t1, frameName, offset, extra);
   if (!s) return;
-  draw('p_' + name, s.m, s.colour, cut, cutM);
+  draw('p_' + name, s.m, s.colour, cut || 0, cutM);
 }
 const vis = (t, t0) => hero || t >= t0;
+
+// ---------- storyboard timeline ----------
+function chapterAt(t) {
+  let index = story.chapters.findIndex(c => t >= c.start && t < c.end);
+  if (index < 0) index = story.chapters.length - 1;
+  return [story.chapters[index], index];
+}
+function chapterSpan(name) {
+  const chapter = story.chapters.find(c => c.name === name);
+  if (!chapter) throw new Error('storyboard chapter missing: ' + name);
+  return chapter;
+}
+// Assembly-timeline time the scene plays at video time t.
+function legacyTime(t) {
+  const [chapter] = chapterAt(t);
+  const [a, b] = chapter.legacy;
+  if (b === a) return a;
+  return a + (Math.min(t, chapter.end) - chapter.start) * (b - a) / (chapter.end - chapter.start);
+}
+
+// ---------- stance ----------
+// Stroke, lock release and state at video time t, from the storyboard stance phases.
+function stanceAt(t) {
+  const ends = scene.stance.endpoints;
+  let s = ends.three_leg, release = 0, phase = 'THREE_FOOT', state = 'THREE_FOOT';
+  if (!hero) {
+    for (const chapter of story.chapters) {
+      if (!chapter.stance || t < chapter.start) continue;
+      const local = t - chapter.start;
+      const phases = chapter.stance.phases;
+      let inside = false;
+      for (const ph of phases) {
+        if (local < ph.start) { inside = true; break; }
+        const target = ends[ph.stroke_to];
+        if (local >= ph.end) { s = target; release = ph.release_to; continue; }
+        const u = smooth(local, ph.start, ph.end);
+        s = lerp(s, target, u); release = lerp(release, ph.release_to, u); phase = ph.phase;
+        inside = true;
+        break;
+      }
+      if (inside) { state = chapter.stance.state; }
+      else { state = chapter.stance.end_state; phase = chapter.stance.end_state; }
+    }
+  }
+  const seated = release < 0.15;
+  return { s, release, phase, state, seated, driveAllowed: state === 'THREE_FOOT' && seated };
+}
+function poseRow(s) {
+  const rows = scene.stance.table;
+  const index = Math.round((s - rows[0].s) / scene.stance.step);
+  return rows[Math.max(0, Math.min(rows.length - 1, index))];
+}
 
 // ---------- cut planes ----------
 // Half section through a point, normal to the current camera azimuth: the half of the part
@@ -163,14 +226,15 @@ function sectionAt(x, y, bias) {
   const offset = x * Math.cos(a) + y * Math.sin(a) + (bias || 0);
   return { mode: 3, m: chain(T(-offset, 0, 0), RZ(-a)) };
 }
-function bodyCut(t) {
-  if (hero) return { mode: 0, m: I() };
-  if (t >= 55 && t < 141) return sectionAt(0, 0, 6);
-  return { mode: 0, m: I() };
+function sceneCut(lt, pose, chapter) {
+  if (hero) return NO_CUT;
+  if (chapter.camera && chapter.camera.cut) return sectionAt(pose.x, pose.y, 6);
+  if (lt >= 55 && lt < 141) return sectionAt(0, 0, 6);
+  return NO_CUT;
 }
 
 // ---------- motion ----------
-const FOOT_C_Y = () => P.skirt_bottom_y - P.caster_trail;
+const FOOT_C_Y = () => P.caster_axis_y - P.caster_trail;
 const TURN_R = 420, TURN_A = radians(75), FWD = 400, BACK = 150, WHEEL_R = 31.5;
 
 function drive(t) {
@@ -251,39 +315,47 @@ function floorGrid() {
 }
 
 // ---------- sub-assemblies ----------
-function motorsAndWheels(t, pose, swivel) {
+function motorsAndWheels(t, pose, swivel, near) {
   const start = { r: 12.0, l: 12.4, c: 12.8 };
-  const roll = { r: pose.right, l: pose.left, c: pose.centre };
+  // During a tilt the KB2040 rolls the centre foot along the floor with the housing
+  // (docs/firmware.md section 11.2, centre-foot feed): its travel is the housing delta along Y.
+  const roll = { r: pose.right, l: pose.left, c: pose.centre + DELTA.foot[13] };
   const lift = T(0, 0, footLift(t));
   const seat = key => (key === 'c' ? mul(lift, swivel) : lift);
   for (const m of scene.motors) {
+    groupDelta = m.foot === 'c' ? DELTA.foot : I();
+    const cut = m.foot === 'r' ? near : NO_CUT;
     const state = fit(t, start[m.foot], start[m.foot] + 3.4, 'foot_' + m.foot, [0, 0, -140]);
     if (!state.show) continue;
     const base = chain(state.m, seat(m.foot), m.m);  // arrival * lift * caster swivel * envelope
-    draw('motor', base, tint(C.motor, t, start[m.foot], start[m.foot] + 3.4));
+    draw('motor', base, tint(C.motor, t, start[m.foot], start[m.foot] + 3.4), cut.mode, cut.m);
     // two M3 tab bolts through the gearbox, fitted after the motor seats
     if (vis(t, 19)) {
       const bolts = fit(t, 19, 22.6, 'foot_' + m.foot, [0, 0, -40]);
       for (const x of [-8.8, 8.8]) {
         draw('bolt3', chain(bolts.m, seat(m.foot), m.m, T(x, -P.tt_thick / 2 - 2.6, 0), RX(Math.PI / 2),
-          RZ(bolts.k * Math.PI * 8)), C.steel);
+          RZ(bolts.k * Math.PI * 8)), C.steel, cut.mode, cut.m);
       }
     }
   }
   for (const w of scene.wheels) {
+    groupDelta = w.foot === 'c' ? DELTA.foot : I();
+    const cut = w.foot === 'r' ? near : NO_CUT;
     const t0 = start[w.foot] + 3.0, t1 = t0 + 3.6;
     const state = fit(t, t0, t1, 'foot_' + w.foot, [0, 0, -170]);
     if (!state.show) continue;
     const angle = w.spin_sign * (-roll[w.foot] / WHEEL_R) + state.k * Math.PI * 3;
     const m = chain(state.m, seat(w.foot), w.m, RZ(angle));
-    draw('wheel', m, tint(C.tyre, t, t0, t1));
-    for (let j = 0; j < 6; j++) draw('wheel_mark', mul(m, RZ(j * Math.PI / 3)), C.tread);
+    draw('wheel', m, tint(C.tyre, t, t0, t1), cut.mode, cut.m);
+    for (let j = 0; j < 6; j++) draw('wheel_mark', mul(m, RZ(j * Math.PI / 3)), C.tread, cut.mode, cut.m);
   }
+  groupDelta = I();
 }
 
-function feet(t, swivel) {
+function feet(t, swivel, near) {
   const rise = footLift(t);
   const lift = T(0, 0, rise);
+  groupDelta = I();
   if (rise > 2) {
     // assembly blocks: the three feet are held clear of the floor while the drives load in
     for (const [x, y, w, d] of [[P.leg_offset_x, P.ankle_y, 190, 250], [-P.leg_offset_x, P.ankle_y, 190, 250],
@@ -294,20 +366,32 @@ function feet(t, swivel) {
   const cutR = sectionAt(P.leg_offset_x, P.ankle_y, -14);
   const cutC = sectionAt(0, FOOT_C_Y(), -14);
   const open = !hero && t < 25;
-  drawPiece('foot_outer_right', t, 8.2, 11.0, 'foot_r', [0, 0, 260], lift, open ? cutR.mode : 0, cutR.m);
+  const right = open ? cutR : near;
+  drawPiece('foot_outer_right', t, 8.2, 11.0, 'foot_r', [0, 0, 260], lift, right.mode, right.m);
   drawPiece('foot_outer_left', t, 8.6, 11.4, 'foot_l', [0, 0, 260], lift);
+  groupDelta = DELTA.foot;
   drawPiece('foot_center', t, 9.2, 12.0, 'foot_c', [0, 0, 260], mul(lift, swivel), open ? cutC.mode : 0, cutC.m);
+  groupDelta = I();
   if (open && t >= 8) {
     cutNote = 'The right and centre feet are cut at a vertical plane, and all three are raised on blocks, so the two motors and four wheels that load through each sole stay visible.';
   }
 }
 
-function legs(t) {
+function legs(t, near) {
+  groupDelta = I();
   for (const [side, frame] of [['right', 'leg_r'], ['left', 'leg_l']]) {
     const d = side === 'right' ? 0 : 0.35;
-    drawPiece('leg_lower_' + side, t, 25.5 + d, 29.0 + d, frame, [0, 0, 300]);
-    drawPiece('leg_upper_' + side, t, 29.0 + d, 32.6 + d, frame, [0, 0, 340]);
+    const cut = side === 'right' ? near : NO_CUT;
+    drawPiece('leg_lower_' + side, t, 25.5 + d, 29.0 + d, frame, [0, 0, 300], null, cut.mode, cut.m);
+    drawPiece('leg_upper_' + side, t, 29.0 + d, 32.6 + d, frame, [0, 0, 340], null, cut.mode, cut.m);
     const f = F[frame];
+    primCut = cut;
+    // two GN 412.2 lock receivers in the upper leg's inboard face, at the 0 and body_tilt angles
+    const rec = fit(t, 29.0 + d, 32.6 + d, frame, [0, 0, 340]);
+    if (rec.show) for (const r of scene.mech.receivers) {
+      if ((r.side > 0) !== (side === 'right')) continue;
+      cyl([P.st_recv[0] / 2, 0, 0], P.st_recv[1] / 2, P.st_recv[0], tint(C.brass, t, 29.0 + d, 32.6 + d), RY(Math.PI / 2), mul(rec.m, r.m));
+    }
     // two full-length M8 rods inside the strut
     const rods = fit(t, 32.6, 36.0, frame, [0, 0, 280]);
     if (rods.show) for (const y of [-P.leg_rod_offset, P.leg_rod_offset]) {
@@ -328,12 +412,14 @@ function legs(t) {
       draw('bolt8m', chain(footFrame.m, T(33, y, z), RY(Math.PI / 2), RZ(ankle.k * Math.PI * 9)), tint(C.steel, t, 38.5, 41.6));
       draw('nut8', chain(footFrame.m, T(-31, y, z), RY(Math.PI / 2)), C.gray);
     }
+    primCut = NO_CUT;
   }
 }
 
 function centreLeg(t, swivel) {
   const fc = F.foot_c;
-  // two caster bearings on the stem, then the printed centre leg over them
+  groupDelta = DELTA.housing;
+  // two caster bearings on the stem, then the printed centre-leg housing over them
   const bearings = fit(t, 43.5, 46.5, 'center_leg', [0, 0, 150]);
   if (bearings.show) for (const z of [P.lg_bearing1_z, P.lg_bearing2_z]) {
     draw('bearing', chain(bearings.m, F.center_leg.m, T(0, 0, z)), tint(C.steel, t, 43.5, 46.5));
@@ -344,31 +430,28 @@ function centreLeg(t, swivel) {
     draw('bolt12', chain(bolt.m, F.center_leg.m, T(0, 0, 84), RZ(bolt.k * Math.PI * 10)), tint(C.steel, t, 50.0, 52.0));
     draw('nut12', chain(bolt.m, F.center_leg.m, T(0, 0, -52)), C.gray);
   }
+  groupDelta = DELTA.foot;
   const pin = fit(t, 52.0, 53.0, 'foot_c', [0, 0, 60]);
   if (pin.show) cyl([P.ft_stop_r, P.caster_trail, P.foot_center_h + P.ft_pin_h / 2], P.ft_pin_d / 2, P.ft_pin_h, tint(C.gray, t, 52, 53), I(), mul(swivel, fc.m));
+  groupDelta = I();
 }
 
 function bodyLower(t, cut) {
+  groupDelta = DELTA.body;
   drawPiece('body_lower', t, 55.8, 59.8, 'body', [0, 0, 300], null, cut.mode, cut.m);
-  const b = F.body.m, tilt = radians(P.body_tilt);
-  // four M8 bolts down through the centre-leg flange into the body floor
-  const flange = fit(t, 59.8, 62.0, 'body', [0, 0, 60]);
-  if (flange.show) for (const [x, y] of P.center_leg_bolts || [[-50, -32], [50, -32], [-50, 32], [50, 32]]) {
-    const base = chain(F.center_leg.m, T(0, 0, P.lg_center_plane_z), RX(tilt), T(x, y, 8));
-    draw('bolt8s', chain(flange.m, base, RZ(flange.k * Math.PI * 9)), tint(C.steel, t, 59.8, 62.0));
-  }
+  const b = F.body.m;
   // 12 V 7 Ah sealed lead-acid battery on its shelf
-  const batt = fit(t, 62.0, 65.0, 'body', [0, 0, 190]);
+  const batt = fit(t, 59.8, 64.0, 'body', [0, 0, 190]);
   if (batt.show) {
     const z = P.battery_shelf_z + P.battery[2] / 2;
-    box([0, P.battery_y, z], P.battery, tint(C.battery, t, 62, 65), mul(batt.m, b));
+    box([0, P.battery_y, z], P.battery, tint(C.battery, t, 59.8, 64), mul(batt.m, b));
     for (const [x, col] of [[-45, C.red], [45, C.dark]]) {
       cyl([x, P.battery_y + 30, P.battery_shelf_z + P.battery[2] + 5], 6, 10, col, I(), mul(batt.m, b));
     }
   }
-  const strap = fit(t, 65.0, 66.5, 'body', [0, 0, 90]);
+  const strap = fit(t, 64.0, 66.0, 'body', [0, 0, 90]);
   if (strap.show) for (const x of [-48, 48]) {
-    const colour = tint(C.strap, t, 65, 66.5), sm = mul(strap.m, b);
+    const colour = tint(C.strap, t, 64, 66), sm = mul(strap.m, b);
     const top = P.battery_shelf_z + P.battery[2];
     box([x, P.battery_y, top + 2], [P.battery_strap_w, P.battery[1] + 8, 4], colour, sm);
     for (const sy of [-1, 1]) {
@@ -376,36 +459,123 @@ function bodyLower(t, cut) {
         [P.battery_strap_w, 4, P.battery[2] + 4], colour, sm);
     }
   }
-  const speaker = fit(t, 66.5, 68.0, 'body', [0, 90, 0]);
+  const speaker = fit(t, 66.0, 67.8, 'body', [0, 90, 0]);
   if (speaker.show) {
-    disc([0, 104, 62], P.speaker_d / 2, P.speaker_depth, tint(C.dark, t, 66.5, 68), RX(Math.PI / 2), mul(speaker.m, b));
+    disc([0, 104, 62], P.speaker_d / 2, P.speaker_depth, tint(C.dark, t, 66, 67.8), RX(Math.PI / 2), mul(speaker.m, b));
     disc([0, 112, 62], P.speaker_d / 2 - 14, 6, C.gray, RX(Math.PI / 2), mul(speaker.m, b));
   }
-  const port = fit(t, 68.0, 69.0, 'body', [0, -70, 0]);
+  const port = fit(t, 67.8, 68.9, 'body', [0, -70, 0]);
   if (port.show) {
-    disc([62, -140, 58], 9, 18, tint(C.dark, t, 68, 69), RX(Math.PI / 2), mul(port.m, b));
+    disc([62, -140, 58], 9, 18, tint(C.dark, t, 67.8, 68.9), RX(Math.PI / 2), mul(port.m, b));
     disc([62, -147, 58], 5, 8, C.brass, RX(Math.PI / 2), mul(port.m, b));
   }
-  const sw = fit(t, 69.0, 70.0, 'body', [0, -70, 0]);
+  const sw = fit(t, 68.9, 69.9, 'body', [0, -70, 0]);
   if (sw.show) {
-    box([-62, -138, 58], [26, 18, 26], tint(C.dark, t, 69, 70), mul(sw.m, b));
+    box([-62, -138, 58], [26, 18, 26], tint(C.dark, t, 68.9, 69.9), mul(sw.m, b));
     box([-62, -148, 62], [12, 6, 14], C.red, mul(sw.m, b));
   }
+  groupDelta = I();
+}
+
+// Revision D stance mechanism: guide shafts, printed carriage with its bearings and pitch hinge,
+// and the P16 actuator. Timed on video time inside the 'stance-mechanism' chapter.
+function mechanism(t, st, cut) {
+  const span = chapterSpan('stance-mechanism'), t0 = span.start;
+  const during = !hero && t >= span.start && t < span.end;
+  primCut = cut;
+  groupDelta = DELTA.body;
+  const shaftLen = P.st_shaft_t[1] - P.st_shaft_t[0];
+  const shafts = fit(t, t0 + 0.5, t0 + 3.0, 'body', [0, 0, 220]);
+  if (shafts.show) for (const m of scene.mech.shafts) {
+    const sm = mul(shafts.m, m);
+    cyl([0, 0, shaftLen / 2], P.st_shaft_d / 2, shaftLen, tint(C.steel, t, t0 + 0.5, t0 + 3.0), I(), sm);
+    if (during) labels.push({ p: posOf(chain(sm, T(0, 0, shaftLen * 0.8))), text: `Guide shaft ${P.st_shaft_d} x ${shaftLen} mm` });
+  }
+  const act = fit(t, t0 + 7.5, t0 + 10.5, 'body', [0, 0, 260]);
+  if (act.show) {
+    const m = mul(act.m, scene.mech.actuator);
+    const c0 = P.st_act_case_t[0], c1 = P.st_act_case_t[1], reach = P.st_act_closed + st.s;
+    const colour = tint(C.dark, t, t0 + 7.5, t0 + 10.5);
+    box([0, 0, -(c0 + c1) / 2], [P.st_act_case[0], P.st_act_case[1], c1 - c0], colour, m);
+    cyl([0, 0, 0], P.st_act_eye_d / 2, P.st_act_eye_w, colour, RY(Math.PI / 2), m);
+    cyl([0, 0, -(reach + c1) / 2], P.st_act_rod_d / 2, reach - c1, C.steel, I(), m);
+    cyl([0, 0, -reach], P.st_act_eye_d / 2, P.st_act_eye_w, C.steel, RY(Math.PI / 2), m);
+    if (during) labels.push({ p: posOf(chain(m, T(0, 0, -(c0 + c1) / 2))), text: 'Actuonix P16-100 actuator' });
+  }
+  groupDelta = DELTA.carriage;
+  const car = fit(t, t0 + 3.0, t0 + 6.0, 'carriage', [0, 0, 200]);
+  drawPiece('leg_carriage', t, t0 + 3.0, t0 + 6.0, 'carriage', [0, 0, 200], null, cut.mode, cut.m);
+  if (car.show) for (const m of scene.mech.bearings) {
+    const bm = mul(car.m, m);
+    cyl([0, 0, P.st_brg[2] / 2], P.st_brg[1] / 2, P.st_brg[2], tint(C.gray, t, t0 + 3.0, t0 + 6.0), I(), bm);
+    if (during) labels.push({ p: posOf(chain(bm, T(0, 0, P.st_brg[2]))), text: 'LM12LUU linear bearing' });
+  }
+  if (car.show && during) labels.push({ p: posOf(chain(car.m, F.carriage.m, T(0, -20, P.st_eye_up))), text: 'leg_carriage (printed)' });
+  const hinge = fit(t, t0 + 6.0, t0 + 7.5, 'carriage', [0, 0, 0]);
+  if (hinge.show) for (const sx of [-1, 1]) {
+    const hm = mul(hinge.m, F.carriage.m);
+    cyl([sx * (P.st_cheek_in + P.st_cheek_t / 2), 0, 0], 6, P.st_cheek_t, tint(C.brass, t, t0 + 6.0, t0 + 7.5), RY(Math.PI / 2), hm);
+    draw('bolt8h', chain(hm, T(sx * (P.st_cheek_in + P.st_cheek_t + 1), 0, 0), RY(sx > 0 ? Math.PI / 2 : -Math.PI / 2),
+      RZ(hinge.k * Math.PI * 10)), tint(C.steel, t, t0 + 6.0, t0 + 7.5));
+    if (during && sx > 0) labels.push({ p: posOf(chain(hm, T(P.st_cheek_in + P.st_cheek_t + 12, 0, 0))), text: 'Pitch hinge, M8 bolt in a bronze sleeve' });
+  }
+  const eyePin = fit(t, t0 + 10.5, t0 + 12.0, 'carriage', [0, 0, 0]);
+  if (eyePin.show) {
+    draw('bolt4p', chain(eyePin.m, F.carriage.m, T(-(P.st_cheek_in + P.st_cheek_t + 1), 0, P.st_eye_up), RY(-Math.PI / 2),
+      RZ(eyePin.k * Math.PI * 12)), tint(C.steel, t, t0 + 10.5, t0 + 12.0));
+  }
+  groupDelta = I();
+  primCut = NO_CUT;
+  if (during) cutNote = 'The lower body ring is cut at the camera side so the guide shafts, the carriage and the actuator stay visible.';
+}
+
+// Sensed shoulder locks in the upper ring: GN 412 plunger, MG995 release servo, SS-01GL switch.
+function locks(lt, st, cut) {
+  primCut = cut;
+  groupDelta = DELTA.body;
+  const pull = P.st_release_pull * st.release;
+  const plunger = fit(lt, 76.5, 78.5, 'body', [0, 0, 80]);
+  const labelling = !hero && lt >= 76.5 && lt < 83;
+  if (plunger.show) for (const lock of scene.mech.locks) {
+    const m = mul(plunger.m, lock.m);
+    const f = P.st_flange, hx = P.st_hex, kn = P.st_knob;
+    box([-f[0] / 2, 0, 0], [f[0], f[1], f[2]], tint(C.gray, lt, 76.5, 78.5), m);
+    cyl([-f[0] - hx[0] / 2, 0, 0], hx[1] / 2, hx[0], C.gray, RY(Math.PI / 2), m);
+    cyl([(-f[0] - hx[0] + P.st_pin_ext) / 2 - pull, 0, 0], P.st_pin_d / 2, f[0] + hx[0] + P.st_pin_ext, C.steel, RY(Math.PI / 2), m);
+    cyl([-f[0] - hx[0] - kn[0] / 2 - pull, 0, 0], kn[1] / 2, kn[0], C.dark, RY(Math.PI / 2), m);
+    if (labelling && lock.side > 0) labels.push({ p: posOf(chain(m, T(-f[0], 0, f[2] / 2))), text: 'Sensed lock: GN 412 plunger' });
+  }
+  const parts = fit(lt, 77.2, 79.0, 'body', [0, 0, 60]);
+  if (parts.show) for (const lock of scene.mech.locks) {
+    const m = mul(parts.m, lock.m);
+    const sx = -22 + P.st_horn_rest_gap + P.st_horn_tip_r - P.st_horn_arm[0];
+    const sz = -12 - P.st_horn_arm[1];
+    const w = P.st_servo_w, h = P.st_servo_h, l = P.st_servo_l, e = P.st_servo_shaft_end;
+    box([sx, 7 + h / 2, sz + e - l / 2], [w, h, l], tint(C.dark, lt, 77.2, 79.0), m);
+    const horn = chain(m, T(sx, -1.5, sz), RY(radians(-P.st_release_angle_deg * st.release)));
+    const [ax, az] = P.st_horn_arm, arm = Math.hypot(ax, az);
+    box([0, 0, 0], [4, 3, arm], C.white, chain(horn, T(ax / 2, 0, az / 2), RY(Math.atan2(ax, az))));
+    cyl([ax, -2, az], P.st_horn_tip_r, 8, C.steel, RX(Math.PI / 2), horn);
+    const xh = -22 + 8.8 + P.st_switch_ot;
+    box([xh - 7.3 + 5.1, 0, 13.5 + 9.9], [10.2, 6.4, 19.8], tint(C.dark, lt, 77.2, 79.0), m);
+    box([(st.seated ? -22 : xh - 13.6) + 0.15, 0, 17.25], [0.3, 3, 14.5], C.steel, m);
+    if (labelling && lock.side > 0) {
+      labels.push({ p: posOf(chain(m, T(sx, 7 + h, sz))), text: 'MG995 release servo' });
+      labels.push({ p: posOf(chain(m, T(xh - 2.2, 0, 33.3))), text: 'SS-01GL lock switch' });
+    }
+  }
+  groupDelta = I();
+  primCut = NO_CUT;
 }
 
 function bodyUpper(t, cut) {
+  groupDelta = DELTA.body;
   drawPiece('body_upper', t, 71.0, 75.0, 'body_upper', [0, 0, 280], null, cut.mode, cut.m);
   const b = F.body.m;
   const zsh = P.shoulder_z;
   const bush = fit(t, 75.0, 76.5, 'body', [0, 0, 0]);
   if (bush.show) for (const s of [-1, 1]) {
     disc([s * (P.body_r + P.shoulder_spacer / 2), 0, zsh], 16, P.shoulder_spacer, tint(C.gray, t, 75, 76.5), RY(Math.PI / 2), mul(bush.m, b));
-  }
-  const pins = fit(t, 76.5, 78.5, 'body', [0, 0, 0]);
-  if (pins.show) for (const s of [-1, 1]) for (const a of P.shoulder_index_angles) {
-    const ang = radians(a + 90);
-    cyl([s * (P.body_r + 2), P.shoulder_index_r * Math.cos(ang), zsh + P.shoulder_index_r * Math.sin(ang)],
-      P.shoulder_index_d / 2, 20, tint(C.copper, t, 76.5, 78.5), RY(Math.PI / 2), mul(pins.m, b));
   }
   const bolts = fit(t, 78.5, 81.5, 'body', [0, 0, 0]);
   if (bolts.show) for (const s of [-1, 1]) {
@@ -414,6 +584,7 @@ function bodyUpper(t, cut) {
       tint(C.steel, t, 78.5, 81.5));
     draw('nut12', chain(bolts.m, b, T(s * 42, 0, zsh), RY(Math.PI / 2)), C.gray);
   }
+  groupDelta = I();
 }
 
 const DECK = [
@@ -423,15 +594,18 @@ const DECK = [
   ['DRV8833 #2', [52, 32], [26, 18, 3], 'red', 88.3, 89.1],
   ['DRV8833 #3', [16, 4], [26, 18, 3], 'red', 89.1, 89.9],
   ['DRV8833 #4', [52, 4], [26, 18, 3], 'red', 89.9, 90.7],
-  ['5 V regulator', [-62, -42], [25.4, 25.4, 9.5], 'gray', 90.7, 91.6],
-  ['6 V regulator', [-26, -42], [25.4, 25.4, 9.5], 'gray', 91.6, 92.5],
-  ['ADS1115', [16, -28], [25, 18, 3], 'blue', 92.5, 93.3],
-  ['Main fuse', [58, -40], [22, 14, 20], 'dark', 93.3, 93.9],
-  ['Charge fuse', [84, -40], [22, 14, 20], 'dark', 93.9, 94.5],
+  ['5 V regulator', [-62, -42], [25.4, 25.4, 9.5], 'gray', 90.7, 91.5],
+  ['6 V regulator', [-26, -42], [25.4, 25.4, 9.5], 'gray', 91.5, 92.3],
+  ['ADS1115', [16, -28], [25, 18, 3], 'blue', 92.3, 93.0],
+  ['Main fuse', [58, -40], [22, 14, 20], 'dark', 93.0, 93.5],
+  ['Charge fuse', [84, -40], [22, 14, 20], 'dark', 93.5, 94.0],
+  ['DRV8871 actuator driver', [58, 64], [25.4, 22, 4], 'red', 94.0, 94.5],
+  ['BSS138 level shifter', [-62, -72], [15, 20, 3], 'blue', 94.5, 95.0],
 ];
 function deck(t) {
   const zDeck = P.body_lower_h + P.tray_z_upper;
   const b = F.body.m;
+  groupDelta = DELTA.body;
   for (const [name, [x, y], size, colourKey, t0, t1] of DECK) {
     const state = fit(t, t0, t1, 'body', [0, 0, 150]);
     if (!state.show) continue;
@@ -440,11 +614,13 @@ function deck(t) {
     if (size[2] > 8) box([x, y, zDeck + size[2] + 1.5], [size[0] * 0.5, size[1] * 0.5, 3], C.dark, m);
     if (!hero && t >= 83 && t < 95) labels.push({ p: posOf(chain(m, T(x, y, zDeck + size[2] + 6))), text: name });
   }
+  groupDelta = I();
 }
 
 function ringsJoined(t) {
   const b = F.body.m;
   if (!vis(t, 95)) return;
+  groupDelta = DELTA.body;
   if (!hero && t >= 95.5 && t < 98) {
     ring([0, 0, P.body_lower_h + P.seam_lip_h / 2], P.body_r - P.body_wall, P.seam_lip_h, C.amber, I(), b, 'ring_thin');
   }
@@ -463,9 +639,11 @@ function ringsJoined(t) {
       tint(C.steel, t, 100.5, 104));
     draw('nut4', chain(seam.m, b, T(r * Math.cos(a), r * Math.sin(a), P.body_lower_h - 16)), C.gray);
   }
+  groupDelta = I();
 }
 
-function headDrive(t, cut) {
+function headDrive(t) {
+  groupDelta = DELTA.body;
   drawPiece('head_drive', t, 106.0, 109.5, 'head_drive', [0, 0, -90], null, 0, null);
   const hdm = F.head_drive.m;
   const motorY = P.hd_hinge_y + P.hd_motor_y, z = P.hd_hinge_z;
@@ -492,6 +670,7 @@ function headDrive(t, cut) {
     const travel = hero ? 4 : lerp(14, 4, smooth(t, 138.5, 140.5));
     draw('thumbnut', chain(nut.m, hdm, T(tx, ty, travel), RZ(hero ? 0 : smooth(t, 138.5, 140.5) * Math.PI * 8)), C.brass);
   }
+  groupDelta = I();
 }
 
 const DOME_PARTS = [
@@ -572,8 +751,9 @@ function domeElectronics(t, dm) {
   }
 }
 
-function domeAndSusan(t, cut) {
+function domeAndSusan(t) {
   const b = F.body.m;
+  groupDelta = DELTA.body;
   const susan = fit(t, 128.5, 131.0, 'body', [0, 0, 130]);
   if (susan.show) {
     ring([0, 0, P.body_top_plate_z + P.susan_t / 2], P.susan_od / 2, P.susan_t, tint(C.steel, t, 128.5, 131), I(), mul(susan.m, b));
@@ -584,33 +764,44 @@ function domeAndSusan(t, cut) {
     draw('bolt5', chain(screws.m, b, T(r * Math.cos(ang), r * Math.sin(ang), P.body_top_plate_z + P.susan_t),
       RZ(screws.k * Math.PI * 12)), tint(C.steel, t, 131, 132.5));
   }
+  // The dome waits on the bench (world frame) until it is lowered on; only the seated dome follows the body.
+  const seated = hero || t >= 138.6;
+  groupDelta = seated ? DELTA.body : I();
   const dm = domeFrame(t);
-  const domeCut = (!hero && t >= 138.0 && t < 141) ? sectionAt(0, 0, 0) : { mode: 0, m: I() };
+  const domeCut = (!hero && t >= 138.0 && t < 141) ? sectionAt(0, 0, 0) : NO_CUT;
   const extra = mul(dm, F.dome.inv);
   drawPiece('dome', t, 117.0, 118.2, 'world', [0, 0, 150], extra, domeCut.mode, domeCut.m);
   domeElectronics(t, dm);
+  groupDelta = I();
   if (!hero && t >= 138.0 && t < 141) cutNote = 'The dome is cut at its centre plane so the drive wheel contact with the dome plate is visible.';
 }
 
 // ---------- assembly ----------
-function assemble(t, pose) {
-  const cut = bodyCut(t);
-  const demo = casterDemo(t);
-  const swivel = frameRotZ(F.caster, hero ? 0 : (t >= 149 ? pose.caster : demo.angle));
-  feet(t, swivel);
-  motorsAndWheels(t, pose, swivel);
-  if (vis(t, 25)) legs(t);
-  if (vis(t, 42)) centreLeg(t, swivel);
-  if (vis(t, 55)) bodyLower(t, cut);
-  if (vis(t, 70)) bodyUpper(t, cut);
-  if (vis(t, 83)) deck(t);
-  if (vis(t, 95)) ringsJoined(t);
-  if (vis(t, 105)) headDrive(t, cut);
-  if (vis(t, 117)) domeAndSusan(t, cut);
+function assemble(t, lt, pose, st, chapter) {
+  const row = poseRow(st.s);
+  DELTA = { body: row.body, carriage: row.carriage, housing: row.housing, foot: row.foot };
+  const cut = sceneCut(lt, pose, chapter);
+  const near = (!hero && chapter.camera && chapter.camera.cut) ? cut : NO_CUT;
+  const demo = casterDemo(lt);
+  const swivel = frameRotZ(F.caster, hero ? 0 : (lt >= 149 ? pose.caster : demo.angle));
+  feet(lt, swivel, near);
+  motorsAndWheels(lt, pose, swivel, near);
+  if (vis(lt, 25)) legs(lt, near);
+  if (vis(lt, 42)) centreLeg(lt, swivel);
+  if (vis(lt, 55)) bodyLower(lt, cut);
+  if (hero || t >= chapterSpan('stance-mechanism').start) mechanism(t, st, cut);
+  if (vis(lt, 70)) { bodyUpper(lt, cut); locks(lt, st, cut); }
+  if (vis(lt, 83)) deck(lt);
+  if (vis(lt, 95)) ringsJoined(lt);
+  if (vis(lt, 105)) headDrive(lt);
+  if (vis(lt, 117)) domeAndSusan(lt);
+  groupDelta = I();
   if (!hero) {
-    if (t >= 55 && t < 105) cutNote = 'The body rings are complete prints. The half nearest the camera is cut away so the battery, the deck and the joint hardware stay visible.';
-    else if (t >= 105 && t < 117) cutNote = 'The body rings are cut at the camera side so the head friction drive under the top plate stays visible.';
-    else if (t >= 128 && t < 138) cutNote = 'The body rings are cut at the camera side so the head friction drive under the top plate stays visible.';
+    if (chapter.camera && chapter.camera.cut) cutNote = 'The near half of the body and the right leg and foot are cut away so the actuator, the carriage and the far shoulder lock stay visible.';
+    else if (chapter.name === 'stance-mechanism') cutNote = cutNote || 'The lower body ring is cut at the camera side so the guide shafts, the carriage and the actuator stay visible.';
+    else if (lt >= 55 && lt < 105) cutNote = 'The body rings are complete prints. The half nearest the camera is cut away so the battery, the deck and the joint hardware stay visible.';
+    else if (lt >= 105 && lt < 117) cutNote = 'The body rings are cut at the camera side so the head friction drive under the top plate stays visible.';
+    else if (lt >= 128 && lt < 138) cutNote = 'The body rings are cut at the camera side so the head friction drive under the top plate stays visible.';
   }
 }
 
@@ -639,20 +830,33 @@ const SHOTS = [
   { at: 149, target: [0, 60, 350], height: 1180, az: 40, elev: 24 },
   { at: 164, target: [0, 40, 370], height: 950, az: 40, elev: 16, azTo: -6, from: 164, to: 170 },
 ];
-function camera(t, pose) {
-  let shot = SHOTS[0];
-  for (const s of SHOTS) if (t >= s.at) shot = s;
-  let az = shot.az;
-  if (shot.azTo !== undefined) az = lerp(shot.az, shot.azTo, smooth(t, shot.from, shot.to));
+function camera(t, lt, pose, chapter) {
+  let az, target, height, elev;
+  if (!hero && chapter.camera) {
+    const c = chapter.camera;
+    const yaw = c.relative ? pose.yaw : 0;
+    az = c.az + (c.az_to !== undefined ? (c.az_to - c.az) * smooth(t, chapter.start, chapter.end) : 0) + degrees(yaw);
+    const r = c.target;
+    target = c.relative
+      ? [pose.x + r[0] * Math.cos(yaw) - r[1] * Math.sin(yaw), pose.y + r[0] * Math.sin(yaw) + r[1] * Math.cos(yaw), r[2]]
+      : r.slice();
+    height = c.height; elev = c.elev;
+  } else {
+    let shot = SHOTS[0];
+    for (const s of SHOTS) if (lt >= s.at) shot = s;
+    az = shot.az;
+    if (shot.azTo !== undefined) az = lerp(shot.az, shot.azTo, smooth(lt, shot.from, shot.to));
+    const follow = lt >= 149 ? lerp(0.75, 1.0, smooth(lt, 162.5, 165)) : 0;
+    target = [shot.target[0] + follow * pose.x, shot.target[1] + follow * pose.y,
+      shot.target[2] + (shot.lift ? footLift(lt) : 0)];
+    height = shot.height; elev = shot.elev;
+  }
   shotAz = az;
-  const follow = t >= 149 ? lerp(0.75, 1.0, smooth(t, 162.5, 165)) : 0;
-  const target = [shot.target[0] + follow * pose.x, shot.target[1] + follow * pose.y,
-    shot.target[2] + (shot.lift ? footLift(t) : 0)];
-  const distance = 2600, a = radians(az), e = radians(shot.elev);
+  const distance = 2600, a = radians(az), e = radians(elev);
   const eye = [target[0] + distance * Math.cos(e) * Math.cos(a),
     target[1] + distance * Math.cos(e) * Math.sin(a),
     target[2] + distance * Math.sin(e)];
-  return mul(ortho(shot.height * (VIEW_W / VIEW_H), shot.height), lookAt(eye, target));
+  return mul(ortho(height * (VIEW_W / VIEW_H), height), lookAt(eye, target));
 }
 
 // ---------- overlay ----------
@@ -702,7 +906,7 @@ function drawLabels() {
   }
   ctx.restore();
 }
-function overlay(t, pose, dm, chapter, index) {
+function overlay(t, lt, pose, dm, st, chapter, index) {
   ctx.clearRect(0, 0, W, H);
   ctx.drawImage(canvas, 0, 0);
   drawLabels();
@@ -711,8 +915,8 @@ function overlay(t, pose, dm, chapter, index) {
   ctx.fillRect(PANEL_X, 108, W - PANEL_X, 888);
   ctx.fillStyle = '#e3e9ee'; ctx.fillRect(PANEL_X, 108, 2, 888); ctx.fillRect(0, 106, W, 2);
 
-  text('R2-D2  /  ASSEMBLY + SIMULATED OPERATION', 52, 48, 29, '#1d2c38', 'bold');
-  text('Printed in PETG  |  317 mm body  |  Adafruit 3777 motors and 3766 wheels  |  Raspberry Pi 4 + KB2040', 54, 84, 19, '#4e606e');
+  text(`R2-D2 REVISION ${story.revision}  /  ASSEMBLY, STANCE CHANGE + SIMULATED OPERATION`, 52, 48, 27, '#1d2c38', 'bold');
+  text('Printed in PETG  |  317 mm body  |  two-foot and three-leg stances  |  Actuonix P16 actuator  |  Raspberry Pi 4 + KB2040', 54, 84, 19, '#4e606e');
 
   ctx.fillStyle = '#1d2c38'; ctx.fillRect(1470, 20, 420, 68);
   text('CAD ANIMATION', 1486, 46, 21, '#ffffff', 'bold');
@@ -726,7 +930,7 @@ function overlay(t, pose, dm, chapter, index) {
   const total = scene.counts.instances;
   ctx.fillStyle = '#eef4f8'; ctx.fillRect(TX - 12, y - 30, TW + 22, 62);
   text(`${shown.size} / ${total} printed pieces placed`, TX, y - 6, 21, '#1d4f6b', 'bold');
-  text(`${scene.counts.designs} STL files  -  legs, feet and lower legs print twice`, TX, y + 20, 16, '#5a6f7d');
+  text(`${scene.counts.designs} STL files  -  ${scene.counts.mirrored.join(', ')} print twice`, TX, y + 20, 16, '#5a6f7d');
   y += 58;
 
   if (cutNote) {
@@ -735,7 +939,7 @@ function overlay(t, pose, dm, chapter, index) {
     wrap(cutNote, TX, y + 44, TW - 6, 22, '16px Arial', '#2a5670');
     y += 126;
   }
-  if (!hero && t >= 141 && t < 164) {
+  if (!hero && chapter.panel === 'drive') {
     ctx.fillStyle = '#edf4f7'; ctx.fillRect(TX - 12, y - 8, TW + 22, 186);
     text('DRIVE: ' + pose.action, TX, y + 22, 23, '#1d5877', 'bold');
     text(`Path travelled: ${Math.round((pose.right + pose.left) / 2)} mm`, TX, y + 52, 18, '#33505f');
@@ -745,10 +949,24 @@ function overlay(t, pose, dm, chapter, index) {
     text('Speeds and light patterns are illustrative.', TX, y + 160, 16, '#5a6f7d');
     y += 200;
   }
-  if (!hero && t >= 164) {
+  if (!hero && chapter.panel === 'stance') {
+    const row = poseRow(st.s);
+    const lock = st.seated ? 'SEATED' : 'RELEASED';
+    ctx.fillStyle = '#edf4f7'; ctx.fillRect(TX - 12, y - 8, TW + 22, 238);
+    text('STANCE: ' + st.state.replace('_', ' '), TX, y + 22, 23, '#1d5877', 'bold');
+    text(`Phase: ${st.phase.replace('_', ' ')}`, TX, y + 52, 18, '#33505f');
+    text(`Actuator stroke: ${st.s.toFixed(1)} mm   Body tilt: ${row.tilt.toFixed(1)} deg`, TX, y + 78, 18, '#33505f');
+    const feed = (st.phase === 'TILT' || st.phase === 'LOCKING') ? (st.state === 'RETRACTING' ? ', rolling back' : ', rolling forward') : '';
+    text(`Centre foot: ${row.lift > 0.05 ? row.lift.toFixed(0) + ' mm above the floor' : 'on the floor' + feed}`, TX, y + 104, 18, '#33505f');
+    text(`Shoulder locks:  L ${lock}   R ${lock}`, TX, y + 130, 18, '#33505f');
+    text(`Ground drive and dome: ${st.driveAllowed ? 'allowed' : 'REFUSED'}`, TX, y + 156, 18, st.driveAllowed ? '#33505f' : '#8a2b1e', 'bold');
+    wrap('Phase order follows docs/firmware.md section 11.2; timing is illustrative.', TX, y + 186, TW - 6, 20, '16px Arial', '#5a6f7d');
+    y += 252;
+  }
+  if (!hero && chapter.panel === 'still-required') {
     ctx.fillStyle = '#edf4f7'; ctx.fillRect(TX - 12, y - 8, TW + 22, 176);
     text('STILL REQUIRED', TX, y + 22, 21, '#1d5877', 'bold');
-    wrap('Print and fit check, joint strength under load, loaded driving, battery runtime, charging and thermal checks.',
+    wrap('Print and fit check, joint strength under load, loaded driving, powered stance change and lock switch checks, battery runtime, charging and thermal checks.',
       TX, y + 50, TW - 6, 24, '18px Arial', '#33505f');
     text('Follow the assembly manual and the wiring sheets.', TX, y + 148, 16, '#5a6f7d');
   }
@@ -768,40 +986,39 @@ function overlay(t, pose, dm, chapter, index) {
   }
 }
 
-function chapterAt(t) {
-  let index = story.chapters.findIndex(c => t >= c.start && t < c.end);
-  if (index < 0) index = story.chapters.length - 1;
-  return [story.chapters[index], index];
-}
-
 window.renderFrame = t => {
   if (!window.ready) throw new Error('Renderer not ready');
   shown = new Set(); labels = []; cutNote = '';
   hero = t < story.chapters[0].end;
-  const pose = drive(t), dm = domeMotion(t);
+  const [chapter, index] = chapterAt(t);
+  const lt = hero ? t : legacyTime(t);
+  const pose = drive(lt), dm = domeMotion(lt), st = stanceAt(t);
   globalPose = chain(T(pose.x, pose.y, 0), RZ(pose.yaw));
   gl.viewport(0, 0, W, H);
   gl.clearColor(0.90, 0.93, 0.96, 1);
   gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
   gl.viewport(VIEW_X, VIEW_Y, VIEW_W, VIEW_H);
-  currentVP = camera(t, pose);
+  currentVP = camera(t, lt, pose, chapter);
   gl.uniformMatrix4fv(U.vp, false, currentVP);
   const savedPose = globalPose;
-  globalPose = I();
+  globalPose = I(); groupDelta = I(); primCut = NO_CUT;
   floorGrid();
   globalPose = savedPose;
-  assemble(t, pose);
+  assemble(t, lt, pose, st, chapter);
   if (gl.getError() !== gl.NO_ERROR) throw new Error('WebGL rendering error');
-  const [chapter, index] = chapterAt(t);
-  overlay(t, pose, dm, chapter, index);
+  overlay(t, lt, pose, dm, st, chapter, index);
   return output.toDataURL('image/jpeg', 0.93).split(',')[1];
 };
 
 window.frameEvidence = t => {
+  hero = t < story.chapters[0].end;
   const [chapter] = chapterAt(t);
-  const pose = drive(t), dm = domeMotion(t), demo = casterDemo(t);
+  const lt = hero ? t : legacyTime(t);
+  const pose = drive(lt), dm = domeMotion(lt), demo = casterDemo(lt), st = stanceAt(t);
+  const row = poseRow(st.s);
+  const lock = st.seated ? 'SEATED' : 'RELEASED';
   return {
-    time: t, chapter: chapter.name, simulation: true,
+    time: t, legacy_time: +lt.toFixed(3), chapter: chapter.name, simulation: true,
     printed_instances: [...shown].sort(),
     drive: {
       action: pose.action, yaw_deg: pose.yaw_deg, caster_deg: pose.caster_deg,
@@ -811,7 +1028,12 @@ window.frameEvidence = t => {
     },
     dome: { spin_deg: +degrees(dm.spin).toFixed(1), spinning: dm.spinning, nudge: dm.nudge },
     caster_demo: demo.active,
-    lights_on: lights(t).on,
+    lights_on: lights(lt).on,
+    stance: {
+      state: st.state, phase: st.phase, stroke_mm: +st.s.toFixed(3), tilt_deg: +row.tilt.toFixed(4),
+      centre_foot_lift_mm: +row.lift.toFixed(3), release: +st.release.toFixed(3),
+      locks: { left: lock, right: lock }, drive_allowed: st.driveAllowed,
+    },
   };
 };
 
@@ -830,5 +1052,6 @@ window.frameEvidence = t => {
     gl.enableVertexAttribArray(1); gl.vertexAttribPointer(1, 3, gl.FLOAT, false, 24, 12);
     meshes[name] = { vao, count: mesh.count };
   }
+  chapterSpan('stance-mechanism');
   window.ready = true;
 })().catch(error => { window.renderError = String(error && error.stack || error); });

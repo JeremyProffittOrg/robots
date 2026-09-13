@@ -1,5 +1,6 @@
 {
-  "total_seconds": 170,
+  "revision": "D",
+  "total_seconds": 214,
   "fps": 24,
   "narration_voice_candidates": [
     "Microsoft Zira Desktop",
@@ -9,20 +10,22 @@
     "Microsoft Hazel Desktop"
   ],
   "sound_directory": "firmware/pi/sounds",
-  "note": "CAD assembly animation and simulated operation of the fable-r2d2 package. Every printed piece is the delivered STL placed by scripts/assembly_layout.py. Purchased parts are nominal envelopes. Motion speeds are illustrative. Follow the assembly manual for wiring, torque, calibration and physical test gates.",
+  "note": "CAD assembly animation and simulated operation of the fable-r2d2 revision D package. Every printed piece is the delivered STL placed by scripts/assembly_layout.py; stance poses come from the same kinematics as cad/stance.scad. Purchased parts are nominal envelopes. Motion speeds and stance-change phase timing are illustrative; the phase order follows docs/firmware.md section 11.2. Follow the assembly manual for wiring, torque, calibration and physical test gates. Tokens in braces are filled by scripts/render_video.py from scripts/parts.json and the CAD. 'legacy' maps each chapter onto the assembly timeline the scene animation is written in: equal spans play it, a repeated time holds it.",
   "chapters": [
     {
       "name": "title-card",
       "start": 0,
       "end": 8,
-      "title": "Nine STL files. Twelve printed pieces.",
-      "instruction": "R2-D2 | 317 mm body | three powered feet | six drive wheels per pair | Raspberry Pi 4 and KB2040 | 12 V 7 Ah battery",
-      "narration": "Simulated assembly. Nine printed designs make twelve pieces."
+      "legacy": [0, 8],
+      "title": "{DESIGNS_WORD_CAP} STL files. {PIECES_WORD_CAP} printed pieces.",
+      "instruction": "R2-D2 revision D | 317 mm body | three powered feet | two-foot and three-leg stances | Raspberry Pi 4 and KB2040 | 12 V 7 Ah battery",
+      "narration": "Simulated assembly, revision D. {DESIGNS_WORD_CAP} printed designs make {PIECES_WORD} pieces."
     },
     {
       "name": "feet",
       "start": 8,
       "end": 25,
+      "legacy": [8, 25],
       "title": "01 | Three feet, six motors, twelve wheels",
       "instruction": "Load two Adafruit 3777 motors and four 3766 wheels into each foot through the sole, then fit the motor tab bolts. Right and centre feet are shown cut away.",
       "narration": "Each foot takes two T T motors and four wheels, loaded from the sole."
@@ -31,110 +34,192 @@
       "name": "outer-legs",
       "start": 25,
       "end": 42,
+      "legacy": [25, 42],
       "title": "02 | Outer legs, two prints each",
-      "instruction": "Slide the lower leg tongue into the foot slot, splice the upper leg over it, run two M8 rods the full length, then fit the ankle pivot and lock bolts.",
+      "instruction": "Slide the lower leg tongue into the foot slot, splice the upper leg over it, run two M8 rods the full length, then fit the ankle pivot and lock bolts. Each upper leg carries two brass lock receivers.",
       "narration": "Join each leg over two M8 rods, then bolt the ankle pivot and lock."
     },
     {
       "name": "centre-leg-caster",
       "start": 42,
       "end": 55,
-      "title": "03 | Centre leg and caster",
-      "instruction": "Press two bearings onto the centre-foot stem, drop the centre leg over them, fit the M12 caster bolt and the sixty degree stop pin. The foot then swivels freely.",
+      "legacy": [42, 55],
+      "title": "03 | Centre-leg housing and caster",
+      "instruction": "Press two bearings onto the centre-foot stem, drop the centre-leg housing over them, fit the M12 caster bolt and the swivel stop pin. The foot then swivels freely.",
       "narration": "The centre foot swivels on two bearings and one M12 caster bolt."
     },
     {
       "name": "body-lower",
       "start": 55,
       "end": 70,
+      "legacy": [55, 70],
       "title": "04 | Lower ring, battery and power",
-      "instruction": "Lower the body floor onto the centre-leg flange bolts. Strap the 12 V 7 Ah battery to its shelf, then fit the speaker, the charge port and the main switch.",
-      "narration": "Bolt the lower ring to the centre leg. Strap the battery to its shelf."
+      "instruction": "Strap the 12 V 7 Ah battery to its shelf, then fit the speaker, the charge port and the main switch.",
+      "narration": "Strap the battery to its shelf, then fit the speaker, charge port and switch."
+    },
+    {
+      "name": "stance-mechanism",
+      "start": 70,
+      "end": 84,
+      "legacy": [70, 70],
+      "title": "05 | Stance guide, carriage and actuator",
+      "instruction": "Seat two 12 mm guide shafts in the lower ring. The printed carriage rides them on two LM12LUU bearings and pivots on the centre-leg housing. An Actuonix P16 actuator drives it along the guide.",
+      "narration": "Two guide shafts, a carriage on linear bearings, and the P 16 actuator.",
+      "camera": { "relative": false, "target": [0, 30, 240], "height": 560, "az": 18, "az_to": 40, "elev": 12 }
     },
     {
       "name": "body-upper",
-      "start": 70,
-      "end": 83,
-      "title": "05 | Upper ring and shoulders",
-      "instruction": "Seat the upper ring. Set both shoulder index pins to the three-leg angle, then run the M12 shoulder bolts through the leg discs into the body bosses.",
-      "narration": "Seat the upper ring. Index each shoulder, then fit the M12 shoulder bolts."
+      "start": 84,
+      "end": 97,
+      "legacy": [70, 83],
+      "title": "06 | Upper ring, shoulders and sensed locks",
+      "instruction": "Seat the upper ring and bolt both shoulders with M12 bolts. Each shoulder gets a sensed lock: a spring plunger, an MG995 release servo and an SS-01GL switch.",
+      "narration": "Bolt the shoulders, then fit each sensed lock, servo and switch."
     },
     {
       "name": "electronics-deck",
-      "start": 83,
-      "end": 95,
-      "title": "06 | Integral electronics deck",
-      "instruction": "Mount the Raspberry Pi 4, the KB2040, four DRV8833 drivers, both regulators, the ADS1115 and the fuse blocks on the deck printed into the upper ring.",
-      "narration": "Mount the Pi, the K B twenty forty, four motor drivers, regulators and fuses."
+      "start": 97,
+      "end": 109,
+      "legacy": [83, 95],
+      "title": "07 | Integral electronics deck",
+      "instruction": "Mount the Raspberry Pi 4, the KB2040, four DRV8833 drivers, the DRV8871 actuator driver, the level shifter, both regulators, the ADS1115 and the fuse blocks on the deck printed into the upper ring.",
+      "narration": "Mount the Pi, the K B twenty forty, the motor and actuator drivers, and the fuses."
     },
     {
       "name": "rings-joined",
-      "start": 95,
-      "end": 105,
-      "title": "07 | Join the two rings",
+      "start": 109,
+      "end": 119,
+      "legacy": [95, 105],
+      "title": "08 | Join the two rings",
       "instruction": "The locating lip aligns the rings. Fit eight M4 seam bolts through the internal flange, then four M8 rods on radius 138 to clamp the whole stack.",
       "narration": "Eight seam bolts and four M8 rods clamp the two rings together."
     },
     {
       "name": "head-drive",
-      "start": 105,
-      "end": 117,
-      "title": "08 | Head friction drive",
+      "start": 119,
+      "end": 131,
+      "legacy": [105, 117],
+      "title": "09 | Head friction drive",
       "instruction": "Bolt the drive base under the top plate. Fit the seventh motor and its wheel on the pivoting arm, then the spring, the M5 adjuster and the thumb nut.",
       "narration": "A seventh motor turns the dome by friction under the top plate."
     },
     {
       "name": "dome-electronics",
-      "start": 117,
-      "end": 128,
-      "title": "09 | Dome displays and lights",
+      "start": 131,
+      "end": 142,
+      "legacy": [117, 128],
+      "title": "10 | Dome displays and lights",
       "instruction": "On the bench: the twelve-wire slip ring at the hub, the round TFT behind the radar eye, four logic matrices, two PSI jewels and three holoprojector LEDs.",
       "narration": "Fit the slip ring, the eye display, the logic matrices and the P S I jewels."
     },
     {
       "name": "dome-seated",
-      "start": 128,
-      "end": 141,
-      "title": "10 | Lazy susan and dome",
+      "start": 142,
+      "end": 155,
+      "legacy": [128, 141],
+      "title": "11 | Lazy susan and dome",
       "instruction": "Screw the lazy susan to the top plate, lower the dome onto it, then tighten the thumb nut until the drive wheel presses the dome plate by 0.6 mm.",
       "narration": "Screw down the lazy susan, seat the dome, then tension the drive wheel."
     },
     {
       "name": "power-on",
-      "start": 141,
-      "end": 149,
-      "title": "11 | Power on",
+      "start": 155,
+      "end": 163,
+      "legacy": [141, 149],
+      "title": "12 | Power on",
       "instruction": "Simulated: the logic displays, the holoprojectors and both PSI lights come up behind the dome cutouts, and the dome begins to rotate.",
       "narration": "Power on. Logic displays, holoprojectors and P S I lights.",
-      "narration_start": 142.4
+      "narration_start": 156.4,
+      "panel": "drive"
     },
     {
       "name": "drive-demo",
-      "start": 149,
-      "end": 164,
-      "title": "12 | Simulated drive",
-      "instruction": "Forward 400 mm, a wide left arc with the centre foot castering to the path, stop, reverse 150 mm, stop, then nudge the dome left and right.",
-      "narration": "Forward, a wide left arc, stop, reverse, then a dome nudge."
+      "start": 163,
+      "end": 178,
+      "legacy": [149, 164],
+      "title": "13 | Simulated drive",
+      "instruction": "Three-leg stance, both locks seated: forward 400 mm, a wide left arc with the centre foot castering to the path, stop, reverse 150 mm, stop, then nudge the dome left and right.",
+      "narration": "Forward, a wide left arc, stop, reverse, then a dome nudge.",
+      "panel": "drive"
+    },
+    {
+      "name": "stance-retract",
+      "start": 178,
+      "end": 190,
+      "legacy": [164, 164],
+      "title": "14 | Stance change: three legs to two feet",
+      "instruction": "Hold-to-run from the control page. Both locks release, the actuator tilts the body upright while the firmware rolls the centre foot back with it, the locks re-seat, then the centre foot lifts clear. Operator drive and the dome are refused throughout.",
+      "narration": "Hold to change stance. Unlock, tilt upright, lock, then lift the centre foot.",
+      "panel": "stance",
+      "camera": { "relative": true, "target": [0, 20, 300], "height": 900, "az": 0, "elev": 8, "cut": true },
+      "stance": {
+        "state": "RETRACTING",
+        "end_state": "TWO_FOOT",
+        "phases": [
+          { "phase": "UNLOCKING", "start": 0.6, "end": 1.6, "stroke_to": "three_leg", "release_to": 1 },
+          { "phase": "TILT", "start": 1.6, "end": 6.6, "stroke_to": "contact", "release_to": 1 },
+          { "phase": "LOCKING", "start": 6.6, "end": 7.6, "stroke_to": "contact", "release_to": 0 },
+          { "phase": "LIFT", "start": 7.6, "end": 11.2, "stroke_to": "two_foot", "release_to": 0 }
+        ]
+      }
+    },
+    {
+      "name": "two-foot-stance",
+      "start": 190,
+      "end": 196,
+      "legacy": [164, 164],
+      "title": "15 | Two-foot stance",
+      "instruction": "Stationary: body upright, centre foot {TWO_FOOT_LIFT} mm clear of the floor, both locks seated in their 0 degree receivers. Ground drive is refused.",
+      "narration": "Two-foot stance. Drive is refused.",
+      "panel": "stance",
+      "camera": { "relative": true, "target": [0, 20, 380], "height": 1000, "az": 30, "az_to": 70, "elev": 12 }
+    },
+    {
+      "name": "stance-deploy",
+      "start": 196,
+      "end": 208,
+      "legacy": [164, 164],
+      "title": "16 | Stance change: two feet to three legs",
+      "instruction": "The locked centre foot lowers to the floor, both locks release, the actuator tilts the body back while the firmware rolls the centre foot forward, and the locks seat in the three-leg receivers. Drive is allowed again.",
+      "narration": "Lower the foot, unlock, tilt back onto three legs, and lock.",
+      "panel": "stance",
+      "camera": { "relative": true, "target": [0, 20, 300], "height": 900, "az": 0, "elev": 8, "cut": true },
+      "stance": {
+        "state": "DEPLOYING",
+        "end_state": "THREE_FOOT",
+        "phases": [
+          { "phase": "LOWER", "start": 0.6, "end": 4.1, "stroke_to": "contact", "release_to": 0 },
+          { "phase": "UNLOCKING", "start": 4.1, "end": 5.1, "stroke_to": "contact", "release_to": 1 },
+          { "phase": "TILT", "start": 5.1, "end": 10.1, "stroke_to": "three_leg", "release_to": 1 },
+          { "phase": "LOCKING", "start": 10.1, "end": 11.1, "stroke_to": "three_leg", "release_to": 0 }
+        ]
+      }
     },
     {
       "name": "closing-card",
-      "start": 164,
-      "end": 170,
-      "title": "Assembly complete | Prototype design",
-      "instruction": "{HEIGHT} mm tall | 317 mm body | nine STL files | twelve printed pieces | physical fit, strength and driving tests are still required. See the assembly manual.",
-      "narration": "Physical fit, strength and driving tests are still required."
+      "start": 208,
+      "end": 214,
+      "legacy": [164, 170],
+      "title": "Assembly complete | Revision D prototype design",
+      "instruction": "{HEIGHT} mm tall | 317 mm body | {DESIGNS_WORD} STL files | {PIECES_WORD} printed pieces | physical fit, strength, driving and powered stance-change tests are still required. See the assembly manual.",
+      "narration": "Fit, strength, drive and stance tests are still required.",
+      "panel": "still-required"
     }
   ],
   "audio_cues": [
     { "start": 15.5, "file": "chirp-double.wav", "text": "Wheels seated." },
     { "start": 34.0, "file": "acknowledge.wav", "text": "Leg splice complete." },
-    { "start": 91.0, "file": "scan.wav", "text": "Electronics deck populated." },
-    { "start": 141.05, "file": "power-on.wav", "text": "Power on." },
-    { "start": 155.4, "file": "whistle-up.wav", "text": "Left arc." },
-    { "start": 158.8, "file": "chirp-double.wav", "text": "Stop." },
-    { "start": 159.4, "file": "whistle-down.wav", "text": "Reverse." },
-    { "start": 162.4, "file": "happy.wav", "text": "Dome nudge." }
+    { "start": 81.5, "file": "acknowledge.wav", "text": "Carriage on its shafts." },
+    { "start": 105.0, "file": "scan.wav", "text": "Electronics deck populated." },
+    { "start": 155.05, "file": "power-on.wav", "text": "Power on." },
+    { "start": 169.4, "file": "whistle-up.wav", "text": "Left arc." },
+    { "start": 172.8, "file": "chirp-double.wav", "text": "Stop." },
+    { "start": 173.4, "file": "whistle-down.wav", "text": "Reverse." },
+    { "start": 176.4, "file": "happy.wav", "text": "Dome nudge." },
+    { "start": 185.9, "file": "chirp-double.wav", "text": "Locks seated upright." },
+    { "start": 189.3, "file": "acknowledge.wav", "text": "Two-foot stance." },
+    { "start": 207.2, "file": "chirp-double.wav", "text": "Locks seated, three legs." }
   ],
-  "keyframes": [0, 4, 14, 20, 28, 36, 44, 50, 53.5, 58, 66, 72, 79, 86, 92, 99, 104, 110, 116, 120, 126, 133, 139, 145, 152, 158, 160, 162, 166, 169],
-  "poster_time": 145.4
+  "keyframes": [0, 4, 14, 20, 28, 36, 44, 50, 53.5, 58, 66, 73, 80, 86, 93, 100, 106, 113, 118, 124, 130, 134, 140, 147, 153, 159, 166, 172, 174, 176, 180, 183, 185.1, 188, 193, 198, 200.6, 203, 206.6, 210, 213],
+  "poster_time": 159.4
 }

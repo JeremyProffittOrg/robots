@@ -1,15 +1,23 @@
-"""Assembly placement of every printed part, mirrored from cad/r2d2.scad.
+"""Assembly placement of every printed part for fable-r2d2 revision D, at any stance pose.
 
-Reads the numeric parameters from cad/params.scad and the few placement constants the part
-files define, then returns 4x4 matrices that move each STL (print frame) into the assembly
-frame (floor z=0, +Y front, +X droid right, three-leg stance). Used by draw_robot.py and
-render_video.py so both use exactly the placement the CAD assembly uses.
+Revision D moves the robot between two stances with a linear actuator. The pose is one number,
+the actuator stroke `stance_s` (mm from fully closed): cad/params.scad `st_s_two` is the two-foot
+stance (body upright, centre foot stowed) and `st_s_three` the three-leg stance (body tilted
+`body_tilt`, centre foot on the floor). cad/r2d2.scad renders any pose with
+`-D stance_s=<mm>`; the name of that variable is STANCE_PARAMETER below.
+
+The kinematics, the print-frame inverses and the list of printed instances are NOT copied here:
+they come from scripts/stability.py `Stance`, which mirrors cad/stance.scad and is owned by the
+CAD. This module wraps that class for the drawing, video and mock-up scripts, checks it against
+scripts/parts.json, and adds the purchased mechanism envelopes those scripts draw.
 
     from assembly_layout import Layout
-    lay = Layout()
-    for inst in lay.instances():   # dict(name, stl, matrix, mirrored, group)
-        mesh = lay.load(inst)      # trimesh already transformed into the assembly frame
+    lay = Layout()                      # three-leg stance
+    two = Layout(stroke=two.endpoints()["two_foot"])
+    for inst in lay.instances():        # dict(name, stl, part, group, matrix, mirrored)
+        mesh = lay.load(inst)           # trimesh already transformed into the assembly frame
 """
+import json
 import math
 import re
 from pathlib import Path
@@ -17,6 +25,16 @@ from pathlib import Path
 import numpy as np
 
 ROOT = Path(__file__).resolve().parents[1]
+
+REVISION = "D"
+"""Package revision every generated output is labelled with."""
+
+STANCE_PARAMETER = "stance_s"
+"""OpenSCAD variable in cad/r2d2.scad that sets the actuator stroke of the rendered pose."""
+
+NUMBER_WORDS = ["zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten",
+                "eleven", "twelve", "thirteen", "fourteen", "fifteen", "sixteen", "seventeen",
+                "eighteen", "nineteen", "twenty"]
 
 
 def _read_scad_assignments(path, names=None, base=None):
@@ -71,31 +89,130 @@ def MX():
     return m
 
 
-class Layout:
-    def __init__(self, root=ROOT):
-        self.root = Path(root)
-        p = _read_scad_assignments(self.root / "cad/params.scad")
-        p.update(_read_scad_assignments(self.root / "cad/lib.scad", names={"tt_len", "tt_gear_len", "tt_gear_h", "tt_thick", "tt_shaft_d", "tt_axle_from_front", "tt_can_d", "tt_shaft_l1", "tt_shaft_l2", "wheel_d", "wheel_w"}))
-        legs = _read_scad_assignments(self.root / "cad/legs.scad", base=p)
-        feet = _read_scad_assignments(self.root / "cad/feet.scad", base=p)
-        head = _read_scad_assignments(self.root / "cad/head_drive.scad", base=p)
-        self.p = p
-        self.legs = legs
-        self.feet = feet
-        self.head = head
-        # derived stance values (same formulas as r2d2.scad)
-        p["shoulder_z_three_leg"] = p["ankle_z"] + p["leg_len"] * math.cos(math.radians(p["leg_lean"]))
-        self.skirt_bottom_z = p["shoulder_z_three_leg"] - p["shoulder_z"] * math.cos(math.radians(p["body_tilt"]))
-        self.skirt_bottom_y = p["shoulder_z"] * math.sin(math.radians(p["body_tilt"]))
-        self.ankle_y = p["leg_len"] * math.sin(math.radians(p["leg_lean"]))
-        self.center_foot_top_z = p["foot_clear"] + p["foot_center_h"]
-        self.center_leg_y = self.skirt_bottom_y + p["center_leg_y_in_body"] * math.cos(math.radians(p["body_tilt"]))
-        self.center_leg_plane_z = self.skirt_bottom_z + p["center_leg_y_in_body"] * math.sin(math.radians(p["body_tilt"]))
+def number_word(count):
+    """English word for a small count ("nine"); digits above twenty."""
+    count = int(count)
+    return NUMBER_WORDS[count] if 0 <= count < len(NUMBER_WORDS) else str(count)
 
-    # ---- placement helpers (native frames), mirroring r2d2.scad ----
-    def at_body(self):
+
+def read_parts(root=ROOT):
+    """scripts/parts.json `parts` mapping, in file order."""
+    return json.loads((Path(root) / "scripts/parts.json").read_text(encoding="utf-8"))["parts"]
+
+
+def package_counts(root=ROOT):
+    """Printed-part counts read from scripts/parts.json (never hard-coded)."""
+    parts = read_parts(root)
+    return {
+        "designs": len(parts),
+        "pieces": sum(int(row["quantity"]) for row in parts.values()),
+        "mirrored": [name for name, row in parts.items() if row.get("mirror")],
+        "names": list(parts),
+    }
+
+
+def declared_stance_parameter(root=ROOT):
+    """Default expression of STANCE_PARAMETER in cad/r2d2.scad, or None when it is not declared."""
+    text = re.sub(r"//[^\n]*", "", (Path(root) / "cad/r2d2.scad").read_text(encoding="utf-8"))
+    match = re.search(rf"(?m)^\s*{re.escape(STANCE_PARAMETER)}\s*=\s*([^;]+);", text)
+    return match.group(1).strip() if match else None
+
+
+def _stance_module():
+    # scripts/stability.py imports T, R, MX and _read_scad_assignments from this module, so it is
+    # imported lazily here (by then this module is fully initialised).
+    import stability
+    return stability
+
+
+# Which stance frame each Stance.instances() group moves with.
+GROUP_FRAME = {"body": "body", "carriage": "carriage", "housing": "housing", "foot": "foot",
+               "legs": "fixed", "feet": "fixed"}
+
+
+class Layout:
+    def __init__(self, root=ROOT, stroke=None, caster_yaw=0.0):
+        self.root = Path(root)
+        stability = _stance_module()
+        p = stability.load_params(self.root)
+        p.update(_read_scad_assignments(self.root / "cad/lib.scad", names={
+            "tt_len", "tt_gear_len", "tt_gear_h", "tt_thick", "tt_shaft_d", "tt_axle_from_front", "tt_can_d",
+            "tt_shaft_l1", "tt_shaft_l2", "wheel_d", "wheel_w"}))
+        self.p = p
+        self.stance = stability.Stance(p)
+        self.legs = _read_scad_assignments(self.root / "cad/legs.scad", base=p)
+        self.feet = _read_scad_assignments(self.root / "cad/feet.scad", base=p)
+        self.head = _read_scad_assignments(self.root / "cad/head_drive.scad", base=p)
+        ends = self.endpoints()
+        self.s = ends["three_leg"] if stroke is None else float(stroke)
+        if not ends["two_foot"] - 1e-6 <= self.s <= ends["three_leg"] + 1e-6:
+            raise ValueError(f"{STANCE_PARAMETER}={self.s} is outside {ends['two_foot']}..{ends['three_leg']} mm")
+        self.caster_yaw = float(caster_yaw)
+        self.tilt = self.stance.tilt(self.s)
+        body = self.at_body()
+        skirt = body @ np.array([0.0, 0.0, 0.0, 1.0])
+        self.shoulder_z_world = float(self.stance.S)
+        self.skirt_bottom_y = float(skirt[1])
+        self.skirt_bottom_z = float(skirt[2])
+        self.ankle_y = float(p["leg_len"] * math.sin(math.radians(p["leg_lean"])))
+        self.center_foot_top_z = float(p["foot_clear"] + p["foot_center_h"])
+        self.caster_axis = [float(v) for v in self.stance.hinge_world(self.s)[:2]]
+
+    # ---- stance ----
+    def endpoints(self):
         p = self.p
-        return T(0, 0, p["shoulder_z_three_leg"]) @ R(p["body_tilt"], 0, 0) @ T(0, 0, -p["shoulder_z"])
+        return {"two_foot": float(p["st_s_two"]), "contact": float(self.stance.contact_stroke()),
+                "three_leg": float(p["st_s_three"])}
+
+    def at_stroke(self, stroke):
+        """A Layout of the same CAD at another stance pose."""
+        other = Layout.__new__(Layout)
+        other.__dict__.update(self.__dict__)
+        other.s = float(stroke)
+        ends = self.endpoints()
+        if not ends["two_foot"] - 1e-6 <= other.s <= ends["three_leg"] + 1e-6:
+            raise ValueError(f"{STANCE_PARAMETER}={other.s} is outside {ends['two_foot']}..{ends['three_leg']} mm")
+        other.tilt = self.stance.tilt(other.s)
+        skirt = other.at_body() @ np.array([0.0, 0.0, 0.0, 1.0])
+        other.skirt_bottom_y, other.skirt_bottom_z = float(skirt[1]), float(skirt[2])
+        other.caster_axis = [float(v) for v in self.stance.hinge_world(other.s)[:2]]
+        return other
+
+    def centre_foot_lift(self, stroke=None):
+        """Height of the centre-foot hinge above its floor-contact height, mm (0 on the floor)."""
+        s = self.s if stroke is None else stroke
+        lift = float(self.stance.hinge_world(s)[2] - self.p["st_floor_hinge_z"])
+        return 0.0 if abs(lift) < 1e-6 else lift   # on the floor: no -0.0 from rounding
+
+    def locks_seated_cad(self, stroke=None):
+        """Lock pins as cad/stance.scad st_mechanism() draws them: seated at or below touchdown and
+        at the three-leg endpoint, released on the tilt path between them."""
+        s = self.s if stroke is None else stroke
+        ends = self.endpoints()
+        return s <= ends["contact"] + 0.01 or abs(s - ends["three_leg"]) < 0.05
+
+    def frame(self, name, stroke=None):
+        """Stance frame (assembly frame) of a group at a stroke: body, carriage, housing, foot, fixed."""
+        s = self.s if stroke is None else stroke
+        if name == "body":
+            return self.stance.at_body(s)
+        if name == "carriage":
+            return self.stance.at_carriage(s)
+        if name == "housing":
+            return self.stance.at_housing(s)
+        if name == "foot":
+            return self.stance.at_center_foot(s, self.caster_yaw)
+        if name == "fixed":
+            return np.eye(4)
+        raise KeyError(f"unknown stance frame {name}")
+
+    def delta(self, name, stroke):
+        """Matrix that moves geometry placed at this Layout's pose to the pose at `stroke`."""
+        return self.frame(name, stroke) @ np.linalg.inv(self.frame(name))
+
+    # ---- placement helpers (assembly frame, at this pose) ----
+    def at_body(self):
+        return self.stance.at_body(self.s)
 
     def at_body_upper(self):
         return self.at_body() @ T(0, 0, self.p["body_lower_h"])
@@ -103,60 +220,46 @@ class Layout:
     def at_dome(self, spin=0.0):
         return self.at_body() @ T(0, 0, self.p["body_height"] + self.p["dome_gap"]) @ R(0, 0, spin)
 
-    def at_leg(self, side):
-        p = self.p
-        m = T(side * (p["body_r"] + p["shoulder_spacer"]), 0, p["shoulder_z_three_leg"]) @ R(p["leg_lean"], 0, 0)
-        return m @ MX() if side < 0 else m
-
-    def at_foot(self, side):
-        p = self.p
-        m = T(side * p["leg_offset_x"], self.ankle_y, p["foot_clear"])
-        return m @ MX() if side < 0 else m
-
-    def at_center_leg(self):
-        return T(0, self.center_leg_y, self.center_foot_top_z)
-
-    def at_center_foot(self, swivel=0.0):
-        p = self.p
-        # swivel about the caster axis (which sits caster_trail ahead of the foot centre)
-        return T(0, self.center_leg_y, p["foot_clear"]) @ R(0, 0, swivel) @ T(0, -p["caster_trail"], 0)
-
     def at_head_drive(self):
         return self.at_body() @ T(0, 0, self.p["body_top_plate_z"])
 
-    # ---- print-frame -> native-frame inverses ----
+    def at_leg(self, side):
+        return self.stance.at_leg(side)
+
+    def at_foot(self, side):
+        return self.stance.at_foot(side)
+
+    def at_carriage(self):
+        return self.stance.at_carriage(self.s)
+
+    def at_center_leg(self):
+        return self.stance.at_housing(self.s)
+
+    def at_center_foot(self, swivel=None):
+        return self.stance.at_center_foot(self.s, self.caster_yaw if swivel is None else swivel)
+
     def print_inverse(self, name):
-        p, lg, hd = self.p, self.legs, self.head
-        if name == "leg_upper":
-            tx = -(-p["leg_split_z"] - lg["lg_hs_top"]) / 2
-            return np.linalg.inv(T(tx, 0, 0) @ R(0, -90, 0))
-        if name == "leg_lower":
-            tx = -(-lg["lg_tongue_bottom_z"] + p["leg_split_z"] + p["leg_splice_len"]) / 2
-            return np.linalg.inv(T(tx, 0, 0) @ R(0, -90, 0))
-        if name == "leg_center":
-            return np.linalg.inv(R(180, 0, 0) @ R(-p["body_tilt"], 0, 0) @ T(0, 0, -lg["lg_center_plane_z"]))
-        if name == "head_drive":
-            return np.linalg.inv(T(0, 0, hd["hd_base_top"]) @ R(180, 0, 0))
-        return np.eye(4)
+        return self.stance.print_inverse(name)
 
-    def instances(self, dome_spin=0.0, caster_swivel=0.0):
-        """Every printed piece with its assembly matrix (STL print frame -> assembly)."""
+    def instances(self, dome_spin=0.0, caster_swivel=None):
+        """Every printed piece with its assembly matrix, checked against scripts/parts.json."""
+        yaw = self.caster_yaw if caster_swivel is None else caster_swivel
+        parts = read_parts(self.root)
         out = []
-
-        def add(name, key, placement, group, mirrored=False):
-            out.append({"name": name, "stl": f"stl/{key}.stl", "part": key, "group": group,
-                        "matrix": placement @ self.print_inverse(key), "mirrored": mirrored})
-
-        add("body_lower", "body_lower", self.at_body(), "body")
-        add("body_upper", "body_upper", self.at_body_upper(), "body")
-        add("dome", "dome", self.at_dome(dome_spin), "dome")
-        add("head_drive", "head_drive", self.at_head_drive(), "head_drive")
-        for side, label in ((1, "right"), (-1, "left")):
-            add(f"leg_upper_{label}", "leg_upper", self.at_leg(side), "legs", side < 0)
-            add(f"leg_lower_{label}", "leg_lower", self.at_leg(side), "legs", side < 0)
-            add(f"foot_outer_{label}", "foot_outer", self.at_foot(side), "feet", side < 0)
-        add("leg_center", "leg_center", self.at_center_leg(), "legs")
-        add("foot_center", "foot_center", self.at_center_foot(caster_swivel), "feet")
+        for inst in self.stance.instances(self.s, yaw):
+            if inst["part"] not in parts:
+                raise KeyError(f"stability.Stance places {inst['part']}, which scripts/parts.json does not list")
+            entry = dict(inst)
+            entry["stl"] = f"stl/{inst['part']}.stl"
+            entry["frame"] = GROUP_FRAME[inst["group"]]
+            if inst["part"] == "dome" and dome_spin:
+                entry["matrix"] = self.at_dome(dome_spin) @ self.print_inverse("dome")
+            out.append(entry)
+        for name, row in parts.items():
+            placed = sum(1 for inst in out if inst["part"] == name)
+            if placed != int(row["quantity"]):
+                raise RuntimeError(f"scripts/parts.json lists {row['quantity']} x {name}; "
+                                   f"stability.Stance places {placed}")
         return out
 
     def load(self, inst):
@@ -165,42 +268,70 @@ class Layout:
         mesh.apply_transform(inst["matrix"])
         return mesh
 
-    # ---- purchased-part envelopes in assembly frame ----
+    # ---- purchased-part envelopes in the assembly frame ----
     def motor_matrices(self, foot_matrix, center=False):
         """4x4 matrices placing lib.scad tt_motor() (shaft along Y, body toward -X) for one foot."""
-        p, ft = self.p, self.feet
-        result = []
-        for sy in (-1, 1):
-            if center:
-                phi = ft["ft_phi_c_front"] if sy > 0 else ft["ft_phi_c_rear"]
-            else:
-                phi = sy * (90 + ft["ft_motor_tilt_o"])
-            # ft_motor_at(y, phi) = translate([0, y, wheel_axle_z]) rotate([90 - phi, 0, 0]) rotate([0, 0, -90])
-            m = T(0, sy * p["foot_axle_y"], p["wheel_axle_z"]) @ R(90 - phi, 0, 0) @ R(0, 0, -90)
-            result.append(foot_matrix @ m)
-        return result
+        return self.stance.motor_points(foot_matrix, center)
 
     def wheel_matrices(self, foot_matrix):
         """4x4 matrices placing a wheel cylinder whose axis is Z, centred (four per foot)."""
-        p = self.p
-        result = []
-        for sy in (-1, 1):
-            for sx in (-1, 1):
-                # wheel axis along X in the foot frame: rotate a Z-axis cylinder by 90 about Y
-                result.append(foot_matrix @ T(sx * p["wheel_x"], sy * p["foot_axle_y"], p["wheel_axle_z"]) @ R(0, 90, 0))
-        return result
+        return self.stance.wheel_matrices(foot_matrix)
+
+    def mechanism(self):
+        """Purchased stance-mechanism envelopes at this pose, as assembly-frame 4x4 matrices.
+
+        shafts     frame at each guide shaft's lower end, +Z up the shaft (length st_shaft_t span)
+        actuator   frame at the P16 fixed eye, +Z toward the eye along the guide (case below it)
+        bearings   frame at each LM12LUU bottom face on the carriage, +Z up the guide
+        locks      lock frame per side (origin at the pin-exit face, +X outward along the pin)
+        receivers  frame at each GN 412.2 in the leg inboard face, +X along the bore
+        """
+        p, st = self.p, self.stance
+        body = self.at_body()
+        carriage = self.at_carriage()
+        guide = R(p["st_guide_angle"], 0, 0)
+        shafts = [body @ T(*st.guide_point(p["st_shaft_t"][0], sx * p["st_shaft_x"])) @ guide for sx in (-1, 1)]
+        actuator = body @ T(*st.act_fixed_eye()) @ guide
+        bearings = [carriage @ T(sx * p["st_shaft_x"], 0, p["st_brg_t"]) for sx in (-1, 1)]
+        locks = {side: body @ st.lock_frame(side) for side in (-1, 1)}
+        receivers = []
+        for side in (-1, 1):
+            for extra in (0.0, p["body_tilt"]):
+                angle = math.radians(p["st_lock_angle"] + extra)
+                receivers.append({"side": side, "angle_deg": extra,
+                                  "matrix": st.at_leg(side) @ T(0, p["st_lock_r"] * math.cos(angle),
+                                                                p["st_lock_r"] * math.sin(angle))})
+        return {"shafts": shafts, "actuator": actuator, "bearings": bearings, "locks": locks,
+                "receivers": receivers}
+
+    def pose_table(self, step=0.25):
+        """Stance deltas from this pose to strokes st_s_two..st_s_three, for animation."""
+        ends = self.endpoints()
+        count = int(math.ceil((ends["three_leg"] - ends["two_foot"]) / step))
+        rows = []
+        for index in range(count + 1):
+            s = min(ends["two_foot"] + index * step, ends["three_leg"])
+            rows.append({"s": s, "tilt": self.stance.tilt(s), "lift": self.centre_foot_lift(s),
+                         "body": self.delta("body", s), "carriage": self.delta("carriage", s),
+                         "housing": self.delta("housing", s), "foot": self.delta("foot", s)})
+        return rows
 
 
 if __name__ == "__main__":
-    import json
     lay = Layout()
-    print(json.dumps({k: lay.p[k] for k in ("body_r", "body_height", "shoulder_z", "shoulder_z_three_leg", "leg_offset_x", "leg_track", "body_tilt")}, indent=2))
-    print("skirt bottom (y, z) =", round(lay.skirt_bottom_y, 1), round(lay.skirt_bottom_z, 1), "ankle y =", round(lay.ankle_y, 1))
-    for inst in lay.instances():
-        path = lay.root / inst["stl"]
-        if path.exists():
-            mesh = lay.load(inst)
-            lo, hi = mesh.bounds
-            print(f"{inst['name']:18s} z {lo[2]:7.1f}..{hi[2]:7.1f}  y {lo[1]:7.1f}..{hi[1]:7.1f}  x {lo[0]:7.1f}..{hi[0]:7.1f}  watertight={mesh.is_watertight}")
-        else:
-            print(f"{inst['name']:18s} (STL not yet exported)")
+    ends = lay.endpoints()
+    print(json.dumps({"revision": REVISION, "stance_parameter": STANCE_PARAMETER,
+                      "declared_in_r2d2_scad": declared_stance_parameter(), "endpoints_mm": ends,
+                      "tilt_deg": {k: round(lay.stance.tilt(v), 3) for k, v in ends.items()},
+                      "counts": package_counts()}, indent=2))
+    for label, stroke in ends.items():
+        pose = lay.at_stroke(stroke)
+        print(f"== {label}: {STANCE_PARAMETER} = {stroke:.2f} mm, tilt {pose.tilt:.2f} deg, "
+              f"centre-foot lift {pose.centre_foot_lift():.1f} mm")
+        for inst in pose.instances():
+            path = lay.root / inst["stl"]
+            if path.exists():
+                lo, hi = pose.load(inst).bounds
+                print(f"  {inst['name']:18s} z {lo[2]:7.1f}..{hi[2]:7.1f}  y {lo[1]:7.1f}..{hi[1]:7.1f}")
+            else:
+                print(f"  {inst['name']:18s} (STL not yet exported)")

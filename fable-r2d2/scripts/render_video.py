@@ -1,16 +1,19 @@
-"""Render the fable-r2d2 assembly and simulated operation as a 170-second 1920x1080 MP4.
+"""Render the fable-r2d2 revision D assembly, simulated operation and stance change as a 1920x1080 MP4.
 
 Every printed piece is the delivered STL, placed by scripts/assembly_layout.py exactly as
-cad/r2d2.scad places it. Purchased hardware is drawn as nominal envelopes from cad/params.scad
-and cad/lib.scad. Frames are rendered in headless Chrome with a small WebGL2 renderer
-(scripts/video_scene.js) and piped as JPEG into FFmpeg; the soundtrack is built by
-scripts/build_video_audio.ps1 from Windows System.Speech narration and the original robot WAVs
-in firmware/pi/sounds.
+cad/r2d2.scad places it. Stance poses come from the same kinematics (scripts/stability.py Stance):
+the scene receives a table of body, carriage, housing and foot matrices over the whole actuator
+stroke and plays the phases the storyboard lists. Purchased hardware is drawn as nominal envelopes
+from cad/params.scad and cad/lib.scad. Frames are rendered in headless Chrome with a small WebGL2
+renderer (scripts/video_scene.js) and piped as JPEG into FFmpeg; the soundtrack is built by
+scripts/build_video_audio.ps1 from Windows System.Speech narration and the original robot WAVs in
+firmware/pi/sounds. Storyboard {TOKENS} are filled from scripts/parts.json and the CAD first.
 
 No network, no printer, no robot and no scheduled task is touched.
 
     python scripts/render_video.py --preview            # keyframe PNGs into output/video/review
     python scripts/render_video.py --allow-missing      # skip STLs that are not exported yet
+    python scripts/render_video.py --check-story        # validate and resolve the storyboard only
     python scripts/render_video.py                      # full render, verify, manifest, poster
 """
 import argparse
@@ -31,12 +34,9 @@ import threading
 import time
 
 import numpy as np
-from PIL import Image
-from playwright.sync_api import sync_playwright
-import trimesh
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from assembly_layout import Layout, T, R  # noqa: E402
+from assembly_layout import REVISION, STANCE_PARAMETER, Layout, T, R, number_word, package_counts  # noqa: E402
 
 ROOT = Path(__file__).resolve().parents[1]
 OUT = ROOT / "output/video"
@@ -46,6 +46,10 @@ SCENE_JS = ROOT / "scripts/video_scene.js"
 WIDTH, HEIGHT = 1920, 1080
 VIDEO = OUT / "r2d2-assembly-and-operation.mp4"
 RENDER_CEILING_SECONDS = 1740  # hard stop below the 30-minute quality bar
+POSE_STEP_MM = 0.1
+STROKE_NAMES = ("two_foot", "contact", "three_leg")
+TOKEN_RE = re.compile(r"\{([A-Z_]+)\}")
+RUNTIME_TOKENS = {"HEIGHT"}
 
 
 def sha(path):
@@ -57,13 +61,83 @@ def cm(matrix):
     return [float(v) for v in np.asarray(matrix, dtype=float).T.ravel()]
 
 
-def scad_numbers(path, names):
-    """Tolerant `name = <number>;` reader.
+# ---------------------------------------------------------------- storyboard
+def story_tokens(counts, lay):
+    """Values for the storyboard {TOKENS}, all read from scripts/parts.json and the CAD."""
+    return {
+        "DESIGNS": str(counts["designs"]), "PIECES": str(counts["pieces"]),
+        "DESIGNS_WORD": number_word(counts["designs"]), "PIECES_WORD": number_word(counts["pieces"]),
+        "DESIGNS_WORD_CAP": number_word(counts["designs"]).capitalize(),
+        "PIECES_WORD_CAP": number_word(counts["pieces"]).capitalize(),
+        "TWO_FOOT_LIFT": f"{lay.centre_foot_lift(lay.endpoints()['two_foot']):.0f}",
+    }
 
-    assembly_layout._read_scad_assignments splits on ";" and drops any assignment whose chunk
-    starts with a leftover "}" from the preceding module, so the first constant after a module
-    (tt_len, wheel_d) never reaches Layout.p. This fills those gaps without touching that file.
-    """
+
+def resolve_story(story, tokens):
+    """Copy of the storyboard with every {TOKEN} filled; {HEIGHT} stays for the render."""
+    resolved = json.loads(json.dumps(story))
+    for chapter in resolved["chapters"]:
+        for field in ("title", "instruction", "narration"):
+            text = chapter.get(field, "")
+            unknown = sorted({name for name in TOKEN_RE.findall(text) if name not in tokens and name not in RUNTIME_TOKENS})
+            if unknown:
+                raise ValueError(f"storyboard chapter {chapter['name']} {field} has unknown tokens {unknown}")
+            chapter[field] = TOKEN_RE.sub(lambda m: tokens.get(m.group(1), m.group(0)), text)
+        if TOKEN_RE.search(chapter.get("narration", "")):
+            raise ValueError(f"narration of {chapter['name']} would speak a raw token")
+    return resolved
+
+
+def validate_story(story):
+    """Structural checks the renderer and the soundtrack rely on; raises ValueError."""
+    chapters = story["chapters"]
+    if story.get("revision") != REVISION:
+        raise ValueError(f"storyboard revision {story.get('revision')} is not {REVISION}")
+    cursor, legacy = 0.0, 0.0
+    for chapter in chapters:
+        name = chapter["name"]
+        if abs(chapter["start"] - cursor) > 1e-9 or chapter["end"] <= chapter["start"]:
+            raise ValueError(f"chapter {name} does not continue at {cursor} s")
+        a, b = chapter["legacy"]
+        if a < legacy - 1e-9 or (b != a and abs((b - a) - (chapter["end"] - chapter["start"])) > 1e-9):
+            raise ValueError(f"chapter {name} legacy span {a}..{b} must continue the timeline and hold or play at 1x")
+        legacy = b
+        for phase in chapter.get("stance", {}).get("phases", []):
+            if phase["stroke_to"] not in STROKE_NAMES or not 0 <= phase["start"] < phase["end"] <= chapter["end"] - chapter["start"]:
+                raise ValueError(f"chapter {name} phase {phase['phase']} is outside the chapter or names an unknown stroke")
+        cursor = chapter["end"]
+    if abs(cursor - story["total_seconds"]) > 1e-9:
+        raise ValueError(f"chapters end at {cursor} s but total_seconds is {story['total_seconds']}")
+    for key in story["keyframes"]:
+        if not 0 <= key < story["total_seconds"]:
+            raise ValueError(f"keyframe {key} is outside the video")
+    unseen = [c["name"] for c in chapters if not any(c["start"] <= k < c["end"] for k in story["keyframes"])]
+    if unseen:
+        raise ValueError(f"chapters without a keyframe: {unseen}")
+    if not any(c.get("stance") and c["stance"]["end_state"] == "TWO_FOOT" for c in chapters) or \
+            not any(c.get("stance") and c["stance"]["end_state"] == "THREE_FOOT" for c in chapters):
+        raise ValueError("the storyboard must show both stance changes")
+    return True
+
+
+def video_time(story, legacy_time):
+    """Video time at which the scene plays a given legacy (assembly-timeline) time."""
+    for chapter in story["chapters"]:
+        a, b = chapter["legacy"]
+        if b > a and a - 1e-9 <= legacy_time < b:
+            return chapter["start"] + (legacy_time - a)
+    raise ValueError(f"legacy time {legacy_time} is not played by any chapter")
+
+
+def phase_windows(story):
+    """(chapter, phase, video start, video end) for every stance phase."""
+    return [(c["name"], p["phase"], c["start"] + p["start"], c["start"] + p["end"])
+            for c in story["chapters"] for p in c.get("stance", {}).get("phases", [])]
+
+
+# ---------------------------------------------------------------- meshes
+def scad_numbers(path, names):
+    """Tolerant `name = <number>;` reader for constants assembly_layout's parser drops."""
     text = re.sub(r"//[^\n]*", "", Path(path).read_text(encoding="utf-8"))
     found = {}
     for name in names:
@@ -80,12 +154,14 @@ def shifted(mesh, xyz):
 
 
 def rotated(mesh, angle, axis):
+    import trimesh
     mesh = mesh.copy()
     mesh.apply_transform(trimesh.transformations.rotation_matrix(angle, axis))
     return mesh
 
 
 def tube(points, radius=1.5, sides=8, closed=False):
+    import trimesh
     points = np.asarray(points, dtype=float)
     tangents = np.gradient(points, axis=0) if not closed else np.roll(points, -1, axis=0) - np.roll(points, 1, axis=0)
     tangents /= np.linalg.norm(tangents, axis=1)[:, None]
@@ -111,6 +187,7 @@ def tube(points, radius=1.5, sides=8, closed=False):
 
 def bolt(diameter, length, head_diameter, head_height):
     """Head sits at z = 0..head_height; the shank runs down to z = -length."""
+    import trimesh
     shank = shifted(trimesh.creation.cylinder(radius=diameter / 2, height=length, sections=16), (0, 0, -length / 2))
     head = shifted(trimesh.creation.cylinder(radius=head_diameter / 2, height=head_height, sections=6), (0, 0, head_height / 2))
     return trimesh.util.concatenate([shank, head])
@@ -124,6 +201,7 @@ def helix(radius, wire_radius, length, turns, segments=90):
 
 def tt_motor_mesh(p):
     """Adafruit 3777 envelope in cad/lib.scad's tt_motor() frame: shaft along Y, can toward -X."""
+    import trimesh
     gear_len, gear_h, thick = p["tt_gear_len"], p["tt_gear_h"], p["tt_thick"]
     front = p["tt_axle_from_front"]
     can_len = p["tt_len"] - gear_len
@@ -139,6 +217,7 @@ def tt_motor_mesh(p):
 
 def wheel_mesh(p):
     """Adafruit 3766 envelope, axis along Z, centred: 63 mm diameter, 29 mm wide."""
+    import trimesh
     radius, width = p["wheel_d"] / 2, p["wheel_w"]
     tyre = trimesh.creation.annulus(r_min=radius - 4.5, r_max=radius, height=width, sections=44)
     hub = trimesh.creation.annulus(r_min=7, r_max=radius - 4.5, height=width - 4, sections=44)
@@ -147,11 +226,13 @@ def wheel_mesh(p):
 
 def wheel_mark_mesh(p):
     """One radial tread rib, drawn dark so the rolling direction is visible."""
+    import trimesh
     radius = p["wheel_d"] / 2
     return shifted(trimesh.creation.box(extents=[3.2, 3.0, p["wheel_w"] + 0.4]), (radius - 1.4, 0, 0))
 
 
 def primitives(p):
+    import trimesh
     meshes = {
         "cube": trimesh.creation.box(extents=[1, 1, 1]),
         "cylinder": trimesh.creation.cylinder(radius=1, height=1, sections=32),
@@ -168,7 +249,8 @@ def primitives(p):
                                                  r_max=p["caster_bearing_od"] / 2,
                                                  height=p["caster_bearing_t"], sections=36)
     for name, m, length in [("bolt3", 3, 16), ("bolt4", 4, 30), ("bolt4l", 4, 86), ("bolt5", 5, 44),
-                            ("bolt8", 8, 95), ("bolt8m", 8, 66), ("bolt12", 12, 150), ("bolt8s", 8, 34)]:
+                            ("bolt8", 8, 95), ("bolt8m", 8, 66), ("bolt12", 12, 150), ("bolt8s", 8, 34),
+                            ("bolt4p", 4, 45), ("bolt8h", 8, 35)]:
         meshes[name] = bolt(m, length, m * 1.85, m * 0.7)
     for name, m in [("nut3", 3), ("nut4", 4), ("nut5", 5), ("nut8", 8), ("nut12", 12)]:
         meshes[name] = trimesh.creation.annulus(r_min=m / 2, r_max=m * 0.95, height=m * 0.8, sections=6)
@@ -207,13 +289,11 @@ def roll_sign(matrix, radius):
     return sign
 
 
-
 # cad/legs.scad, feet.scad and head_drive.scad define constants inside files that also contain
 # modules. assembly_layout._read_scad_assignments splits those files on ";" and silently drops any
 # assignment whose chunk begins with a leftover "}", so a constant can disappear whenever the CAD
-# owner moves code. Layout.print_inverse then raises KeyError, and any constant the scene reads
-# would quietly become NaN. Refill the gaps from the formulas the .scad files document, and refuse
-# to render if anything the scene needs is still missing.
+# owner moves code. Refill the gaps from the formulas the .scad files document, and refuse to
+# render if anything the scene needs is still missing.
 def backfill(lay):
     """Restore CAD constants the scad reader dropped; raise if any are unrecoverable."""
     p, legs, feet, head = lay.p, lay.legs, lay.feet, lay.head
@@ -227,12 +307,11 @@ def backfill(lay):
 
     fill(legs, "lg_hs_top", p["horseshoe_w"] / 2)
     fill(legs, "lg_tongue_bottom_z", -p["leg_len"] - pivot_up - p["leg_tongue_depth"])
-    fill(legs, "lg_center_plane_z", lay.skirt_bottom_z - lay.center_foot_top_z)
     fill(legs, "lg_rod_x", p["leg_strut_t"] / 2)
     fill(legs, "lg_splice_x", [5, p["leg_strut_t"] - 5])
     fill(legs, "lg_splice_z", [p["leg_split_z"] + 10, p["leg_split_z"] + 30])
-    fill(legs, "lg_bearing1_z", 26)
-    fill(legs, "lg_bearing2_z", 26 + 18)
+    fill(legs, "lg_bearing1_z", p["lg_center_bottom_z"])
+    fill(legs, "lg_bearing2_z", p["lg_center_bottom_z"] + p["caster_bearing_gap"])
     fill(head, "hd_base_top", -p["body_top_plate_t"])
     fill(head, "hd_hinge_y", -82)
     fill(head, "hd_motor_y", -(p["head_wheel_r"] + head.get("hd_hinge_y", -82) - p["wheel_x"]))
@@ -254,19 +333,31 @@ def backfill(lay):
 # Every params.scad / derived name scripts/video_scene.js reads. A missing one is a NaN matrix,
 # so the render stops instead of producing a silently wrong frame.
 SCENE_KEYS = [
-    "ankle_y", "skirt_bottom_y", "caster_trail", "leg_offset_x", "body_tilt", "foot_clear",
+    "ankle_y", "caster_axis_y", "caster_trail", "leg_offset_x", "body_tilt", "foot_clear",
     "foot_center_h", "foot_outer_h", "caster_stop_deg", "body_r", "body_wall", "body_height",
-    "body_lower_h", "body_top_plate_z", "shoulder_z", "shoulder_spacer", "shoulder_index_r",
-    "shoulder_index_d", "shoulder_index_angles", "leg_strut_t", "leg_rod_offset", "leg_rod_top_z",
-    "leg_rod_bottom_z", "battery", "battery_y", "battery_shelf_z", "battery_strap_w", "speaker_d",
+    "body_lower_h", "body_top_plate_z", "shoulder_z", "shoulder_spacer", "leg_strut_t", "leg_rod_offset",
+    "leg_rod_top_z", "leg_rod_bottom_z", "battery", "battery_y", "battery_shelf_z", "battery_strap_w", "speaker_d",
     "tray_z_upper", "rod_n", "rod_r", "rod_angle0", "rod_d", "seam_bolt_n", "seam_flange_w",
     "seam_lip_h", "susan_od", "susan_t", "susan_hole_r", "susan_hole_angles", "slip_ring_d",
     "slip_ring_l", "dome_r", "dome_a", "dome_b", "dome_band_h", "dome_plate_t", "dome_eye_lens_d",
     "dome_eye_lcd_pcb", "dome_matrix_pcb", "dome_hp_d", "dome_hp3_r", "head_wheel_r", "tt_thick",
     "wheel_d", "wheel_x", "lg_rod_x", "lg_splice_x", "lg_splice_z", "lg_bearing1_z", "lg_bearing2_z",
-    "lg_center_plane_z", "ft_pivot_z", "ft_lock_r", "ft_stop_r", "ft_pin_d", "ft_pin_h", "ft_stem",
+    "ft_pivot_z", "ft_lock_r", "ft_stop_r", "ft_pin_d", "ft_pin_h", "ft_stem",
     "hd_hinge_y", "hd_hinge_z", "hd_motor_y", "hd_tension_xy", "hd_stop_xy",
+    "st_shaft_d", "st_shaft_t", "st_shaft_x", "st_act_closed", "st_act_case", "st_act_case_t", "st_act_rod_d",
+    "st_act_eye_d", "st_act_eye_w", "st_brg", "st_cheek_in", "st_cheek_t", "st_eye_up", "st_flange", "st_hex",
+    "st_knob", "st_pin_d", "st_pin_ext", "st_release_pull", "st_horn_arm", "st_horn_rest_gap", "st_horn_tip_r",
+    "st_servo_h", "st_servo_l", "st_servo_w", "st_servo_shaft_end", "st_switch_ot", "st_recv",
+    "st_release_angle_deg",
 ]
+
+
+def release_angle_deg(p):
+    """MG995 horn rotation that pulls the lock pin st_release_pull (cad/stance.scad st_release_angle)."""
+    arm_x, arm_z = p["st_horn_arm"]
+    radius = math.hypot(arm_x, arm_z)
+    return math.degrees(math.acos((arm_x - p["st_release_pull"] - p["st_horn_rest_gap"]) / radius)) - \
+        math.degrees(math.atan2(arm_z, arm_x))
 
 
 def bake(mesh, matrix):
@@ -293,13 +384,19 @@ def pack(array):
     return {"count": int(len(array)), "buffer": base64.b64encode(np.ascontiguousarray(array).tobytes()).decode("ascii")}
 
 
-def export_scene(target, allow_missing):
+def load_story(lay=None):
+    """The storyboard validated and resolved against scripts/parts.json and the CAD."""
+    lay = lay or Layout(ROOT)
     story = json.loads(STORY_PATH.read_text(encoding="utf-8"))
-    parts = json.loads((ROOT / "scripts/parts.json").read_text(encoding="utf-8"))["parts"]
-    designs = len(parts)
-    instances_expected = sum(int(entry["quantity"]) for entry in parts.values())
+    validate_story(story)
+    return resolve_story(story, story_tokens(package_counts(ROOT), lay))
 
+
+def export_scene(target, allow_missing):
+    import trimesh
+    counts = package_counts(ROOT)
     lay = Layout(ROOT)
+    story = load_story(lay)
     backfill(lay)
     p = dict(lay.p)
     p.update({k: v for k, v in lay.feet.items() if k.startswith("ft_")})
@@ -319,22 +416,19 @@ def export_scene(target, allow_missing):
     numeric = {k: v for k, v in p.items()
                if isinstance(v, (int, float)) and not isinstance(v, bool)
                or (isinstance(v, list) and all(isinstance(x, (int, float)) for x in v))}
-    numeric["skirt_bottom_y"] = lay.skirt_bottom_y
-    numeric["skirt_bottom_z"] = lay.skirt_bottom_z
     numeric["ankle_y"] = lay.ankle_y
+    numeric["caster_axis_y"] = lay.caster_axis[1]
     numeric["center_foot_top_z"] = lay.center_foot_top_z
+    numeric["st_release_angle_deg"] = release_angle_deg(p)
 
     absent = [k for k in SCENE_KEYS if k not in numeric]
     if absent:
-        raise RuntimeError("CAD constants the scene needs are missing and have no fallback: "
-                           + ", ".join(absent))
+        raise RuntimeError("CAD constants the scene needs are missing and have no fallback: " + ", ".join(absent))
 
-    instances = lay.instances()
-    if len(instances) != instances_expected:
-        raise RuntimeError(f"Layout gives {len(instances)} pieces; parts.json quantities sum to {instances_expected}")
-
+    instances = lay.instances()  # raises unless the placement matches scripts/parts.json quantities
     data = {"meshes": {}, "printed": [], "frames": {}, "params": numeric, "storyboard": story,
-            "counts": {"designs": designs, "instances": instances_expected}}
+            "counts": {"designs": counts["designs"], "instances": counts["pieces"], "mirrored": counts["mirrored"]},
+            "revision": REVISION}
 
     missing = []
     highest = 0.0
@@ -346,7 +440,7 @@ def export_scene(target, allow_missing):
         mesh = trimesh.load_mesh(path, process=False)
         data["meshes"]["p_" + inst["name"]] = pack(bake(mesh, inst["matrix"]))
         data["printed"].append({"name": inst["name"], "part": inst["part"], "group": inst["group"],
-                                "mirrored": bool(inst["mirrored"])})
+                                "frame": inst["frame"], "mirrored": bool(inst["mirrored"])})
         transformed = mesh.vertices @ np.asarray(inst["matrix"])[:3, :3].T + np.asarray(inst["matrix"])[:3, 3]
         highest = max(highest, float(transformed[:, 2].max()))
     if missing:
@@ -354,7 +448,7 @@ def export_scene(target, allow_missing):
             raise SystemExit("Missing STL files (use --allow-missing while they are generated): " + ", ".join(missing))
         print("!" * 78, flush=True)
         print(f"!! WARNING: {len(missing)} STL file(s) ABSENT - this render is NOT deliverable: {', '.join(missing)}", flush=True)
-        print(f"!! Printed pieces shown will be {len(data['printed'])} of {instances_expected}.", flush=True)
+        print(f"!! Printed pieces shown will be {len(data['printed'])} of {counts['pieces']}.", flush=True)
         print("!" * 78, flush=True)
 
     for name, mesh in primitives(p).items():
@@ -368,8 +462,23 @@ def export_scene(target, allow_missing):
                          ("leg_r", lay.at_leg(1)), ("leg_l", lay.at_leg(-1)),
                          ("foot_r", lay.at_foot(1)), ("foot_l", lay.at_foot(-1)),
                          ("foot_c", lay.at_center_foot(0.0)), ("center_leg", lay.at_center_leg()),
-                         ("caster", T(0, lay.skirt_bottom_y, p["foot_clear"]))]:
+                         ("carriage", lay.at_carriage()),
+                         ("caster", T(lay.caster_axis[0], lay.caster_axis[1], p["foot_clear"]))]:
         data["frames"][name] = {"m": cm(matrix), "inv": cm(np.linalg.inv(matrix))}
+
+    ends = lay.endpoints()
+    table = lay.pose_table(POSE_STEP_MM)
+    data["stance"] = {"parameter": STANCE_PARAMETER, "endpoints": ends, "step": POSE_STEP_MM,
+                      "tilt_three_leg": lay.stance.tilt(ends["three_leg"]),
+                      "table": [{"s": round(row["s"], 4), "tilt": round(row["tilt"], 4), "lift": round(row["lift"], 3),
+                                 "body": cm(row["body"]), "carriage": cm(row["carriage"]),
+                                 "housing": cm(row["housing"]), "foot": cm(row["foot"])} for row in table]}
+    mech = lay.mechanism()
+    data["mech"] = {"shafts": [cm(m) for m in mech["shafts"]], "actuator": cm(mech["actuator"]),
+                    "bearings": [cm(m) for m in mech["bearings"]],
+                    "locks": [{"side": side, "m": cm(m)} for side, m in sorted(mech["locks"].items())],
+                    "receivers": [{"side": r["side"], "angle_deg": r["angle_deg"], "m": cm(r["matrix"])}
+                                  for r in mech["receivers"]]}
 
     data["motors"] = []
     data["wheels"] = []
@@ -383,14 +492,18 @@ def export_scene(target, allow_missing):
 
     print(f"WHEELS {len(data['wheels'])} placed; roll signs measured from the mesh: "
           f"{sorted({int(w['spin_sign']) for w in data['wheels']})}", flush=True)
+    print(f"STANCE {STANCE_PARAMETER} {ends['two_foot']:.2f} / {ends['contact']:.2f} / {ends['three_leg']:.2f} mm, "
+          f"{len(table)} poses, three-leg tilt {data['stance']['tilt_three_leg']:.3f} deg", flush=True)
 
-    source_paths = [ROOT / inst["stl"] for inst in instances if (ROOT / inst["stl"]).is_file()]
-    source_paths = sorted(set(source_paths)) + [SCENE_JS, STORY_PATH]
+    source_paths = sorted({ROOT / inst["stl"] for inst in instances if (ROOT / inst["stl"]).is_file()})
+    source_paths += [ROOT / "cad/params.scad", ROOT / "cad/stance.scad", ROOT / "scripts/parts.json",
+                     ROOT / "scripts/assembly_layout.py", ROOT / "scripts/stability.py", SCENE_JS, STORY_PATH]
     hashes = {path.relative_to(ROOT).as_posix(): sha(path) for path in source_paths}
     data["sources"] = hashes
 
     (target / "scene.json").write_text(json.dumps(data, separators=(",", ":")), encoding="utf-8")
     shutil.copyfile(SCENE_JS, target / "video_scene.js")
+    (target / "storyboard-resolved.json").write_text(json.dumps(story, indent=2), encoding="utf-8")
     (target / "index.html").write_text(
         '<!doctype html><html><head><meta charset="utf-8"><style>html,body{margin:0;background:#fff;overflow:hidden}'
         '</style></head><body><canvas id="output"></canvas><script src="video_scene.js"></script></body></html>',
@@ -426,13 +539,83 @@ def write_captions(story, height_mm):
     (OUT / "assembly-captions.srt").write_text("\n".join(lines), encoding="utf-8")
 
 
+def check_motion(evidence, scene, story):
+    """Assertions on the keyframe evidence: every chapter, the drive demo and both stance changes."""
+    names = sorted(entry["name"] for entry in scene["printed"])
+    final = evidence[-1]
+    assert sorted(final["printed_instances"]) == names, "final frame does not show every printed piece"
+    if not scene["missing_stl"]:
+        assert len(final["printed_instances"]) == scene["counts"]["instances"], "final piece count wrong"
+    assert final["drive"]["action"] == "STOPPED" and abs(final["drive"]["yaw_deg"]) > 1, "robot must end stopped and turned"
+
+    def at(mark):
+        return next(e for e in evidence if abs(e["time"] - mark) < 1e-6)
+    assert at(video_time(story, 152))["drive"]["action"] == "FORWARD"
+    assert at(video_time(story, 158))["drive"]["action"] == "LEFT ARC"
+    assert at(video_time(story, 160))["drive"]["action"] == "REVERSE"
+    # The castering direction depends on whether the centre foot is ahead of (revision D) or behind
+    # the outer-foot axle line; the swivel must also stay inside the CAD stop.
+    params = scene["params"]
+    ahead = (params["caster_axis_y"] - params["caster_trail"]) - params["ankle_y"]
+    caster = at(video_time(story, 158))["drive"]["caster_deg"]
+    assert caster * math.copysign(1.0, ahead) > 1, f"centre foot must caster toward the arc: {caster} deg"
+    assert abs(caster) <= params["caster_stop_deg"], f"caster {caster} deg is beyond the {params['caster_stop_deg']} deg stop"
+    assert at(video_time(story, 158))["stance"]["drive_allowed"] is True, "drive only in the seated three-leg stance"
+    assert at(video_time(story, 145))["dome"]["spinning"] is True
+    assert at(53.5)["caster_demo"] is True
+    chapters_seen = {e["chapter"] for e in evidence}
+    assert chapters_seen == {c["name"] for c in story["chapters"]}, f"chapters missing evidence: {chapters_seen}"
+
+    ends, tilt_three = scene["stance"]["endpoints"], scene["stance"]["tilt_three_leg"]
+    seen = set()
+    for chapter, phase, begin, finish in phase_windows(story):
+        inside = [e for e in evidence if begin + 0.2 < e["time"] < finish - 0.2]
+        for e in inside:
+            st = e["stance"]
+            assert st["phase"] == phase, f"{e['time']} s: phase {st['phase']}, storyboard says {phase}"
+            assert st["drive_allowed"] is False, f"{e['time']} s: drive allowed during {phase}"
+            if phase == "TILT":
+                assert set(st["locks"].values()) == {"RELEASED"}, f"{e['time']} s: locks {st['locks']} while tilting"
+                assert 0.0 < st["tilt_deg"] < tilt_three, f"{e['time']} s: tilt {st['tilt_deg']} not between stances"
+                assert st["centre_foot_lift_mm"] < 0.01, "the centre foot must stay on the floor while tilting"
+            if phase in ("LIFT", "LOWER"):
+                assert set(st["locks"].values()) == {"SEATED"}, f"{e['time']} s: foot moving without both locks"
+                assert abs(st["tilt_deg"]) < 1e-6 and st["centre_foot_lift_mm"] > 0.0
+            seen.add((chapter, phase))
+    for chapter in story["chapters"]:
+        for phase in chapter.get("stance", {}).get("phases", []):
+            if phase["phase"] in ("TILT", "LIFT", "LOWER"):
+                assert (chapter["name"], phase["phase"]) in seen, f"no keyframe inside {chapter['name']} {phase['phase']}"
+    parked = [e for e in evidence if e["chapter"] == "two-foot-stance"]
+    assert parked, "no keyframe in the two-foot stance"
+    for e in parked:
+        st = e["stance"]
+        assert st["state"] == "TWO_FOOT" and abs(st["stroke_mm"] - ends["two_foot"]) < 0.01 and abs(st["tilt_deg"]) < 1e-6
+        assert set(st["locks"].values()) == {"SEATED"} and st["drive_allowed"] is False
+    st = final["stance"]
+    assert st["state"] == "THREE_FOOT" and abs(st["stroke_mm"] - ends["three_leg"]) < 0.01
+    assert abs(st["tilt_deg"] - tilt_three) < 0.05 and set(st["locks"].values()) == {"SEATED"} and st["drive_allowed"]
+
+
 def run():
     parser = argparse.ArgumentParser()
     parser.add_argument("--preview", action="store_true", help="render only the storyboard keyframes")
     parser.add_argument("--allow-missing", action="store_true", help="skip STL files that do not exist yet")
     parser.add_argument("--audio", type=Path, help="use an existing soundtrack WAV instead of building one")
     parser.add_argument("--frames", type=int, default=0, help="stop after N frames (timing probe only)")
+    parser.add_argument("--check-story", action="store_true", help="validate and resolve the storyboard, then exit")
     args = parser.parse_args()
+
+    if args.check_story:
+        story = load_story()
+        print(f"PASS storyboard revision {story['revision']}: {len(story['chapters'])} chapters, "
+              f"{story['total_seconds']} s, {len(story['keyframes'])} keyframes, {len(phase_windows(story))} stance phases")
+        for chapter in story["chapters"]:
+            print(f"  {chapter['start']:6.1f}-{chapter['end']:6.1f}  {chapter['title']}  |  {chapter['narration']}")
+        return
+
+    from PIL import Image
+    from playwright.sync_api import sync_playwright
 
     for executable in ("ffmpeg", "ffprobe"):
         if not shutil.which(executable):
@@ -452,14 +635,14 @@ def run():
         total_frames = duration * fps
         keyframes = list(story["keyframes"])
         height_mm = scene["overall_height_mm"]
-        deliverable = not scene["missing_stl"]
 
         audio = args.audio
         if not args.preview and not args.frames and audio is None:
             audio = directory / "soundtrack.wav"
             print("AUDIO building narration and robot cues", flush=True)
             result = subprocess.run(["powershell", "-NoProfile", "-ExecutionPolicy", "Bypass", "-File",
-                                     str(ROOT / "scripts/build_video_audio.ps1"), "-OutputPath", str(audio)],
+                                     str(ROOT / "scripts/build_video_audio.ps1"), "-OutputPath", str(audio),
+                                     "-StoryboardPath", str(directory / "storyboard-resolved.json")],
                                     capture_output=True, text=True, timeout=300)
             print(result.stdout.strip()[-2000:], flush=True)
             if result.returncode != 0:
@@ -521,7 +704,7 @@ def run():
                                        "-c:v", "libx264", "-preset", "fast", "-crf", "20", "-pix_fmt", "yuv420p",
                                        "-r", str(fps), "-c:a", "aac", "-b:a", "160k", "-t", str(duration),
                                        "-movflags", "+faststart",
-                                       "-metadata", "title=R2-D2 assembly and simulated operation (CAD animation)",
+                                       "-metadata", f"title=R2-D2 revision {REVISION} assembly, stance change and simulated operation (CAD animation)",
                                        str(VIDEO)]
                             encoder = subprocess.Popen(command, stdin=subprocess.PIPE, stderr=errors)
                             print(f"RENDER encoder PID {encoder.pid}; {total_frames} frames at {fps} fps", flush=True)
@@ -537,7 +720,7 @@ def run():
                                 encoder.stdin.write(jpeg)
                                 frames += 1
                                 if frame in key_indices:
-                                    evidence.append(page.evaluate("t=>frameEvidence(t)", seconds))
+                                    evidence.append(page.evaluate("t=>frameEvidence(t)", key_indices[frame]))
                                     Image.open(io.BytesIO(jpeg)).save(review / f"frame-{key_indices[frame]:06.1f}.png")
                                 if frame == poster_index:
                                     Image.open(io.BytesIO(jpeg)).save(OUT / "video-poster.png")
@@ -566,27 +749,12 @@ def run():
             print("TIMING PROBE COMPLETE", flush=True)
             return
 
-        names = sorted(entry["name"] for entry in scene["printed"])
         if evidence:
-            final = evidence[-1]
-            assert sorted(final["printed_instances"]) == names, "final frame does not show every printed piece"
-            if deliverable:
-                assert len(final["printed_instances"]) == scene["counts"]["instances"], "final piece count wrong"
-            assert final["drive"]["action"] == "STOPPED" and abs(final["drive"]["yaw_deg"]) > 1, "robot must end stopped and turned"
-            def at(mark):
-                return next(e for e in evidence if abs(e["time"] - mark) < 1e-6)
-            assert at(152)["drive"]["action"] == "FORWARD"
-            assert at(158)["drive"]["action"] == "LEFT ARC"
-            assert at(160)["drive"]["action"] == "REVERSE"
-            assert at(158)["drive"]["caster_deg"] < -1, "centre foot must caster during the arc"
-            assert at(145)["dome"]["spinning"] is True
-            assert at(53.5)["caster_demo"] is True
-            chapters_seen = {e["chapter"] for e in evidence}
-            assert chapters_seen == {c["name"] for c in story["chapters"]}, f"chapters missing evidence: {chapters_seen}"
+            check_motion(evidence, scene, story)
 
         if args.preview:
             print(f"PASS preview: {frames} keyframes, {len(scene['printed'])}/{scene['counts']['instances']} pieces, "
-                  f"inputs unchanged", flush=True)
+                  f"stance changes checked, inputs unchanged", flush=True)
             return
 
         probe = json.loads(subprocess.check_output(
@@ -599,13 +767,14 @@ def run():
         assert video_stream["avg_frame_rate"] == f"{fps}/1"
         probed_duration = float(probe["format"]["duration"])
         assert abs(probed_duration - duration) < 0.1, f"duration {probed_duration}"
-        assert 150 <= duration <= 180
+        assert 150 <= duration <= 240
         subprocess.run(["ffmpeg", "-v", "error", "-i", str(VIDEO), "-f", "null", "-"], check=True, timeout=600)
 
         write_captions(story, height_mm)
         cues = [dict(cue) for cue in story["audio_cues"]]
         manifest = {
-            "type": "CAD animation and simulated operation, not physical footage",
+            "revision": REVISION,
+            "type": "CAD animation, simulated operation and simulated stance change, not physical footage",
             "seconds": duration,
             "fps": fps,
             "frames": frames,
@@ -615,6 +784,9 @@ def run():
             "printed_designs": scene["counts"]["designs"],
             "printed_instances": scene["counts"]["instances"],
             "overall_height_mm": height_mm,
+            "stance_parameter": STANCE_PARAMETER,
+            "stance_endpoints_mm": scene["stance"]["endpoints"],
+            "stance_phases": [{"chapter": c, "phase": ph, "start_s": a, "end_s": b} for c, ph, a, b in phase_windows(story)],
             "source_sha256": inputs,
             "inputs_unchanged": True,
             "video_sha256": sha(VIDEO),
@@ -635,18 +807,19 @@ def run():
             "verification": (f"ffprobe: {WIDTH}x{HEIGHT}, {video_stream['codec_name']}+{audio_stream['codec_name']}, "
                              f"{total_frames} frames, {video_stream['avg_frame_rate']}, {probed_duration:.3f} s; "
                              "full FFmpeg decode passed; every source hash unchanged during the render; "
-                             "final frame shows all printed pieces seated"),
+                             "final frame shows all printed pieces seated in the three-leg stance with both locks "
+                             "seated; every stance phase keyframe matched its storyboard phase"),
             "limitations": [
-                "Purchased hardware (motors, wheels, battery, boards, bearings, lazy susan, slip ring) is drawn as a nominal envelope.",
-                "Assembly motions, speeds and light patterns are illustrative, not measured.",
-                "No physical print, fit, strength, thermal, battery or driving test is depicted.",
+                "Purchased hardware (motors, wheels, battery, boards, bearings, actuator, locks, servos, lazy susan, slip ring) is drawn as a nominal envelope.",
+                "Assembly motions, speeds, light patterns and stance-change phase timing are illustrative, not measured.",
+                "No physical print, fit, strength, thermal, battery, driving or powered stance-change test is depicted.",
                 "Wiring is not routed in the animation; follow electronics/wiring.csv and the manual.",
             ],
         }
         (OUT / "video-manifest.json").write_text(json.dumps(manifest, indent=2) + "\n", encoding="utf-8")
-        print(f"PASS: {duration}s / {frames} frames / {WIDTH}x{HEIGHT} H.264 + AAC; full decode; "
+        print(f"PASS: revision {REVISION} {duration}s / {frames} frames / {WIDTH}x{HEIGHT} H.264 + AAC; full decode; "
               f"{scene['counts']['instances']} printed pieces from {scene['counts']['designs']} STL files; "
-              f"render {render_seconds:.1f}s", flush=True)
+              f"both stance changes checked; render {render_seconds:.1f}s", flush=True)
         print(VIDEO, flush=True)
 
 
