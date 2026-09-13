@@ -5,13 +5,13 @@
 
 namespace r2 {
 
-// Actuonix P16 potentiometer: yellow ref+ through R_POT_TOP to 3.3 V, orange ref- to GND,
+// Actuonix P16 potentiometer: yellow ref+ through R_POT_TOP to 3.3 V, orange ref- through1k to GND,
 // purple wiper to an ADC1 pin with a 470k pulldown. An open wiper or open ref+ reads near 0 mV;
 // an open ref- reads near 3.3 V. Both fall outside the valid window.
-struct PotCalibration { float zeroMv, fullMv, strokeMm, minValidMv, maxValidMv; };
+struct PotCalibration { float zeroMv, fullMv, strokeMm, minValidMv, maxValidMv; bool commissioned; };
 
 inline bool potPosition(float mv, const PotCalibration &c, float &mm) {
- if (!isfinite(mv) || c.fullMv <= c.zeroMv || mv < c.minValidMv || mv > c.maxValidMv) return false;
+ if (!c.commissioned || !isfinite(mv) || c.fullMv <= c.zeroMv || mv < c.minValidMv || mv > c.maxValidMv) return false;
  mm = (mv - c.zeroMv) * c.strokeMm / (c.fullMv - c.zeroMv);
  return true;
 }

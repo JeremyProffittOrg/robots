@@ -35,6 +35,8 @@ struct Plant : StanceHal {
  bool readLockEngaged(bool &out) override { out = sensorSaysEngaged ? true : sensorSaysReleased ? false : seated != 0; return lockOk; }
  bool withdrawnBlocked=false, withdrawnStuck=false;
  bool readLockWithdrawn(bool &out) override { out=withdrawnStuck || (!withdrawnBlocked && release && seated==0); return lockOk; }
+ bool floorLost=false, floorStuck=false;
+ bool footSupported() override { return floorStuck || (!floorLost && mm>=45.038373f-.15f); }
  bool travelLimitsClosed() override { return limitsClosed; }
  bool powerHealthy() override { return power; }
  bool heartbeatFresh(uint32_t) override { return heartbeat; }
@@ -97,14 +99,15 @@ static void twoFoot(Rig &r) { r.plant.mm = L.twoFootMm; r.plant.seated = 2; r.ru
 static bool contains(const char *text, const char *part) { return text && std::strstr(text, part); }
 
 static void sensorConditioning() {
- const PotCalibration &c = calibration::POT; float mm = -99;
+ PotCalibration c = calibration::POT; float mm = -99;
+ CHECK(!potPosition(c.zeroMv,c,mm));c.commissioned=true;
  CHECK(!potPosition(0.0f, c, mm)); CHECK(!potPosition(3.0f, c, mm));  // open wiper or ref+
  CHECK(!potPosition(3250.0f, c, mm));                                 // open ref-
  CHECK(!potPosition(NAN, c, mm));
- CHECK(potPosition(1375.0f, c, mm) && std::fabs(mm - 50.0f) < 0.01f);
- CHECK(potPosition(55.0f, c, mm) && std::fabs(mm - 2.0f) < 0.01f);
+ CHECK(potPosition((c.zeroMv+c.fullMv)/2, c, mm) && std::fabs(mm - 50.0f) < 0.01f);
+ CHECK(potPosition(c.zeroMv+(c.fullMv-c.zeroMv)*.02f, c, mm) && std::fabs(mm - 2.0f) < 0.01f);
  // Pot tolerance +/-50% with the 2.2k top resistor keeps full stroke inside the valid window.
- for (float kohm : {5.5f, 11.0f, 16.5f}) { float full = 3300.0f * kohm / (kohm + 2.2f); CHECK(full < c.maxValidMv && full > 2000.0f); }
+ for (float kohm : {5.5f, 11.0f, 16.5f}) { float full = 3300.0f * (kohm+1) / (kohm + 3.2f); CHECK(full < c.maxValidMv && full > 2000.0f); }
  ContactPair p(calibration::LOCK_LEGAL_MS, calibration::LOCK_ILLEGAL_MS);
  p.update(0, true, false); CHECK(!p.settled());
  p.update(20, true, false); CHECK(!p.settled());
@@ -346,7 +349,18 @@ static void fullWithdrawalRequired() {
    CHECK(r.stance.fault==StanceFault::LOCK_SENSOR); CHECK(!r.stance.driveAllowed()); }
 }
 
+static void floorConfirmationRequired() {
+ { Rig r; twoFoot(r); r.plant.floorLost=true;r.request=StanceTarget::THREE_FOOT;
+   r.run(30000);CHECK(r.stance.fault==StanceFault::FOOT_CONTACT);CHECK(!r.plant.release);CHECK(r.plant.drive==0); }
+ { Rig r; threeFoot(r);r.request=StanceTarget::TWO_FOOT;
+   CHECK(r.runUntilPhase(StancePhase::TILT,2000));r.plant.floorLost=true;r.run(10);
+   CHECK(r.stance.fault==StanceFault::FOOT_CONTACT);CHECK(r.plant.drive==0); }
+ { Rig r;r.plant.floorStuck=true;twoFoot(r);
+   CHECK(r.stance.fault==StanceFault::FOOT_CONTACT);CHECK(!r.stance.driveAllowed()); }
+}
+
 int main() {
+ floorConfirmationRequired();
  fullWithdrawalRequired();
  sensorConditioning();
  limitsAndBoot();

@@ -17,7 +17,7 @@ enum class StanceState : uint8_t { THREE_FOOT, DEPLOYING, RETRACTING, TWO_FOOT, 
 enum class StancePhase : uint8_t { NONE, TILT, LOCKING, LIFT, LOWER, UNLOCKING };
 enum class StanceTarget : int8_t { NONE = -1, TWO_FOOT = 2, THREE_FOOT = 3 };
 enum class StanceFault : uint8_t {
- NONE, POWER, FEEDBACK, LOCK_SENSOR, TRAVEL_LIMIT, STALL, TRAVEL_TIMEOUT, LOCK_TIMEOUT, LOCK_DISAGREES, DRIFT, OVERTRAVEL, REVERSED_FEEDBACK
+ NONE, POWER, FEEDBACK, LOCK_SENSOR, TRAVEL_LIMIT, STALL, TRAVEL_TIMEOUT, LOCK_TIMEOUT, LOCK_DISAGREES, DRIFT, OVERTRAVEL, REVERSED_FEEDBACK, FOOT_CONTACT
 };
 
 struct StanceLimits {
@@ -42,6 +42,7 @@ class StanceHal {
  virtual bool readPositionMm(float &mm) = 0;        // false: no valid reading
  virtual bool readLockEngaged(bool &engaged) = 0;   // false: sensor state invalid
  virtual bool readLockWithdrawn(bool &withdrawn) = 0; // independent full-withdrawal endpoint
+ virtual bool footSupported() = 0; // independent floor probe, not inferred from post position
  virtual bool travelLimitsClosed() = 0;             // both NC hardware travel limits closed
  virtual bool powerHealthy() = 0;                   // RUN power present and battery inside limits
  virtual bool heartbeatFresh(uint32_t now) = 0;     // an armed operator command is inside its lease
@@ -80,6 +81,7 @@ inline const char *faultName(StanceFault f) {
   case StanceFault::TRAVEL_TIMEOUT: return "TRAVEL_TIMEOUT";
   case StanceFault::LOCK_TIMEOUT: return "LOCK_TIMEOUT";
   case StanceFault::LOCK_DISAGREES: return "LOCK_DISAGREES";
+  case StanceFault::FOOT_CONTACT: return "FOOT_CONTACT";
   case StanceFault::DRIFT: return "DRIFT";
   case StanceFault::OVERTRAVEL: return "OVERTRAVEL";
   default: return "REVERSED_FEEDBACK";
@@ -102,7 +104,7 @@ class Stance {
  int actuator = 0;
  bool release = false;
  // Last sample, published to the status API.
- bool positionValid = false, lockValid = false, lockEngaged = false, lockWithdrawn = false, limitsClosed = false, power = false, heartbeat = false;
+ bool positionValid = false, lockValid = false, lockEngaged = false, lockWithdrawn = false, footContact = false, limitsClosed = false, power = false, heartbeat = false;
  float positionMm = NAN;
 
  const StanceLimits &limits() const { return lim; }
@@ -196,6 +198,7 @@ class Stance {
   lockValid = hal.readLockWithdrawn(withdrawn) && lockValid;
   lockWithdrawn = lockValid && withdrawn;
   if (lockEngaged && lockWithdrawn) lockValid = false;
+  footContact = hal.footSupported();
   limitsClosed = hal.travelLimitsClosed();
   power = hal.powerHealthy();
   heartbeat = hal.heartbeatFresh(now);
@@ -247,6 +250,12 @@ class Stance {
    fail(now, StanceFault::OVERTRAVEL, "centre post beyond its stance endpoints"); return false;
   }
   PostRegion r = region(positionMm);
+  if ((r == PostRegion::TILT || r == PostRegion::DEPLOYED) && !footContact) {
+   fail(now, StanceFault::FOOT_CONTACT, "centre-foot ground contact missing"); return false;
+  }
+  if (r == PostRegion::LIFT && footContact) {
+   fail(now, StanceFault::FOOT_CONTACT, "floor probe remains pressed with centre foot raised"); return false;
+  }
   if (r == PostRegion::LIFT && !lockEngaged) {
    fail(now, StanceFault::LOCK_DISAGREES, "centre foot raised but shoulder lock sensor not engaged"); return false;
   }
@@ -285,6 +294,9 @@ class Stance {
  }
 
  void enterPhase(uint32_t now, StancePhase next) {
+  if ((next == StancePhase::UNLOCKING || next == StancePhase::TILT) && !footContact) {
+   fail(now, StanceFault::FOOT_CONTACT, "foot must contact the floor before unlocking"); return;
+  }
   phase = next; phaseStart = now; phasePos = positionMm;
   progressAt = now; progressPos = positionMm;
   seekReached = false;
@@ -401,7 +413,11 @@ class Stance {
      else if (move(now, lim.twoFootMm, 100)) complete(now, StanceState::TWO_FOOT);
     } else {
      if (phase == StancePhase::LIFT) enterPhase(now, StancePhase::LOWER);
-     else if (move(now, lim.contactMm, 100)) enterPhase(now, StancePhase::UNLOCKING);
+     else if (footContact && fabsf(positionMm-lim.contactMm)<=lim.lockWindowMm) {
+      stopActuator(now); enterPhase(now, StancePhase::UNLOCKING);
+     } else if (move(now, lim.contactMm+lim.stopToleranceMm+.2f, 100)) {
+      fail(now, StanceFault::FOOT_CONTACT, "post reached contact position without floor confirmation");
+     }
     }
     return;
    default:

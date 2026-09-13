@@ -2,7 +2,7 @@
 // Execute the real phone code with a small simulated DOM and network.
 const assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm'),path=require('node:path');
 const elements=new Map(),intervals=new Map(),events=new Map(),requests=[];
-function element(id){if(!elements.has(id))elements.set(id,{id,value:({speed:'35',turn:'0',sound:'1'})[id]||'',textContent:'',disabled:false,dataset:{},append(){},setPointerCapture(){}});return elements.get(id);}
+function element(id){if(!elements.has(id))elements.set(id,{id,value:({speed:'100',turn:'0',sound:'1'})[id]||'',textContent:'',disabled:false,dataset:{},append(){},setPointerCapture(){}});return elements.get(id);}
 const buttons=[{speed:'1'},{speed:'-1'},{head:'-1'},{head:'1'},{stance:'2'},{stance:'3'}].map(dataset=>({dataset,disabled:true,setPointerCapture(){}}));
 const [forward,,headLeft,,twoFoot,threeFoot]=buttons;
 let armed=false,token=100,fail=false,deferred=null,refuse=null;
@@ -33,7 +33,7 @@ const press=async(b,id=1)=>{b.onpointerdown({preventDefault(){},pointerId:id});a
  assert.equal(forward.disabled,false);assert.equal(twoFoot.disabled,false);assert.equal(threeFoot.disabled,true);
  assert.match(element('stanceBlocks').textContent,/Three feet: already on three feet/);assert.equal(element('clear').disabled,true);
  // Driving on three feet.
- await press(forward);assert.equal(last().speed,'35');assert.deepEqual(Object.keys(last()).sort(),['head','lease','seq','speed','stance','turn']);
+ await press(forward);assert.equal(last().speed,'100');assert.deepEqual(Object.keys(last()).sort(),['head','lease','seq','speed','stance','turn']);
  forward.onpointerup();await settle();assert.equal(last().speed,'0');
  await press(headLeft);assert.equal(last().head,'-60');
  headLeft.onpointercancel();await settle();assert.equal(state('lease'),0);assert.equal(armed,false);
@@ -74,5 +74,12 @@ const press=async(b,id=1)=>{b.onpointerdown({preventDefault(){},pointerId:id});a
  deferred={};const old=element('arm').onclick();await settle();element('stop').onclick();await settle();deferred.resolve();await old;assert.equal(state('lease'),0);assert.equal(armed,false);deferred=null;
  await element('arm').onclick();fail=true;await intervals.get(100)();assert.equal(state('lease'),0);fail=false;
  await poll();assert.equal(state('lease'),0);
+ robot={...robot,calibrated:false,healthy:false,post_mv:232.4,post_mm:null};
+ await poll();assert.equal(element('arm').disabled,true);
+ assert.match(element('status').textContent,/calibration required/);
+ assert.match(element('pose').textContent,/232.4 mV/);
+ robot={...robot,calibrated:true,foot_contact:true,lock_engaged:false,lock_withdrawn:true};
+ await poll();assert.equal(element('arm').disabled,false);
+ assert.match(element('pose').textContent,/lock withdrawn/);assert.match(element('pose').textContent,/foot on floor/);
  console.log('PASS: stance controls gated by interlocks, held button during its own change, drive refused in transitions and on two feet, fault display and lease-bound clear, release, cancel, blur, late arm response, disconnect and no automatic re-arm');
 })().catch(e=>{console.error(e);process.exitCode=1;});

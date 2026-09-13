@@ -26,7 +26,7 @@ bool ready=false, healthy=false, fsReady=false;
 struct Snapshot {
  float volts=0; const char *state="STARTING", *phase="NONE", *fault="NONE", *reason="starting";
  bool positionValid=false, lockValid=false, lockEngaged=false, limitsClosed=false;
- float postMm=0; bool pitchValid=false; float pitchDeg=0; const char *pitchSource="unknown";
+ float postMm=0,postMv=0; bool lockWithdrawn=false,footContact=false; bool pitchValid=false; float pitchDeg=0; const char *pitchSource="unknown";
  bool driveAllowed=false, headAllowed=false; const char *twoBlock="starting", *threeBlock="starting";
 };
 Snapshot snap;
@@ -34,11 +34,12 @@ int clearState=0; // 0 idle, 1 requested, 2 cleared, 3 refused
 
 class RomeoHal : public r2::StanceHal {
  public:
- bool positionOk=false, lockOk=false, lockEngaged=false, lockWithdrawn=false, limits=false, power=false, fresh=false;
+ bool positionOk=false, lockOk=false, lockEngaged=false, lockWithdrawn=false, floor=false, limits=false, power=false, fresh=false;
  float mm=0; int actuator=0; bool release=false;
  bool readPositionMm(float &out) override { out=mm; return positionOk; }
  bool readLockEngaged(bool &out) override { out=lockEngaged; return lockOk; }
  bool readLockWithdrawn(bool &out) override { out=lockWithdrawn; return lockOk; }
+ bool footSupported() override { return floor; }
  bool travelLimitsClosed() override { return limits; }
  bool powerHealthy() override { return power; }
  bool heartbeatFresh(uint32_t) override { return fresh; }
@@ -76,6 +77,7 @@ void motion(void*){
  r2::Ramp ramps[3],headRamp; r2::Stance stance(calibration::STANCE); RomeoHal hal;
  r2::ContactPair lock(calibration::LOCK_LEGAL_MS,calibration::LOCK_ILLEGAL_MS);
  r2::ContactPair withdrawn(calibration::LOCK_LEGAL_MS,calibration::LOCK_ILLEGAL_MS);
+ r2::ContactPair floorContact(30,30);
  TickType_t wake=xTaskGetTickCount();
  bool battery=false,lowTiming=false,initialized=false,wasFault=false;uint32_t lowSince=0,lastSample=0,bootAt=millis();float filtered=0,angle=0;
  portENTER_CRITICAL(&mutex);ready=true;portEXIT_CRITICAL(&mutex);
@@ -92,10 +94,12 @@ void motion(void*){
   lock.update(now,digitalRead(pins::LOCK_NO)==LOW,digitalRead(pins::LOCK_NC)==LOW);
   withdrawn.update(now,digitalRead(pins::WITHDRAWN_NO)==LOW,digitalRead(pins::WITHDRAWN_NC)==LOW);
   hal.lockOk=lock.valid&&withdrawn.valid;hal.lockEngaged=lock.engaged;hal.lockWithdrawn=withdrawn.engaged;
+  bool onFloor=digitalRead(pins::FOOT_CONTACT)==LOW;
+  floorContact.update(now,onFloor,!onFloor);hal.floor=floorContact.valid&&floorContact.engaged;
   hal.limits=digitalRead(pins::LIMIT_EXTEND_OPEN)==LOW&&digitalRead(pins::LIMIT_RETRACT_OPEN)==LOW;
   bool powered=digitalRead(pins::POWER)==HIGH;
   hal.power=powered&&battery;
-  bool good=powered&&battery&&fsReady;
+  bool good=powered&&battery&&fsReady&&calibration::POT.commissioned;
   now=millis();
   portENTER_CRITICAL(&mutex);healthy=good;controller.tick(now,good);bool armed=controller.armed;r2::Command command=controller.command;
   hal.fresh=controller.fresh(now);bool clear=clearState==1;portEXIT_CRITICAL(&mutex);
@@ -130,6 +134,7 @@ void motion(void*){
   portENTER_CRITICAL(&mutex);
   snap.volts=filtered;snap.state=stance.started()?r2::stanceName(stance.state):"STARTING";snap.phase=r2::phaseName(stance.phase);
   snap.fault=r2::faultName(stance.fault);snap.reason=stance.reason;snap.positionValid=stance.positionValid;snap.postMm=stance.positionValid?stance.positionMm:0;
+  snap.postMv=sum/8.0f;snap.lockWithdrawn=stance.lockWithdrawn;snap.footContact=stance.footContact;
   snap.lockValid=stance.lockValid;snap.lockEngaged=stance.lockEngaged;snap.limitsClosed=stance.limitsClosed;
   snap.pitchValid=pose.valid;snap.pitchDeg=pose.pitchDeg;snap.pitchSource=r2::pitchSourceName(pose.source);
   snap.driveAllowed=stance.driveAllowed();snap.headAllowed=stance.headAllowed();snap.twoBlock=two;snap.threeBlock=three;
@@ -150,6 +155,7 @@ void routes(){
   String body=String("{\"armed\":")+flag(a)+",\"healthy\":"+flag(h)+",\"volts\":"+String(s.volts,2)+
    ",\"stance\":"+quoted(s.state)+",\"phase\":"+quoted(s.phase)+",\"fault\":"+quoted(s.fault)+",\"reason\":"+quoted(s.reason)+
    ",\"post_mm\":"+(s.positionValid?String(s.postMm,1):String("null"))+",\"lock_valid\":"+flag(s.lockValid)+",\"lock_engaged\":"+flag(s.lockEngaged)+
+   ",\"calibrated\":"+flag(calibration::POT.commissioned)+",\"post_mv\":"+String(s.postMv,1)+",\"lock_withdrawn\":"+flag(s.lockWithdrawn)+",\"foot_contact\":"+flag(s.footContact)+
    ",\"limits_closed\":"+flag(s.limitsClosed)+",\"pitch_deg\":"+(s.pitchValid?String(s.pitchDeg,1):String("null"))+",\"pitch_source\":"+quoted(s.pitchSource)+
    ",\"drive_allowed\":"+flag(s.driveAllowed)+",\"head_allowed\":"+flag(s.headAllowed)+
    ",\"can_two_foot\":"+flag(!s.twoBlock)+",\"can_three_foot\":"+flag(!s.threeBlock)+
@@ -193,7 +199,7 @@ void setup(){
  ledcAttachPin(pins::STEER,ch::STEER);ledcAttachPin(pins::LOCK_SERVO,ch::LOCK);ledcWrite(ch::STEER,0);ledcWrite(ch::LOCK,0);
  ledcSetup(ch::EXTEND,18000,8);ledcSetup(ch::RETRACT,18000,8);
  ledcAttachPin(pins::POST_EXTEND,ch::EXTEND);ledcAttachPin(pins::POST_RETRACT,ch::RETRACT);actuatorOutput(0);
- for(int pin:{pins::LOCK_NO,pins::LOCK_NC,pins::WITHDRAWN_NO,pins::WITHDRAWN_NC,pins::LIMIT_EXTEND_OPEN,pins::LIMIT_RETRACT_OPEN,pins::POWER})pinMode(pin,INPUT);
+ for(int pin:{pins::LOCK_NO,pins::LOCK_NC,pins::WITHDRAWN_NO,pins::WITHDRAWN_NC,pins::FOOT_CONTACT,pins::LIMIT_EXTEND_OPEN,pins::LIMIT_RETRACT_OPEN,pins::POWER})pinMode(pin,INPUT);
  analogSetPinAttenuation(pins::PACK,ADC_11db);analogSetPinAttenuation(pins::POST_POSITION,ADC_11db);
  Serial.begin(115200);fsReady=LittleFS.begin(false);
  audioOut.SetPinout(pins::BCLK,pins::LRCLK,pins::AUDIO);audioOut.SetGain(.11f); // amplifier GAIN pin open: 9 dB

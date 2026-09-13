@@ -10,11 +10,12 @@ constexpr int RIGHT_EN=14, RIGHT_PH=21;   // M2: right foot pair
 constexpr int CENTER_EN=9, CENTER_PH=10;  // M3: centre foot pair
 constexpr int HEAD_EN=47, HEAD_PH=11;     // M4: head friction-wheel motor
 constexpr int BCLK=15, LRCLK=16, AUDIO=17; // MAX98357A I2S
-constexpr int STEER=40, LOCK_SERVO=41;    // MG995 pulses through 74AHCT125 gates to 5 V
+constexpr int STEER=40, LOCK_SERVO=41;    // goBILDA servo pulses through 74AHCT125 gates to 5 V
 constexpr int POST_EXTEND=38, POST_RETRACT=42; // DRV8871 IN1/IN2 through AHCT125 gates enabled by NC travel limits
 constexpr int LIMIT_EXTEND_OPEN=7, LIMIT_RETRACT_OPEN=8; // HIGH = that NC limit is open (direction disabled)
-constexpr int LOCK_NO=18, LOCK_NC=5;      // SS-01GL NO and NC contacts, COM to GND; LOW = closed
+constexpr int LOCK_NO=18, LOCK_NC=5;      // SS-01 NO and NC contacts, COM to GND; LOW = closed
 constexpr int WITHDRAWN_NO=43, WITHDRAWN_NC=44; // second SPDT switch at full6mm withdrawal
+constexpr int FOOT_CONTACT=48; // P18-7, independent grounded NO contact
 constexpr int POST_POSITION=4;            // ADC1_CH3, P16 wiper
 constexpr int PACK=6;                     // ADC1_CH5, battery divider 100k/22k
 constexpr int POWER=39;                   // 5.7 V RUN rail through 10k/10k divider; HIGH = present
@@ -44,15 +45,17 @@ constexpr float POST_NO_LOAD_SPEED_MM_S=4.8f; // Actuonix P16-100-256-12-P datas
 
 namespace calibration {
 constexpr int DIRECTION[3]={1,1,1}; // left, right, centre; lift robot and change after wheel-direction test
-constexpr int HEAD_LIMIT=70;
+constexpr int HEAD_LIMIT=25;
 constexpr float STEER_US_PER_DEGREE=6.666667f; // goBILDA2000-0025-0002:0.15degree per microsecond
 constexpr int STEER_CENTER_US=1500;
 constexpr float PACK_SCALE=122.0f/22.0f, PACK_CORRECTION=1.0f;
 constexpr float CUTOFF=11.2f, REARM=12.0f, MAX_PACK=15.2f;
-// MG995 release: 17 mm finger, 28 deg pulls the GN817 knob 7.98 mm. Calibrate both pulses on the lever.
-constexpr int LOCK_RELEASE_US=1000, LOCK_ENGAGE_US=1311;
+// goBILDA cam: attach at1500us in the parked position, then calibrate withdrawal
+// with the mechanism unloaded. The open-sided follower permits spring-only return.
+constexpr int LOCK_RELEASE_US=1734, LOCK_ENGAGE_US=1500;
 constexpr uint32_t LOCK_LEGAL_MS=30, LOCK_ILLEGAL_MS=150;
-// P16-100 pot, nominal 11k with 2.2k top resistor: 0 mV at stroke 0, 2750 mV at stroke 100.
-// Measure zeroMv/fullMv on the detached actuator before installation (pot tolerance +/-50%).
-constexpr r2::PotCalibration POT={0.0f,2750.0f,100.0f,5.0f,3000.0f};
+// Nominal values are not operating calibration. Measure the actual conditioned
+// potentiometer at0/100mm, verify intermediate points, then set commissioned=true.
+// The1k lower-reference resistor separates valid stow from open/short faults.
+constexpr r2::PotCalibration POT={232.0f,2777.0f,100.0f,80.0f,3000.0f,false};
 }

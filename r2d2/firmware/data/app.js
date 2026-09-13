@@ -22,10 +22,13 @@ for(const b of controls){
 }
 function render(s){
  status=s;
- $('status').textContent=`${s.volts.toFixed(1)} V · ${s.armed?'Armed':s.healthy?'Ready to arm':'Check RUN power / battery'}`;
+ $('status').textContent=`${s.volts.toFixed(1)} V · ${s.calibrated===false?'Actuator calibration required':s.armed?'Armed':s.healthy?'Ready to arm':'Check RUN power / battery'}`;
  const moving=s.stance==='DEPLOYING'||s.stance==='RETRACTING';
  $('stanceState').textContent=`${stanceLabels[s.stance]||s.stance}${s.phase&&s.phase!=='NONE'?' · '+s.phase:''} · ${s.reason}`;
- $('pose').textContent=`Post ${s.post_mm===null?'unavailable':s.post_mm.toFixed(1)+' mm'} · lock ${!s.lock_valid?'sensor invalid':s.lock_engaged?'engaged':'released'}${s.limits_closed?'':' · travel limit open'} · pitch ${s.pitch_deg===null?'unknown':s.pitch_deg.toFixed(1)+'°'} (${s.pitch_source})`;
+ $('pose').textContent=`Post ${s.post_mm===null?'unavailable':s.post_mm.toFixed(1)+' mm'} · lock ${!s.lock_valid?'sensor invalid':s.lock_engaged?'engaged':s.lock_withdrawn?'withdrawn':'between endpoints'}${s.limits_closed?'':' · travel limit open'} · pitch ${s.pitch_deg===null?'unknown':s.pitch_deg.toFixed(1)+'°'} (${s.pitch_source})`;
+ if(s.calibrated===false)$('pose').textContent='Raw actuator feedback: '+s.post_mv.toFixed(1)+' mV. Complete the build-guide calibration before arming.';
+ else if(typeof s.foot_contact==='boolean')$('pose').textContent+=' · foot '+(s.foot_contact?'on floor':'clear');
+ $('arm').disabled=s.calibrated===false;
  $('fault').textContent=s.stance==='FAULT'?`Fault ${s.fault}: ${s.reason}`:'';
  const blocks=[];
  for(const b of controls){

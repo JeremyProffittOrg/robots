@@ -25,7 +25,7 @@ class PhEnDrive {
  private:
  uint32_t offSince=0;
 };
-constexpr int LIMIT=90; // conservative commissioning duty ceiling, percent
+constexpr int LIMIT=35; // initial indoor commissioning ceiling; raise only after loaded stopping tests
 constexpr uint32_t DEADMAN=500; // command heartbeat lease, ms
 constexpr float SIDE_FOOT_X_MM=165.0f;
 // stance: -1 no request, 2 hold for two-foot stance, 3 hold for three-foot stance.
@@ -57,11 +57,13 @@ class Controller {public:
  bool arm(uint32_t now,uint32_t token,bool healthy){if(armed||!healthy||!token)return false;armed=true;lease=token;last=now;sequence=0;command=Command{};return true;}
  bool accept(uint32_t now,uint32_t token,uint32_t seq,Command next,bool healthy){tick(now,healthy);if(!armed||token!=lease||seq<=sequence||!valid(next))return false;command=next;sequence=seq;last=now;return true;}
 };
-class Ramp{public:int value=0;uint32_t until=0;bool holding=false;
+class Ramp{public:int value=0;uint32_t until=0,lastStep=0;bool holding=false;
  int tick(int target,uint32_t now){if(holding){if(int32_t(now-until)<0)return 0;holding=false;}
+ if(uint32_t(now-lastStep)<20)return value;
+ lastStep=now;
  bool reverse=(value>0&&target<0)||(value<0&&target>0);int next=reverse?0:target;
- if(value<next)value+=(next-value>3?3:next-value);
- if(value>next)value-=(value-next>3?3:value-next);
+ if(value<next)value++;
+ if(value>next)value--;
  if(reverse&&value==0){holding=true;until=now+100;}return value;}
  void stop(){value=0;holding=false;}
 };
