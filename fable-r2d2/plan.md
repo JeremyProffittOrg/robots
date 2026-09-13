@@ -104,7 +104,9 @@ with revision D labels.
 
 ### revision-d-integration — regenerate the package with revision D labels
 
-- [ ] revision-d-integration — depends on: stance-mechanism, stance-controls.
+- [~] revision-d-integration — depends on: stance-mechanism, stance-controls. The prep pass is done
+  (0d71a76, agent a0aab2170c72e82aa). Regeneration waits for the ring slices and for the
+  stance-check source hashes.
   - Update the labels and asserts in `scripts/build_bom.py`, `draw_robot.py`, `build_manual.py`,
     `render_video.py`, `render_mockup.py`, `assembly_layout.py` and `verify.py`.
   - `render_mockup.py` must show both stances and the transition.
@@ -185,6 +187,37 @@ with revision D labels.
     - Receiver thread retention.
     - P16 and MG995 are out of stock.
   - stance-controls made two follow-up commits (23ee773, 6902675) to bind the final 30 deg geometry.
+  - Parent re-ran: kb2040 "Ran 120 tests" OK; pi "Ran 66 tests" OK; `check_wiring` PASS, 184 wires;
+    `check_firmware` PASS.
+- 2026-09-13: revision-d-integration prep finished (0d71a76).
+  - Agent-reported results:
+    - `test_integration_revision_d.py`: "Ran 26 tests" OK; py_compile exit 0.
+    - `build_bom.py` PASS: 66 electronics rows, 44 hardware rows, 10 printed parts; electronics
+      +20 pieces / +$168.65, hardware +25 pieces / +$105.14.
+    - `deliver.py --dry-run`: MIME 19269566 bytes, nothing sent.
+  - The stance parameter is `stance_s` in `cad/r2d2.scad`, matching `STANCE_PARAMETER` in
+    `scripts/assembly_layout.py`.
+  - verify.py now refuses revision D unless `docs/stance-check.json` has `source_sha256`. That
+    change was sent to stance-mechanism, along with the `mechanical.md` revision C headings, the
+    guide shaft length agreement, and `leg_carriage` in `printed-parts.csv`.
+  - The agent restored `docs/verification.json` once with `git checkout --`. The file was unmodified,
+    so nothing was lost.
+  - The parent checked the agent's claim that firmware still used old strokes: `firmware/kb2040/stance.py`
+    already has `THREE_FOOT_MM = 81.3` and `HARD_STOP_MM = 86.0`.
+  - Regeneration order, from `C:/dev/robots/fable-r2d2`:
+    1. `export_cad.py`
+    2. `slice_check.py`
+    3. `stability.py`
+    4. `check_stance.py`
+    5. `electronics.py`
+    6. `build_bom.py`
+    7. `draw_robot.py`
+    8. `render_mockup.py`
+    9. `render_video.py`
+    10. `verify.py --only images,cad,stance,bom,wiring,firmware,audio,drawings,mockup,video`
+    11. `build_manual.py`
+    12. `verify.py`
+    13. `deliver.py --dry-run`
 
 ## Locked decisions (user-confirmed; do not revisit)
 
