@@ -99,6 +99,14 @@
       "measured_or_estimated_load_A": 1.62,
       "loads_md_minimum_A": 1.5,
       "note": "17 NeoPixels at 60 mA (1.02 A) plus four backpacks (0.50 A) plus the TFT (0.10 A). loads.md proposed a 1.5 A polyfuse, which the worst case exceeds; a 2 A blade fuse is used instead."
+    },
+    {
+      "designator": "F7",
+      "circuit": "12 V actuator driver U10 (DRV8871), revision D",
+      "rating_A": 2,
+      "measured_or_estimated_load_A": 1.0,
+      "loads_md_minimum_A": null,
+      "note": "Actuator stall is 1.0 A at 12 V and the DRV8871 limit is set to 0.895 A by R5. Not in loads.md; sized at twice the stall current."
     }
   ],
   "wire_ampacity": [
@@ -150,6 +158,91 @@
       "amps_12V": 4.537,
       "runtime_h_to_50_percent_DoD": 0.74
     }
+  },
+  "stance_change": {
+    "status": "revision D; mechanism values are the firmware MECHANISM CONSTANTS block in firmware/kb2040/stance.py, provisional until stance-mechanism reports",
+    "actuator": {
+      "part": "Actuonix P16-100-256-12-P",
+      "supply_V": 12.0,
+      "stall_A": 1.0,
+      "rated_duty_percent": 20,
+      "rest_ms_per_ms_of_travel": 4,
+      "stroke_mm": 100.0,
+      "two_foot_mm": 5.0,
+      "touchdown_mm": 31.6,
+      "three_foot_mm": 62.3,
+      "no_load_speed_mm_s": 4.8,
+      "change_time_s_no_load": 11.9,
+      "cooldown_after_one_change_s": 48.0,
+      "lift_phase_timeout_s": 16.0,
+      "tilt_phase_timeout_s": 20.0
+    },
+    "driver": {
+      "part": "Adafruit DRV8871 (3190)",
+      "factory_ilim_ohms": 30000,
+      "factory_trip_A": 2.13,
+      "fitted_ilim_ohms": 71500,
+      "fitted_trip_A": 0.895,
+      "fuse": "F7 2 A in FH7",
+      "trip_formula": "I_TRIP = 64 / R_ILIM(kOhm), DRV8871 datasheet"
+    },
+    "potentiometer": {
+      "top_resistor_ohms": 2200,
+      "nominal_ohms": 11000,
+      "tolerance_percent": 50,
+      "full_scale_mV_nominal": 2750,
+      "full_scale_mV_plus_50_percent": 2912,
+      "full_scale_mV_minus_50_percent": 2357,
+      "valid_window_mV": [
+        40.0,
+        3000.0
+      ],
+      "wiper_pulldown_ohms": 470000,
+      "reference_current_mA": 0.25
+    },
+    "lock_switch": {
+      "part": "Omron SS-01GL",
+      "count": 2,
+      "wiring": "COM to GND, NO and NC to pulled-up inputs; right switch on STEMMA QT GP12/GP13",
+      "seated_contact": "NO",
+      "pullup_ohms": 3300,
+      "closed_contact_current_mA": 1.0,
+      "omron_minimum_load": "5 V DC 1 mA",
+      "legal_debounce_ms": 50,
+      "invalid_persist_ms": 150
+    },
+    "release_servo": {
+      "part": "TowerPro MG995 (Adafruit 1142)",
+      "count": 2,
+      "supply": "U7 6 V rail B",
+      "stall_A_budget_each": 1.5,
+      "release_us": [
+        1310,
+        1690
+      ],
+      "engage_us": [
+        1500,
+        1500
+      ],
+      "engage_hold_ms": 1000,
+      "pwm_hz": 50,
+      "kb2040_pins": "D0 (GP0) left, D1 (GP1) right: both channels of PWM slice 0",
+      "level_shifter": "Adafruit 757 BSS138, 3.3 V to 5 V"
+    },
+    "kb2040_battery_sense": {
+      "top_ohms": 100000,
+      "bottom_ohms": 15000,
+      "ratio": 7.6667,
+      "node_V_at_12V70": 1.657,
+      "node_V_at_14V75": 1.924,
+      "cutoff_V": 11.2,
+      "rearm_V": 12.0,
+      "maximum_V": 15.2,
+      "debounce_ms": 500
+    },
+    "transition_worst_case_draw_from_12V_A": 3.315,
+    "U7_rail_note": "Rail B carries 3 A of motors or, during a stance change, 3 A of servo stall; ground drive and the dome are refused whenever the servos can move.",
+    "note": "Ground drive and the dome are refused during a stance change, so the transition worst case does not add to the driving worst case."
   },
   "notes": [
     "Motor currents come from loads.md section 2: 0.385 A per drive motor at 6 V on a hard floor, and 0.5 A at 3 V for the head drive.",

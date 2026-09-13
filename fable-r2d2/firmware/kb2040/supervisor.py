@@ -7,17 +7,18 @@ ramp, the ground-drive and dome interlocks, and the stance state machine.
 
 Hardware object (duck typed; ``code.Hardware`` and ``test_stance.Plant``):
 
-    set_enabled(flag)                  DRV8833 SLP line
+    set_enabled(flag)                  arm or disarm the ground and dome motors
     apply_drive(enabled, channels)     four permille values: left, right, centre, head
     coast_all()                        release the ground and dome motors now
     fill(r, g, b) -> bool              every NeoPixel; False when unavailable
     set_pixel(i, r, g, b) -> bool      one NeoPixel; False when unavailable
     index_detected() -> bool           dome home sensor
     read_position_mv() -> float|None   actuator wiper, millivolts at KB2040 A0
-    read_lock_contacts() -> (no, nc)   True = that lock-switch contact is closed
+    read_lock_contacts() -> [(no, nc)] one pair per shoulder lock, left first;
+                                       True = that switch contact is closed
     read_battery_mv() -> float|None    pack millivolts from the KB2040 A1 divider
     drive_actuator(percent)            -100 retract .. 0 coast .. +100 extend
-    set_release_pulse(us)              release servo pulse, 0 = no pulse
+    set_release_pulses([us, ...])      one release-servo pulse per lock, 0 = no pulse
 """
 
 import protocol
@@ -43,9 +44,10 @@ class Supervisor:
         if problems:
             raise ValueError("inconsistent mechanism constants: " + "; ".join(problems))
         self.stance = stance.Stance(self.limits)
-        self.lock = stance.ContactPair()
+        self.lock = stance.LockSet()
         self.battery = stance.BatteryGuard()
-        self.servo = stance.ReleaseServo()
+        self.servos = [stance.ReleaseServo(stance.RELEASE_US[index], stance.ENGAGE_US[index])
+                       for index in range(len(stance.LOCK_NAMES))]
         self.drive = protocol.DriveState(protocol.RAMP_STEP)
         self.enabled = False
         self.timed_out = False
@@ -187,8 +189,7 @@ class Supervisor:
     def tick(self, now):
         """One 10 ms control tick.  Serial input must already have been fed."""
         position = stance.pot_position_mm(self.hal.read_position_mv(), self.limits)
-        no_closed, nc_closed = self.hal.read_lock_contacts()
-        self.lock.update(now, no_closed, nc_closed)
+        self.lock.update(now, self.hal.read_lock_contacts())
         power = self.battery.update(now, self.hal.read_battery_mv())
         heartbeat = now - self.last_command_ms <= protocol.HEARTBEAT_MS
         request_fresh = (self.last_request_ms is not None
@@ -198,11 +199,11 @@ class Supervisor:
                             or self.drive.target[2] or self.drive.target[3])
         self.drive_idle = targets_zero and not self.drive.is_moving()
 
-        # The lock switch needs its debounce and the battery one reading before
-        # the state machine may decide anything; until then it stays "starting".
-        if self.lock.settled and self.battery.pack_mv is not None:
-            sample = stance.Sample(position, self.lock.valid, self.lock.engaged, power,
-                                   heartbeat, self.enabled)
+        # Both lock switches need their debounce and the battery one reading
+        # before the state machine may decide anything; until then it is "starting".
+        if self.lock.settled() and self.battery.pack_mv is not None:
+            sample = stance.Sample(position, self.lock.valid(), self.lock.all_engaged(),
+                                   self.lock.any_engaged(), power, heartbeat, self.enabled)
             self.stance.tick(now, sample, request, self.drive_idle, request_fresh)
 
         if not heartbeat:
@@ -217,7 +218,8 @@ class Supervisor:
             self._push_drive()
 
         self.hal.drive_actuator(self.stance.actuator)
-        self.hal.set_release_pulse(self.servo.update(now, self.stance.release))
+        self.hal.set_release_pulses([servo.update(now, self.stance.release)
+                                     for servo in self.servos])
 
         if now - self.last_status_ms >= STATUS_PERIOD_MS:
             self.send_status(now)

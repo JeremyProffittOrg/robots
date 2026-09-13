@@ -3,12 +3,17 @@
 Checks, in order:
 
 1. ``electronics/generate.py`` runs and exits zero.
-2. The four SVG sheets, ``wiring.csv`` and ``calculations.json`` exist, are not empty,
+2. The five SVG sheets, ``wiring.csv`` and ``calculations.json`` exist, are not empty,
    and every SVG parses as XML.
-3. Every KB2040 pin that ``wiring.csv`` uses agrees with the ``MOTORS`` table, the
-   enable pin, the NeoPixel pin and the index pin in ``firmware/kb2040/code.py``.
+3. Every KB2040 pin that ``wiring.csv`` uses agrees with ``firmware/kb2040/code.py``:
+   the ``DRIVES`` table, the ``ACTUATOR`` entry, and the NeoPixel, index, both
+   release-servo, all four lock-switch, actuator-position and battery pins.  No
+   KB2040 pin carries two nets, and every firmware pin is wired.
+4. The firmware pin plan is legal on the RP2040: no two PWM outputs share a slice
+   output, the 50 Hz servo does not share a slice with a 20 kHz output, and both
+   analogue inputs are on ADC pins.
    The firmware file is parsed with regular expressions, not imported, because it is
-   CircuitPython and imports ``board``.
+   CircuitPython and imports ``board``; ``protocol.py`` is pure and is imported.
 
 Any mismatch prints what was expected, what was found, and exits non-zero.
 
@@ -27,19 +32,39 @@ ELECTRONICS = ROOT / "electronics"
 GENERATOR = ELECTRONICS / "generate.py"
 FIRMWARE = ROOT / "firmware/kb2040/code.py"
 
+sys.path.insert(0, str(ROOT / "firmware/kb2040"))
+import protocol  # noqa: E402  (hardware-free)
+
 SHEETS = [
     "01-power-and-charging.svg",
     "02-motor-drive.svg",
     "03-head-electronics.svg",
     "04-pi-audio-and-links.svg",
+    "05-stance-actuator-and-lock.svg",
 ]
 KB2040 = "A2"  # the KB2040's reference designator in wiring.csv
+NON_GPIO = {"3V3 pad", "GND pad", "USB-C", "STEMMA QT GND"}
 
-MOTOR_ENTRY = re.compile(
-    r'\(\s*"(?P<name>[a-z0-9\-]+)"\s*,\s*(?P<channel>[A-Z]+)\s*,\s*'
-    r'board\.(?P<pwm>\w+)\s*,\s*(?P<pwm_gpio>\d+)\s*,\s*'
-    r'board\.(?P<digital>\w+)\s*,\s*(?P<dig_gpio>\d+)\s*,\s*(?P<invert>True|False)\s*\)')
-SINGLE_PIN = r'^{0}\s*=\s*board\.(\w+)'
+DRIVE_ENTRY = re.compile(
+    r'\(\s*"(?P<name>[a-z]+)"\s*,\s*[A-Z]+\s*,\s*board\.(?P<pwm>\w+)\s*,\s*(?P<pwm_gpio>\d+)\s*,\s*'
+    r'board\.(?P<digital>\w+)\s*,\s*(?P<dig_gpio>\d+)\s*,\s*(?:True|False)\s*\)')
+ACTUATOR_ENTRY = re.compile(
+    r'^ACTUATOR\s*=\s*\(\s*"actuator"\s*,\s*board\.(?P<pwm>\w+)\s*,\s*(?P<pwm_gpio>\d+)\s*,\s*'
+    r'board\.(?P<digital>\w+)\s*,\s*(?P<dig_gpio>\d+)', re.M)
+
+# net in wiring.csv -> the code.py name that assigns its KB2040 pin
+SINGLE_NETS = {
+    "NEOPIXEL": "PIXEL_PIN",
+    "SIG-DOME-INDEX": "INDEX_PIN",
+    "SIG-RELEASE-SERVO-L": "RELEASE_SERVO_LEFT_PIN",
+    "SIG-RELEASE-SERVO-R": "RELEASE_SERVO_RIGHT_PIN",
+    "SIG-LOCK-L-NO": "LOCK_LEFT_NO_PIN",
+    "SIG-LOCK-L-NC": "LOCK_LEFT_NC_PIN",
+    "SIG-LOCK-R-NO": "LOCK_RIGHT_NO_PIN",
+    "SIG-LOCK-R-NC": "LOCK_RIGHT_NC_PIN",
+    "SIG-ACT-POS": "POSITION_PIN",
+    "SIG-VBAT-KB": "BATTERY_PIN",
+}
 
 
 def fail(message):
@@ -49,30 +74,64 @@ def fail(message):
 
 
 def read_firmware_pins():
-    """Return (motor map, enable pin, pixel pin, index pin) from firmware/kb2040/code.py."""
+    """Return ({net: pin}, gpio facts) from firmware/kb2040/code.py."""
     if not FIRMWARE.is_file():
         fail("{0} is missing, so the pin map cannot be checked".format(FIRMWARE))
     source = FIRMWARE.read_text(encoding="utf-8")
 
-    table = re.search(r"^MOTORS\s*=\s*\((?P<body>.*?)^\)", source, re.S | re.M)
+    table = re.search(r"^DRIVES\s*=\s*\((?P<body>.*?)^\)", source, re.S | re.M)
     if table is None:
-        fail("no MOTORS = ( ... ) table found in {0}".format(FIRMWARE))
-    motors = {}
-    for match in MOTOR_ENTRY.finditer(table.group("body")):
-        motors[match.group("name")] = (match.group("pwm"), match.group("digital"))
-    if not motors:
-        fail("the MOTORS table in {0} parsed to zero motors".format(FIRMWARE))
+        fail("no DRIVES = ( ... ) table found in {0}".format(FIRMWARE))
+    expected = {}
+    fast_gpios = []
+    for match in DRIVE_ENTRY.finditer(table.group("body")):
+        expected["SIG-{0}-PWM".format(match.group("name"))] = match.group("pwm")
+        expected["SIG-{0}-DIR".format(match.group("name"))] = match.group("digital")
+        fast_gpios.append(int(match.group("pwm_gpio")))
+    if len(fast_gpios) != 4:
+        fail("the DRIVES table in {0} parsed to {1} outputs, expected 4".format(
+            FIRMWARE, len(fast_gpios)))
 
-    singles = {}
-    for name in ("ENABLE_PIN", "PIXEL_PIN", "INDEX_PIN"):
-        match = re.search(SINGLE_PIN.format(name), source, re.M)
+    actuator = ACTUATOR_ENTRY.search(source)
+    if actuator is None:
+        fail("no ACTUATOR = (\"actuator\", ...) entry found in {0}".format(FIRMWARE))
+    expected["SIG-ACT-PWM"] = actuator.group("pwm")
+    expected["SIG-ACT-DIR"] = actuator.group("digital")
+    fast_gpios.append(int(actuator.group("pwm_gpio")))
+
+    for net, name in SINGLE_NETS.items():
+        match = re.search(r"^{0}\s*=\s*board\.(\w+)".format(name), source, re.M)
         if match is None:
             fail("{0} is not assigned a board pin in {1}".format(name, FIRMWARE))
-        singles[name] = match.group(1)
-    return motors, singles["ENABLE_PIN"], singles["PIXEL_PIN"], singles["INDEX_PIN"]
+        expected[net] = match.group(1)
+
+    gpios = {}
+    for name in ("RELEASE_SERVO_LEFT", "RELEASE_SERVO_RIGHT", "POSITION", "BATTERY"):
+        match = re.search(r"^{0}_GPIO\s*=\s*(\d+)".format(name), source, re.M)
+        if match is None:
+            fail("{0}_GPIO is not assigned in {1}".format(name, FIRMWARE))
+        gpios[name] = int(match.group(1))
+    return expected, fast_gpios, gpios
 
 
-def check_wiring(motors, enable_pin, pixel_pin, index_pin):
+def check_pin_plan(fast_gpios, gpios):
+    """RP2040 PWM slice, frequency and ADC rules."""
+    problems = []
+    servos = [gpios["RELEASE_SERVO_LEFT"], gpios["RELEASE_SERVO_RIGHT"]]
+    for first, second in protocol.pwm_conflicts(fast_gpios + servos):
+        problems.append("PWM GP{0} and GP{1} share one slice output".format(first, second))
+    outputs = [(gpio, protocol.PWM_FREQUENCY) for gpio in fast_gpios]
+    outputs += [(gpio, protocol.SERVO_FREQUENCY) for gpio in servos]
+    for first, second in protocol.pwm_frequency_conflicts(outputs):
+        problems.append("PWM GP{0} and GP{1} share a slice at different frequencies".format(
+            first, second))
+    for name in ("POSITION", "BATTERY"):
+        if gpios[name] not in protocol.ADC_GPIOS:
+            problems.append("{0} input GP{1} is not an ADC pin".format(name.lower(), gpios[name]))
+    return problems
+
+
+def check_wiring(expected):
     """Compare every KB2040 pin in wiring.csv with the firmware pin map."""
     path = ELECTRONICS / "wiring.csv"
     with path.open(newline="", encoding="utf-8") as handle:
@@ -85,56 +144,31 @@ def check_wiring(motors, enable_pin, pixel_pin, index_pin):
     if list(rows[0]) != expected_columns:
         fail("wiring.csv columns are {0}, expected {1}".format(list(rows[0]), expected_columns))
 
-    found = {}
-    seen_pins = set()
+    problems = []
+    nets_on_pin = {}
+    wired_nets = set()
     for row in rows:
         for side, pin_key in (("source", "source_pin"), ("target", "target_pin")):
-            if row[side] != KB2040:
+            if row[side] != KB2040 or row[pin_key] in NON_GPIO:
                 continue
             pin = row[pin_key]
-            seen_pins.add(pin)
-            match = re.match(r"^SIG-(?P<name>[a-z0-9\-]+)-(?P<kind>PWM|DIR)$", row["net"])
-            if match:
-                found.setdefault(match.group("name"), {})[match.group("kind")] = pin
-
-    problems = []
-    for name, (pwm_pin, digital_pin) in sorted(motors.items()):
-        if name not in found:
-            problems.append("motor {0}: no SIG-{0}-PWM / SIG-{0}-DIR rows in wiring.csv".format(name))
-            continue
-        actual = found[name]
-        if actual.get("PWM") != pwm_pin:
-            problems.append("motor {0} PWM pin: wiring.csv says {1}, code.py says {2}".format(
-                name, actual.get("PWM"), pwm_pin))
-        if actual.get("DIR") != digital_pin:
-            problems.append("motor {0} direction pin: wiring.csv says {1}, code.py says {2}".format(
-                name, actual.get("DIR"), digital_pin))
-    for name in sorted(set(found) - set(motors)):
-        problems.append("wiring.csv drives a motor {0} that code.py does not have".format(name))
-
-    for net, pin, label in ((r"^SIG-SLP$", enable_pin, "DRV8833 SLP"),
-                            (r"^NEOPIXEL$", pixel_pin, "NeoPixel data"),
-                            (r"^SIG-DOME-INDEX$", index_pin, "dome index sensor")):
-        pins = {row["source_pin"] for row in rows
-                if row["source"] == KB2040 and re.match(net, row["net"])}
-        if pins != {pin}:
-            problems.append("{0}: wiring.csv uses {1}, code.py says {2}".format(
-                label, sorted(pins) or "nothing", pin))
-
-    allowed = set()
-    for pwm_pin, digital_pin in motors.values():
-        allowed.update((pwm_pin, digital_pin))
-    allowed.update({enable_pin, pixel_pin, index_pin, "3V3 pad", "GND pad", "USB-C"})
-    unknown = sorted(seen_pins - allowed)
-    if unknown:
-        problems.append("wiring.csv uses KB2040 pins the firmware never mentions: "
-                        + ", ".join(unknown))
-
-    if problems:
-        for problem in problems:
-            print("FAIL: " + problem)
-        sys.exit(1)
-    return len(rows)
+            net = row["net"]
+            nets_on_pin.setdefault(pin, set()).add(net)
+            if net not in expected:
+                problems.append("{0}: KB2040 pin {1} carries net {2}, which code.py does not "
+                                "assign".format(row["wire_id"], pin, net))
+            elif expected[net] != pin:
+                problems.append("{0}: net {1} on KB2040 pin {2}, code.py says {3}".format(
+                    row["wire_id"], net, pin, expected[net]))
+            else:
+                wired_nets.add(net)
+    for pin, nets in sorted(nets_on_pin.items()):
+        if len(nets) > 1:
+            problems.append("KB2040 pin {0} carries several nets: {1}".format(pin, sorted(nets)))
+    for net in sorted(set(expected) - wired_nets):
+        problems.append("code.py assigns {0} to {1}, but wiring.csv never wires it".format(
+            expected[net], net))
+    return rows, problems
 
 
 def main():
@@ -158,11 +192,17 @@ def main():
         if not path.is_file() or path.stat().st_size == 0:
             fail("{0} was not written".format(path))
 
-    motors, enable_pin, pixel_pin, index_pin = read_firmware_pins()
-    wires = check_wiring(motors, enable_pin, pixel_pin, index_pin)
+    expected, fast_gpios, gpios = read_firmware_pins()
+    rows, problems = check_wiring(expected)
+    problems += check_pin_plan(fast_gpios, gpios)
+    if problems:
+        for problem in problems:
+            print("FAIL: " + problem)
+        sys.exit(1)
 
-    print("PASS: {0} SVG sheets parse, wiring.csv has {1} wires, and all {2} KB2040 pins "
-          "match firmware/kb2040/code.py".format(len(SHEETS), wires, 2 * len(motors) + 3))
+    print("PASS: {0} SVG sheets parse, wiring.csv has {1} wires, all {2} KB2040 signal pins "
+          "match firmware/kb2040/code.py, and the RP2040 PWM/ADC plan is legal".format(
+              len(SHEETS), len(rows), len(expected)))
 
 
 if __name__ == "__main__":

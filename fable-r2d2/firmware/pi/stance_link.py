@@ -41,6 +41,18 @@ STATE_LABELS = {
 LOCK_LABELS = {"E": "seated", "R": "released", "X": "switch invalid", "W": "settling"}
 
 
+LOCK_SIDES = ("left", "right")
+
+
+def describe_locks(codes):
+    """``"ER"`` becomes ``"left seated, right released"``."""
+    parts = []
+    for index, code in enumerate(codes):
+        side = LOCK_SIDES[index] if index < len(LOCK_SIDES) else "lock {0}".format(index + 1)
+        parts.append("{0} {1}".format(side, LOCK_LABELS[code]))
+    return ", ".join(parts)
+
+
 def format_request(target):
     """The ``T`` line for the KB2040, terminator included."""
     if target not in REQUESTS:
@@ -60,7 +72,7 @@ def parse_stance_line(line):
     if len(parts) != 12:
         return None
     _tag, state, phase, fault, position, lock, pack_mv, drive, head, two, three, tail = parts
-    if state not in STATE_LABELS or lock not in LOCK_LABELS:
+    if state not in STATE_LABELS or not lock or any(code not in LOCK_LABELS for code in lock):
         return None
     try:
         position = int(position)
@@ -80,7 +92,7 @@ def parse_stance_line(line):
         "fault": fault,
         "position_mm": None if position < 0 else position / 10.0,
         "lock": lock,
-        "lock_label": LOCK_LABELS[lock],
+        "lock_label": describe_locks(lock),
         "pack_volts": None if pack_mv < 0 else pack_mv / 1000.0,
         "drive_allowed": flags[0] == 1,
         "head_allowed": flags[1] == 1,

@@ -7,7 +7,7 @@ library bundle (see README.md).
 Responsibilities
     * drive the three foot pairs and the dome motor through four DRV8833 (3297)
     * drive the 12 V centre-leg actuator through a DRV8871 (3190)
-    * drive the lock-release servo and read the lock switch (NO + NC)
+    * drive the two lock-release servos and read the two lock switches (NO + NC)
     * read the actuator potentiometer and the battery divider
     * drive the 17 pixel dome NeoPixel chain, read the dome index sensor
     * speak the line protocol in ``protocol.py`` over USB CDC data
@@ -20,20 +20,26 @@ ports/raspberrypi/boards/adafruit_kb2040/pins.c in the CircuitPython tree:
     D8=GP8  D9=GP9  D10=GP10  SCK=GP18  MOSI=GP19  MISO=GP20
     A0=GP26  A1=GP27  A2=GP28  A3=GP29  SDA=GP12  SCL=GP13 (STEMMA QT)
 
-Revision D pin budget
-    The revision C map used every header pin: one PWM and one digital pin for
-    each of seven motors.  Both motors in a foot always receive the same value,
-    so revision D drives each foot's two DRV8833 channels from one pin pair
-    (AIN1 jumpered to BIN1, AIN2 to BIN2 on the board).  That frees D4, D5, D8,
-    D9, SCK, MISO, A0 and A1.  The head moves to D4/D5 so that A0 and A1, two of
-    only four ADC pins, can read the actuator pot and the battery.
+Revision D pin budget (all 20 KB2040 GPIOs are used)
+    The stance change needs 12 signals: actuator IN1/IN2, two release servos,
+    four lock-switch contacts (two locks, NO + NC each), the actuator pot and
+    the battery divider.  Revision C used 17 of the 20 GPIOs.  To make room:
+    * both motors in a foot always receive the same value, so each foot's two
+      DRV8833 channels share one pin pair (AIN1 jumpered to BIN1, AIN2 to BIN2
+      on the board), freeing D4, D5, D8, D9, SCK and MISO;
+    * the head moves to D4/D5 so that A0 and A1, two of only four ADC pins, can
+      read the actuator pot and the battery;
+    * the four DRV8833 SLP pins are tied to the KB2040 3V3 pad instead of D1.
+      Arming stays in firmware: disarmed outputs are held at coast.  The SLP
+      line was driven by this same MCU, so it added no independent safety;
+    * the right lock switch uses GP12/GP13 through the STEMMA QT connector.
 
 One PWM pin and one plain digital pin per output
-    GPIO n uses PWM slice (n >> 1) & 7, channel n & 1.  The five 20 kHz PWM
-    pins below occupy five different slice/channel pairs, and the 50 Hz servo
-    sits alone on slice 0 (its partner GP1 is the plain SLP output), because
-    both channels of a slice share one frequency.  ``_check_pin_plan`` re-verifies
-    this at boot.
+    GPIO n uses PWM slice (n >> 1) & 7, channel n & 1, and both channels of a
+    slice share one frequency.  The five 20 kHz PWM pins below occupy five
+    different slice/channel pairs; the two 50 Hz servos take both channels of
+    slice 0 (GP0, GP1) and nothing else runs there.  ``_check_pin_plan``
+    re-verifies this at boot.
 """
 
 import time
@@ -79,15 +85,20 @@ DRIVES = (
 # stance machine latches REVERSED_FEEDBACK; swap the actuator's motor leads.
 ACTUATOR = ("actuator", board.D9, 9, board.D8, 8, False)
 
-ENABLE_PIN = board.D1  # all four DRV8833 SLP pins, high = awake
 PIXEL_PIN = board.A2
 INDEX_PIN = board.A3  # optional dome home sensor, active low
-RELEASE_SERVO_PIN = board.D0  # through level shifter U11 to the MG995 signal
-RELEASE_SERVO_GPIO = 0
-LOCK_NO_PIN = board.SCK  # lock switch NO contact, 3.3 k pull-up, low = closed
-LOCK_NO_GPIO = 18
-LOCK_NC_PIN = board.MISO  # lock switch NC contact, 3.3 k pull-up, low = closed
-LOCK_NC_GPIO = 20
+RELEASE_SERVO_LEFT_PIN = board.D0  # level shifter U11 channel 1 to SV1
+RELEASE_SERVO_LEFT_GPIO = 0
+RELEASE_SERVO_RIGHT_PIN = board.D1  # level shifter U11 channel 2 to SV2
+RELEASE_SERVO_RIGHT_GPIO = 1
+LOCK_LEFT_NO_PIN = board.SCK  # left lock switch SW2 NO, 3.3 k pull-up, low = closed
+LOCK_LEFT_NO_GPIO = 18
+LOCK_LEFT_NC_PIN = board.MISO  # left lock switch SW2 NC
+LOCK_LEFT_NC_GPIO = 20
+LOCK_RIGHT_NO_PIN = board.SDA  # right lock switch SW3 NO, STEMMA QT blue lead
+LOCK_RIGHT_NO_GPIO = 12
+LOCK_RIGHT_NC_PIN = board.SCL  # right lock switch SW3 NC, STEMMA QT yellow lead
+LOCK_RIGHT_NC_GPIO = 13
 POSITION_PIN = board.A0  # actuator pot wiper, 470 k pull-down
 POSITION_GPIO = 26
 BATTERY_PIN = board.A1  # 12 V bus through 100 k over 15 k
@@ -176,9 +187,7 @@ class Hardware:
     """The real pins behind the hardware object ``supervisor.Supervisor`` expects."""
 
     def __init__(self):
-        self.enable_line = digitalio.DigitalInOut(ENABLE_PIN)
-        self.enable_line.direction = digitalio.Direction.OUTPUT
-        self.enable_line.value = False
+        self.enabled = False
 
         self.index_line = digitalio.DigitalInOut(INDEX_PIN)
         self.index_line.direction = digitalio.Direction.INPUT
@@ -190,16 +199,22 @@ class Hardware:
         name, pwm_pin, _pwm_gpio, dig_pin, _dig_gpio, invert = ACTUATOR
         self.actuator = Motor(name, pwm_pin, dig_pin, invert)
 
-        self.servo = pwmio.PWMOut(RELEASE_SERVO_PIN, frequency=protocol.SERVO_FREQUENCY,
-                                  duty_cycle=0, variable_frequency=False)
-        self._servo_duty = 0
+        self.servos = []
+        for pin in (RELEASE_SERVO_LEFT_PIN, RELEASE_SERVO_RIGHT_PIN):
+            self.servos.append(pwmio.PWMOut(pin, frequency=protocol.SERVO_FREQUENCY,
+                                            duty_cycle=0, variable_frequency=False))
+        self._servo_duty = [0, 0]
 
-        self.lock_no = digitalio.DigitalInOut(LOCK_NO_PIN)
-        self.lock_no.direction = digitalio.Direction.INPUT
-        self.lock_no.pull = digitalio.Pull.UP
-        self.lock_nc = digitalio.DigitalInOut(LOCK_NC_PIN)
-        self.lock_nc.direction = digitalio.Direction.INPUT
-        self.lock_nc.pull = digitalio.Pull.UP
+        self.locks = []
+        for no_pin, nc_pin in ((LOCK_LEFT_NO_PIN, LOCK_LEFT_NC_PIN),
+                               (LOCK_RIGHT_NO_PIN, LOCK_RIGHT_NC_PIN)):
+            pair = []
+            for pin in (no_pin, nc_pin):
+                line = digitalio.DigitalInOut(pin)
+                line.direction = digitalio.Direction.INPUT
+                line.pull = digitalio.Pull.UP
+                pair.append(line)
+            self.locks.append(pair)
 
         self.position = analogio.AnalogIn(POSITION_PIN)
         self.battery = analogio.AnalogIn(BATTERY_PIN)
@@ -213,11 +228,17 @@ class Hardware:
         return total / ADC_SAMPLES
 
     def set_enabled(self, flag):
-        self.enable_line.value = bool(flag)
+        # SLP is tied high in revision D: disarmed means every output held at coast.
+        self.enabled = bool(flag)
+        if not self.enabled:
+            self.coast_all()
 
     def apply_drive(self, enabled, channels):
         for channel, motor in self.drives:
-            motor.apply(channels[channel] if enabled else 0)
+            if enabled and self.enabled:
+                motor.apply(channels[channel])
+            else:
+                motor.coast()
 
     def coast_all(self):
         for _channel, motor in self.drives:
@@ -236,7 +257,7 @@ class Hardware:
         return stance.adc_to_mv(self._average(self.position))
 
     def read_lock_contacts(self):
-        return (not self.lock_no.value, not self.lock_nc.value)
+        return [(not no_line.value, not nc_line.value) for no_line, nc_line in self.locks]
 
     def read_battery_mv(self):
         return stance.pack_mv_from_node(stance.adc_to_mv(self._average(self.battery)))
@@ -244,11 +265,12 @@ class Hardware:
     def drive_actuator(self, percent):
         self.actuator.apply(int(percent) * 10)
 
-    def set_release_pulse(self, pulse_us):
-        duty = stance.servo_duty(pulse_us)
-        if duty != self._servo_duty:
-            self.servo.duty_cycle = duty
-            self._servo_duty = duty
+    def set_release_pulses(self, pulses_us):
+        for index, pulse_us in enumerate(pulses_us):
+            duty = stance.servo_duty(pulse_us)
+            if duty != self._servo_duty[index]:
+                self.servos[index].duty_cycle = duty
+                self._servo_duty[index] = duty
 
 
 def _now_ms():
@@ -260,10 +282,11 @@ def _check_pin_plan():
     """Return a human readable problem string, or None when the plan is legal."""
     problems = []
     fast = [entry[3] for entry in DRIVES] + [ACTUATOR[2]]
-    for first, second in protocol.pwm_conflicts(fast + [RELEASE_SERVO_GPIO]):
+    servos = [RELEASE_SERVO_LEFT_GPIO, RELEASE_SERVO_RIGHT_GPIO]
+    for first, second in protocol.pwm_conflicts(fast + servos):
         problems.append("pwm slice clash GP{0}/GP{1}".format(first, second))
     outputs = [(gpio, protocol.PWM_FREQUENCY) for gpio in fast]
-    outputs.append((RELEASE_SERVO_GPIO, protocol.SERVO_FREQUENCY))
+    outputs += [(gpio, protocol.SERVO_FREQUENCY) for gpio in servos]
     for first, second in protocol.pwm_frequency_conflicts(outputs):
         problems.append("pwm frequency clash GP{0}/GP{1}".format(first, second))
     for label, gpio in (("position", POSITION_GPIO), ("battery", BATTERY_GPIO)):

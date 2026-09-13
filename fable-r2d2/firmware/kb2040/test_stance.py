@@ -1,9 +1,10 @@
 """Host tests for the revision D stance interlock, the supervisor and the pin plan.
 
-A simulated plant stands in for the actuator, the spring-return lock pin with a
-receiver at each endpoint, the NO/NC lock switch, the battery and the motors.
-The real ``supervisor.Supervisor`` and ``stance.Stance`` run against it, fed
-through the real serial protocol.
+A simulated plant stands in for the actuator, the two spring-return shoulder
+lock pins (each with a tilt-0 receiver and a tilt-18 receiver), the two NO/NC
+lock switches, the release servos, the battery and the motors.  The real
+``supervisor.Supervisor`` and ``stance.Stance`` run against it, fed through the
+real serial protocol.
 
     python -m unittest discover -s firmware/kb2040 -v
 """
@@ -21,39 +22,44 @@ import stance  # noqa: E402
 import supervisor  # noqa: E402
 
 L = stance.Limits()
-RECEIVER_TWO = L.two_foot_mm
+TWO_FOOT_POS = L.two_foot_mm
+CONTACT_POS = L.contact_mm
 RECEIVER_THREE = L.three_foot_mm + 0.2  # real receiver slightly off nominal: exercises the seek
-SEAT_BAND_MM = 0.3
+BAND_CONTACT = 0.05  # 0.1 mm radial pin clearance at 2.2 deg/mm
+BAND_THREE = 0.3     # the same clearance at 0.31 deg/mm
 
 
-def receiver_mm(which):
-    return RECEIVER_TWO if which == 2 else RECEIVER_THREE
+class Pin:
+    """One spring-return plunger pin and its lock switch."""
+
+    def __init__(self, seated):
+        self.seated = seated      # 0 out, 2 tilt-0 receiver, 3 tilt-18 receiver
+        self.stuck = False        # will not leave its receiver
+        self.jammed = False       # will not enter a receiver
+        self.override = None      # forced (no_closed, nc_closed) switch reading
+        self.pending_at = None
 
 
 class Plant:
-    """Non-backdrivable lead-screw actuator and a spring pin with two receivers."""
+    """Non-backdrivable lead-screw actuator and two shoulder lock pins."""
 
     def __init__(self, mm=RECEIVER_THREE, seated=3):
         self.mm = mm
-        self.seated = seated
+        self.pins = [Pin(seated), Pin(seated)]
         self.speed = stance.ACTUATOR_NO_LOAD_SPEED_MM_S / 1000.0  # mm per ms at 100 %
         self.actuator = 0
-        self.release_us = 0
+        self.release_us = [0, 0]
         self.enabled = False
         self.channels = [0, 0, 0, 0]
         self.coasted = 0
         self.pack_mv = 12600.0
         self.pot_override_mv = None
-        self.contacts_override = None
         self.stalled = False
-        self.jammed = False
-        self.stuck_seated = False
         self.reversed_drive = False
-        self.seat_delay = 60
-        self.pull_delay = 250
-        self.moved_pinned = False
+        self.seat_delay = 30
+        self.pull_delay = 80
+        self.pinned_ms = 0
         self.foot_output_while_not_parked = False
-        self._pending_at = None
 
     # -- hardware object used by the supervisor ----------------------------
 
@@ -82,10 +88,13 @@ class Plant:
         return L.mv_for_mm(self.mm)
 
     def read_lock_contacts(self):
-        if self.contacts_override is not None:
-            return self.contacts_override
-        seated = self.seated != 0
-        return (seated, not seated)  # NO closes when the pin is seated
+        readings = []
+        for pin in self.pins:
+            if pin.override is not None:
+                readings.append(pin.override)
+            else:
+                readings.append((pin.seated != 0, pin.seated == 0))  # NO closes when seated
+        return readings
 
     def read_battery_mv(self):
         return self.pack_mv
@@ -93,20 +102,34 @@ class Plant:
     def drive_actuator(self, percent):
         self.actuator = percent
 
-    def set_release_pulse(self, pulse_us):
-        self.release_us = pulse_us
+    def set_release_pulses(self, pulses_us):
+        self.release_us = list(pulses_us)
 
     # -- physics ----------------------------------------------------------
 
-    def releasing(self):
-        return self.release_us == stance.RELEASE_US
+    def releasing(self, index):
+        return self.release_us[index] == stance.RELEASE_US[index]
+
+    def pulled(self):
+        return self.releasing(0) and self.releasing(1)
+
+    def seated(self):
+        return [pin.seated for pin in self.pins]
 
     def aligned(self):
-        if abs(self.mm - RECEIVER_TWO) <= SEAT_BAND_MM:
-            return 2
-        if abs(self.mm - RECEIVER_THREE) <= SEAT_BAND_MM:
+        if self.mm <= CONTACT_POS + BAND_CONTACT:
+            return 2  # the body is upright for every stroke up to touchdown
+        if abs(self.mm - RECEIVER_THREE) <= BAND_THREE:
             return 3
         return 0
+
+    def blocked(self, following):
+        for pin in self.pins:
+            if pin.seated == 2 and following > CONTACT_POS + BAND_CONTACT:
+                return True
+            if pin.seated == 3 and abs(following - RECEIVER_THREE) > BAND_THREE:
+                return True
+        return False
 
     def physics(self, now, dt):
         if self.actuator and not self.stalled and self.pack_mv > 9000:
@@ -114,33 +137,36 @@ class Plant:
             if self.reversed_drive:
                 step = -step
             following = self.mm + step
-            if self.seated and abs(following - receiver_mm(self.seated)) > SEAT_BAND_MM:
-                self.moved_pinned = True
+            if self.blocked(following):
+                self.pinned_ms += dt
             else:
                 self.mm = following
-        if self.stuck_seated:
-            want = self.seated
-        elif self.releasing():
-            want = 0
-        elif self.seated == 0 and not self.jammed:
-            want = self.aligned()
-        else:
-            want = self.seated
-        if want != self.seated:
-            if self._pending_at is None:
-                self._pending_at = now + (self.seat_delay if want else self.pull_delay)
-            elif now >= self._pending_at:
-                self.seated = want
-                self._pending_at = None
-        else:
-            self._pending_at = None
+        for index, pin in enumerate(self.pins):
+            if pin.stuck:
+                want = pin.seated
+            elif self.releasing(index):
+                want = 0
+            elif pin.seated == 0 and not pin.jammed:
+                want = self.aligned()
+            else:
+                want = pin.seated
+            if want != pin.seated:
+                if pin.pending_at is None:
+                    pin.pending_at = now + (self.seat_delay if want else self.pull_delay)
+                elif now >= pin.pending_at:
+                    pin.seated = want
+                    pin.pending_at = None
+            else:
+                pin.pending_at = None
 
 
 class Rig:
     """Supervisor + plant + a stand-in Pi that sends M and T lines every 50 ms."""
 
-    def __init__(self, mm=RECEIVER_THREE, seated=3, armed=True):
+    def __init__(self, mm=RECEIVER_THREE, seated=3, armed=True, jammed=False):
         self.plant = Plant(mm, seated)
+        for pin in self.plant.pins:
+            pin.jammed = jammed  # keep deliberately unseated pins out of an aligned receiver
         self.t = 1000
         self.lines = []
         self.errors = []
@@ -178,12 +204,11 @@ class Rig:
             self.core.feed(text, self.t)
             self._next_line = self.t + 50
         self.core.tick(self.t)
-        parked = self.s.state == stance.THREE_FOOT
-        if not parked and any(self.plant.channels[:3]):
+        if self.s.state != stance.THREE_FOOT and any(self.plant.channels[:3]):
             self.plant.foot_output_while_not_parked = True
 
     def run(self, ms):
-        for _ in range(ms // 10):
+        for _ in range(int(ms) // 10):
             self.step()
 
     def run_until(self, predicate, limit_ms):
@@ -238,6 +263,9 @@ class TestPinPlan(unittest.TestCase):
             cls.source, re.M).groups()
         cls.singles = dict(re.findall(r"^([A-Z_]+)_PIN\s*=\s*board\.(\w+)", cls.source, re.M))
 
+    def gpio(self, label):
+        return int(re.search(r"^{0}_GPIO\s*=\s*(\d+)".format(label), self.source, re.M).group(1))
+
     def test_four_drive_outputs(self):
         self.assertEqual([entry[0] for entry in self.drives], ["left", "right", "centre", "head"])
 
@@ -247,31 +275,29 @@ class TestPinPlan(unittest.TestCase):
             self.assertEqual(KB2040_GPIO[digital], int(dig_gpio))
         self.assertEqual(KB2040_GPIO[self.actuator[0]], int(self.actuator[1]))
         self.assertEqual(KB2040_GPIO[self.actuator[2]], int(self.actuator[3]))
-        for label in ("RELEASE_SERVO", "LOCK_NO", "LOCK_NC", "POSITION", "BATTERY"):
-            gpio = int(re.search(r"^{0}_GPIO\s*=\s*(\d+)".format(label), self.source, re.M).group(1))
-            self.assertEqual(KB2040_GPIO[self.singles[label]], gpio, label)
+        for label in ("RELEASE_SERVO_LEFT", "RELEASE_SERVO_RIGHT", "LOCK_LEFT_NO", "LOCK_LEFT_NC",
+                      "LOCK_RIGHT_NO", "LOCK_RIGHT_NC", "POSITION", "BATTERY"):
+            self.assertEqual(KB2040_GPIO[self.singles[label]], self.gpio(label), label)
 
-    def test_no_pin_is_used_twice(self):
+    def test_every_gpio_is_used_exactly_once(self):
         used = []
         for _name, pwm, _a, digital, _b in self.drives:
             used += [pwm, digital]
         used += [self.actuator[0], self.actuator[2]]
         used += list(self.singles.values())
         self.assertEqual(len(used), len(set(used)), used)
-        self.assertEqual(len(used), 18)
-        self.assertNotIn("SDA", used)
-        self.assertNotIn("SCL", used)
+        self.assertEqual(sorted(used), sorted(KB2040_GPIO))
+        self.assertNotIn("ENABLE_PIN", self.source)  # SLP is tied to 3V3 in revision D
 
     def test_pwm_pins_do_not_share_an_output_or_a_frequency(self):
         fast = [int(entry[2]) for entry in self.drives] + [int(self.actuator[1])]
-        servo = KB2040_GPIO[self.singles["RELEASE_SERVO"]]
-        self.assertEqual(protocol.pwm_conflicts(fast + [servo]), [])
+        servos = [self.gpio("RELEASE_SERVO_LEFT"), self.gpio("RELEASE_SERVO_RIGHT")]
+        self.assertEqual(protocol.pwm_conflicts(fast + servos), [])
         outputs = [(gpio, protocol.PWM_FREQUENCY) for gpio in fast]
-        outputs.append((servo, protocol.SERVO_FREQUENCY))
+        outputs += [(gpio, protocol.SERVO_FREQUENCY) for gpio in servos]
         self.assertEqual(protocol.pwm_frequency_conflicts(outputs), [])
-        # The servo's slice partner must not be a PWM output at all.
-        partner = servo ^ 1
-        self.assertNotIn(partner, fast)
+        for servo in servos:
+            self.assertNotIn(servo ^ 1, fast)
 
     def test_analogue_inputs_are_on_adc_pins(self):
         for label in ("POSITION", "BATTERY"):
@@ -279,13 +305,14 @@ class TestPinPlan(unittest.TestCase):
 
     def test_frequency_clash_is_detected(self):
         self.assertEqual(protocol.pwm_frequency_conflicts([(0, 50), (1, 20000)]), [(0, 1)])
-        self.assertEqual(protocol.pwm_frequency_conflicts([(2, 20000), (3, 20000)]), [])
+        self.assertEqual(protocol.pwm_frequency_conflicts([(0, 50), (1, 50)]), [])
 
 
 class TestSensorConditioning(unittest.TestCase):
     def test_mechanism_constants_are_consistent(self):
         self.assertEqual(L.problems(), [])
         self.assertIn("seek", " ".join(stance.Limits(seek_mm=5.0).problems()))
+        self.assertIn("overlap", " ".join(stance.Limits(three_foot_mm=33.0).problems()))
 
     def test_unknown_limit_is_rejected(self):
         with self.assertRaises(AttributeError):
@@ -293,8 +320,8 @@ class TestSensorConditioning(unittest.TestCase):
 
     def test_pot_window(self):
         self.assertIsNone(stance.pot_position_mm(None, L))
-        self.assertIsNone(stance.pot_position_mm(0.0, L))      # open wiper or open ref+
-        self.assertIsNone(stance.pot_position_mm(3250.0, L))   # open ref-
+        self.assertIsNone(stance.pot_position_mm(0.0, L))      # open wiper or open pot +
+        self.assertIsNone(stance.pot_position_mm(3250.0, L))   # open pot -
         self.assertAlmostEqual(stance.pot_position_mm(1375.0, L), 50.0)
         self.assertAlmostEqual(stance.pot_position_mm(L.mv_for_mm(5.0), L), 5.0)
 
@@ -311,7 +338,6 @@ class TestSensorConditioning(unittest.TestCase):
         self.assertEqual(pair.code(), "W")
         pair.update(30, True, False)
         self.assertTrue(pair.valid and pair.engaged)
-        self.assertEqual(pair.code(), "E")
         pair.update(40, False, False)
         pair.update(140, False, False)
         self.assertTrue(pair.valid and pair.engaged)   # changeover gap keeps the last legal state
@@ -337,6 +363,27 @@ class TestSensorConditioning(unittest.TestCase):
         with self.assertRaises(ValueError):
             stance.ContactPair(30, 150, "COM")
 
+    def test_lock_set_needs_both_locks(self):
+        locks = stance.LockSet(2, 50, 150)
+        locks.update(0, [(True, False), (True, False)])
+        self.assertFalse(locks.settled())
+        locks.update(50, [(True, False), (True, False)])
+        self.assertTrue(locks.settled() and locks.all_engaged() and locks.any_engaged())
+        self.assertEqual(locks.code(), "EE")
+        locks.update(60, [(True, False), (False, True)])
+        locks.update(110, [(True, False), (False, True)])
+        self.assertTrue(locks.valid())
+        self.assertFalse(locks.all_engaged())
+        self.assertTrue(locks.any_engaged())
+        self.assertEqual(locks.code(), "ER")
+        locks.update(120, [(True, True), (False, True)])
+        locks.update(270, [(True, True), (False, True)])
+        self.assertFalse(locks.valid())
+        self.assertFalse(locks.any_engaged())
+        self.assertEqual(locks.code(), "XR")
+        with self.assertRaises(ValueError):
+            locks.update(280, [(True, False)])
+
     def test_battery_guard_debounces_dips_and_needs_rearm(self):
         guard = stance.BatteryGuard(11200, 12000, 15200, 500)
         self.assertFalse(guard.update(0, None))
@@ -351,17 +398,20 @@ class TestSensorConditioning(unittest.TestCase):
         self.assertFalse(guard.update(1900, 12100))
         self.assertTrue(guard.update(2010, 12100))
         self.assertFalse(guard.update(2020, None))    # sense lost: at once
-        guard2 = stance.BatteryGuard()
-        guard2.update(0, 12600)
-        self.assertFalse(guard2.update(10, 16000))    # not a battery reading: at once
+        other = stance.BatteryGuard()
+        other.update(0, 12600)
+        self.assertFalse(other.update(10, 16000))     # not a battery reading: at once
 
     def test_release_servo_goes_limp_after_engaging(self):
-        servo = stance.ReleaseServo(1000, 1311, 1000)
-        self.assertEqual(servo.update(0, True), 1000)
-        self.assertEqual(servo.update(10, False), 1311)
-        self.assertEqual(servo.update(1009, False), 1311)
+        servo = stance.ReleaseServo(1310, 1500, 1000)
+        self.assertEqual(servo.update(0, True), 1310)
+        self.assertEqual(servo.update(10, False), 1500)
+        self.assertEqual(servo.update(1009, False), 1500)
         self.assertEqual(servo.update(1010, False), 0)
-        self.assertEqual(servo.update(2000, True), 1000)
+        self.assertEqual(servo.update(2000, True), 1310)
+
+    def test_mirrored_release_pulses(self):
+        self.assertEqual(stance.RELEASE_US[0] + stance.RELEASE_US[1], 2 * stance.ENGAGE_US[0])
 
     def test_conversions(self):
         self.assertEqual(stance.servo_duty(1500), 4915)
@@ -385,12 +435,12 @@ class TestProtocolStanceLines(unittest.TestCase):
             protocol.parse_command("C 1")
 
     def test_stance_status_line(self):
-        line = protocol.format_stance("RETRACTING", "TRAVEL", "NONE", 51.26, "R", 12603.4,
+        line = protocol.format_stance("RETRACTING", "TILT", "NONE", 51.26, "RR", 12603.4,
                                       False, False, False, False, "retracting", "a|b", "")
-        self.assertEqual(line, "ss RETRACTING TRAVEL NONE 513 R 12603 0 0 0 0 retracting|a/b|\n")
-        line = protocol.format_stance("FAULT", "NONE", "FEEDBACK", None, "X", None,
+        self.assertEqual(line, "ss RETRACTING TILT NONE 513 RR 12603 0 0 0 0 retracting|a/b|\n")
+        line = protocol.format_stance("FAULT", "NONE", "FEEDBACK", None, "XE", None,
                                       False, False, False, False, "bad", "x", "y")
-        self.assertEqual(line, "ss FAULT NONE FEEDBACK -1 X -1 0 0 0 0 bad|x|y\n")
+        self.assertEqual(line, "ss FAULT NONE FEEDBACK -1 XE -1 0 0 0 0 bad|x|y\n")
 
 
 class TestBoot(unittest.TestCase):
@@ -399,28 +449,34 @@ class TestBoot(unittest.TestCase):
         self.assertEqual(rig.s.state, stance.THREE_FOOT)
         self.assertTrue(rig.s.drive_allowed())
         self.assertEqual(rig.plant.actuator, 0)
-        self.assertEqual(rig.plant.release_us, stance.ENGAGE_US)
+        self.assertEqual(rig.plant.release_us, list(stance.ENGAGE_US))
         rig.run(stance.ENGAGE_HOLD_MS)
-        self.assertEqual(rig.plant.release_us, 0)
+        self.assertEqual(rig.plant.release_us, [0, 0])
         status = rig.last_status()
-        self.assertTrue(status.startswith("ss THREE_FOOT NONE NONE 952 E 12600 1 1 1 0 "), status)
+        self.assertTrue(status.startswith("ss THREE_FOOT NONE NONE 625 EE 12600 1 1 1 0 "), status)
+        self.assertEqual(rig.s.tilt_deg(), 18.0)
 
     def test_boot_on_two_feet(self):
-        rig = Rig(RECEIVER_TWO, 2)
+        rig = Rig(TWO_FOOT_POS, 2)
         self.assertEqual(rig.s.state, stance.TWO_FOOT)
         self.assertFalse(rig.s.drive_allowed())
         self.assertTrue(rig.s.head_allowed())
+        self.assertEqual(rig.s.tilt_deg(), 0.0)
 
     def test_boot_between_stances_holds(self):
-        rig = Rig(50.0, 0)
+        rig = Rig(45.0, 0)
         self.assertEqual(rig.s.state, stance.HELD)
         self.assertFalse(rig.s.drive_allowed())
         self.assertFalse(rig.s.head_allowed())
         self.assertIsNone(rig.s.tilt_deg())
 
-    def test_endpoint_without_a_seated_pin_is_not_a_stance(self):
-        rig = Rig(L.three_foot_mm, 0)
+    def test_endpoint_without_seated_pins_is_not_a_stance(self):
+        rig = Rig(L.three_foot_mm, 0, jammed=True)
         self.assertEqual(rig.s.state, stance.HELD)
+
+    def test_raised_foot_without_seated_locks_is_a_fault(self):
+        rig = Rig(20.0, 0, jammed=True)
+        self.assertEqual(rig.s.fault, stance.LOCK_DISAGREES)
 
     def test_stance_waits_for_the_lock_switch_debounce(self):
         plant = Plant()
@@ -428,25 +484,20 @@ class TestBoot(unittest.TestCase):
         core.tick(10)
         self.assertFalse(core.stance.begun)
         self.assertFalse(core.stance.drive_allowed())
-        core.tick(40)
+        core.tick(60)
         self.assertTrue(core.stance.begun)
 
     def test_open_wiper_at_boot_is_a_feedback_fault(self):
         plant = Plant()
         plant.pot_override_mv = 0.0
         core = supervisor.Supervisor(plant, lambda text: None, 0)
-        for now in range(10, 100, 10):
+        for now in range(10, 120, 10):
             core.tick(now)
         self.assertEqual(core.stance.fault, stance.FEEDBACK)
 
     def test_inconsistent_constants_refuse_to_start(self):
         with self.assertRaises(ValueError):
             supervisor.Supervisor(Plant(), lambda text: None, 0, stance.Limits(overshoot_mm=9.0))
-
-
-def retract_to_two(test, rig):
-    rig.request = stance.REQUEST_TWO_FOOT
-    test.assertTrue(rig.until_state(stance.TWO_FOOT, 60000), rig.s.reason)
 
 
 class TestTransitions(unittest.TestCase):
@@ -457,40 +508,42 @@ class TestTransitions(unittest.TestCase):
         self.assertEqual(rig.s.state, stance.RETRACTING)
         self.assertEqual(rig.s.phase, stance.UNLOCKING)
         self.assertEqual(rig.plant.actuator, 0)
-        self.assertEqual(rig.plant.release_us, stance.RELEASE_US)
+        self.assertTrue(rig.plant.pulled())
         self.assertFalse(rig.s.drive_allowed())
         self.assertFalse(rig.s.head_allowed())
 
-        self.assertTrue(rig.until_phase(stance.TRAVEL, 1000))
-        self.assertEqual(rig.plant.seated, 0)
+        self.assertTrue(rig.until_phase(stance.TILT, 1000))
+        self.assertEqual(rig.plant.seated(), [0, 0])
         rig.run(20)
         self.assertEqual(rig.plant.actuator, -100)
-        self.assertEqual(rig.plant.release_us, stance.RELEASE_US)
-        clear_at = L.three_foot_mm - L.release_clear_mm
-        while rig.s.phase == stance.TRAVEL and rig.plant.mm > clear_at + 0.5:
+        self.assertTrue(rig.plant.pulled())
+        while rig.s.phase == stance.TILT and rig.plant.mm > L.release_drop_retract_mm + 0.5:
             rig.step()
-            self.assertEqual(rig.plant.release_us, stance.RELEASE_US)
+            self.assertTrue(rig.plant.pulled())
         rig.run(200)
-        self.assertEqual(rig.s.phase, stance.TRAVEL)
-        self.assertNotEqual(rig.plant.release_us, stance.RELEASE_US)  # pin rides the ring face
-        self.assertEqual(rig.plant.seated, 0)
+        self.assertEqual(rig.s.phase, stance.TILT)
+        self.assertFalse(rig.plant.releasing(0) or rig.plant.releasing(1))  # pins ride the ring face
+        self.assertEqual(rig.plant.seated(), [0, 0])
 
         self.assertTrue(rig.until_phase(stance.LOCKING, 30000))
         self.assertEqual(rig.plant.actuator, 0)
         rig.run(L.lock_settle_ms - 30)
-        self.assertEqual(rig.plant.actuator, 0)            # the pin drops before the creep
+        self.assertEqual(rig.plant.actuator, 0)               # the pins drop before the creep
         rig.run(60)
         self.assertEqual(rig.plant.actuator, -L.seek_duty_percent)
-        self.assertTrue(rig.until_state(stance.TWO_FOOT, 5000))
+        self.assertTrue(rig.until_phase(stance.LIFT, 5000))
+        self.assertEqual(rig.plant.seated(), [2, 2])
+        rig.run(20)
+        self.assertEqual(rig.plant.actuator, -100)            # lifting the foot, locks carry the body
+        self.assertTrue(rig.until_state(stance.TWO_FOOT, 30000))
         self.assertEqual(rig.plant.actuator, 0)
-        self.assertEqual(rig.plant.seated, 2)
-        self.assertFalse(rig.plant.moved_pinned)
+        self.assertEqual(rig.plant.seated(), [2, 2])
+        self.assertLessEqual(rig.plant.pinned_ms, 100)
         self.assertFalse(rig.plant.foot_output_while_not_parked)
         self.assertFalse(rig.s.drive_allowed())
         self.assertTrue(rig.s.head_allowed())
-        self.assertEqual(rig.s.tilt_deg(), 0.0)
         rig.run(2000)
-        self.assertEqual(rig.s.state, stance.TWO_FOOT)       # holding the control after arrival does nothing
+        self.assertEqual(rig.s.state, stance.TWO_FOOT)        # holding the control after arrival does nothing
         self.assertEqual(rig.plant.actuator, 0)
 
         rig.release()
@@ -504,17 +557,24 @@ class TestTransitions(unittest.TestCase):
         rig.request = stance.REQUEST_THREE_FOOT
         rig.run(60)
         self.assertEqual(rig.s.state, stance.DEPLOYING)
-        self.assertEqual(rig.s.phase, stance.UNLOCKING)
-        self.assertTrue(rig.until_phase(stance.TRAVEL, 1000))
+        self.assertEqual(rig.s.phase, stance.LOWER)
+        self.assertEqual(rig.plant.actuator, 100)
+        self.assertFalse(rig.plant.releasing(0) or rig.plant.releasing(1))
+        self.assertTrue(rig.until_phase(stance.UNLOCKING, 20000))
+        self.assertEqual(rig.plant.actuator, 0)
+        self.assertTrue(rig.plant.pulled())
+        self.assertTrue(rig.until_phase(stance.TILT, 1000))
         rig.run(20)
         self.assertEqual(rig.plant.actuator, 100)
+        while rig.s.phase == stance.TILT and rig.plant.mm < L.release_drop_deploy_mm - 0.5:
+            rig.step()
+            self.assertTrue(rig.plant.pulled())
         self.assertTrue(rig.until_phase(stance.LOCKING, 30000))
-        self.assertNotEqual(rig.plant.release_us, stance.RELEASE_US)
+        self.assertFalse(rig.plant.releasing(0) or rig.plant.releasing(1))
         self.assertTrue(rig.until_state(stance.THREE_FOOT, 10000))
-        self.assertEqual(rig.plant.seated, 3)
+        self.assertEqual(rig.plant.seated(), [3, 3])
         self.assertTrue(rig.s.drive_allowed())
-        self.assertEqual(rig.s.tilt_deg(), 18.0)
-        self.assertFalse(rig.plant.moved_pinned)
+        self.assertLessEqual(rig.plant.pinned_ms, 100)
         self.assertFalse(rig.plant.foot_output_while_not_parked)
         self.assertEqual(rig.errors, [])
         rig.run(200)
@@ -522,7 +582,8 @@ class TestTransitions(unittest.TestCase):
 
     def test_drive_works_again_after_the_round_trip(self):
         rig = Rig()
-        retract_to_two(self, rig)
+        rig.request = stance.REQUEST_TWO_FOOT
+        self.assertTrue(rig.until_state(stance.TWO_FOOT, 60000))
         rig.cool()
         rig.request = stance.REQUEST_THREE_FOOT
         self.assertTrue(rig.until_state(stance.THREE_FOOT, 60000))
@@ -533,11 +594,11 @@ class TestTransitions(unittest.TestCase):
 
 
 class TestCommandLoss(unittest.TestCase):
-    def test_pi_link_lost_mid_travel_holds_and_never_restarts_alone(self):
+    def test_pi_link_lost_while_the_locks_carry_the_raised_foot(self):
         rig = Rig()
         rig.request = stance.REQUEST_TWO_FOOT
-        self.assertTrue(rig.until_phase(stance.TRAVEL, 2000))
-        rig.run(3000)
+        self.assertTrue(rig.until_phase(stance.LIFT, 40000))
+        rig.run(1000)
         rig.link = False
         rig.run(protocol.HEARTBEAT_MS + 60)
         self.assertEqual(rig.s.state, stance.HELD)
@@ -548,7 +609,9 @@ class TestCommandLoss(unittest.TestCase):
         before = rig.plant.mm
         rig.run(3000)
         self.assertAlmostEqual(rig.plant.mm, before, places=3)
-        rig.link = True                                     # link back, control still held
+        self.assertEqual(rig.plant.seated(), [2, 2])
+        self.assertEqual(rig.s.tilt_deg(), 0.0)
+        rig.link = True                                      # link back, control still held
         rig.run(1000)
         self.assertEqual(rig.s.state, stance.HELD)
         self.assertEqual(rig.plant.actuator, 0)
@@ -556,12 +619,25 @@ class TestCommandLoss(unittest.TestCase):
         rig.release()
         rig.cool()
         rig.request = stance.REQUEST_TWO_FOOT
+        rig.run(60)
+        self.assertEqual(rig.s.phase, stance.LIFT)
         self.assertTrue(rig.until_state(stance.TWO_FOOT, 60000))
+
+    def test_pi_link_lost_mid_tilt(self):
+        rig = Rig()
+        rig.request = stance.REQUEST_TWO_FOOT
+        self.assertTrue(rig.until_phase(stance.TILT, 2000))
+        rig.run(2000)
+        rig.link = False
+        rig.run(protocol.HEARTBEAT_MS + 60)
+        self.assertEqual(rig.s.state, stance.HELD)
+        self.assertEqual(rig.plant.actuator, 0)
+        self.assertIsNone(rig.s.tilt_deg())
 
     def test_pi_link_lost_while_unlocking(self):
         rig = Rig()
         rig.request = stance.REQUEST_TWO_FOOT
-        rig.run(80)
+        rig.run(60)
         self.assertEqual(rig.s.phase, stance.UNLOCKING)
         rig.link = False
         rig.run(protocol.HEARTBEAT_MS + 60)
@@ -571,9 +647,9 @@ class TestCommandLoss(unittest.TestCase):
     def test_stance_requests_stop_arriving_mid_deploy(self):
         # What the KB2040 sees when the phone goes silent: the Pi keeps its
         # heartbeat but its stance lease has expired, so T lines stop or read 0.
-        rig = Rig(RECEIVER_TWO, 2)
+        rig = Rig(TWO_FOOT_POS, 2)
         rig.request = stance.REQUEST_THREE_FOOT
-        self.assertTrue(rig.until_phase(stance.TRAVEL, 2000))
+        self.assertTrue(rig.until_phase(stance.TILT, 20000))
         rig.run(2000)
         rig.send_request = False
         rig.run(protocol.HEARTBEAT_MS + 60)
@@ -585,7 +661,7 @@ class TestCommandLoss(unittest.TestCase):
     def test_operator_release_mid_change(self):
         rig = Rig()
         rig.request = stance.REQUEST_TWO_FOOT
-        self.assertTrue(rig.until_phase(stance.TRAVEL, 2000))
+        self.assertTrue(rig.until_phase(stance.TILT, 2000))
         rig.run(1000)
         rig.request = 0
         rig.run(60)
@@ -595,7 +671,7 @@ class TestCommandLoss(unittest.TestCase):
     def test_reversal_mid_change_holds(self):
         rig = Rig()
         rig.request = stance.REQUEST_TWO_FOOT
-        self.assertTrue(rig.until_phase(stance.TRAVEL, 2000))
+        self.assertTrue(rig.until_phase(stance.TILT, 2000))
         rig.run(2000)
         rig.request = stance.REQUEST_THREE_FOOT
         rig.run(60)
@@ -603,13 +679,13 @@ class TestCommandLoss(unittest.TestCase):
         rig.cool()
         rig.request = stance.REQUEST_THREE_FOOT
         self.assertTrue(rig.until_state(stance.THREE_FOOT, 60000))
-        self.assertEqual(rig.plant.seated, 3)
+        self.assertEqual(rig.plant.seated(), [3, 3])
 
     def test_stop_and_disarm_hold_a_transition(self):
         for line in ("S", "E 0"):
             rig = Rig()
             rig.request = stance.REQUEST_TWO_FOOT
-            self.assertTrue(rig.until_phase(stance.TRAVEL, 2000))
+            self.assertTrue(rig.until_phase(stance.TILT, 2000))
             rig.run(500)
             rig.send(line)
             rig.run(10)
@@ -628,11 +704,11 @@ class TestPowerAndFeedbackFaults(unittest.TestCase):
     def test_battery_undervoltage_mid_change(self):
         rig = Rig()
         rig.request = stance.REQUEST_TWO_FOOT
-        self.assertTrue(rig.until_phase(stance.TRAVEL, 2000))
+        self.assertTrue(rig.until_phase(stance.TILT, 2000))
         rig.run(2000)
         rig.plant.pack_mv = 10800.0
         rig.run(200)
-        self.assertEqual(rig.s.state, stance.RETRACTING)   # a short sag is not a fault
+        self.assertEqual(rig.s.state, stance.RETRACTING)    # a short sag is not a fault
         rig.plant.pack_mv = 12400.0
         rig.run(200)
         rig.plant.pack_mv = 10800.0
@@ -651,10 +727,10 @@ class TestPowerAndFeedbackFaults(unittest.TestCase):
         rig.request = stance.REQUEST_TWO_FOOT
         self.assertTrue(rig.until_state(stance.TWO_FOOT, 60000))
 
-    def test_pot_open_mid_change_latches_until_feedback_returns(self):
-        rig = Rig(RECEIVER_TWO, 2)
+    def test_pot_open_while_lowering_latches_until_feedback_returns(self):
+        rig = Rig(TWO_FOOT_POS, 2)
         rig.request = stance.REQUEST_THREE_FOOT
-        self.assertTrue(rig.until_phase(stance.TRAVEL, 2000))
+        self.assertTrue(rig.until_phase(stance.LOWER, 2000))
         rig.run(2000)
         rig.plant.pot_override_mv = 0.0
         rig.run(10)
@@ -677,128 +753,161 @@ class TestPowerAndFeedbackFaults(unittest.TestCase):
         self.assertFalse(rig.s.drive_allowed())
 
     def test_reversed_actuator_wiring(self):
-        rig = Rig()
+        rig = Rig(TWO_FOOT_POS, 2)
         rig.plant.reversed_drive = True
-        rig.request = stance.REQUEST_TWO_FOOT
+        rig.request = stance.REQUEST_THREE_FOOT
         rig.run(3000)
         self.assertEqual(rig.s.fault, stance.REVERSED_FEEDBACK)
         self.assertEqual(rig.plant.actuator, 0)
 
     def test_drift_off_a_parked_endpoint(self):
-        # The lock window lies inside the hold tolerance, so a seated reading off
-        # the endpoint is LOCK_DISAGREES; DRIFT is the released-and-moved case.
         machine = stance.Stance(L)
-        parked = stance.Sample(L.two_foot_mm, True, True, True, True, True)
+        parked = stance.Sample(L.two_foot_mm, True, True, True, True, True, True)
         machine.tick(0, parked, 0, True)
         self.assertEqual(machine.state, stance.TWO_FOOT)
-        moved = stance.Sample(L.two_foot_mm + L.hold_tolerance_mm + 0.5, True, False, True, True, True)
+        moved = stance.Sample(L.two_foot_mm + L.hold_tolerance_mm + 0.5, True, True, True, True, True, True)
         machine.tick(10, moved, 0, True)
         self.assertEqual(machine.fault, stance.DRIFT)
         self.assertEqual(machine.actuator, 0)
 
 
 class TestStallAndTimeout(unittest.TestCase):
-    def test_stall_mid_travel(self):
+    def test_stall_mid_tilt(self):
         rig = Rig()
         rig.request = stance.REQUEST_TWO_FOOT
-        self.assertTrue(rig.until_phase(stance.TRAVEL, 2000))
+        self.assertTrue(rig.until_phase(stance.TILT, 2000))
         rig.run(1500)
         rig.plant.stalled = True
         rig.run(L.progress_ms + 30)
         self.assertEqual(rig.s.fault, stance.STALL)
         self.assertEqual(rig.plant.actuator, 0)
 
-    def test_travel_timeout(self):
+    def test_tilt_timeout(self):
         rig = Rig()
         rig.plant.speed = (L.progress_mm * 1.3) / L.progress_ms  # moving, far too slowly
         rig.request = stance.REQUEST_TWO_FOOT
-        rig.run(L.travel_timeout_ms + 1500)
+        rig.run(L.tilt_timeout_ms + 1500)
         self.assertEqual(rig.s.fault, stance.TRAVEL_TIMEOUT)
+        self.assertIn("TILT", rig.s.reason)
         self.assertEqual(rig.plant.actuator, 0)
 
-    def test_pin_will_not_leave_the_receiver(self):
+    def test_lift_timeout(self):
+        rig = Rig(TWO_FOOT_POS, 2)
+        rig.plant.speed = (L.progress_mm * 1.3) / L.progress_ms
+        rig.request = stance.REQUEST_THREE_FOOT
+        rig.run(L.lift_timeout_ms + 1500)
+        self.assertEqual(rig.s.fault, stance.TRAVEL_TIMEOUT)
+        self.assertIn("LOWER", rig.s.reason)
+        self.assertEqual(rig.plant.seated(), [2, 2])
+
+    def test_a_pin_will_not_leave_the_tilt_18_receiver(self):
         rig = Rig()
-        rig.plant.stuck_seated = True
+        rig.plant.pins[1].stuck = True
         rig.request = stance.REQUEST_TWO_FOOT
-        rig.run(L.lock_timeout_ms + 100)
+        rig.run(L.lock_release_timeout_ms + 100)
         self.assertEqual(rig.s.fault, stance.LOCK_TIMEOUT)
         self.assertEqual(rig.plant.actuator, 0)
-        self.assertFalse(rig.plant.moved_pinned)
+        self.assertEqual(rig.plant.pinned_ms, 0)
         self.assertAlmostEqual(rig.plant.mm, RECEIVER_THREE)
+
+    def test_a_pin_will_not_leave_the_tilt_0_receiver(self):
+        rig = Rig(TWO_FOOT_POS, 2)
+        rig.request = stance.REQUEST_THREE_FOOT
+        self.assertTrue(rig.until_phase(stance.UNLOCKING, 20000))
+        rig.plant.pins[0].stuck = True
+        rig.run(L.lock_release_timeout_ms + 100)
+        self.assertEqual(rig.s.fault, stance.LOCK_TIMEOUT)
+        self.assertEqual(rig.plant.actuator, 0)
+        self.assertLessEqual(rig.plant.mm, L.contact_mm + L.stop_tolerance_mm)
 
 
 class TestLockSensor(unittest.TestCase):
-    def test_both_contacts_open_is_invalid_after_the_changeover_allowance(self):
+    def test_one_switch_with_both_contacts_open(self):
         rig = Rig()
-        rig.plant.contacts_override = (False, False)
+        rig.plant.pins[0].override = (False, False)
         rig.run(100)
-        self.assertEqual(rig.s.state, stance.THREE_FOOT)
+        self.assertEqual(rig.s.state, stance.THREE_FOOT)     # inside the changeover allowance
         rig.run(80)
         self.assertEqual(rig.s.fault, stance.LOCK_SENSOR)
         self.assertFalse(rig.s.drive_allowed())
 
-    def test_both_contacts_closed_mid_travel(self):
+    def test_both_contacts_closed_mid_tilt(self):
         rig = Rig()
         rig.request = stance.REQUEST_TWO_FOOT
-        self.assertTrue(rig.until_phase(stance.TRAVEL, 2000))
+        self.assertTrue(rig.until_phase(stance.TILT, 2000))
         rig.run(2000)
-        rig.plant.contacts_override = (True, True)
+        rig.plant.pins[1].override = (True, True)
         rig.run(stance.LOCK_ILLEGAL_MS + 20)
         self.assertEqual(rig.s.fault, stance.LOCK_SENSOR)
         self.assertEqual(rig.plant.actuator, 0)
 
-    def test_parked_on_two_feet_but_switch_reads_released(self):
-        rig = Rig(RECEIVER_TWO, 2)
-        rig.plant.contacts_override = (False, True)
-        rig.run(60)
+    def test_parked_on_two_feet_but_one_switch_reads_released(self):
+        rig = Rig(TWO_FOOT_POS, 2)
+        rig.plant.pins[1].override = (False, True)
+        rig.run(80)
         self.assertEqual(rig.s.fault, stance.LOCK_DISAGREES)
         self.assertFalse(rig.s.head_allowed())
         rig.run(2000)
-        self.assertEqual(rig.s.state, stance.FAULT)          # latched
-        # Clearing with the pin still unseated gives HELD, not a stance: nothing
-        # moves and both drive and dome stay refused.
+        self.assertEqual(rig.s.state, stance.FAULT)           # latched
+        rig.send("C")                                         # the raised foot still lacks a lock
+        self.assertTrue(rig.errors[-1].startswith("err fault not cleared"))
+        self.assertEqual(rig.s.state, stance.FAULT)
+        rig.plant.pins[1].override = None
+        rig.run(80)
         rig.send("C")
-        self.assertEqual(rig.s.state, stance.HELD)
-        self.assertFalse(rig.s.drive_allowed())
-        self.assertFalse(rig.s.head_allowed())
-        rig.plant.contacts_override = None
-        rig.run(60)
-        rig.request = stance.REQUEST_TWO_FOOT                # a fresh press re-seats nothing, it confirms
-        rig.run(60)
         self.assertEqual(rig.s.state, stance.TWO_FOOT)
-        self.assertEqual(rig.plant.actuator, 0)
 
-    def test_switch_reads_seated_away_from_both_receivers(self):
+    def test_parked_on_three_feet_but_one_switch_reads_released(self):
+        rig = Rig()
+        rig.plant.pins[0].override = (False, True)
+        rig.run(80)
+        self.assertEqual(rig.s.fault, stance.LOCK_DISAGREES)
+        self.assertFalse(rig.s.drive_allowed())
+
+    def test_one_switch_reads_seated_away_from_the_receivers(self):
         rig = Rig()
         rig.request = stance.REQUEST_TWO_FOOT
-        self.assertTrue(rig.until_phase(stance.TRAVEL, 2000))
-        rig.run(4000)
-        rig.plant.contacts_override = (True, False)
-        rig.run(60)
+        self.assertTrue(rig.until_phase(stance.TILT, 2000))
+        rig.run(3000)
+        rig.plant.pins[0].override = (True, False)
+        rig.run(80)
         self.assertEqual(rig.s.fault, stance.LOCK_DISAGREES)
         self.assertEqual(rig.plant.actuator, 0)
 
-    def test_pin_never_seats_at_the_two_foot_endpoint(self):
+    def test_one_pin_never_seats_at_touchdown_so_the_foot_is_never_lifted(self):
         rig = Rig()
-        rig.plant.jammed = True
+        rig.plant.pins[1].jammed = True
         rig.request = stance.REQUEST_TWO_FOOT
         self.assertTrue(rig.until_phase(stance.LOCKING, 40000))
-        rig.run(L.lock_settle_ms + 2000 + L.lock_timeout_ms)
+        rig.run(L.lock_settle_ms + 3000 + L.lock_seat_timeout_ms)
         self.assertEqual(rig.s.fault, stance.LOCK_TIMEOUT)
         self.assertIn("not seated", rig.s.reason)
         self.assertEqual(rig.plant.actuator, 0)
-        self.assertGreaterEqual(rig.plant.mm, L.two_foot_mm - L.overshoot_mm - L.stop_tolerance_mm - 0.1)
+        self.assertEqual(rig.plant.seated(), [2, 0])
+        self.assertGreaterEqual(rig.plant.mm, L.contact_mm - L.overshoot_mm - L.stop_tolerance_mm - 0.1)
 
-    def test_pin_never_seats_at_the_three_foot_endpoint_so_no_drive(self):
-        rig = Rig(RECEIVER_TWO, 2)
+    def test_pins_never_seat_at_three_feet_so_no_drive(self):
+        rig = Rig(TWO_FOOT_POS, 2)
         rig.request = stance.REQUEST_THREE_FOOT
-        self.assertTrue(rig.until_phase(stance.TRAVEL, 2000))
-        rig.plant.jammed = True
+        self.assertTrue(rig.until_phase(stance.TILT, 20000))
+        rig.plant.pins[0].jammed = True
+        rig.plant.pins[1].jammed = True
         self.assertTrue(rig.until_phase(stance.LOCKING, 40000))
-        rig.run(L.lock_settle_ms + 2000 + L.lock_timeout_ms)
+        rig.run(L.lock_settle_ms + 3000 + L.lock_seat_timeout_ms)
         self.assertEqual(rig.s.fault, stance.LOCK_TIMEOUT)
         self.assertFalse(rig.s.drive_allowed())
         self.assertLessEqual(rig.plant.mm, L.three_foot_mm + L.overtravel_mm)
+
+    def test_a_lock_reads_released_while_lifting(self):
+        rig = Rig()
+        rig.request = stance.REQUEST_TWO_FOOT
+        self.assertTrue(rig.until_phase(stance.LIFT, 40000))
+        rig.run(500)
+        rig.plant.pins[1].override = (False, True)
+        rig.run(80)
+        self.assertEqual(rig.s.fault, stance.LOCK_DISAGREES)
+        self.assertEqual(rig.plant.actuator, 0)
+        self.assertFalse(rig.plant.releasing(0) or rig.plant.releasing(1))
 
 
 class TestDriveRefusal(unittest.TestCase):
@@ -820,12 +929,12 @@ class TestDriveRefusal(unittest.TestCase):
         self.assertIn("stop the wheels", rig.s.blocked(stance.REQUEST_TWO_FOOT, rig.t, rig.core.drive_idle))
         rig.drive_line = "M 0 0 0 0"
         rig.run(300)
-        self.assertEqual(rig.s.state, stance.RETRACTING)    # still held: starts once idle
+        self.assertEqual(rig.s.state, stance.RETRACTING)     # still held: starts once idle
 
     def test_drive_refused_during_a_transition(self):
         rig = Rig()
         rig.request = stance.REQUEST_TWO_FOOT
-        self.assertTrue(rig.until_phase(stance.TRAVEL, 2000))
+        self.assertTrue(rig.until_phase(stance.TILT, 2000))
         rig.run(500)
         rig.send("M 500 500 500 0")
         self.assertEqual(rig.errors[-1],
@@ -845,7 +954,7 @@ class TestDriveRefusal(unittest.TestCase):
         self.assertEqual(rig.s.state, stance.HELD)
 
     def test_drive_refused_on_two_feet_but_dome_allowed(self):
-        rig = Rig(RECEIVER_TWO, 2)
+        rig = Rig(TWO_FOOT_POS, 2)
         rig.drive_line = "M 500 500 500 300"
         rig.run(300)
         self.assertIn("err drive refused (ground drive): the two-foot stance is stationary", rig.errors)
@@ -861,7 +970,7 @@ class TestDriveRefusal(unittest.TestCase):
         rig.run(300)
         self.assertIn("err drive refused (ground drive and dome): stance fault latched", rig.errors)
         self.assertEqual(rig.plant.channels, [0, 0, 0, 0])
-        held = Rig(50.0, 0)
+        held = Rig(45.0, 0)
         held.drive_line = "M 500 0 0 0"
         held.run(100)
         self.assertTrue(held.errors[-1].startswith("err drive refused (ground drive): stance not locked"))
@@ -872,8 +981,8 @@ class TestDriveRefusal(unittest.TestCase):
         rig.drive_line = "M 600 600 600 0"
         rig.run(300)
         self.assertEqual(rig.plant.channels[:3], [600, 600, 600])
-        rig.plant.contacts_override = (False, True)
-        rig.run(50)
+        rig.plant.pins[0].override = (False, True)
+        rig.run(80)
         self.assertEqual(rig.s.fault, stance.LOCK_DISAGREES)
         self.assertEqual(rig.plant.channels, [0, 0, 0, 0])
 
@@ -882,27 +991,27 @@ class TestFaultLatchAndClear(unittest.TestCase):
     def test_fault_stays_latched_until_cleared_and_needs_a_fresh_press(self):
         rig = Rig()
         rig.request = stance.REQUEST_TWO_FOOT
-        self.assertTrue(rig.until_phase(stance.TRAVEL, 2000))
+        self.assertTrue(rig.until_phase(stance.TILT, 2000))
         rig.run(1500)
         rig.plant.stalled = True
         rig.run(L.progress_ms + 30)
         self.assertEqual(rig.s.fault, stance.STALL)
         rig.plant.stalled = False
-        rig.run(3000)                                        # cause gone, control still held
+        rig.run(3000)                                         # cause gone, control still held
         self.assertEqual(rig.s.state, stance.FAULT)
         self.assertEqual(rig.plant.actuator, 0)
         self.assertFalse(rig.s.drive_allowed())
         self.assertTrue(rig.last_status().startswith("ss FAULT NONE STALL "))
-        rig.send("C")                                        # clear while the control is still held
+        rig.send("C")                                         # clear while the control is still held
         self.assertEqual(rig.lines[-1], "ok\n")
         self.assertEqual(rig.s.state, stance.HELD)
+        rig.run(1000)
+        self.assertEqual(rig.plant.actuator, 0)               # the held control does not restart it
         rig.cool()
         rig.request = stance.REQUEST_TWO_FOOT
-        rig.run(10)
-        # cool() released the control, so this press is fresh and resumes the retract.
         self.assertTrue(rig.until_state(stance.TWO_FOOT, 60000))
 
-    def test_clear_after_a_hold_is_not_needed_and_clear_without_fault_is_refused(self):
+    def test_clear_without_a_fault_is_refused(self):
         rig = Rig()
         rig.send("C")
         self.assertEqual(rig.errors[-1], "err no stance fault latched")
@@ -910,14 +1019,14 @@ class TestFaultLatchAndClear(unittest.TestCase):
     def test_clear_keeps_the_press_consumed(self):
         rig = Rig()
         rig.request = stance.REQUEST_TWO_FOOT
-        self.assertTrue(rig.until_phase(stance.TRAVEL, 2000))
+        self.assertTrue(rig.until_phase(stance.TILT, 2000))
         rig.run(1500)
         rig.plant.pot_override_mv = 0.0
         rig.run(20)
         rig.plant.pot_override_mv = None
         rig.run(20)
         rig.send("C")
-        rig.run(200000)                                      # control held the whole time
+        rig.run(200000)                                       # control held the whole time
         self.assertEqual(rig.s.state, stance.HELD)
         self.assertEqual(rig.plant.actuator, 0)
         self.assertIn("release", rig.s.blocked(stance.REQUEST_TWO_FOOT, rig.t, True))

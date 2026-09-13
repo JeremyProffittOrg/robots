@@ -18,6 +18,10 @@ Outputs, all written next to this file in ``electronics/``:
 ``04-pi-audio-and-links.svg`` the Raspberry Pi header pins in use, the USB link to the
                               KB2040, the amplifier and speaker, the 5 V feed and the
                               ADS1115 battery divider
+``05-stance-actuator-and-lock.svg``  revision D: the DRV8871 actuator driver and its
+                              fuse, the actuator potentiometer, the NO/NC lock switch
+                              with its pull-ups, the release servo with its level
+                              shifter, and the KB2040's own battery divider
 ``wiring.csv``                one row per wire
 ``calculations.json``         rail currents, fuse ratings, ampacity checks and runtime
 ============================  =========================================================
@@ -31,12 +35,18 @@ fusing"), ``firmware/kb2040/code.py`` (the motor pin map), ``firmware/pi/display
 
 import csv
 import json
+import sys
 import xml.etree.ElementTree as ET
 from html import escape
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
 ROOT = HERE.parent
+
+# The stance values on sheet 05 and in calculations.json come from the one
+# MECHANISM CONSTANTS block in the firmware, so the drawings cannot drift from it.
+sys.path.insert(0, str(ROOT / "firmware" / "kb2040"))
+import stance as fw  # noqa: E402  (hardware-free)
 
 # ---------------------------------------------------------------------------
 # Harness
@@ -49,17 +59,38 @@ ROWS = []
 MOTORS = [
     # ref,  name,       driver, channel, pwm pin, digital pin, foot,          route
     ("M1", "lf-front", "U1", "A", "D3", "D2", "left foot", "body_upper tray -> left leg -> left foot"),
-    ("M2", "lf-rear", "U1", "B", "D5", "D4", "left foot", "body_upper tray -> left leg -> left foot"),
+    ("M2", "lf-rear", "U1", "B", "D3", "D2", "left foot", "body_upper tray -> left leg -> left foot"),
     ("M3", "rf-front", "U2", "A", "D7", "D6", "right foot", "body_upper tray -> right leg -> right foot"),
-    ("M4", "rf-rear", "U2", "B", "D9", "D8", "right foot", "body_upper tray -> right leg -> right foot"),
+    ("M4", "rf-rear", "U2", "B", "D7", "D6", "right foot", "body_upper tray -> right leg -> right foot"),
     ("M5", "cf-front", "U3", "A", "D10", "MOSI", "centre foot", "body_upper tray -> body_lower -> centre leg -> centre foot"),
-    ("M6", "cf-rear", "U3", "B", "SCK", "MISO", "centre foot", "body_upper tray -> body_lower -> centre leg -> centre foot"),
-    ("M7", "head", "U4", "A", "A1", "A0", "head drive", "body_upper tray -> under the body top plate"),
+    ("M6", "cf-rear", "U3", "B", "D10", "MOSI", "centre foot", "body_upper tray -> body_lower -> centre leg -> centre foot"),
+    ("M7", "head", "U4", "A", "D5", "D4", "head drive", "body_upper tray -> under the body top plate"),
 ]
 
-SLP_PIN = "D1"
+# Revision D: the DRIVES table in firmware/kb2040/code.py.  Each foot's two DRV8833
+# channels share one KB2040 pin pair, jumpered AIN1-BIN1 and AIN2-BIN2 on the board.
+DRIVE_SIGNALS = [
+    # drive,   driver, pwm pin, digital pin, motors
+    ("left", "U1", "D3", "D2", "M1 lf-front, M2 lf-rear"),
+    ("right", "U2", "D7", "D6", "M3 rf-front, M4 rf-rear"),
+    ("centre", "U3", "D10", "MOSI", "M5 cf-front, M6 cf-rear"),
+    ("head", "U4", "D5", "D4", "M7 head"),
+]
+
 PIXEL_PIN = "A2"
 INDEX_PIN = "A3"
+
+# Revision D stance pins, mirrored from firmware/kb2040/code.py.
+ACT_DIR_PIN = "D8"
+ACT_PWM_PIN = "D9"
+POSITION_PIN = "A0"
+BATTERY_PIN = "A1"
+# side, switch, NO pin, NC pin, pull-ups, servo, servo pin, extension, U11 channel
+LOCKS = [
+    ("L", "SW2", "SCK", "MISO", ("R6A", "R6B"), "SV1", "D0", "J13A", 1, "left"),
+    ("R", "SW3", "SDA", "SCL", ("R6C", "R6D"), "SV2", "D1", "J13B", 2, "right"),
+]
+CENTRE_LEG = "body_upper tray -> body_lower -> centre leg"
 
 # The twelve Adafruit 1195 slip-ring wires, in the order they are documented.
 SLIP_RING = [
@@ -180,14 +211,18 @@ def build_harness():
     wire("USB-LINK", "A1", "USB 2.0 type A port", "A2", "USB-C", 0, "cable J11", 1000,
          tray + " (5 V power and the USB CDC serial link)")
 
-    # -- motor control signals --------------------------------------------
-    for ref, name, driver, channel, pwm_pin, dig_pin, foot, route in MOTORS:
-        wire("SIG-{0}-PWM".format(name), "A2", pwm_pin, driver,
-             "{0}IN2".format(channel), 22, "green", 140, tray)
-        wire("SIG-{0}-DIR".format(name), "A2", dig_pin, driver,
-             "{0}IN1".format(channel), 22, "white", 140, tray)
+    # -- motor control signals: one pin pair per foot, jumpered on the board --
+    for drive, driver, pwm_pin, dig_pin, _motors in DRIVE_SIGNALS:
+        wire("SIG-{0}-PWM".format(drive), "A2", pwm_pin, driver, "AIN2", 22, "green", 140, tray)
+        wire("SIG-{0}-DIR".format(drive), "A2", dig_pin, driver, "AIN1", 22, "white", 140, tray)
+        if drive != "head":
+            wire("SIG-{0}-PWM".format(drive), driver, "AIN2", driver, "BIN2 (jumper on the board)",
+                 22, "green", 30, tray)
+            wire("SIG-{0}-DIR".format(drive), driver, "AIN1", driver, "BIN1 (jumper on the board)",
+                 22, "white", 30, tray)
     for driver in ("U1", "U2", "U3", "U4"):
-        wire("SIG-SLP", "A2", SLP_PIN, driver, "SLP", 22, "yellow", 140, tray)
+        # Revision D: SLP tied high; arming and stopping are done in firmware.
+        wire("SLP-TIED-HIGH", "A2", "3V3 pad", driver, "SLP", 22, "yellow", 140, tray)
 
     # -- motor power pairs -------------------------------------------------
     lengths = {"left foot": 820, "right foot": 820, "centre foot": 760, "head drive": 300}
@@ -199,6 +234,74 @@ def build_harness():
              "terminal - (JST-XH pin 2)", 22, "blue", length, route)
     wire("GND", "TB2", "star ground stud", "U4", "BIN1 and BIN2 (tied low)", 22, "black", 150,
          tray + " (driver 4 channel B is unused)")
+
+    # -- revision D: 12 V actuator branch and DRV8871 (sheet 05) --------------
+    wire("12V-BUS", "TB2", "12V+ stud", "FH7", "in", 16, "red", 120, tray)
+    wire("ACT-12V", "FH7", "out (F7 2 A)", "U10", "VM (terminal block +)", 22, "red", 120, tray)
+    wire("GND", "TB2", "star ground stud", "U10", "GND (terminal block -)", 22, "black", 120, tray)
+    wire("GND", "A2", "GND pad", "U10", "GND (logic header)", 22, "black", 140, tray)
+    wire("SIG-ACT-DIR", "A2", ACT_DIR_PIN, "U10", "IN1", 22, "white", 140, tray)
+    wire("SIG-ACT-PWM", "A2", ACT_PWM_PIN, "U10", "IN2", 22, "green", 140, tray)
+    wire("ACT-MOTOR-A", "U10", "OUT1 (terminal block)", "ACT1", "red lead (motor +)", 22, "yellow",
+         450, CENTRE_LEG)
+    wire("ACT-MOTOR-B", "U10", "OUT2 (terminal block)", "ACT1", "black lead (motor -)", 22, "blue",
+         450, CENTRE_LEG)
+
+    # -- revision D: actuator position potentiometer -------------------------
+    wire("3V3", "A2", "3V3 pad", "R7", "2.2k leg 1", 22, "red", 140, tray)
+    wire("ACT-POT-REF", "R7", "2.2k leg 2", "ACT1", "yellow lead (pot + reference)", 22, "red", 450,
+         CENTRE_LEG)
+    wire("GND", "A2", "GND pad", "ACT1", "orange lead (pot - reference)", 22, "black", 450, CENTRE_LEG)
+    wire("SIG-ACT-POS", "ACT1", "purple lead (pot wiper)", "A2", POSITION_PIN, 22, "green", 450,
+         CENTRE_LEG)
+    wire("SIG-ACT-POS", "A2", POSITION_PIN, "R8", "470k leg 1", 22, "green", 20, tray)
+    wire("GND", "R8", "470k leg 2", "A2", "GND pad", 22, "black", 20, tray)
+
+    # -- revision D: two shoulder lock switches, NO and NC each ----------------
+    # The right switch reaches GP12/GP13 through the STEMMA QT connector (cable J14).
+    wire("GND", "A2", "STEMMA QT GND", "J14", "JST SH plug, GND", 0, "cable J14", 150,
+         tray + " (STEMMA QT connector; red 3V3 lead insulated, unused)")
+    for side, switch, no_pin, nc_pin, pullups, _servo, _servo_pin, _ext, _channel, name in LOCKS:
+        route = "body_upper tray -> {0} shoulder".format(name)
+        for contact, pin, pullup, colour in (("NO", no_pin, pullups[0], "white"),
+                                             ("NC", nc_pin, pullups[1], "blue")):
+            net = "SIG-LOCK-{0}-{1}".format(side, contact)
+            if side == "L":
+                wire(net, switch, contact, "A2", pin, 22, colour, 420, route)
+                wire("3V3", "A2", "3V3 pad", pullup, "3.3k leg 1", 22, "red", 20, tray)
+                wire(net, pullup, "3.3k leg 2", "A2", pin, 22, colour, 20, tray)
+            else:
+                lead = "blue lead (SDA) header pin" if pin == "SDA" else "yellow lead (SCL) header pin"
+                wire(net, "A2", pin, "J14", "JST SH plug, " + pin, 0, "cable J14", 150,
+                     tray + " (STEMMA QT connector)")
+                wire(net, "J14", lead, switch, contact, 22, colour, 420, route)
+                wire("3V3", "A2", "3V3 pad", pullup, "3.3k leg 1", 22, "red", 20, tray)
+                wire(net, pullup, "3.3k leg 2", "J14", lead, 22, colour, 20, tray)
+        if side == "L":
+            wire("GND", "A2", "GND pad", switch, "COM", 22, "black", 420, route)
+        else:
+            wire("GND", "J14", "black lead (GND) header pin", switch, "COM", 22, "black", 420, route)
+
+    # -- revision D: two release servos through one level shifter --------------
+    wire("3V3", "A2", "3V3 pad", "U11", "LV", 22, "red", 120, tray)
+    wire("5V", "U5", "VOUT", "U11", "HV", 22, "red", 200, tray)
+    wire("GND", "A2", "GND pad", "U11", "GND", 22, "black", 120, tray)
+    for side, _switch, _no, _nc, _pullups, servo, servo_pin, extension, channel, name in LOCKS:
+        route = "body_upper tray -> {0} shoulder".format(name)
+        wire("SIG-RELEASE-SERVO-" + side, "A2", servo_pin, "U11", "LV{0}".format(channel), 22,
+             "green", 120, tray)
+        wire("SERVO-SIGNAL-" + side, "U11", "HV{0}".format(channel), extension, "signal (orange)", 22,
+             "green", 60, tray)
+        wire("6V-U7", "U7", "VOUT", extension, "V+ (red)", 22, "red", 180, tray)
+        wire("GND", "TB2", "star ground stud", extension, "GND (brown)", 22, "black", 180, tray)
+        wire("SERVO-LEAD-" + side, extension, "far end, 3 pin", servo, "servo plug", 0,
+             "cable " + extension, 300, route + " (300 mm extension)")
+
+    # -- revision D: the KB2040's own battery divider --------------------------
+    wire("12V-BUS", "TB2", "12V+ stud", "R9", "100k leg 1", 22, "red", 150, tray)
+    wire("SIG-VBAT-KB", "R9", "100k leg 2", "A2", BATTERY_PIN, 22, "white", 120, tray)
+    wire("SIG-VBAT-KB", "A2", BATTERY_PIN, "R10", "15k leg 1", 22, "white", 20, tray)
+    wire("GND", "R10", "15k leg 2", "A2", "GND pad", 22, "black", 20, tray)
 
     # -- dome index sensor (optional) --------------------------------------
     wire("3V3", "A2", "3V3 pad", "SQ1", "pin 1 (VCC)", 22, "red", 420, plate)
@@ -455,7 +558,7 @@ class Sheet:
         return name
 
 
-FOOTER = ("fable-r2d2 electrical set, 2026-09-12  |  sheets 01-04 and electronics/wiring.csv "
+FOOTER = ("fable-r2d2 electrical set, revision D, 2026-09-12  |  sheets 01-05 and electronics/wiring.csv "
           "are one drawing set  |  pin names are the final firmware names in "
           "firmware/kb2040/code.py  |  not yet validated on hardware")
 
@@ -528,8 +631,8 @@ def sheet_power():
     ], COLOURS["6v"])
     s.box(1116, top, 528, "U7  D36V50F6  12 V -> 6 V 5.5 A  (rail B)", [
         "12V-BUS -> FH5 (F5 5 A) -> VIN",
-        "VOUT -> U2 VMOTOR (right foot) and U4 VMOTOR (head drive)",
-        "Three motors at the 1 A limit: 3 A worst case",
+        "VOUT -> U2 (right foot), U4 (head), SV1 and SV2 servos",
+        "3 A motors, or 3 A of servo stall while motors are refused",
         "18 W at 6 V is 1.7 A from 12 V at 90 percent efficiency",
         "Splitting the rails keeps a stalled foot off the head drive",
         "Both 6 V rails share the star ground, nothing else",
@@ -594,6 +697,7 @@ def sheet_power():
         ("F4  5 A", "6 V regulator U6 input, holder FH4"),
         ("F5  5 A", "6 V regulator U7 input, holder FH5"),
         ("F6  2 A", "5 V dome feed to the slip ring, holder FH6"),
+        ("F7  2 A", "12 V actuator driver U10 (sheet 05), holder FH7"),
     ], left_width=140, accent=COLOURS["12v"])
     s.box(1116, bottom2, 528, "Safety, before the battery goes in", [
         "1. F1 within 100 mm of the battery positive terminal.",
@@ -617,16 +721,19 @@ def sheet_motors():
               1680, 1380)
 
     rows = []
-    for ref, name, driver, channel, pwm_pin, dig_pin, foot, _route in MOTORS:
-        rows.append(("{0:<5}".format(pwm_pin),
-                     "{0} {1}IN2  PWM  ->  {2} {3}".format(driver, channel, ref, name)))
-        rows.append(("{0:<5}".format(dig_pin),
-                     "{0} {1}IN1  direction (high = slow decay)".format(driver, channel)))
-    rows.append((SLP_PIN, "SLP on all four DRV8833 boards, high = awake"))
+    for drive, driver, pwm_pin, dig_pin, motors in DRIVE_SIGNALS:
+        pair = "" if drive == "head" else " + BIN2"
+        rows.append((pwm_pin, "{0} AIN2{1}  PWM  ->  {2}".format(driver, pair, motors)))
+        pair = "" if drive == "head" else " + BIN1"
+        rows.append((dig_pin, "{0} AIN1{1}  direction (high = slow decay)".format(driver, pair)))
+    rows.append(("3V3 pad", "SLP on all four DRV8833 boards, tied high"))
     rows.append((PIXEL_PIN, "NeoPixel data out, 17 pixels, to slip ring wire 5"))
     rows.append((INDEX_PIN, "dome index sensor SQ1, active low, internal pull-up"))
-    rows.append(("D0", "spare, no connection"))
-    rows.append(("SDA/SCL", "STEMMA QT, GPIO12/13, reserved and unused"))
+    rows.append(("D8/D9", "U10 DRV8871 actuator IN1 / IN2: sheet 05"))
+    rows.append(("D0/D1", "left / right release servo through U11: sheet 05"))
+    rows.append(("SCK/MISO", "left lock switch SW2 NO / NC: sheet 05"))
+    rows.append(("SDA/SCL", "right lock switch SW3 NO / NC, STEMMA QT: sheet 05"))
+    rows.append(("A0/A1", "actuator pot wiper / KB2040 battery divider: sheet 05"))
     bottom = s.pin_table(36, 120, 780, "A2  Adafruit KB2040 - every external connection",
                          rows, left_width=110, accent=COLOURS["data"])
 
@@ -634,16 +741,15 @@ def sheet_motors():
         "USB-C from the Pi (cable J11):",
         "5 V and the USB CDC serial link.",
         "Do NOT also feed RAW from U5.",
-        "3V3 pad feeds only SQ1.",
+        "3V3 pad: SQ1, SLP, sheet 05.",
     ], COLOURS["5v"])
-    s.box(1256, 120, 388, "Why one PWM pin per motor", [
-        "RP2040 GPIO n uses PWM slice",
-        "(n >> 1) & 7, channel n & 1, so",
-        "GP2/GP18, GP3/GP19, GP4/GP20 and",
-        "GP10/GP26 collide. Fourteen PWM",
-        "outputs are impossible here.",
-        "The seven PWM pins above sit on",
-        "seven different slice/channels.",
+    s.box(1256, 120, 388, "Why one PWM pin per output", [
+        "GPIO n is PWM slice (n >> 1) & 7,",
+        "channel n & 1: GP2/GP18, GP3/GP19,",
+        "GP4/GP20, GP10/GP26 collide. So",
+        "each output gets one PWM and one",
+        "plain pin; a foot's two channels",
+        "share one pin pair (jumpers).",
     ], COLOURS["data"])
 
     s.box(836, 316, 808, "DRV8833 states reachable with one PWM and one digital pin", [
@@ -658,21 +764,25 @@ def sheet_motors():
     top = max(bottom, 520) + 52
     s.text(36, top - 18, "Driver boards, motor rails and the seven motors", "head")
     columns = [
-        ("U1  DRV8833 #1  left foot", "U6 (6 V rail A)",
-         [("A", "M1 lf-front", "D3", "D2"), ("B", "M2 lf-rear", "D5", "D4")]),
-        ("U2  DRV8833 #2  right foot", "U7 (6 V rail B)",
-         [("A", "M3 rf-front", "D7", "D6"), ("B", "M4 rf-rear", "D9", "D8")]),
-        ("U3  DRV8833 #3  centre foot", "U6 (6 V rail A)",
-         [("A", "M5 cf-front", "D10", "MOSI"), ("B", "M6 cf-rear", "SCK", "MISO")]),
-        ("U4  DRV8833 #4  head drive", "U7 (6 V rail B)",
-         [("A", "M7 head", "A1", "A0")]),
+        ("U1  DRV8833 #1  left foot", "U6 (6 V rail A)", "D3", "D2",
+         [("A", "M1 lf-front"), ("B", "M2 lf-rear")]),
+        ("U2  DRV8833 #2  right foot", "U7 (6 V rail B)", "D7", "D6",
+         [("A", "M3 rf-front"), ("B", "M4 rf-rear")]),
+        ("U3  DRV8833 #3  centre foot", "U6 (6 V rail A)", "D10", "MOSI",
+         [("A", "M5 cf-front"), ("B", "M6 cf-rear")]),
+        ("U4  DRV8833 #4  head drive", "U7 (6 V rail B)", "D5", "D4",
+         [("A", "M7 head")]),
     ]
     x = 36
     width = 388
-    for title, rail, channels in columns:
-        lines = ["VMOTOR <- {0}".format(rail), "GND <- TB2 star ground", "SLP <- KB2040 D1"]
-        for channel, motor, pwm_pin, dig_pin in channels:
-            lines.append("{0}IN1 <- {1} / {0}IN2 <- {2}".format(channel, dig_pin, pwm_pin))
+    for title, rail, pwm_pin, dig_pin, channels in columns:
+        lines = ["VMOTOR <- {0}".format(rail), "GND <- TB2 star ground", "SLP <- KB2040 3V3 (tied)"]
+        if len(channels) == 2:
+            lines.append("AIN1 + BIN1 <- {0} (jumpered)".format(dig_pin))
+            lines.append("AIN2 + BIN2 <- {0} (jumpered)".format(pwm_pin))
+        else:
+            lines.append("AIN1 <- {0} / AIN2 <- {1}".format(dig_pin, pwm_pin))
+        for channel, motor in channels:
             lines.append("{0}OUT1/{0}OUT2 -> {1}".format(channel, motor))
         if len(channels) == 1:
             lines.append("BIN1/BIN2 tied to ground")
@@ -712,10 +822,10 @@ def sheet_motors():
         (COLOURS["gnd"], "ground"),
     ])
     s.box(1256, foot, 388, "Stop behaviour", [
-        "KB2040 drops SLP on E 0, on S,",
-        "and after 500 ms with no line",
-        "from the Pi: every motor coasts.",
-        "SLP low is coast, not a brake.",
+        "KB2040 coasts every motor on E 0,",
+        "on S, and after 500 ms with no",
+        "line from the Pi. SLP is tied",
+        "high, so coast is the stop.",
         "Power off at SW1 is the only",
         "guaranteed disconnect.",
     ], COLOURS["12v"])
@@ -899,7 +1009,7 @@ def sheet_pi():
         "Ratio (100k + 15k) / 15k = 7.6667, so 12.70 V reads 1.657 V and the",
         "14.75 V charge peak reads 1.924 V: inside the 4.096 V full scale.",
         "firmware/pi/battery.py: 12.70 V full, 11.60 V empty, 11.20 V critical.",
-        "No KB2040 pin is involved; A0 and A1 there drive the head motor.",
+        "The KB2040 has its own divider on A1 (R9 / R10) for the interlock: sheet 05.",
     ], COLOURS["signal"])
     s.box(856, top2, 788, "Rail check with a multimeter, loads disconnected", [
         "1. Fuses out, battery connected, SW1 off: 0 V at the bus, 12.x V at F1 in.",
@@ -920,7 +1030,7 @@ def sheet_pi():
     ])
     s.box(476, foot, 560, "What is NOT wired", [
         "GPIO18 backlight control (R1 ties the backlight on: sheet 03).",
-        "The KB2040 STEMMA QT port (GPIO12/13): reserved, unused.",
+        "KB2040 D1 to SLP: the four SLP pins are tied to 3V3 (sheet 02).",
         "KB2040 RAW: the Pi's USB port is the only 5 V source for it.",
         "Pi header pins 2 and 4: 5 V goes in through the USB-C input only.",
     ], COLOURS["note"], style="small")
@@ -932,6 +1042,147 @@ def sheet_pi():
         "never shares a return with a motor.",
     ])
     return s.save("04-pi-audio-and-links.svg", FOOTER)
+
+
+# ---------------------------------------------------------------------------
+# Sheet 05 - revision D stance change
+# ---------------------------------------------------------------------------
+
+POT_TOP_OHMS = 2200
+POT_NOMINAL_OHMS = 11000
+ILIM_OHMS = 71500
+LOCK_PULLUP_OHMS = 3300
+
+
+def pot_full_mv(pot_ohms):
+    """Wiper millivolts at full stroke with the 2.2 k top resistor from 3.3 V."""
+    return 3300.0 * pot_ohms / (pot_ohms + POT_TOP_OHMS)
+
+
+def sheet_stance():
+    s = Sheet("05  Stance change: actuator driver, position pot, lock switch, release servo",
+              "Revision D. The KB2040 owns the interlock (firmware/kb2040/stance.py and "
+              "supervisor.py). Pin names are exactly those in firmware/kb2040/code.py.",
+              1680, 1460)
+
+    # A. the 12 V actuator chain
+    y = 196
+    s.text(36, 128, "A.  12 V actuator branch", "head")
+    s.text(36, y + 5, "12V-BUS", "net", fill=NET)
+    s.line(116, y, 150, y, COLOURS["12v"])
+    end = s.fuse(150, y, "F7  2 A  (holder FH7)")
+    s.arrow(end, y, end + 50, y, COLOURS["12v"])
+    box_x = end + 50
+    s.box(box_x, 150, 330, "U10  Adafruit DRV8871", [
+        "VM / GND terminal block",
+        "IN1 <- D8   IN2 <- D9",
+        "ILIM R5 71.5 k: {0:.3f} A".format(64.0 / (ILIM_OHMS / 1000.0)),
+    ], COLOURS["12v"], style="small")
+    s.arrow(box_x + 330, y, box_x + 420, y, COLOURS["12v"])
+    s.motor(box_x + 450, y, "ACT1 actuator")
+    s.box(box_x + 540, 150, 1644 - (box_x + 540), "ACT1  " + fw.ACTUATOR_PART, [
+        "{0:.0f} mm stroke, 12 V, {1:.1f} A stall, 20 % duty".format(
+            fw.ACTUATOR_STROKE_MM, fw.ACTUATOR_STALL_A),
+        "two-foot {0:.1f}, touchdown {1:.1f}, three-foot {2:.1f} mm".format(
+            fw.TWO_FOOT_MM, fw.CONTACT_MM, fw.THREE_FOOT_MM),
+        "{0:.1f} mm/s no load: {1:.0f} s per change".format(
+            fw.ACTUATOR_NO_LOAD_SPEED_MM_S,
+            (fw.THREE_FOOT_MM - fw.TWO_FOOT_MM) / fw.ACTUATOR_NO_LOAD_SPEED_MM_S),
+    ], COLOURS["12v"], style="small")
+
+    top = 320
+    bottom = s.pin_table(36, top, 780, "A2  KB2040 pins used by the stance change", [
+        (ACT_DIR_PIN, "U10 IN1, actuator direction (high = slow decay, extend)"),
+        (ACT_PWM_PIN, "U10 IN2, actuator PWM 20 kHz, slice 4 channel B"),
+        ("D0", "U11 LV1 -> HV1 5 V -> SV1 left release servo, 50 Hz, slice 0A"),
+        ("D1", "U11 LV2 -> HV2 5 V -> SV2 right release servo, 50 Hz, slice 0B"),
+        ("SCK", "SW2 left lock NO, R6A 3.3 k pull-up to 3V3; low = closed"),
+        ("MISO", "SW2 left lock NC, R6B 3.3 k pull-up to 3V3; low = closed"),
+        ("SDA", "SW3 right lock NO via J14 blue lead, R6C 3.3 k pull-up"),
+        ("SCL", "SW3 right lock NC via J14 yellow lead, R6D 3.3 k pull-up"),
+        (POSITION_PIN, "ACT1 pot wiper (purple), R8 470 k pull-down"),
+        (BATTERY_PIN, "12 V bus through R9 100 k over R10 15 k"),
+        ("D4/D5", "head drive U4 AIN1 / AIN2, moved from A0 / A1 (sheet 02)"),
+        ("3V3 pad", "R6A-R6D, R7 (pot reference), U11 LV, DRV8833 SLP"),
+        ("GND pad", "SW2 COM, pot orange lead, R8, R10, U10 and U11 logic ground"),
+    ], left_width=110, accent=COLOURS["data"])
+    s.box(836, top, 808, "U10  DRV8871 wiring and current limit", [
+        "VM <- F7 2 A (holder FH7) <- 12V-BUS.  GND -> TB2.  Logic GND -> KB2040 GND pad.",
+        "IN1 <- KB2040 D8 (digital), IN2 <- D9 (PWM).  OUT1 -> ACT1 red, OUT2 -> ACT1 black.",
+        "IN1 high, IN2 duty FULL*(1-m): extend at m.  IN1 low, IN2 duty FULL*m: retract at m.",
+        "Both inputs low: coast, and the driver sleeps.  Both high: brake.",
+        "Remove the factory 30 k ILIM resistor (about 2 A) and fit R5 71.5 k 1 %: 0.895 A.",
+        "The actuator stalls at 1.0 A, so a jam is chopped by the driver and latched as STALL.",
+        "VM 6.5-45 V: the pack (10.5-14.75 V) feeds it directly.  3.3 V logic drives IN1/IN2.",
+        "If the pot reads backwards the firmware latches REVERSED_FEEDBACK: swap red and black.",
+    ], COLOURS["12v"])
+
+    top = max(bottom, top + 230) + 30
+    full_nominal = pot_full_mv(POT_NOMINAL_OHMS)
+    full_high = pot_full_mv(POT_NOMINAL_OHMS * 1.5)
+    bottom = s.box(36, top, 800, "ACT1  position potentiometer", [
+        "Yellow (pot +) <- R7 2.2 k <- KB2040 3V3.  Orange (pot -) -> KB2040 GND pad.",
+        "Purple (wiper) -> KB2040 A0, with R8 470 k from A0 to the GND pad at the KB2040.",
+        "11 k pot: 0 mV at stroke 0, {0:.0f} mV at full stroke; +50 % tolerance gives {1:.0f} mV.".format(
+            full_nominal, full_high),
+        "Open wiper or open pot + reads near 0 mV; open pot - reads near 3300 mV.",
+        "Valid window {0:.0f}-{1:.0f} mV.  Outside it: FEEDBACK latched, actuator stopped.".format(
+            fw.POT_MIN_VALID_MV, fw.POT_MAX_VALID_MV),
+        "Measure zero and full mV on the detached actuator and set POT_ZERO_MV / POT_FULL_MV.",
+    ], COLOURS["signal"])
+    seated = fw.LOCK_SEATED_CONTACT
+    other = "NC" if seated == "NO" else "NO"
+    s.box(856, top, 788, "SW2 / SW3  Omron SS-01GL lock switches, NO + NC", [
+        "SW2 left: COM -> GND pad, NO -> SCK, NC -> MISO.  SW3 right via J14: NO -> SDA, NC -> SCL.",
+        "3.3 k pull-ups R6A-R6D to 3V3: 1 mA through a closed contact.  COM of SW3 -> J14 black.",
+        "Pin seated: {0} closed, {1} open.  Pin out: {0} open, {1} closed.".format(seated, other),
+        "Per switch, exactly one closed contact is legal; a change must hold {0} ms.".format(
+            fw.LOCK_LEGAL_MS),
+        "Both open or both closed for {0} ms latches LOCK_SENSOR (broken wire or short).".format(
+            fw.LOCK_ILLEGAL_MS),
+        "Omron minimum load is 5 V 1 mA; this is 3.3 V 1 mA.  Bench-check it first.",
+    ], COLOURS["data"])
+
+    top = bottom + 30
+    bottom = s.box(36, top, 800, "SV1 / SV2  release servos, U11 level shifter, J13A / J13B", [
+        "D0 -> U11 LV1 -> HV1 -> J13A -> SV1 (left); D1 -> LV2 -> HV2 -> J13B -> SV2 (right).",
+        "U11 LV <- KB2040 3V3, HV <- U5 5 V, GND -> KB2040 GND pad.  5 V signal swing.",
+        "Servo V+ (red) <- U7 6 V rail B; servo GND (brown) -> TB2 star ground.",
+        "Engage {0}/{1} us; release {2} us left, {3} us right (mirrored); no pulse after {4} ms.".format(
+            fw.ENGAGE_US[0], fw.ENGAGE_US[1], fw.RELEASE_US[0], fw.RELEASE_US[1], fw.ENGAGE_HOLD_MS),
+        "The pins are spring return: losing servo power or signal lets them seat.",
+        "Calibrate each release on its lever: 5.5-5.9 mm of pin pull without a stall.",
+    ], COLOURS["6v"])
+    ratio = (fw.BATTERY_TOP_OHMS + fw.BATTERY_BOTTOM_OHMS) / float(fw.BATTERY_BOTTOM_OHMS)
+    s.box(856, top, 788, "R9 / R10  KB2040 battery sense on A1", [
+        "12V-BUS -> R9 100 k -> A1 node -> R10 15 k -> KB2040 GND pad.  Ratio {0:.3f}.".format(ratio),
+        "12.70 V reads {0:.3f} V and 14.75 V reads {1:.3f} V at A1 (ADC range 3.3 V).".format(
+            12.7 / ratio, 14.75 / ratio),
+        "Below {0:.1f} V for {1} ms: no power.  Back only at {2:.1f} V for {1} ms.".format(
+            fw.BATTERY_CUTOFF_MV / 1000.0, fw.BATTERY_LOW_MS, fw.BATTERY_REARM_MV / 1000.0),
+        "No power blocks a stance start and latches POWER during a change.",
+        "Separate from the Pi ADS1115 divider (R2 / R3, sheet 04).",
+        "R9 comes from the R2 pack; R10 is the second R3 resistor.",
+    ], COLOURS["signal"])
+
+    top = bottom + 30
+    bottom = s.box(36, top, 1608, "Interlock (firmware/kb2040/stance.py, tested on a simulated plant)", [
+        "Retract: UNLOCKING, TILT, LOCKING at touchdown (creep until SW2 and SW3 both read seated), LIFT.  "
+        "Deploy: LOWER, UNLOCKING, TILT, LOCKING at three feet.",
+        "Ground drive only in THREE_FOOT.  Dome only in THREE_FOOT or TWO_FOOT.  Refused commands answer "
+        "err drive refused and hold a running change.",
+        "Hold-to-run: the page repeats T 2 or T 3 every 50 ms.  Letting go, a 0.5 s phone or Pi heartbeat loss, "
+        "S or E 0 stops the actuator and holds.",
+        "Latched faults: POWER, FEEDBACK, LOCK_SENSOR, LOCK_DISAGREES, STALL, TRAVEL_TIMEOUT, LOCK_TIMEOUT, "
+        "DRIFT, OVERTRAVEL, REVERSED_FEEDBACK.  Clear with C.",
+        "A clear succeeds only if fresh sensors are consistent, and the stance control must be released and "
+        "pressed again.  Nothing ever restarts by itself.",
+        "Budget: F7 carries 1.0 A stall.  Rail B carries 3 A of servo stall only while its motors are refused.  "
+        "3V3 pad load under 3 mA.",
+    ], COLOURS["12v"], style="small")
+    if bottom > s.height - 60:
+        OVERFLOW.append("sheet 05 content ends at {0}, below {1}".format(bottom, s.height - 60))
+    return s.save("05-stance-actuator-and-lock.svg", FOOTER)
 
 
 # ---------------------------------------------------------------------------
@@ -993,7 +1244,82 @@ def calculations():
          "note": "17 NeoPixels at 60 mA (1.02 A) plus four backpacks (0.50 A) plus the TFT "
                  "(0.10 A). loads.md proposed a 1.5 A polyfuse, which the worst case exceeds; "
                  "a 2 A blade fuse is used instead."},
+        {"designator": "F7", "circuit": "12 V actuator driver U10 (DRV8871), revision D",
+         "rating_A": 2, "measured_or_estimated_load_A": fw.ACTUATOR_STALL_A,
+         "loads_md_minimum_A": None,
+         "note": "Actuator stall is 1.0 A at 12 V and the DRV8871 limit is set to 0.895 A by R5. "
+                 "Not in loads.md; sized at twice the stall current."},
     ]
+
+    servo_stall_A = 1.5  # per servo; Adafruit publishes none, budget from stance-mechanism
+    servo_count = len(fw.LOCK_NAMES)
+    transition_from_12V_A = round(five_volt_from_12V_A + fw.ACTUATOR_STALL_A
+                                  + servo_count * servo_stall_A * 6.0 / efficiency / 12.0, 3)
+    travel_mm = fw.THREE_FOOT_MM - fw.TWO_FOOT_MM
+    travel_s = travel_mm / fw.ACTUATOR_NO_LOAD_SPEED_MM_S
+    stance = {
+        "status": "revision D; mechanism values are the firmware MECHANISM CONSTANTS block in "
+                  "firmware/kb2040/stance.py, provisional until stance-mechanism reports",
+        "actuator": {
+            "part": fw.ACTUATOR_PART, "supply_V": 12.0, "stall_A": fw.ACTUATOR_STALL_A,
+            "rated_duty_percent": 20, "rest_ms_per_ms_of_travel": fw.ACTUATOR_REST_PER_RUN,
+            "stroke_mm": fw.ACTUATOR_STROKE_MM, "two_foot_mm": fw.TWO_FOOT_MM,
+            "touchdown_mm": fw.CONTACT_MM, "three_foot_mm": fw.THREE_FOOT_MM,
+            "no_load_speed_mm_s": fw.ACTUATOR_NO_LOAD_SPEED_MM_S,
+            "change_time_s_no_load": round(travel_s, 1),
+            "cooldown_after_one_change_s": round(travel_s * fw.ACTUATOR_REST_PER_RUN, 0),
+            "lift_phase_timeout_s": fw.LIFT_TIMEOUT_MS / 1000.0,
+            "tilt_phase_timeout_s": fw.TILT_TIMEOUT_MS / 1000.0,
+        },
+        "driver": {
+            "part": "Adafruit DRV8871 (3190)", "factory_ilim_ohms": 30000,
+            "factory_trip_A": round(64.0 / 30.0, 2), "fitted_ilim_ohms": ILIM_OHMS,
+            "fitted_trip_A": round(64.0 / (ILIM_OHMS / 1000.0), 3), "fuse": "F7 2 A in FH7",
+            "trip_formula": "I_TRIP = 64 / R_ILIM(kOhm), DRV8871 datasheet",
+        },
+        "potentiometer": {
+            "top_resistor_ohms": POT_TOP_OHMS, "nominal_ohms": POT_NOMINAL_OHMS,
+            "tolerance_percent": 50,
+            "full_scale_mV_nominal": round(pot_full_mv(POT_NOMINAL_OHMS)),
+            "full_scale_mV_plus_50_percent": round(pot_full_mv(POT_NOMINAL_OHMS * 1.5)),
+            "full_scale_mV_minus_50_percent": round(pot_full_mv(POT_NOMINAL_OHMS * 0.5)),
+            "valid_window_mV": [fw.POT_MIN_VALID_MV, fw.POT_MAX_VALID_MV],
+            "wiper_pulldown_ohms": 470000,
+            "reference_current_mA": round(3.3 / ((POT_NOMINAL_OHMS + POT_TOP_OHMS) / 1000.0), 3),
+        },
+        "lock_switch": {
+            "part": "Omron SS-01GL", "count": servo_count,
+            "wiring": "COM to GND, NO and NC to pulled-up inputs; right switch on STEMMA QT GP12/GP13",
+            "seated_contact": fw.LOCK_SEATED_CONTACT, "pullup_ohms": LOCK_PULLUP_OHMS,
+            "closed_contact_current_mA": round(3.3 / (LOCK_PULLUP_OHMS / 1000.0), 2),
+            "omron_minimum_load": "5 V DC 1 mA",
+            "legal_debounce_ms": fw.LOCK_LEGAL_MS, "invalid_persist_ms": fw.LOCK_ILLEGAL_MS,
+        },
+        "release_servo": {
+            "part": "TowerPro MG995 (Adafruit 1142)", "count": servo_count, "supply": "U7 6 V rail B",
+            "stall_A_budget_each": servo_stall_A,
+            "release_us": list(fw.RELEASE_US), "engage_us": list(fw.ENGAGE_US),
+            "engage_hold_ms": fw.ENGAGE_HOLD_MS, "pwm_hz": 50,
+            "kb2040_pins": "D0 (GP0) left, D1 (GP1) right: both channels of PWM slice 0",
+            "level_shifter": "Adafruit 757 BSS138, 3.3 V to 5 V",
+        },
+        "kb2040_battery_sense": {
+            "top_ohms": fw.BATTERY_TOP_OHMS, "bottom_ohms": fw.BATTERY_BOTTOM_OHMS,
+            "ratio": round((fw.BATTERY_TOP_OHMS + fw.BATTERY_BOTTOM_OHMS)
+                           / float(fw.BATTERY_BOTTOM_OHMS), 4),
+            "node_V_at_12V70": round(12.7 * fw.BATTERY_BOTTOM_OHMS
+                                     / (fw.BATTERY_TOP_OHMS + fw.BATTERY_BOTTOM_OHMS), 3),
+            "node_V_at_14V75": round(14.75 * fw.BATTERY_BOTTOM_OHMS
+                                     / (fw.BATTERY_TOP_OHMS + fw.BATTERY_BOTTOM_OHMS), 3),
+            "cutoff_V": fw.BATTERY_CUTOFF_MV / 1000.0, "rearm_V": fw.BATTERY_REARM_MV / 1000.0,
+            "maximum_V": fw.BATTERY_MAX_MV / 1000.0, "debounce_ms": fw.BATTERY_LOW_MS,
+        },
+        "transition_worst_case_draw_from_12V_A": transition_from_12V_A,
+        "U7_rail_note": "Rail B carries 3 A of motors or, during a stance change, 3 A of servo "
+                        "stall; ground drive and the dome are refused whenever the servos can move.",
+        "note": "Ground drive and the dome are refused during a stance change, so the transition "
+                "worst case does not add to the driving worst case.",
+    }
 
     ampacity = [
         {"gauge_awg": 16, "chassis_rating_A": 22, "used_for":
@@ -1051,6 +1377,7 @@ def calculations():
             "dome_practical_A_at_firmware_brightness_0p4": 1.01,
         },
         "runtime": profiles,
+        "stance_change": stance,
         "notes": [
             "Motor currents come from loads.md section 2: 0.385 A per drive motor at 6 V on "
             "a hard floor, and 0.5 A at 3 V for the head drive.",
@@ -1072,7 +1399,7 @@ def main():
         writer.writerows(ROWS)
     (HERE / "calculations.json").write_text(
         json.dumps(calculations(), indent=2) + "\n", encoding="utf-8")
-    sheets = [sheet_power(), sheet_motors(), sheet_head(), sheet_pi()]
+    sheets = [sheet_power(), sheet_motors(), sheet_head(), sheet_pi(), sheet_stance()]
     if OVERFLOW:
         raise SystemExit("text would overflow its box:\n  " + "\n  ".join(OVERFLOW))
     print("wiring.csv: {0} wires".format(len(ROWS)))

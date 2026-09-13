@@ -172,7 +172,7 @@
     if (available) {
       stancePose.textContent =
         "actuator " + (stance.position_mm === null ? "invalid" : stance.position_mm.toFixed(1) + " mm") +
-        "   lock " + stance.lock_label +
+        "   locks " + stance.lock_label +
         "   pack " + (stance.pack_volts === null ? "--" : stance.pack_volts.toFixed(2) + " V");
     } else {
       stancePose.textContent = "actuator --   lock --   pack --";

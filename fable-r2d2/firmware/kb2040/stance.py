@@ -1,76 +1,91 @@
 """Revision D stance interlock for the fable-r2d2 KB2040.  Hardware-free.
 
-The centre leg is moved by a 12 V linear actuator with a potentiometer.  The
-actuator stroke sets both the centre-leg position and the body tilt:
+A 12 V linear actuator, parallel to the centre-leg guide, moves the centre leg.
+Its stroke ``s`` (mm from fully closed) sets the stance:
 
-    two-foot stance    retracted end, body tilt 0 deg, centre wheels lifted,
-                       stationary only
-    three-foot stance  deployed end, body tilt 18 deg, centre foot to the front
+    s = TWO_FOOT_MM     two-foot stance: centre foot stowed, wheels lifted,
+                        body tilt 0 deg, stationary only
+    s = CONTACT_MM      centre foot touches the floor, body tilt still 0 deg
+    s = THREE_FOOT_MM   three-foot stance: body tilt 18 deg, centre foot forward
 
-A spring-return shoulder lock pin seats in a receiver at each endpoint.  A
-servo pulls the pin (the "release").  An SPDT lock switch wired NO + NC reports
-whether the pin is seated.  The lock state always comes from that switch and is
+Two shoulder locks, one per outer leg, mirror images.  Each is a spring-return
+plunger pin in the body with two receivers in its leg: one at tilt 0 (seated for
+every s up to CONTACT_MM) and one at tilt 18 deg (seated at THREE_FOOT_MM).  A
+servo per lock pulls the pin (the "release").  An SPDT switch per lock, wired
+NO + NC, reports "seated".  Lock state always comes from those switches and is
 never inferred from actuator position.
 
-This module has no CircuitPython imports.  ``supervisor.py`` feeds it sensor
-samples and applies its outputs; ``test_stance.py`` runs it against a simulated
-plant on CPython.  Port of the state machine in fable-r2d3
-``firmware/include/stance.h``, reduced to this robot's single-segment stroke
-(no separate foot-lift phase) and without hardware travel-limit switches.
+Regions of the stroke:
+    LIFT      s < CONTACT - window   body upright, foot in the air: both locks
+                                     must read seated
+    CONTACT   window round CONTACT   tilt-0 receivers: any lock state is legal
+    TILT      between the windows    no receiver: no lock may read seated
+    DEPLOYED  window round THREE     tilt-18 receivers: any lock state is legal
 
-States     THREE_FOOT, RETRACTING, TWO_FOOT, DEPLOYING, HELD, FAULT
-Phases     UNLOCKING  actuator stopped, release pulled, wait for the switch
-           TRAVEL     actuator at full duty toward the far receiver; the
-                      release drops once the pin is clear of the departure
-                      receiver so the spring rides the pin on the ring face
-           LOCKING    settle, then creep through the receiver until the switch
-                      reads seated
+Phases of a change:
+    retract  UNLOCKING -> TILT -> LOCKING (at CONTACT) -> LIFT -> TWO_FOOT
+    deploy   LOWER -> UNLOCKING -> TILT -> LOCKING (at THREE) -> THREE_FOOT
+    UNLOCKING  actuator stopped, releases pulled, wait until no lock reads seated
+    TILT       full duty toward the far receiver, stopping SEEK short of it; the
+               releases drop once the pins have cleared their bores
+    LOCKING    settle, then creep through the receiver until both locks read seated
+    LIFT/LOWER both locks seated, full duty between TWO_FOOT and CONTACT
+
+No CircuitPython imports: ``supervisor.py`` feeds samples and applies outputs;
+``test_stance.py`` runs it against a simulated plant on CPython.  Port of the
+state machine in fable-r2d3 ``firmware/include/stance.h`` to two locks.
 """
 
 # ===== MECHANISM CONSTANTS =====
-# Every value that depends on the chosen actuator, lock and servo lives in this
-# block.  Status: PROVISIONAL (2026-09-12).  Reference parts: Actuonix
-# P16-100-256-12-P, Omron SS-01GL wired NO + NC, TowerPro MG995 release.
-# Replace the whole block together when stance-mechanism reports its values.
+# Source: stance-mechanism design values for the fable-r2d2 CAD, 2026-09-12
+# (actuator datasheet Actuonix P16 Rev B, Omron SS series, Adafruit 1142).
+# Replace every value in this block together if the CAD changes them.
 
 ACTUATOR_PART = "Actuonix P16-100-256-12-P"
 ACTUATOR_STROKE_MM = 100.0          # full mechanical stroke
-ACTUATOR_NO_LOAD_SPEED_MM_S = 4.8   # datasheet, 12 V
+ACTUATOR_NO_LOAD_SPEED_MM_S = 4.8   # 12 V; 3.4 mm/s at 150 N, 2.5 mm/s at 250 N
 ACTUATOR_STALL_A = 1.0              # at 12 V
 ACTUATOR_REST_PER_RUN = 4           # 20 % duty: 4 ms rest per ms of travel
 
-TWO_FOOT_MM = 5.0                   # stroke at the two-foot receiver (tilt 0 deg)
-THREE_FOOT_MM = 95.0                # stroke at the three-foot receiver (tilt 18 deg)
+TWO_FOOT_MM = 5.0                   # two-foot stance: wheels 25 mm above the floor
+CONTACT_MM = 31.6                   # centre-foot touchdown at tilt 0; tilt-0 receivers
+THREE_FOOT_MM = 62.3                # tilt 18 deg; tilt-18 receivers
+COMMAND_MIN_MM = 0.7                # never command outside 0.7 .. 99.3 mm
+COMMAND_MAX_MM = 99.3
 TWO_FOOT_TILT_DEG = 0.0
 THREE_FOOT_TILT_DEG = 18.0
 
 POT_ZERO_MV = 0.0                   # wiper millivolts at stroke 0 (2.2 k top resistor)
 POT_FULL_MV = 2750.0                # wiper millivolts at full stroke, 11 k pot
-POT_MIN_VALID_MV = 40.0             # open wiper or open ref+ reads below this
-POT_MAX_VALID_MV = 3000.0           # open ref- reads above this
+POT_MIN_VALID_MV = 40.0             # open wiper or open pot + reads below this
+POT_MAX_VALID_MV = 3000.0           # open pot - reads above this
 
-STOP_TOLERANCE_MM = 0.4             # a movement goal counts as reached inside this band
-HOLD_TOLERANCE_MM = 2.5             # a parked stance faults if the actuator drifts further
-LOCK_WINDOW_MM = 2.5                # band round each receiver where either lock state is legal
-SEEK_MM = 1.5                       # TRAVEL stops this far before the far receiver
-OVERSHOOT_MM = 0.8                  # LOCKING creeps this far past the nominal receiver
+STOP_TOLERANCE_MM = 0.3             # a movement goal counts as reached inside this band
+HOLD_TOLERANCE_MM = 2.0             # a parked stance faults if the actuator drifts further
+LOCK_WINDOW_MM = 1.5                # band round each receiver where either lock state is legal
+SEEK_MM = 1.2                       # TILT stops this far before the far receiver
+OVERSHOOT_MM = 1.0                  # LOCKING creeps this far past the nominal receiver
 OVERTRAVEL_MM = 1.5                 # beyond an endpoint by more than this is a fault
-RELEASE_CLEAR_MM = 8.0              # stroke off the departure receiver before the release drops
-PROGRESS_MM = 0.5                   # stall: less than this ...
-PROGRESS_MS = 750                   # ... within this many ms while driven
-TRAVEL_TIMEOUT_MS = 40000           # per phase
-LOCK_SETTLE_MS = 400                # pin drop time before the LOCKING creep starts
-LOCK_TIMEOUT_MS = 1500              # pin must leave or enter a receiver within this
+RELEASE_DROP_DEPLOY_MM = 37.8       # deploy: pins clear of the tilt-0 bores at or above this
+RELEASE_DROP_RETRACT_MM = 44.3      # retract: pins clear of the tilt-18 bores at or below this
+PROGRESS_MM = 0.3                   # stall: less than this ...
+PROGRESS_MS = 1000                  # ... within this many ms while driven
+LIFT_TIMEOUT_MS = 16000             # LIFT / LOWER phase, 26.6 mm at 2.5 mm/s x 1.5
+TILT_TIMEOUT_MS = 20000             # TILT and LOCKING phase, 30.7 mm at 2.5 mm/s x 1.5 = 18.4 s
+LOCK_SETTLE_MS = 150                # pin drop time before the LOCKING creep starts
+LOCK_RELEASE_TIMEOUT_MS = 400       # 0.3 s pin pull plus the switch debounce
+LOCK_SEAT_TIMEOUT_MS = 3000         # after the creep ends, both pins must read seated
 REVERSE_DWELL_MS = 150              # stopped time before the actuator reverses
-SEEK_DUTY_PERCENT = 60              # LOCKING creep duty
+SEEK_DUTY_PERCENT = 20              # LOCKING creep duty, about 1 mm/s with no load
 
-LOCK_SEATED_CONTACT = "NO"          # switch contact that closes when the pin is seated
-LOCK_LEGAL_MS = 30                  # debounce for a legal NO/NC pair
+LOCK_NAMES = ("left", "right")
+LOCK_SEATED_CONTACT = "NO"          # switch contact that closes when a pin is seated
+LOCK_LEGAL_MS = 50                  # debounce for a legal NO/NC pair
 LOCK_ILLEGAL_MS = 150               # both open or both closed must persist this long
 
-RELEASE_US = 1000                   # servo pulse that pulls the pin
-ENGAGE_US = 1311                    # servo pulse that lets the spring seat the pin
-ENGAGE_HOLD_MS = 1000               # engage pulse is held this long, then the servo goes limp
+ENGAGE_US = (1500, 1500)            # left, right: horn parked 1 mm clear of the knob
+RELEASE_US = (1310, 1690)           # left, right: 17 deg toward the knob, mirrored
+ENGAGE_HOLD_MS = 1000               # engage pulse is held this long, then no pulse
 SERVO_PERIOD_US = 20000             # 50 Hz
 
 # ===== END MECHANISM CONSTANTS =====
@@ -80,12 +95,11 @@ BATTERY_TOP_OHMS = 100000
 BATTERY_BOTTOM_OHMS = 15000
 BATTERY_CUTOFF_MV = 11200           # below this for BATTERY_LOW_MS: no power
 BATTERY_REARM_MV = 12000            # power returns only above this for BATTERY_LOW_MS
-BATTERY_MAX_MV = 15200              # above this the reading is not a battery (fault)
+BATTERY_MAX_MV = 15200              # above this the reading is not a battery
 BATTERY_LOW_MS = 500
 ADC_REFERENCE_MV = 3300
 ADC_FULL_SCALE = 65535
 
-# States, phases, faults and requests as short ASCII words for the serial line.
 THREE_FOOT = "THREE_FOOT"
 RETRACTING = "RETRACTING"
 TWO_FOOT = "TWO_FOOT"
@@ -96,9 +110,15 @@ STATES = (THREE_FOOT, RETRACTING, TWO_FOOT, DEPLOYING, HELD, FAULT)
 
 NO_PHASE = "NONE"
 UNLOCKING = "UNLOCKING"
-TRAVEL = "TRAVEL"
+TILT = "TILT"
 LOCKING = "LOCKING"
-PHASES = (NO_PHASE, UNLOCKING, TRAVEL, LOCKING)
+LIFT = "LIFT"
+LOWER = "LOWER"
+PHASES = (NO_PHASE, UNLOCKING, TILT, LOCKING, LIFT, LOWER)
+
+# Regions of the stroke (LIFT and TILT share their phase names).
+CONTACT = "CONTACT"
+DEPLOYED = "DEPLOYED"
 
 NO_FAULT = "NONE"
 POWER = "POWER"
@@ -118,8 +138,8 @@ REQUEST_NONE = 0
 REQUEST_TWO_FOOT = 2
 REQUEST_THREE_FOOT = 3
 
-READY_TWO = "standing on two feet; shoulder lock engaged"
-READY_THREE = "on three feet; shoulder lock engaged; ready to drive"
+READY_TWO = "standing on two feet; both shoulder locks seated"
+READY_THREE = "on three feet; both shoulder locks seated; ready to drive"
 
 
 class Limits:
@@ -127,7 +147,10 @@ class Limits:
 
     def __init__(self, **overrides):
         self.two_foot_mm = TWO_FOOT_MM
+        self.contact_mm = CONTACT_MM
         self.three_foot_mm = THREE_FOOT_MM
+        self.command_min_mm = COMMAND_MIN_MM
+        self.command_max_mm = COMMAND_MAX_MM
         self.stroke_mm = ACTUATOR_STROKE_MM
         self.pot_zero_mv = POT_ZERO_MV
         self.pot_full_mv = POT_FULL_MV
@@ -139,12 +162,15 @@ class Limits:
         self.seek_mm = SEEK_MM
         self.overshoot_mm = OVERSHOOT_MM
         self.overtravel_mm = OVERTRAVEL_MM
-        self.release_clear_mm = RELEASE_CLEAR_MM
+        self.release_drop_deploy_mm = RELEASE_DROP_DEPLOY_MM
+        self.release_drop_retract_mm = RELEASE_DROP_RETRACT_MM
         self.progress_mm = PROGRESS_MM
         self.progress_ms = PROGRESS_MS
-        self.travel_timeout_ms = TRAVEL_TIMEOUT_MS
+        self.lift_timeout_ms = LIFT_TIMEOUT_MS
+        self.tilt_timeout_ms = TILT_TIMEOUT_MS
         self.lock_settle_ms = LOCK_SETTLE_MS
-        self.lock_timeout_ms = LOCK_TIMEOUT_MS
+        self.lock_release_timeout_ms = LOCK_RELEASE_TIMEOUT_MS
+        self.lock_seat_timeout_ms = LOCK_SEAT_TIMEOUT_MS
         self.reverse_dwell_ms = REVERSE_DWELL_MS
         self.rest_per_run = ACTUATOR_REST_PER_RUN
         self.seek_duty_percent = SEEK_DUTY_PERCENT
@@ -165,6 +191,7 @@ class Limits:
         """Return a list of inconsistencies.  An empty list means the set is usable."""
         found = []
         tol = self.stop_tolerance_mm
+        window = self.lock_window_mm
 
         def need(condition, text):
             if not condition:
@@ -175,18 +202,27 @@ class Limits:
              "pot minimum valid reading must lie below the two-foot overtravel limit")
         need(self.mm_for_mv(self.pot_max_valid_mv) > self.three_foot_mm + self.overtravel_mm,
              "pot maximum valid reading must lie above the three-foot overtravel limit")
-        need(self.seek_mm + tol <= self.lock_window_mm, "seek point must sit inside the lock window")
-        need(self.overshoot_mm + tol < self.lock_window_mm, "overshoot must stay inside the lock window")
+        need(self.two_foot_mm - self.overtravel_mm >= self.command_min_mm,
+             "two-foot overtravel limit must stay inside the command range")
+        need(self.three_foot_mm + self.overtravel_mm <= self.command_max_mm,
+             "three-foot overtravel limit must stay inside the command range")
+        need(self.seek_mm + tol <= window, "seek point must sit inside the lock window")
+        need(self.overshoot_mm + tol < window, "overshoot must stay inside the lock window")
         need(self.overshoot_mm + tol < self.overtravel_mm, "overshoot must stay short of overtravel")
-        need(self.lock_window_mm <= self.hold_tolerance_mm, "lock window must not exceed hold tolerance")
-        need(self.two_foot_mm + self.lock_window_mm < self.three_foot_mm - self.release_clear_mm,
-             "retract release drop must lie outside the two-foot lock window")
-        need(self.three_foot_mm - self.lock_window_mm > self.two_foot_mm + self.release_clear_mm,
-             "deploy release drop must lie outside the three-foot lock window")
-        need(self.release_clear_mm > self.lock_window_mm, "release must stay pulled across the lock window")
+        need(window <= self.hold_tolerance_mm, "lock window must not exceed hold tolerance")
+        need(self.contact_mm + window < self.release_drop_deploy_mm,
+             "deploy release drop must lie above the contact lock window")
+        need(self.release_drop_retract_mm < self.three_foot_mm - window,
+             "retract release drop must lie below the three-foot lock window")
+        need(self.two_foot_mm + self.hold_tolerance_mm < self.contact_mm - window,
+             "two-foot hold band must lie below the contact lock window")
+        need(self.contact_mm + window < self.three_foot_mm - window,
+             "the two lock windows must not overlap")
         need(self.progress_mm > 0 and self.progress_ms > 0, "stall detection needs positive values")
-        need(self.travel_timeout_ms > self.progress_ms, "travel timeout must exceed the stall window")
-        need(self.lock_timeout_ms > 0 and self.lock_settle_ms >= 0, "lock timings must be positive")
+        need(self.lift_timeout_ms > self.progress_ms and self.tilt_timeout_ms > self.progress_ms,
+             "travel timeouts must exceed the stall window")
+        need(self.lock_release_timeout_ms > LOCK_LEGAL_MS and self.lock_seat_timeout_ms > LOCK_LEGAL_MS,
+             "lock timeouts must exceed the switch debounce")
         need(0 < self.seek_duty_percent <= 100, "seek duty must be 1..100 percent")
         return found
 
@@ -218,7 +254,7 @@ def servo_duty(pulse_us, period_us=SERVO_PERIOD_US):
 
 
 class ContactPair:
-    """SPDT lock switch: COM to ground, NO and NC each to a pulled-up input.
+    """One SPDT lock switch: COM to ground, NO and NC each to a pulled-up input.
 
     Exactly one closed contact is a legal reading.  Both open (broken COM or a
     broken wire) or both closed (a short) is invalid once it persists longer
@@ -251,7 +287,7 @@ class ContactPair:
             self.settled = True
 
     def code(self):
-        """One letter for the status line: E engaged, R released, X invalid, W waiting."""
+        """One letter: E seated, R released, X invalid, W waiting for the debounce."""
         if not self.settled:
             return "W"
         if not self.valid:
@@ -259,13 +295,44 @@ class ContactPair:
         return "E" if self.engaged else "R"
 
 
+class LockSet:
+    """Both shoulder lock switches, read together."""
+
+    def __init__(self, count=len(LOCK_NAMES), legal_ms=LOCK_LEGAL_MS, illegal_ms=LOCK_ILLEGAL_MS,
+                 seated_contact=LOCK_SEATED_CONTACT):
+        self.pairs = [ContactPair(legal_ms, illegal_ms, seated_contact) for _ in range(count)]
+
+    def update(self, now, contacts):
+        """``contacts`` is one ``(no_closed, nc_closed)`` per lock, left first."""
+        if len(contacts) != len(self.pairs):
+            raise ValueError("expected {0} lock readings".format(len(self.pairs)))
+        for pair, reading in zip(self.pairs, contacts):
+            pair.update(now, reading[0], reading[1])
+
+    def settled(self):
+        return all(pair.settled for pair in self.pairs)
+
+    def valid(self):
+        return all(pair.valid for pair in self.pairs)
+
+    def all_engaged(self):
+        return self.valid() and all(pair.engaged for pair in self.pairs)
+
+    def any_engaged(self):
+        return self.valid() and any(pair.engaged for pair in self.pairs)
+
+    def code(self):
+        """One letter per lock, left first, for the status line."""
+        return "".join(pair.code() for pair in self.pairs)
+
+
 class BatteryGuard:
     """Debounced battery health from the KB2040's own divider.
 
-    A reading below the cutoff (or above the maximum, or missing) for
-    ``low_ms`` removes power; power returns only after the pack reads at or
-    above the re-arm level for ``low_ms``.  Short motor-start dips therefore do
-    not fault a transition, but a sagging pack does.
+    A reading below the cutoff for ``low_ms`` removes power; a missing or
+    above-maximum reading removes it at once.  Power returns only after the pack
+    reads at or above the re-arm level for ``low_ms``.  Short motor-start dips
+    therefore do not fault a change, but a sagging pack does.
     """
 
     def __init__(self, cutoff_mv=BATTERY_CUTOFF_MV, rearm_mv=BATTERY_REARM_MV,
@@ -312,14 +379,14 @@ class BatteryGuard:
 
 
 class ReleaseServo:
-    """Pulse width for the lock-release servo.
+    """Pulse width for one lock-release servo.
 
     Release: the release pulse, held.  Engage: the engage pulse for
-    ``hold_ms``, then no pulse, so the servo stops loading the spring-return
-    pin and draws no holding current.
+    ``hold_ms``, then no pulse, so the horn stays parked clear of the knob and
+    the servo draws no holding current.  The pin is spring return either way.
     """
 
-    def __init__(self, release_us=RELEASE_US, engage_us=ENGAGE_US, hold_ms=ENGAGE_HOLD_MS):
+    def __init__(self, release_us, engage_us, hold_ms=ENGAGE_HOLD_MS):
         self.release_us = release_us
         self.engage_us = engage_us
         self.hold_ms = hold_ms
@@ -339,11 +406,12 @@ class ReleaseServo:
 class Sample:
     """One tick's conditioned inputs to :class:`Stance`."""
 
-    def __init__(self, position_mm=None, lock_valid=False, lock_engaged=False, power=False,
-                 heartbeat=False, armed=False):
+    def __init__(self, position_mm=None, lock_valid=False, lock_all=False, lock_any=False,
+                 power=False, heartbeat=False, armed=False):
         self.position_mm = position_mm
         self.lock_valid = lock_valid
-        self.lock_engaged = lock_engaged
+        self.lock_all = lock_all
+        self.lock_any = lock_any
         self.power = power
         self.heartbeat = heartbeat
         self.armed = armed
@@ -360,10 +428,10 @@ def _sign(value):
 class Stance:
     """The interlocked stance-change state machine.
 
-    Call :meth:`tick` once per control tick.  Read :attr:`actuator` (-100
-    retract .. +100 extend) and :attr:`release` (True pulls the pin) afterwards
-    and apply them.  Ground drive is allowed only in ``THREE_FOOT``; the dome
-    head only in ``THREE_FOOT`` or ``TWO_FOOT``.
+    Call :meth:`tick` once per control tick, then apply :attr:`actuator` (-100
+    retract .. +100 extend) and :attr:`release` (True pulls both pins).  Ground
+    drive is allowed only in ``THREE_FOOT``; the dome only in ``THREE_FOOT`` or
+    ``TWO_FOOT``.
     """
 
     def __init__(self, limits=None):
@@ -377,7 +445,8 @@ class Stance:
         self.release = False
         self.position_mm = None
         self.lock_valid = False
-        self.lock_engaged = False
+        self.lock_all = False
+        self.lock_any = False
         self.power = False
         self.heartbeat = False
         self.armed = False
@@ -408,11 +477,13 @@ class Stance:
         return self.state == THREE_FOOT or self.state == TWO_FOOT
 
     def tilt_deg(self):
-        """Body tilt known from the state, or ``None`` between stances."""
-        if self.state == TWO_FOOT:
-            return TWO_FOOT_TILT_DEG
+        """Body tilt known from the state and the locks, or ``None`` when unknown."""
         if self.state == THREE_FOOT:
             return THREE_FOOT_TILT_DEG
+        if self.state == FAULT or self.position_mm is None:
+            return None
+        if self.lock_all and self.region(self.position_mm) in (LIFT, CONTACT):
+            return TWO_FOOT_TILT_DEG
         return None
 
     def cooldown_ms(self, now):
@@ -451,11 +522,14 @@ class Stance:
         return None
 
     def region(self, mm):
-        if mm <= self.lim.two_foot_mm + self.lim.lock_window_mm:
-            return TWO_FOOT
-        if mm >= self.lim.three_foot_mm - self.lim.lock_window_mm:
-            return THREE_FOOT
-        return TRAVEL
+        lim = self.lim
+        if mm < lim.contact_mm - lim.lock_window_mm:
+            return LIFT
+        if mm <= lim.contact_mm + lim.lock_window_mm:
+            return CONTACT
+        if mm < lim.three_foot_mm - lim.lock_window_mm:
+            return TILT
+        return DEPLOYED
 
     # -- commands ---------------------------------------------------------
 
@@ -464,13 +538,14 @@ class Stance:
 
         ``request`` is the operator's held stance control (0 none, 2, 3).
         ``request_fresh`` is False when no request has arrived recently: the
-        request then counts as none for the running transition, but it does
-        NOT count as the operator letting go, so a link that comes back with
-        the control still held can never restart the actuator by itself.
+        request then counts as none for a running change, but NOT as the
+        operator letting go, so a link that comes back with the control still
+        held can never restart the actuator by itself.
         """
         self.position_mm = sample.position_mm
         self.lock_valid = sample.lock_valid
-        self.lock_engaged = sample.lock_valid and sample.lock_engaged
+        self.lock_all = sample.lock_valid and sample.lock_all
+        self.lock_any = sample.lock_valid and sample.lock_any
         self.power = sample.power
         self.heartbeat = sample.heartbeat
         self.armed = sample.armed
@@ -504,7 +579,7 @@ class Stance:
                 self._begin(now, request)
 
     def hold(self, now, text):
-        """Stop the actuator and hold.  The lock command is left as it is."""
+        """Stop the actuator and hold.  The release command is left as it is."""
         self._stop_actuator(now)
         self._start_rest(now)
         self.state = HELD
@@ -514,7 +589,7 @@ class Stance:
         self._released = False
 
     def interrupt(self, now, text):
-        """Hold if a transition is running; otherwise do nothing."""
+        """Hold if a change is running; otherwise do nothing."""
         if self.transitioning():
             self.hold(now, text)
             return True
@@ -561,14 +636,18 @@ class Stance:
             self._fail(now, FEEDBACK, "actuator position feedback out of range")
             return False
         if not self.lock_valid:
-            self._fail(now, LOCK_SENSOR, "shoulder lock switch invalid: NO and NC agree")
+            self._fail(now, LOCK_SENSOR, "a shoulder lock switch is invalid: NO and NC agree")
             return False
         mm = self.position_mm
         if mm < lim.two_foot_mm - lim.overtravel_mm or mm > lim.three_foot_mm + lim.overtravel_mm:
             self._fail(now, OVERTRAVEL, "actuator beyond its stance endpoints")
             return False
-        if self.lock_engaged and self.region(mm) == TRAVEL:
-            self._fail(now, LOCK_DISAGREES, "lock switch reads seated away from both receivers")
+        where = self.region(mm)
+        if where == LIFT and not self.lock_all:
+            self._fail(now, LOCK_DISAGREES, "centre foot raised but a shoulder lock is not seated")
+            return False
+        if where == TILT and self.lock_any:
+            self._fail(now, LOCK_DISAGREES, "a shoulder lock reads seated where no receiver exists")
             return False
         return True
 
@@ -579,9 +658,9 @@ class Stance:
             self._fail(now, DRIFT, "actuator left the two-foot endpoint" if two
                        else "actuator left the three-foot endpoint")
             return False
-        if not self.lock_engaged:
-            self._fail(now, LOCK_DISAGREES, "two-foot endpoint but lock switch not seated" if two
-                       else "three-foot endpoint but lock switch not seated")
+        if not self.lock_all:
+            self._fail(now, LOCK_DISAGREES, "two-foot stance but a shoulder lock is not seated" if two
+                       else "three-foot stance but a shoulder lock is not seated")
             return False
         return True
 
@@ -593,21 +672,22 @@ class Stance:
         self.actuator = 0
         if not self._check_sensors(now):
             return
-        self.release = False  # spring-return lock: recovery never holds the pin out
+        self.release = False  # spring-return locks: recovery never holds a pin out
         mm = self.position_mm
-        if self.lock_engaged and abs(mm - self.lim.two_foot_mm) <= self.lim.hold_tolerance_mm:
+        if self.lock_all and abs(mm - self.lim.two_foot_mm) <= self.lim.hold_tolerance_mm:
             self.state = TWO_FOOT
             self.reason = READY_TWO
-        elif self.lock_engaged and abs(mm - self.lim.three_foot_mm) <= self.lim.hold_tolerance_mm:
+        elif self.lock_all and abs(mm - self.lim.three_foot_mm) <= self.lim.hold_tolerance_mm:
             self.state = THREE_FOOT
             self.reason = READY_THREE
         else:
             self.reason = "between stances; hold a stance control to finish"
 
-    def _pin_clear(self):
+    def _pins_clear(self):
+        """True once the pins have left the bores they were released from."""
         if self.state == RETRACTING:
-            return self.position_mm <= self.lim.three_foot_mm - self.lim.release_clear_mm
-        return self.position_mm >= self.lim.two_foot_mm + self.lim.release_clear_mm
+            return self.position_mm <= self.lim.release_drop_retract_mm
+        return self.position_mm >= self.lim.release_drop_deploy_mm
 
     def _enter_phase(self, now, phase):
         self.phase = phase
@@ -616,8 +696,8 @@ class Stance:
         self._progress_at = now
         self._progress_pos = self.position_mm
         self._seek_reached = False
-        self.release = phase == UNLOCKING or phase == TRAVEL
-        if phase == TRAVEL and self._pin_clear():
+        self.release = phase == UNLOCKING or phase == TILT
+        if phase == TILT and self._pins_clear():
             self.release = False
 
     def _begin(self, now, wanted):
@@ -630,27 +710,37 @@ class Stance:
         if wanted == REQUEST_TWO_FOOT:
             self.state = RETRACTING
             self.reason = "retracting the centre leg to the two-foot stance"
-            if where == THREE_FOOT:
-                first = UNLOCKING if self.lock_engaged else TRAVEL
-            elif where == TRAVEL:
-                first = TRAVEL
-            elif self.lock_engaged:
-                self._complete(now, TWO_FOOT)
-                return
+            if where == LIFT:
+                first = LIFT
+            elif where == CONTACT:
+                if self.lock_all:
+                    first = LIFT
+                elif mm <= lim.contact_mm + lim.seek_mm or self.lock_any:
+                    first = LOCKING
+                else:
+                    first = TILT
+            elif where == TILT:
+                first = TILT
             else:
-                first = LOCKING if mm <= lim.two_foot_mm + lim.seek_mm else TRAVEL
+                first = UNLOCKING if self.lock_any else TILT
         else:
             self.state = DEPLOYING
             self.reason = "deploying the centre leg to the three-foot stance"
-            if where == TWO_FOOT:
-                first = UNLOCKING if self.lock_engaged else TRAVEL
-            elif where == TRAVEL:
-                first = TRAVEL
-            elif self.lock_engaged:
+            if where == LIFT:
+                first = LOWER
+            elif where == CONTACT:
+                if self.lock_all:
+                    at_contact = abs(mm - lim.contact_mm) <= lim.stop_tolerance_mm
+                    first = UNLOCKING if at_contact else LOWER
+                else:
+                    first = UNLOCKING if self.lock_any else TILT
+            elif where == TILT:
+                first = TILT
+            elif self.lock_all:
                 self._complete(now, THREE_FOOT)
                 return
             else:
-                first = LOCKING if mm >= lim.three_foot_mm - lim.seek_mm else TRAVEL
+                first = LOCKING if mm >= lim.three_foot_mm - lim.seek_mm or self.lock_any else TILT
         self._enter_phase(now, first)
 
     def _complete(self, now, done):
@@ -663,7 +753,7 @@ class Stance:
         self.release = False
         self._released = False
 
-    def _move(self, now, goal, duty):
+    def _move(self, now, goal, duty, timeout_ms):
         """Drive toward ``goal``.  True once inside the stop band with the actuator stopped."""
         lim = self.lim
         error = goal - self.position_mm
@@ -671,8 +761,8 @@ class Stance:
             self._stop_actuator(now)
             return True
         direction = 1 if error > 0 else -1
-        if now - self._phase_start >= lim.travel_timeout_ms:
-            self._fail(now, TRAVEL_TIMEOUT, "actuator travel timeout")
+        if now - self._phase_start >= timeout_ms:
+            self._fail(now, TRAVEL_TIMEOUT, "actuator travel timeout in the {0} phase".format(self.phase))
             return False
         current = _sign(self.actuator)
         if current != direction:
@@ -710,43 +800,63 @@ class Stance:
     def _step(self, now):
         lim = self.lim
         retracting = self.state == RETRACTING
-        destination = TWO_FOOT if retracting else THREE_FOOT
         if self.phase == UNLOCKING:
-            if self._stopped_drift(now, "actuator moved while the lock was releasing"):
+            if self._stopped_drift(now, "actuator moved while the locks were releasing"):
                 return
-            if not self.lock_engaged:
-                self._enter_phase(now, TRAVEL)
-            elif now - self._phase_start >= lim.lock_timeout_ms:
-                self._fail(now, LOCK_TIMEOUT, "lock release commanded but lock switch still seated")
+            if not self.lock_any:
+                self._enter_phase(now, TILT)
+            elif now - self._phase_start >= lim.lock_release_timeout_ms:
+                self._fail(now, LOCK_TIMEOUT, "releases pulled but a shoulder lock still reads seated")
             return
-        if self.phase == TRAVEL:
-            if self.lock_engaged:
+        if self.phase == TILT:
+            if self.lock_any:
+                destination = CONTACT if retracting else DEPLOYED
                 if self.region(self.position_mm) == destination:
-                    self._complete(now, destination)
+                    self._stop_actuator(now)
+                    self._enter_phase(now, LOCKING)
                 else:
-                    self._fail(now, LOCK_DISAGREES, "lock switch seated while the release was pulled")
+                    self._fail(now, LOCK_DISAGREES, "a shoulder lock reads seated while leaving its receiver")
                 return
-            if self._pin_clear():
+            if self._pins_clear():
                 self.release = False
-            goal = lim.two_foot_mm + lim.seek_mm if retracting else lim.three_foot_mm - lim.seek_mm
-            if self._move(now, goal, 100):
+            goal = lim.contact_mm + lim.seek_mm if retracting else lim.three_foot_mm - lim.seek_mm
+            if self._move(now, goal, 100, lim.tilt_timeout_ms):
                 self._enter_phase(now, LOCKING)
             return
         if self.phase == LOCKING:
-            if self.lock_engaged:
-                self._complete(now, destination)
+            if self.lock_all:
+                self._stop_actuator(now)
+                if retracting:
+                    self._enter_phase(now, LIFT)
+                else:
+                    self._complete(now, THREE_FOOT)
                 return
             if now - self._phase_start < lim.lock_settle_ms:
-                self._stopped_drift(now, "actuator moved while the lock pin was dropping")
+                self._stopped_drift(now, "actuator moved while the lock pins were dropping")
                 return
             if not self._seek_reached:
-                goal = lim.two_foot_mm - lim.overshoot_mm if retracting else lim.three_foot_mm + lim.overshoot_mm
-                if self._move(now, goal, lim.seek_duty_percent):
+                goal = lim.contact_mm - lim.overshoot_mm if retracting else lim.three_foot_mm + lim.overshoot_mm
+                if self._move(now, goal, lim.seek_duty_percent, lim.tilt_timeout_ms):
                     self._seek_reached = True
                     self._seek_reached_at = now
                 return
             self._stop_actuator(now)
-            if now - self._seek_reached_at >= lim.lock_timeout_ms:
-                self._fail(now, LOCK_TIMEOUT, "actuator passed the receiver but lock switch not seated")
+            if now - self._seek_reached_at >= lim.lock_seat_timeout_ms:
+                self._fail(now, LOCK_TIMEOUT, "actuator passed the receivers but a shoulder lock is not seated")
+            return
+        if self.phase == LIFT or self.phase == LOWER:
+            if not self.lock_all:
+                self._fail(now, LOCK_DISAGREES, "a shoulder lock released while it must carry the body")
+                return
+            if retracting:
+                if self.phase == LOWER:
+                    self._enter_phase(now, LIFT)
+                elif self._move(now, lim.two_foot_mm, 100, lim.lift_timeout_ms):
+                    self._complete(now, TWO_FOOT)
+            else:
+                if self.phase == LIFT:
+                    self._enter_phase(now, LOWER)
+                elif self._move(now, lim.contact_mm, 100, lim.lift_timeout_ms):
+                    self._enter_phase(now, UNLOCKING)
             return
         self.hold(now, "no stance phase; stance held")

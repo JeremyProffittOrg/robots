@@ -2,16 +2,27 @@
 
 Board: Adafruit KB2040 (product 5302, RP2040).
 Firmware: CircuitPython 9.x for `adafruit_kb2040`.
+Revision D: the board also runs the interlocked, motorized stance change.
 
 ## Files from this directory
 
-Copy all three to the **root** of the CIRCUITPY drive:
+Copy these five to the **root** of the CIRCUITPY drive:
 
-| File          | Purpose |
-| ------------- | ------- |
-| `boot.py`     | Enables the second USB CDC endpoint so the Pi has a data port separate from the REPL. Takes effect only after a hard reset or power cycle. |
-| `code.py`     | The controller: seven motors, 17 NeoPixels, dome index sensor, serial protocol, heartbeat. |
-| `protocol.py` | Hardware-free parsing, ramp and duty maths. `code.py` imports it; `test_protocol.py` tests it on a workstation and is **not** copied to the board. |
+| File            | Purpose |
+| --------------- | ------- |
+| `boot.py`       | Enables the second USB CDC endpoint so the Pi has a data port separate from the REPL. Takes effect only after a hard reset or power cycle. |
+| `code.py`       | Pins and hardware: four drive outputs, the DRV8871 actuator, two release servos, two lock switches, the actuator pot, the battery divider, 17 NeoPixels, the dome index sensor, and the serial loop. |
+| `supervisor.py` | Hardware-free controller core: protocol, Pi heartbeat, drive ramp, ground-drive and dome interlocks. |
+| `stance.py`     | Hardware-free stance state machine, sensor conditioning and the one `MECHANISM CONSTANTS` block. |
+| `protocol.py`   | Hardware-free parsing, ramp, duty and RP2040 PWM-slice maths. |
+
+`test_protocol.py` and `test_stance.py` run on a workstation and are **not**
+copied to the board.
+
+If the board reports `MemoryError` while importing `stance.py` or
+`supervisor.py`, compile them with `mpy-cross` from the CircuitPython 9
+release (`mpy-cross stance.py` gives `stance.mpy`) and copy the `.mpy` files
+instead of the `.py` files. The behaviour is identical.
 
 ## Library files from the CircuitPython 9 bundle
 
@@ -23,10 +34,10 @@ Download `adafruit-circuitpython-bundle-9.x-mpy-<date>.zip` from
 | -------------- | --------- |
 | `neopixel.mpy` | The dome NeoPixel chain (`L` and `P` commands). |
 
-That is the whole list. Everything else `code.py` uses — `board`, `digitalio`,
-`pwmio`, `usb_cdc`, `time` — is built into the CircuitPython binary, so no other
-bundle file is required. If `neopixel.mpy` is missing the firmware still drives
-all seven motors and answers `err neopixel unavailable: ...` to `L` and `P`.
+Everything else — `board`, `digitalio`, `analogio`, `pwmio`, `usb_cdc`, `time` —
+is built into the CircuitPython binary. If `neopixel.mpy` is missing the
+firmware still drives every motor and the stance change, and answers
+`err neopixel library missing` to `L` and `P`.
 
 Resulting layout:
 
@@ -34,82 +45,84 @@ Resulting layout:
 CIRCUITPY/
     boot.py
     code.py
+    supervisor.py
+    stance.py
     protocol.py
     lib/
         neopixel.mpy
 ```
 
-## Pin map
+## Pin map (revision D, all 20 GPIOs used)
 
-Verified against `ports/raspberrypi/boards/adafruit_kb2040/pins.c` in the
-CircuitPython source tree. Silkscreen name = `board` attribute = RP2040 GPIO.
+Verified against `ports/raspberrypi/boards/adafruit_kb2040/pins.c`.
+Silkscreen name = `board` attribute = RP2040 GPIO. `test_stance.py` checks that
+every GPIO is used once, that the PWM plan is legal and that both analogue
+inputs are on ADC pins; `python scripts/electronics.py` checks the same pins
+against `electronics/wiring.csv`.
 
-| Function                      | `board` name | GPIO | Role |
-| ----------------------------- | ------------ | ---- | ---- |
-| Driver 1 (left foot) AIN1     | `board.D2`   | 2    | LF-front, digital |
-| Driver 1 (left foot) AIN2     | `board.D3`   | 3    | LF-front, **PWM** |
-| Driver 1 (left foot) BIN1     | `board.D4`   | 4    | LF-rear, digital |
-| Driver 1 (left foot) BIN2     | `board.D5`   | 5    | LF-rear, **PWM** |
-| Driver 2 (right foot) AIN1    | `board.D6`   | 6    | RF-front, digital |
-| Driver 2 (right foot) AIN2    | `board.D7`   | 7    | RF-front, **PWM** |
-| Driver 2 (right foot) BIN1    | `board.D8`   | 8    | RF-rear, digital |
-| Driver 2 (right foot) BIN2    | `board.D9`   | 9    | RF-rear, **PWM** |
-| Driver 3 (centre foot) AIN1   | `board.D10`  | 10   | CF-front, **PWM** |
-| Driver 3 (centre foot) AIN2   | `board.MOSI` | 19   | CF-front, digital |
-| Driver 3 (centre foot) BIN1   | `board.MISO` | 20   | CF-rear, digital |
-| Driver 3 (centre foot) BIN2   | `board.SCK`  | 18   | CF-rear, **PWM** |
-| Driver 4 (head) AIN1          | `board.A0`   | 26   | head, digital |
-| Driver 4 (head) AIN2          | `board.A1`   | 27   | head, **PWM** |
-| All four DRV8833 `SLP`        | `board.D1`   | 1    | high = drivers awake |
-| NeoPixel data (17 pixels)     | `board.A2`   | 28   | front PSI 0-6, rear PSI 7-13, holoprojectors 14-16 |
-| Dome index sensor, active low | `board.A3`   | 29   | optional, internal pull-up |
-| Spare                         | `board.D0`   | 0    | unused |
-| STEMMA QT SDA / SCL           | `board.SDA` / `board.SCL` | 12 / 13 | reserved, unused |
+| Function | `board` name | GPIO | Role |
+| -------- | ------------ | ---- | ---- |
+| Left foot, U1 AIN1 + BIN1 (jumpered) | `board.D2` | 2 | digital |
+| Left foot, U1 AIN2 + BIN2 (jumpered) | `board.D3` | 3 | **PWM** 20 kHz, slice 1B |
+| Head, U4 AIN1 | `board.D4` | 4 | digital |
+| Head, U4 AIN2 | `board.D5` | 5 | **PWM** 20 kHz, slice 2B |
+| Right foot, U2 AIN1 + BIN1 (jumpered) | `board.D6` | 6 | digital |
+| Right foot, U2 AIN2 + BIN2 (jumpered) | `board.D7` | 7 | **PWM** 20 kHz, slice 3B |
+| Actuator, U10 DRV8871 IN1 | `board.D8` | 8 | digital |
+| Actuator, U10 DRV8871 IN2 | `board.D9` | 9 | **PWM** 20 kHz, slice 4B |
+| Centre foot, U3 AIN2 + BIN2 (jumpered) | `board.D10` | 10 | **PWM** 20 kHz, slice 5A |
+| Centre foot, U3 AIN1 + BIN1 (jumpered) | `board.MOSI` | 19 | digital |
+| Left release servo SV1, via U11 channel 1 | `board.D0` | 0 | **PWM** 50 Hz, slice 0A |
+| Right release servo SV2, via U11 channel 2 | `board.D1` | 1 | **PWM** 50 Hz, slice 0B |
+| Left lock switch SW2, NO | `board.SCK` | 18 | input, 3.3 k pull-up, low = closed |
+| Left lock switch SW2, NC | `board.MISO` | 20 | input, 3.3 k pull-up, low = closed |
+| Right lock switch SW3, NO (STEMMA QT, J14 blue) | `board.SDA` | 12 | input, 3.3 k pull-up, low = closed |
+| Right lock switch SW3, NC (STEMMA QT, J14 yellow) | `board.SCL` | 13 | input, 3.3 k pull-up, low = closed |
+| Actuator pot wiper | `board.A0` | 26 | ADC, 470 k pull-down |
+| Battery divider, 100 k over 15 k | `board.A1` | 27 | ADC |
+| NeoPixel data (17 pixels) | `board.A2` | 28 | front PSI 0-6, rear PSI 7-13, holoprojectors 14-16 |
+| Dome index sensor, active low | `board.A3` | 29 | optional, internal pull-up |
+| All four DRV8833 `SLP` | 3V3 pad | — | tied high; arming is done in firmware |
 
-**`board.SDA` and `board.SCL` are GPIO 12 and 13 on this board, not `D2` and
-`D3`.** The STEMMA QT connector therefore stays free while `D2` and `D3` drive a
-motor.
+### What changed from revision C, and why
 
-## Why one PWM pin per motor instead of two
+Revision C used 17 GPIOs: one PWM and one digital pin for each of seven motors,
+plus SLP, NeoPixel and index. The stance change needs 12 more signals. They fit
+because:
 
-The RP2040 has eight PWM slices of two channels each. GPIO *n* is hard-wired to
-slice `(n >> 1) & 7`, channel `n & 1`, so any two GPIOs sixteen apart are the
-*same* PWM output. In this pin map that makes four unavoidable collisions:
+* both motors in a foot always get the same value, so each foot's two DRV8833
+  channels share one pin pair (jumper AIN1 to BIN1 and AIN2 to BIN2 on the
+  board); that frees D4, D5, D8, D9, SCK and MISO;
+* the head moves from A0/A1 to D4/D5, so two of the only four ADC pins can read
+  the actuator pot and the battery;
+* SLP is tied to the KB2040 3V3 pad, freeing D1 for the second servo; disarmed
+  outputs are held at coast by firmware, which is the same MCU that drove SLP;
+* the right lock switch uses GP12/GP13 through the STEMMA QT connector and cable
+  J14.
 
-```
-GP2 / GP18  -> slice 1 channel A
-GP3 / GP19  -> slice 1 channel B
-GP4 / GP20  -> slice 2 channel A
-GP10 / GP26 -> slice 5 channel A
-```
+Per-motor `invert` flags are gone with the pairing: wire each motor so the
+slow-decay direction (digital pin high) drives the robot forward, and swap its
+two leads at the driver output if it does not.
 
-Fourteen simultaneous `pwmio.PWMOut` objects are therefore impossible here;
-`pwmio` raises on the fifth allocation and the firmware would not start.
+## Why one PWM pin per output
 
-`code.py` instead gives each motor **one** PWM pin and **one** plain digital
-pin, choosing the PWM pin so that the seven land on seven different
-slice/channel pairs (GP3, GP5, GP7, GP9, GP10, GP18, GP27). All four DRV8833
-states are still reachable:
+The RP2040 has eight PWM slices of two channels. GPIO *n* is slice
+`(n >> 1) & 7`, channel `n & 1`, so GPIOs sixteen apart are the *same* output,
+and both channels of one slice share one frequency. The five 20 kHz outputs use
+five different slice/channel pairs; the two 50 Hz servos use both channels of
+slice 0 and nothing else. Each output gets one PWM pin and one digital pin, which
+still reaches all four H-bridge states on both the DRV8833 and the DRV8871:
 
-| Digital pin | PWM pin duty | DRV8833 state | Used for |
-| ----------- | ------------ | ------------- | -------- |
-| low  | 0            | both low  | coast |
-| high | `FULL*(1-m)` | forward   | forward at magnitude `m`, slow decay |
-| low  | `FULL*m`     | reverse   | reverse at magnitude `m`, fast decay |
+| Digital pin | PWM pin duty | State | Used for |
+| ----------- | ------------ | ----- | -------- |
+| low  | 0            | both low  | coast (the DRV8871 also sleeps) |
+| high | `FULL*(1-m)` | forward   | forward / extend at magnitude `m`, slow decay |
+| low  | `FULL*m`     | reverse   | reverse / retract at magnitude `m`, fast decay |
 | high | `FULL`       | both high | brake |
 
-`protocol.pwm_conflicts()` re-checks the plan and `code.py` reports
-`err pwm slice clash ...` over serial if anyone edits `MOTORS` into a collision.
-
-### Consequence for wiring
-
-Forward uses slow decay and reverse uses fast decay, so a motor is slightly
-stronger in the slow-decay direction at the same duty. That direction is the one
-where the digital pin is high. **Wire each motor's two leads to its DRV8833
-output pair so the slow-decay direction drives the robot forward.** If a motor
-turns the wrong way, swap its two leads at the driver output (preferred), or set
-its `invert` flag to `True` in the `MOTORS` table in `code.py` — the flag works,
-but it moves that motor's slow-decay direction to reverse.
+`code.py` re-checks the plan at boot and answers
+`err pwm slice clash ...` or `err pwm frequency clash ...` if the pin table is
+ever edited into a collision.
 
 ## Bench check without the Pi
 
@@ -123,7 +136,13 @@ E 0
 ?
 ```
 
-The board answers `ok` to each and `st <enabled> <l> <r> <c> <h> <index>` to
-`?`, plus an unsolicited `st` line every 200 ms. Stop typing for half a second
-and it answers `err heartbeat timeout, motors coasted`, which is the watchdog
-doing its job.
+The board answers `ok` to each line, and to `?` it sends two status lines:
+`st <enabled> <l> <r> <c> <h> <index>` and
+`ss <state> <phase> <fault> <pos_0.1mm> <locks> <pack_mv> <drive_ok> <head_ok> <can_two> <can_three> <reason>|<why_two>|<why_three>`.
+Both also arrive unsolicited every 200 ms. Stop typing for half a second and it
+answers `err heartbeat timeout, motors coasted`.
+
+`M` values are refused unless `ss` reports `THREE_FOOT`: the board then answers
+`err drive refused (...)`. A stance change needs `E 1` and a `T 2` or `T 3`
+line repeated at least every 500 ms; a terminal cannot comfortably do that, so
+exercise the stance change from the control page.

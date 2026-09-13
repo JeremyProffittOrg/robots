@@ -99,7 +99,9 @@ def check_wiring():
     for row in rows:
         for field in ("source_pin", "target_pin"):
             match = re.match(r"(?:board\.)?([A-Z][A-Z0-9]*)$", (row.get(field) or "").strip())
-            if match and ("KB2040" in (row.get("source", "") + row.get("target", ""))):
+            side = field[:-len("_pin")]
+            if match and ("KB2040" in (row.get("source", "") + row.get("target", ""))
+                          or row.get(side) == "A2"):  # A2 is the KB2040 designator in wiring.csv
                 used.add(match.group(1))
     unknown = sorted(p for p in used if p not in board_pins and p not in ("GND", "RAW", "3V", "VBUS", "USB"))
     ok = len(rows) > 40 and not unknown
@@ -114,10 +116,11 @@ def run(cmd, cwd=ROOT):
 def check_firmware():
     outputs = []
     ok = True
-    for cmd in ([sys.executable, "firmware/kb2040/test_protocol.py"], [sys.executable, "firmware/pi/test_mixing.py"]):
-        code, out = run(cmd)
-        ok &= code == 0 and "OK" in out
-        outputs.append(out.splitlines()[-1] if out else "no output")
+    for suite in ("firmware/kb2040", "firmware/pi"):  # every test_*.py, stance tests included
+        code, out = run([sys.executable, "-m", "unittest", "discover", "-s", suite])
+        ok &= code == 0 and out.rstrip().endswith("OK")
+        ran = next((line for line in out.splitlines() if line.startswith("Ran ")), "no test count")
+        outputs.append("{0}: {1}, exit {2}".format(suite, ran, code))
     if shutil.which("node"):
         code, out = run(["node", "--check", "firmware/pi/static/app.js"])
         ok &= code == 0

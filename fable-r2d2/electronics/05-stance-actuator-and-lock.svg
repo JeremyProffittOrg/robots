@@ -1,0 +1,131 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1680" height="1460" viewBox="0 0 1680 1460">
+<rect width="1680" height="1460" fill="#ffffff"/>
+<text x="36" y="46" font-family="Arial, Helvetica, sans-serif" font-size="27" font-weight="bold" fill="#12283d" text-anchor="start">05  Stance change: actuator driver, position pot, lock switch, release servo</text>
+<text x="36" y="74" font-family="Arial, Helvetica, sans-serif" font-size="16" font-weight="normal" fill="#5b7c99" text-anchor="start">Revision D. The KB2040 owns the interlock (firmware/kb2040/stance.py and supervisor.py). Pin names are exactly those in firmware/kb2040/code.py.</text>
+<line x1="36" y1="88" x2="1644" y2="88" stroke="#5b7c99" stroke-width="1.2"/>
+<text x="36" y="128" font-family="Arial, Helvetica, sans-serif" font-size="19" font-weight="bold" fill="#12283d" text-anchor="start">A.  12 V actuator branch</text>
+<text x="36" y="201" font-family="Consolas, monospace" font-size="14" font-weight="normal" fill="#00507f" text-anchor="start">12V-BUS</text>
+<line x1="116" y1="196" x2="150" y2="196" stroke="#c62828" stroke-width="2.2" stroke-linecap="round"/>
+<line x1="150" y1="196" x2="164" y2="196" stroke="#c62828" stroke-width="2.2" stroke-linecap="round"/>
+<rect x="164" y="187" width="58" height="18" rx="4" fill="#ffffff" stroke="#c62828" stroke-width="2"/>
+<line x1="164" y1="196" x2="222" y2="196" stroke="#c62828" stroke-width="1.6" stroke-linecap="round"/>
+<line x1="222" y1="196" x2="236" y2="196" stroke="#c62828" stroke-width="2.2" stroke-linecap="round"/>
+<text x="193" y="180" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" fill="#12283d" text-anchor="middle">F7  2 A  (holder FH7)</text>
+<line x1="236" y1="196" x2="286" y2="196" stroke="#c62828" stroke-width="2.2" stroke-linecap="round"/>
+<path d="M275,190 L286,196 L275,202" fill="none" stroke="#c62828" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+<rect x="286" y="150" width="330" height="108" rx="7" fill="#f2f7fb" stroke="#c62828" stroke-width="1.6"/>
+<rect x="286" y="150" width="6" height="108" rx="3" fill="#c62828"/>
+<text x="306" y="180" font-family="Arial, Helvetica, sans-serif" font-size="19" font-weight="bold" fill="#12283d" text-anchor="start">U10  Adafruit DRV8871</text>
+<text x="306" y="204" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" fill="#12283d" text-anchor="start">VM / GND terminal block</text>
+<text x="306" y="224" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" fill="#12283d" text-anchor="start">IN1 &lt;- D8   IN2 &lt;- D9</text>
+<text x="306" y="244" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" fill="#12283d" text-anchor="start">ILIM R5 71.5 k: 0.895 A</text>
+<line x1="616" y1="196" x2="706" y2="196" stroke="#c62828" stroke-width="2.2" stroke-linecap="round"/>
+<path d="M695,190 L706,196 L695,202" fill="none" stroke="#c62828" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+<circle cx="736" cy="196" r="22" fill="#ffffff" stroke="#12283d" stroke-width="2"/>
+<text x="736" y="203" font-family="Arial, Helvetica, sans-serif" font-size="19" font-weight="bold" fill="#12283d" text-anchor="middle">M</text>
+<text x="736" y="238" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" fill="#12283d" text-anchor="middle">ACT1 actuator</text>
+<rect x="826" y="150" width="818" height="108" rx="7" fill="#f2f7fb" stroke="#c62828" stroke-width="1.6"/>
+<rect x="826" y="150" width="6" height="108" rx="3" fill="#c62828"/>
+<text x="846" y="180" font-family="Arial, Helvetica, sans-serif" font-size="19" font-weight="bold" fill="#12283d" text-anchor="start">ACT1  Actuonix P16-100-256-12-P</text>
+<text x="846" y="204" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" fill="#12283d" text-anchor="start">100 mm stroke, 12 V, 1.0 A stall, 20 % duty</text>
+<text x="846" y="224" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" fill="#12283d" text-anchor="start">two-foot 5.0, touchdown 31.6, three-foot 62.3 mm</text>
+<text x="846" y="244" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" fill="#12283d" text-anchor="start">4.8 mm/s no load: 12 s per change</text>
+<rect x="36" y="320" width="780" height="334" rx="7" fill="#ffffff" stroke="#2e7d32" stroke-width="1.6"/>
+<text x="50" y="350" font-family="Arial, Helvetica, sans-serif" font-size="19" font-weight="bold" fill="#12283d" text-anchor="start">A2  KB2040 pins used by the stance change</text>
+<text x="50" y="376" font-family="Consolas, monospace" font-size="14" font-weight="normal" fill="#00507f" text-anchor="start">D8</text>
+<text x="146" y="376" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" fill="#12283d" text-anchor="start">U10 IN1, actuator direction (high = slow decay, extend)</text>
+<line x1="50" y1="383" x2="802" y2="383" stroke="#dde7ef" stroke-width="1.2"/>
+<text x="50" y="398" font-family="Consolas, monospace" font-size="14" font-weight="normal" fill="#00507f" text-anchor="start">D9</text>
+<text x="146" y="398" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" fill="#12283d" text-anchor="start">U10 IN2, actuator PWM 20 kHz, slice 4 channel B</text>
+<line x1="50" y1="405" x2="802" y2="405" stroke="#dde7ef" stroke-width="1.2"/>
+<text x="50" y="420" font-family="Consolas, monospace" font-size="14" font-weight="normal" fill="#00507f" text-anchor="start">D0</text>
+<text x="146" y="420" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" fill="#12283d" text-anchor="start">U11 LV1 -&gt; HV1 5 V -&gt; SV1 left release servo, 50 Hz, slice 0A</text>
+<line x1="50" y1="427" x2="802" y2="427" stroke="#dde7ef" stroke-width="1.2"/>
+<text x="50" y="442" font-family="Consolas, monospace" font-size="14" font-weight="normal" fill="#00507f" text-anchor="start">D1</text>
+<text x="146" y="442" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" fill="#12283d" text-anchor="start">U11 LV2 -&gt; HV2 5 V -&gt; SV2 right release servo, 50 Hz, slice 0B</text>
+<line x1="50" y1="449" x2="802" y2="449" stroke="#dde7ef" stroke-width="1.2"/>
+<text x="50" y="464" font-family="Consolas, monospace" font-size="14" font-weight="normal" fill="#00507f" text-anchor="start">SCK</text>
+<text x="146" y="464" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" fill="#12283d" text-anchor="start">SW2 left lock NO, R6A 3.3 k pull-up to 3V3; low = closed</text>
+<line x1="50" y1="471" x2="802" y2="471" stroke="#dde7ef" stroke-width="1.2"/>
+<text x="50" y="486" font-family="Consolas, monospace" font-size="14" font-weight="normal" fill="#00507f" text-anchor="start">MISO</text>
+<text x="146" y="486" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" fill="#12283d" text-anchor="start">SW2 left lock NC, R6B 3.3 k pull-up to 3V3; low = closed</text>
+<line x1="50" y1="493" x2="802" y2="493" stroke="#dde7ef" stroke-width="1.2"/>
+<text x="50" y="508" font-family="Consolas, monospace" font-size="14" font-weight="normal" fill="#00507f" text-anchor="start">SDA</text>
+<text x="146" y="508" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" fill="#12283d" text-anchor="start">SW3 right lock NO via J14 blue lead, R6C 3.3 k pull-up</text>
+<line x1="50" y1="515" x2="802" y2="515" stroke="#dde7ef" stroke-width="1.2"/>
+<text x="50" y="530" font-family="Consolas, monospace" font-size="14" font-weight="normal" fill="#00507f" text-anchor="start">SCL</text>
+<text x="146" y="530" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" fill="#12283d" text-anchor="start">SW3 right lock NC via J14 yellow lead, R6D 3.3 k pull-up</text>
+<line x1="50" y1="537" x2="802" y2="537" stroke="#dde7ef" stroke-width="1.2"/>
+<text x="50" y="552" font-family="Consolas, monospace" font-size="14" font-weight="normal" fill="#00507f" text-anchor="start">A0</text>
+<text x="146" y="552" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" fill="#12283d" text-anchor="start">ACT1 pot wiper (purple), R8 470 k pull-down</text>
+<line x1="50" y1="559" x2="802" y2="559" stroke="#dde7ef" stroke-width="1.2"/>
+<text x="50" y="574" font-family="Consolas, monospace" font-size="14" font-weight="normal" fill="#00507f" text-anchor="start">A1</text>
+<text x="146" y="574" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" fill="#12283d" text-anchor="start">12 V bus through R9 100 k over R10 15 k</text>
+<line x1="50" y1="581" x2="802" y2="581" stroke="#dde7ef" stroke-width="1.2"/>
+<text x="50" y="596" font-family="Consolas, monospace" font-size="14" font-weight="normal" fill="#00507f" text-anchor="start">D4/D5</text>
+<text x="146" y="596" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" fill="#12283d" text-anchor="start">head drive U4 AIN1 / AIN2, moved from A0 / A1 (sheet 02)</text>
+<line x1="50" y1="603" x2="802" y2="603" stroke="#dde7ef" stroke-width="1.2"/>
+<text x="50" y="618" font-family="Consolas, monospace" font-size="14" font-weight="normal" fill="#00507f" text-anchor="start">3V3 pad</text>
+<text x="146" y="618" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" fill="#12283d" text-anchor="start">R6A-R6D, R7 (pot reference), U11 LV, DRV8833 SLP</text>
+<line x1="50" y1="625" x2="802" y2="625" stroke="#dde7ef" stroke-width="1.2"/>
+<text x="50" y="640" font-family="Consolas, monospace" font-size="14" font-weight="normal" fill="#00507f" text-anchor="start">GND pad</text>
+<text x="146" y="640" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" fill="#12283d" text-anchor="start">SW2 COM, pot orange lead, R8, R10, U10 and U11 logic ground</text>
+<rect x="836" y="320" width="808" height="224" rx="7" fill="#f2f7fb" stroke="#c62828" stroke-width="1.6"/>
+<rect x="836" y="320" width="6" height="224" rx="3" fill="#c62828"/>
+<text x="856" y="350" font-family="Arial, Helvetica, sans-serif" font-size="19" font-weight="bold" fill="#12283d" text-anchor="start">U10  DRV8871 wiring and current limit</text>
+<text x="856" y="376" font-family="Arial, Helvetica, sans-serif" font-size="15" font-weight="normal" fill="#12283d" text-anchor="start">VM &lt;- F7 2 A (holder FH7) &lt;- 12V-BUS.  GND -&gt; TB2.  Logic GND -&gt; KB2040 GND pad.</text>
+<text x="856" y="398" font-family="Arial, Helvetica, sans-serif" font-size="15" font-weight="normal" fill="#12283d" text-anchor="start">IN1 &lt;- KB2040 D8 (digital), IN2 &lt;- D9 (PWM).  OUT1 -&gt; ACT1 red, OUT2 -&gt; ACT1 black.</text>
+<text x="856" y="420" font-family="Arial, Helvetica, sans-serif" font-size="15" font-weight="normal" fill="#12283d" text-anchor="start">IN1 high, IN2 duty FULL*(1-m): extend at m.  IN1 low, IN2 duty FULL*m: retract at m.</text>
+<text x="856" y="442" font-family="Arial, Helvetica, sans-serif" font-size="15" font-weight="normal" fill="#12283d" text-anchor="start">Both inputs low: coast, and the driver sleeps.  Both high: brake.</text>
+<text x="856" y="464" font-family="Arial, Helvetica, sans-serif" font-size="15" font-weight="normal" fill="#12283d" text-anchor="start">Remove the factory 30 k ILIM resistor (about 2 A) and fit R5 71.5 k 1 %: 0.895 A.</text>
+<text x="856" y="486" font-family="Arial, Helvetica, sans-serif" font-size="15" font-weight="normal" fill="#12283d" text-anchor="start">The actuator stalls at 1.0 A, so a jam is chopped by the driver and latched as STALL.</text>
+<text x="856" y="508" font-family="Arial, Helvetica, sans-serif" font-size="15" font-weight="normal" fill="#12283d" text-anchor="start">VM 6.5-45 V: the pack (10.5-14.75 V) feeds it directly.  3.3 V logic drives IN1/IN2.</text>
+<text x="856" y="530" font-family="Arial, Helvetica, sans-serif" font-size="15" font-weight="normal" fill="#12283d" text-anchor="start">If the pot reads backwards the firmware latches REVERSED_FEEDBACK: swap red and black.</text>
+<rect x="36" y="684" width="800" height="180" rx="7" fill="#f2f7fb" stroke="#1565c0" stroke-width="1.6"/>
+<rect x="36" y="684" width="6" height="180" rx="3" fill="#1565c0"/>
+<text x="56" y="714" font-family="Arial, Helvetica, sans-serif" font-size="19" font-weight="bold" fill="#12283d" text-anchor="start">ACT1  position potentiometer</text>
+<text x="56" y="740" font-family="Arial, Helvetica, sans-serif" font-size="15" font-weight="normal" fill="#12283d" text-anchor="start">Yellow (pot +) &lt;- R7 2.2 k &lt;- KB2040 3V3.  Orange (pot -) -&gt; KB2040 GND pad.</text>
+<text x="56" y="762" font-family="Arial, Helvetica, sans-serif" font-size="15" font-weight="normal" fill="#12283d" text-anchor="start">Purple (wiper) -&gt; KB2040 A0, with R8 470 k from A0 to the GND pad at the KB2040.</text>
+<text x="56" y="784" font-family="Arial, Helvetica, sans-serif" font-size="15" font-weight="normal" fill="#12283d" text-anchor="start">11 k pot: 0 mV at stroke 0, 2750 mV at full stroke; +50 % tolerance gives 2912 mV.</text>
+<text x="56" y="806" font-family="Arial, Helvetica, sans-serif" font-size="15" font-weight="normal" fill="#12283d" text-anchor="start">Open wiper or open pot + reads near 0 mV; open pot - reads near 3300 mV.</text>
+<text x="56" y="828" font-family="Arial, Helvetica, sans-serif" font-size="15" font-weight="normal" fill="#12283d" text-anchor="start">Valid window 40-3000 mV.  Outside it: FEEDBACK latched, actuator stopped.</text>
+<text x="56" y="850" font-family="Arial, Helvetica, sans-serif" font-size="15" font-weight="normal" fill="#12283d" text-anchor="start">Measure zero and full mV on the detached actuator and set POT_ZERO_MV / POT_FULL_MV.</text>
+<rect x="856" y="684" width="788" height="180" rx="7" fill="#f2f7fb" stroke="#2e7d32" stroke-width="1.6"/>
+<rect x="856" y="684" width="6" height="180" rx="3" fill="#2e7d32"/>
+<text x="876" y="714" font-family="Arial, Helvetica, sans-serif" font-size="19" font-weight="bold" fill="#12283d" text-anchor="start">SW2 / SW3  Omron SS-01GL lock switches, NO + NC</text>
+<text x="876" y="740" font-family="Arial, Helvetica, sans-serif" font-size="15" font-weight="normal" fill="#12283d" text-anchor="start">SW2 left: COM -&gt; GND pad, NO -&gt; SCK, NC -&gt; MISO.  SW3 right via J14: NO -&gt; SDA, NC -&gt; SCL.</text>
+<text x="876" y="762" font-family="Arial, Helvetica, sans-serif" font-size="15" font-weight="normal" fill="#12283d" text-anchor="start">3.3 k pull-ups R6A-R6D to 3V3: 1 mA through a closed contact.  COM of SW3 -&gt; J14 black.</text>
+<text x="876" y="784" font-family="Arial, Helvetica, sans-serif" font-size="15" font-weight="normal" fill="#12283d" text-anchor="start">Pin seated: NO closed, NC open.  Pin out: NO open, NC closed.</text>
+<text x="876" y="806" font-family="Arial, Helvetica, sans-serif" font-size="15" font-weight="normal" fill="#12283d" text-anchor="start">Per switch, exactly one closed contact is legal; a change must hold 50 ms.</text>
+<text x="876" y="828" font-family="Arial, Helvetica, sans-serif" font-size="15" font-weight="normal" fill="#12283d" text-anchor="start">Both open or both closed for 150 ms latches LOCK_SENSOR (broken wire or short).</text>
+<text x="876" y="850" font-family="Arial, Helvetica, sans-serif" font-size="15" font-weight="normal" fill="#12283d" text-anchor="start">Omron minimum load is 5 V 1 mA; this is 3.3 V 1 mA.  Bench-check it first.</text>
+<rect x="36" y="894" width="800" height="180" rx="7" fill="#f2f7fb" stroke="#ef6c00" stroke-width="1.6"/>
+<rect x="36" y="894" width="6" height="180" rx="3" fill="#ef6c00"/>
+<text x="56" y="924" font-family="Arial, Helvetica, sans-serif" font-size="19" font-weight="bold" fill="#12283d" text-anchor="start">SV1 / SV2  release servos, U11 level shifter, J13A / J13B</text>
+<text x="56" y="950" font-family="Arial, Helvetica, sans-serif" font-size="15" font-weight="normal" fill="#12283d" text-anchor="start">D0 -&gt; U11 LV1 -&gt; HV1 -&gt; J13A -&gt; SV1 (left); D1 -&gt; LV2 -&gt; HV2 -&gt; J13B -&gt; SV2 (right).</text>
+<text x="56" y="972" font-family="Arial, Helvetica, sans-serif" font-size="15" font-weight="normal" fill="#12283d" text-anchor="start">U11 LV &lt;- KB2040 3V3, HV &lt;- U5 5 V, GND -&gt; KB2040 GND pad.  5 V signal swing.</text>
+<text x="56" y="994" font-family="Arial, Helvetica, sans-serif" font-size="15" font-weight="normal" fill="#12283d" text-anchor="start">Servo V+ (red) &lt;- U7 6 V rail B; servo GND (brown) -&gt; TB2 star ground.</text>
+<text x="56" y="1016" font-family="Arial, Helvetica, sans-serif" font-size="15" font-weight="normal" fill="#12283d" text-anchor="start">Engage 1500/1500 us; release 1310 us left, 1690 us right (mirrored); no pulse after 1000 ms.</text>
+<text x="56" y="1038" font-family="Arial, Helvetica, sans-serif" font-size="15" font-weight="normal" fill="#12283d" text-anchor="start">The pins are spring return: losing servo power or signal lets them seat.</text>
+<text x="56" y="1060" font-family="Arial, Helvetica, sans-serif" font-size="15" font-weight="normal" fill="#12283d" text-anchor="start">Calibrate each release on its lever: 5.5-5.9 mm of pin pull without a stall.</text>
+<rect x="856" y="894" width="788" height="180" rx="7" fill="#f2f7fb" stroke="#1565c0" stroke-width="1.6"/>
+<rect x="856" y="894" width="6" height="180" rx="3" fill="#1565c0"/>
+<text x="876" y="924" font-family="Arial, Helvetica, sans-serif" font-size="19" font-weight="bold" fill="#12283d" text-anchor="start">R9 / R10  KB2040 battery sense on A1</text>
+<text x="876" y="950" font-family="Arial, Helvetica, sans-serif" font-size="15" font-weight="normal" fill="#12283d" text-anchor="start">12V-BUS -&gt; R9 100 k -&gt; A1 node -&gt; R10 15 k -&gt; KB2040 GND pad.  Ratio 7.667.</text>
+<text x="876" y="972" font-family="Arial, Helvetica, sans-serif" font-size="15" font-weight="normal" fill="#12283d" text-anchor="start">12.70 V reads 1.657 V and 14.75 V reads 1.924 V at A1 (ADC range 3.3 V).</text>
+<text x="876" y="994" font-family="Arial, Helvetica, sans-serif" font-size="15" font-weight="normal" fill="#12283d" text-anchor="start">Below 11.2 V for 500 ms: no power.  Back only at 12.0 V for 500 ms.</text>
+<text x="876" y="1016" font-family="Arial, Helvetica, sans-serif" font-size="15" font-weight="normal" fill="#12283d" text-anchor="start">No power blocks a stance start and latches POWER during a change.</text>
+<text x="876" y="1038" font-family="Arial, Helvetica, sans-serif" font-size="15" font-weight="normal" fill="#12283d" text-anchor="start">Separate from the Pi ADS1115 divider (R2 / R3, sheet 04).</text>
+<text x="876" y="1060" font-family="Arial, Helvetica, sans-serif" font-size="15" font-weight="normal" fill="#12283d" text-anchor="start">R9 comes from the R2 pack; R10 is the second R3 resistor.</text>
+<rect x="36" y="1104" width="1608" height="168" rx="7" fill="#f2f7fb" stroke="#c62828" stroke-width="1.6"/>
+<rect x="36" y="1104" width="6" height="168" rx="3" fill="#c62828"/>
+<text x="56" y="1134" font-family="Arial, Helvetica, sans-serif" font-size="19" font-weight="bold" fill="#12283d" text-anchor="start">Interlock (firmware/kb2040/stance.py, tested on a simulated plant)</text>
+<text x="56" y="1158" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" fill="#12283d" text-anchor="start">Retract: UNLOCKING, TILT, LOCKING at touchdown (creep until SW2 and SW3 both read seated), LIFT.  Deploy: LOWER, UNLOCKING, TILT, LOCKING at three feet.</text>
+<text x="56" y="1178" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" fill="#12283d" text-anchor="start">Ground drive only in THREE_FOOT.  Dome only in THREE_FOOT or TWO_FOOT.  Refused commands answer err drive refused and hold a running change.</text>
+<text x="56" y="1198" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" fill="#12283d" text-anchor="start">Hold-to-run: the page repeats T 2 or T 3 every 50 ms.  Letting go, a 0.5 s phone or Pi heartbeat loss, S or E 0 stops the actuator and holds.</text>
+<text x="56" y="1218" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" fill="#12283d" text-anchor="start">Latched faults: POWER, FEEDBACK, LOCK_SENSOR, LOCK_DISAGREES, STALL, TRAVEL_TIMEOUT, LOCK_TIMEOUT, DRIFT, OVERTRAVEL, REVERSED_FEEDBACK.  Clear with C.</text>
+<text x="56" y="1238" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" fill="#12283d" text-anchor="start">A clear succeeds only if fresh sensors are consistent, and the stance control must be released and pressed again.  Nothing ever restarts by itself.</text>
+<text x="56" y="1258" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" fill="#12283d" text-anchor="start">Budget: F7 carries 1.0 A stall.  Rail B carries 3 A of servo stall only while its motors are refused.  3V3 pad load under 3 mA.</text>
+<line x1="36" y1="1416" x2="1644" y2="1416" stroke="#5b7c99" stroke-width="1.2"/>
+<text x="36" y="1438" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" fill="#5b7c99" text-anchor="start">fable-r2d2 electrical set, revision D, 2026-09-12  |  sheets 01-05 and electronics/wiring.csv are one drawing set  |  pin names are the final firmware names in firmware/kb2040/code.py  |  not yet validated on hardware</text>
+</svg>

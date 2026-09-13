@@ -35,7 +35,7 @@ class Clock:
 
 def status_line(state="THREE_FOOT", drive=True, head=True, two=True, three=False,
                 reason="ready", two_block="", three_block="already on three feet"):
-    return protocol.format_stance(state, "NONE", "NONE", 95.2, "E", 12600, drive, head, two, three,
+    return protocol.format_stance(state, "NONE", "NONE", 62.5, "EE", 12600, drive, head, two, three,
                                   reason, two_block, three_block)
 
 
@@ -66,29 +66,31 @@ class FakeLink:
 class TestParseStanceLine(unittest.TestCase):
     def test_round_trip_from_the_kb2040_formatter(self):
         parsed = stance_link.parse_stance_line(protocol.format_stance(
-            "RETRACTING", "TRAVEL", "NONE", 51.26, "R", 12603, False, False, False, False,
+            "RETRACTING", "TILT", "NONE", 51.26, "RR", 12603, False, False, False, False,
             "retracting the centre leg", "stance change in progress",
             "release the active stance control first"))
         self.assertEqual(parsed["state"], "RETRACTING")
-        self.assertEqual(parsed["phase"], "TRAVEL")
+        self.assertEqual(parsed["phase"], "TILT")
         self.assertAlmostEqual(parsed["position_mm"], 51.3)
-        self.assertEqual(parsed["lock_label"], "released")
+        self.assertEqual(parsed["lock_label"], "left released, right released")
         self.assertAlmostEqual(parsed["pack_volts"], 12.603)
         self.assertFalse(parsed["drive_allowed"])
         self.assertEqual(parsed["two_foot_block"], "stance change in progress")
 
     def test_invalid_readings_become_none(self):
         parsed = stance_link.parse_stance_line(protocol.format_stance(
-            "FAULT", "NONE", "FEEDBACK", None, "X", None, False, False, False, False,
+            "FAULT", "NONE", "FEEDBACK", None, "XE", None, False, False, False, False,
             "actuator position feedback out of range", "fault latched; clear it first",
             "fault latched; clear it first"))
         self.assertIsNone(parsed["position_mm"])
         self.assertIsNone(parsed["pack_volts"])
         self.assertEqual(parsed["fault"], "FEEDBACK")
+        self.assertEqual(parsed["lock_label"], "left switch invalid, right seated")
 
     def test_rejects_other_lines(self):
         for line in ("st 1 0 0 0 0 0", "ss", "ss BOGUS NONE NONE 1 E 1 0 0 0 0 a|b|c",
-                     "ss HELD NONE NONE 1 Q 1 0 0 0 0 a|b|c", "ss HELD NONE NONE 1 E 1 0 2 0 0 a|b|c",
+                     "ss HELD NONE NONE 1 Q 1 0 0 0 0 a|b|c", "ss HELD NONE NONE 1 EQ 1 0 0 0 0 a|b|c",
+                     "ss HELD NONE NONE 1 E 1 0 2 0 0 a|b|c",
                      "ss HELD NONE NONE x E 1 0 0 0 0 a|b|c", "ss HELD NONE NONE 1 E 1 0 0 0 0 a|b"):
             self.assertIsNone(stance_link.parse_stance_line(line), line)
 
@@ -305,12 +307,12 @@ class TestEndToEnd(unittest.TestCase):
         self.assertFalse(rig.control.drive_permitted())
         self.assertTrue(rig.control.head_permitted())
         self.assertEqual(rig.control.gate(600, 600, 600, 450), (0, 0, 0, 450))
-        self.assertFalse(rig.plant.moved_pinned)
+        self.assertLessEqual(rig.plant.pinned_ms, 100)
 
     def test_phone_goes_silent_mid_transition(self):
-        rig = EndToEnd(kb.RECEIVER_TWO, 2)
+        rig = EndToEnd(kb.TWO_FOOT_POS, 2)
         rig.phone_target = 3
-        self.assertTrue(rig.run_until(lambda: rig.s.phase == stance.TRAVEL, 3000))
+        self.assertTrue(rig.run_until(lambda: rig.s.phase == stance.TILT, 20000))
         rig.run(2000)
         self.assertEqual(rig.s.state, stance.DEPLOYING)
         rig.phone_target = None                             # Wi-Fi drops, the page stops sending
@@ -330,7 +332,7 @@ class TestEndToEnd(unittest.TestCase):
     def test_pi_to_kb2040_cable_lost_mid_transition(self):
         rig = EndToEnd()
         rig.phone_target = 2
-        self.assertTrue(rig.run_until(lambda: rig.s.phase == stance.TRAVEL, 3000))
+        self.assertTrue(rig.run_until(lambda: rig.s.phase == stance.TILT, 3000))
         rig.run(1500)
         rig.bridge.connected = False
         rig.run(protocol.HEARTBEAT_MS + 100)
@@ -344,7 +346,7 @@ class TestEndToEnd(unittest.TestCase):
     def test_fault_is_cleared_from_the_page(self):
         rig = EndToEnd()
         rig.phone_target = 2
-        self.assertTrue(rig.run_until(lambda: rig.s.phase == stance.TRAVEL, 3000))
+        self.assertTrue(rig.run_until(lambda: rig.s.phase == stance.TILT, 3000))
         rig.run(1000)
         rig.plant.stalled = True
         rig.run(kb.L.progress_ms + 100)

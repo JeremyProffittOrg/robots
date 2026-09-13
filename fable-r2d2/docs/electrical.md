@@ -1,6 +1,8 @@
 # fable-r2d2 electrical design, harness and commissioning
 
-Written 2026-09-12. This document, the four sheets in `electronics/` and
+Written 2026-09-12 and revised the same day for revision D (the motorized,
+interlocked stance change: section 11 and sheet 05). This document, the five
+sheets in `electronics/` and
 `electronics/wiring.csv` are one drawing set; the numbers behind them are in
 `electronics/calculations.json`, which `electronics/generate.py` writes from
 `research/loads.md` section 6 and `research/components-electronics.md`.
@@ -16,8 +18,9 @@ python scripts/electronics.py
 ```
 
 That script runs the generator and then fails loudly if any KB2040 pin in
-`wiring.csv` disagrees with the `MOTORS` table, `ENABLE_PIN`, `PIXEL_PIN` or
-`INDEX_PIN` in `firmware/kb2040/code.py`.
+`wiring.csv` disagrees with `firmware/kb2040/code.py` (the `DRIVES` table, the
+`ACTUATOR` entry and every single pin), if a KB2040 pin carries two nets, if a
+firmware pin is not wired, or if the RP2040 PWM or ADC plan is illegal.
 
 ---
 
@@ -35,6 +38,8 @@ BT1 12 V 7 Ah SLA
   |                                      |                        +--> FH4 [F4 5 A] --> U6  12 V -> 6 V (rail A)
   |                          J1 charge jack                       +--> FH5 [F5 5 A] --> U7  12 V -> 6 V (rail B)
   |                                                               +--> R2 100k / R3 15k --> U9 ADS1115 A0
+  |                                                               +--> FH7 [F7 2 A] --> U10 DRV8871 --> ACT1 (rev D)
+  |                                                               +--> R9 100k / R10 15k --> KB2040 A1 (rev D)
   +--F2 blade--> J10 Powerpole --> TB2 star ground
 ```
 
@@ -46,6 +51,11 @@ BT1 12 V 7 Ah SLA
 - **U6 (D36V50F6, 6 V, rail A)** feeds DRV8833 U1 (left foot) and U3 (centre foot).
 - **U7 (D36V50F6, 6 V, rail B)** feeds DRV8833 U2 (right foot) and U4 (head drive).
   Splitting the two rails keeps a stalled foot from pulling the head drive down.
+  In revision D it also feeds the two MG995 release servos (SV1, SV2). The servos
+  move only while ground drive and the dome are refused, so rail B carries either
+  3 A of motors or 3 A of servo stall, never both.
+- **U10 (DRV8871) is fed straight from the 12 V bus through FH7 (F7 2 A).** The
+  actuator is a 12 V part; the DRV8833 boards stop at 10.8 V and cannot drive it.
 - **Never feed a DRV8833 from the 12 V bus.** Its maximum motor supply is 10.8 V.
 - **The KB2040 is powered only by the Pi's USB port** (cable J11). Do not also connect
   its RAW pin to the 5 V rail.
@@ -60,6 +70,7 @@ BT1 12 V 7 Ah SLA
 | 12 V | the 5 V rail at 90 percent converter efficiency | **0.648 A** | calculated |
 | 12 V | driving: six drive motors at 0.385 A / 6 V plus the head motor | **1.422 A** on top of idle | loads.md section 2 |
 | 12 V | worst case, seven motors at the DRV8833 1 A limit, plus idle | **4.537 A** | calculated |
+| 12 V | stance change (rev D): idle, actuator stall 1.0 A, two servo stalls of 1.5 A at 6 V; ground and dome motors refused | **3.315 A** | calculated |
 
 ### Runtime, to 50 percent depth of discharge (3.35 Ah usable)
 
@@ -116,6 +127,7 @@ Every fuse is an ATO/ATC blade in a Littelfuse FHAC0001ZXJ in-line holder.
 | F4 | FH4 | 5 A | 12 V bus to U6 (6 V rail A, four motors) | 2.2 A | 0287005.PXCN |
 | F5 | FH5 | 5 A | 12 V bus to U7 (6 V rail B, three motors) | 1.7 A | 0287005.PXCN |
 | F6 | FH6 | 2 A | 5 V rail to the slip ring (the whole dome) | 1.62 A | 0287002.PXCN |
+| F7 | FH7 | 2 A | 12 V bus to the DRV8871 actuator driver U10 (rev D) | 1.0 A stall, 0.895 A driver limit | 0287002.PXCN |
 
 Notes.
 
@@ -157,9 +169,9 @@ Colour code used in `wiring.csv`, matching the six-colour 22 AWG kit:
 | red | any positive supply (12 V, 6 V, 5 V, 3V3) |
 | black | ground, every return |
 | yellow | motor OUT1, SCL, SLP, TFT RST, audio right, speaker plus |
-| blue | motor OUT2, SPI MOSI and SCLK, speaker minus |
+| blue | motor OUT2, SPI MOSI and SCLK, speaker minus, lock switch NC (rev D) |
 | green | PWM inputs, NeoPixel data, TFT CS, index sensor |
-| white | direction inputs, SDA, TFT DC, audio left and summed |
+| white | direction inputs, SDA, TFT DC, audio left and summed, lock switch NO (rev D) |
 
 Because colours repeat across functions, flag both ends of every signal wire with a
 printed or written heat-shrink label. In the motor pairs, **yellow is OUT1 and blue is
@@ -175,10 +187,12 @@ OUT2**.
 | TB1 | Six insulated 0.250 inch female spades (TE 3-520408-2) | Battery terminals and SW1 | Two battery, two switch, two spare |
 | J1 | Switchcraft L722A panel jack | Rear lower band of `body_lower` | 5.5 x 2.1 mm, centre positive |
 | SW1 | Carling rocker, 20 A | Rear lower band, cutout 36.83 x 21.08 mm | 0.250 inch quick connects |
-| FH1-FH6 | In-line ATO holders | On the tray, except FH1 which sits at the battery | Label each holder with its fuse value |
+| FH1-FH7 | In-line ATO holders | On the tray, except FH1 which sits at the battery | Label each holder with its fuse value |
 | J2-J9 | JST-XH 2 pin pairs (Adafruit 4872) | One per motor at its DRV8833 output, plus one spare | Male half at the driver |
 | J11 | USB A to USB C, 1 m (Adafruit 4474) | Pi USB 2.0 port to the KB2040 | Power and the CDC serial link |
 | J12 | USB Type C plug breakout (Adafruit 5978) | U5 VOUT to the Pi USB-C power input | Its 5.1 k CC1 resistor is what makes the Pi accept the supply |
+| J13A, J13B | 300 mm servo extensions (Pololu 2184) | Tray to the left and right release servos | Signal from U11 HV1/HV2, V+ from U7, GND to TB2 (rev D) |
+| J14 | STEMMA QT to male headers, 150 mm (Adafruit 4209) | KB2040 STEMMA QT to the right lock switch SW3 | Blue SDA = NO, yellow SCL = NC, black = COM; red 3V3 insulated (rev D) |
 | SR1 | Adafruit 1195 slip ring, 12 wires | Clamped in the printed post on the body top plate | See the wire table below |
 | TB2 | Star ground stud | Electronics tray | Every return lands here and nowhere else |
 
@@ -218,8 +232,10 @@ Build the harness on the bench, in this order, before anything goes into the bod
 not connect the battery until step 11.
 
 1. **Star ground first.** Fit TB2 on the electronics tray. Everything below returns here.
-2. **Tray boards.** Mount U5, U6, U7, the four DRV8833 boards (U1-U4), U9 (ADS1115) and
-   U8 (PAM8302) on M3 nylon standoffs. Leave room for the fuse holders.
+2. **Tray boards.** Mount U5, U6, U7, the four DRV8833 boards (U1-U4), U9 (ADS1115),
+   U8 (PAM8302), U10 (DRV8871) and U11 (BSS138 level shifter) on M3 nylon standoffs.
+   Leave room for the fuse holders. On U10, replace the factory 30 k ILIM resistor
+   with R5 71.5 k before mounting.
 3. **12 V bus.** Make up the 16 AWG bus: SW1 load side to TB2's 12 V stud, then FH3, FH4
    and FH5 from that stud to the three regulator inputs. Fit no fuses yet.
 4. **Battery branch.** Crimp the Powerpole pair (J10), the spade terminals (TB1) and
@@ -228,11 +244,17 @@ not connect the battery until step 11.
    TB2. Check the polarity with a meter now, while it is easy to reach.
 6. **Regulator outputs.** U5 to J12 (Pi), U5 to FH6, U5 to U8; U6 and U7 to their two
    DRV8833 boards each. Ground each regulator back to TB2 with 16 AWG.
-7. **Signal harness.** KB2040 to the four drivers: seven PWM wires, seven direction
-   wires and the shared SLP wire, per `wiring.csv` and sheet 02. Label both ends.
+7. **Signal harness.** KB2040 to the four drivers: one PWM and one direction wire per
+   foot and for the head, with AIN1-BIN1 and AIN2-BIN2 jumpers on U1, U2 and U3, and
+   the four SLP pins tied to the KB2040 3V3 pad, per `wiring.csv` and sheet 02. Then
+   the stance signals per sheet 05: D8/D9 to U10, D0/D1 through U11 to J13A/J13B,
+   the pull-ups R6A-R6D, R7 and R8 at the KB2040, R9/R10 on A1, and J14 on the STEMMA
+   QT connector. Label both ends.
 8. **Motor leads.** Crimp a JST-XH pair per motor. Route through the legs with the
    ankle bolts loose so the wires are not trapped. Splice 28 AWG to 22 AWG inside each
-   foot.
+   foot. Run the actuator's five leads down the centre leg (red/black to U10, yellow
+   through R7, orange to the KB2040 GND pad, purple to A0) and the SW2/SW3 leads and
+   servo extensions to the shoulders, with slack for the full 5-62 mm stroke.
 9. **Dome harness.** Solder the slip ring's twelve stator leads to the body side per the
    table in section 6, then the twelve rotor leads to the dome devices. Do the dome
    soldering with the dome off the robot and the backpack address jumpers already
@@ -257,7 +279,11 @@ Do this with the loads disconnected. Each step ends with the power off.
 | 4 | SW1 off. Fit F4 and F5. SW1 on. Meter U6 VOUT and U7 VOUT to ground | 6.0 V +/- 0.25 V each | More than 6.5 V at a DRV8833 input is out of spec |
 | 5 | SW1 off. Connect J12 (Pi), the driver VMOTOR leads and FH6 (dome). SW1 on | Pi boots, no rail sags below its tolerance under load | A sagging 5 V rail usually means the Pi feed is too long or too thin |
 | 6 | With the Pi running, compare the battery gauge to the meter at the battery terminals | Within 0.15 V | Check R2 (100 k) and R3 (15 k) and the ADS1115 address (0x48) before trusting the gauge |
-| 7 | Wheels off the ground. `E 1` then `M 300 0 0 0` on the KB2040's serial port | Only the left foot turns, forward | If a motor turns the wrong way, swap its two leads at the driver output |
+| 7 | Wheels off the ground, robot on three feet. `E 1` then `M 300 0 0 0` on the KB2040's serial port | Both left-foot motors turn, forward | If a motor turns the wrong way, swap its two leads at the driver output |
+| 8 (rev D) | F7 out. Resistance across U10's ILIM pads | 71.5 k (R5 fitted, factory 30 k removed) | 30 k means a 2.1 A limit: fix before fitting F7 |
+| 9 (rev D) | Actuator detached. Read `ss` while moving the rod by hand end to end | `pos` follows the rod; wiper 0-2912 mV | Set `POT_ZERO_MV` / `POT_FULL_MV` in `stance.py`; a -1 reading is an open pot wire |
+| 10 (rev D) | Press and release each lock lever by hand | `ss` locks read `E` pressed, `R` released; unplugging either contact wire gives `X` within 0.15 s | `X` with both wires fitted: check COM and the 3.3 k pull-ups |
+| 11 (rev D) | Battery meter against `ss` pack_mv | Within 0.15 V | Check R9 (100 k) and R10 (15 k) on A1 |
 
 Do not skip step 1. A bridged fuse holder on a pack that can deliver roughly 457 A into
 a short is how harnesses catch fire.
@@ -275,8 +301,11 @@ a short is how harnesses catch fire.
 - **An SLA vents hydrogen when it is charged.** Charge it upright, in free air, never in
   a sealed box, never inverted, never below 0 C.
 - **Never charge through the main switch.** The charge branch is separate on purpose.
-- **SLP low is coast, not a brake.** The only guaranteed disconnect is SW1 off and, for
-  any work inside the body, the Powerpole pair unplugged.
+- **A stopped motor coasts; it does not brake.** In revision D the DRV8833 SLP pins are
+  tied high and the firmware holds disarmed outputs at coast. The only guaranteed
+  disconnect is SW1 off and, for any work inside the body, the Powerpole pair unplugged.
+- **The actuator does not back-drive** (over 500 N). A pinch point at the centre leg
+  stays pinched when power is removed: keep hands clear during a stance change.
 - **The PAM8302 output is a bridge.** Grounding either speaker lead destroys it.
 - **Do not connect USB to the KB2040 while the 5 V rail also feeds it.** The Pi's port is
   its only supply.
@@ -299,3 +328,28 @@ a short is how harnesses catch fire.
 | Battery divider (100 k / 15 k, ADS1115 at 0x48) | `firmware/pi/battery.py` |
 | Where each part sits in the robot | `cad/params.scad` |
 | Wire-by-wire connections and length estimates | `electronics/wiring.csv` |
+| Stance mechanism values, lock and servo timing, battery thresholds (rev D) | `firmware/kb2040/stance.py` `MECHANISM CONSTANTS`, from the stance-mechanism CAD of 2026-09-12 |
+| DRV8871, BSS138, P16, SS-01GL, MG995, cable part data and prices (rev D) | the product pages listed in `bom/electronics.csv`, read 2026-09-12 |
+
+---
+
+## 11. Revision D stance change wiring (sheet 05)
+
+Sheet `05-stance-actuator-and-lock.svg` draws all of it; `wiring.csv` has every wire.
+Values not on the sheet are in `electronics/calculations.json` under `stance_change`.
+
+| Part | Connections | Notes |
+| --- | --- | --- |
+| U10 Adafruit DRV8871 (3190) | VM <- FH7 (F7 2 A) <- 12 V bus; GND -> TB2; logic GND -> KB2040 GND pad; IN1 <- D8; IN2 <- D9; OUT1/OUT2 -> ACT1 red/black | R5 71.5 k replaces the factory 30 k ILIM resistor: I_TRIP = 64 / 71.5 = 0.895 A against the 1.0 A actuator stall. 3.3 V logic drives IN1/IN2 directly. |
+| ACT1 Actuonix P16-100-256-12-P | yellow (pot +) <- R7 2.2 k <- KB2040 3V3; orange (pot -) -> GND pad; purple (wiper) -> A0 with R8 470 k to GND | 11 k pot: 0-2750 mV nominal, 2912 mV at +50 %. An open wiper or pot + reads near 0 mV, an open pot - near 3300 mV: both leave the 40-3000 mV window and latch FEEDBACK. |
+| SW2 left lock, Omron SS-01GL | COM -> GND pad; NO -> SCK; NC -> MISO; R6A/R6B 3.3 k to 3V3 | Seated = NO closed. 1 mA through the closed contact at 3.3 V. |
+| SW3 right lock, Omron SS-01GL | COM -> J14 black; NO -> J14 blue -> SDA (GP12); NC -> J14 yellow -> SCL (GP13); R6C/R6D 3.3 k to 3V3 | Through the STEMMA QT connector; the KB2040 has no other free pins. |
+| U11 Adafruit BSS138 level shifter (757) | LV <- 3V3; HV <- U5 5 V; GND -> GND pad; LV1 <- D0, HV1 -> J13A; LV2 <- D1, HV2 -> J13B | Gives the servos a 5 V signal. Channels 3 and 4 unused. |
+| SV1, SV2 TowerPro MG995 (Adafruit 1142) | signal <- J13A/J13B; V+ <- U7 6 V rail B; GND -> TB2 | 50 Hz on PWM slice 0. Engage 1500 us, release 1310 us left and 1690 us right (calibrate). No pulse 1 s after engaging. |
+| R9 / R10 KB2040 battery divider | 12 V bus -> R9 100 k -> A1 -> R10 15 k -> GND pad | 12.70 V reads 1.657 V at A1. The bottom leg returns at the KB2040 so the USB ground offset stays out of the reading. |
+| DRV8833 SLP (U1-U4) | SLP <- KB2040 3V3 pad | Tied high to free D1. Arming and stopping are done in firmware. |
+
+Purchased pieces added for revision D, all in `bom/electronics.csv`: U10, U11, ACT1,
+SW2-SW3 (2), SV1-SV2 (2), J13A-J13B (2), J14, FH7 (holder count 6 -> 7), F7, R3
+(count 1 -> 2, used as R10), R5, R6A-R6D (4), R7, R8. That is 20 pieces. R9 comes
+from the existing 100 k pack (R2). Nothing has been bought, built or measured.

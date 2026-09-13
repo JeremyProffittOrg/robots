@@ -2,10 +2,13 @@
 
 Two processors, one job each.
 
-**Adafruit KB2040** (product 5302, RP2040, CircuitPython 9) is the motor and
-light controller. It drives seven Adafruit 3777 TT motors through four DRV8833
-(3297) boards, drives the 17 pixel dome NeoPixel chain, reads the dome index
-sensor, and coasts every motor if the Pi stops talking for 500 ms.
+**Adafruit KB2040** (product 5302, RP2040, CircuitPython 9) is the motor, light
+and stance controller. It drives seven Adafruit 3777 TT motors through four
+DRV8833 (3297) boards, drives the 17 pixel dome NeoPixel chain, reads the dome
+index sensor, and coasts every motor if the Pi stops talking for 500 ms. In
+revision D it also owns the interlocked stance change: the 12 V centre-leg
+actuator through a DRV8871, two lock-release servos, two NO/NC lock switches, the
+actuator potentiometer and its own battery divider (section 11).
 
 **Raspberry Pi 4** (Raspberry Pi OS Bookworm, 64 bit) is everything else. It
 serves the phone control page over its own Wi-Fi access point, mixes the
@@ -16,8 +19,9 @@ at 20 Hz, animates the head displays, and plays the sound clips.
  phone browser ──WebSocket──► Pi: server.py ──USB CDC 115200──► KB2040: code.py
                                    │                                  │
                                    ├─ displays.py  HT16K33 x4, GC9A01A ├─ 7 x DRV8833 channels
-                                   ├─ audio.py     aplay / pygame      └─ 17 x NeoPixel
-                                   └─ battery.py   ADS1115 (optional)
+                                   ├─ audio.py     aplay / pygame      ├─ 17 x NeoPixel
+                                   ├─ battery.py   ADS1115 (optional)  ├─ DRV8871 -> actuator (+ pot)
+                                   └─ stance_link.py  lease, gate      └─ 2 x servo, 2 x lock switch
 ```
 
 ---
@@ -29,9 +33,12 @@ at 20 Hz, animates the head displays, and plays the sound clips.
 | File | Purpose |
 | ---- | ------- |
 | `boot.py` | Enables the second USB CDC endpoint (the Pi's data port). |
-| `code.py` | Controller: motors, pixels, index sensor, serial loop, heartbeat. |
-| `protocol.py` | Hardware-free parser, ramp and duty maths. Imported by `code.py`. |
+| `code.py` | Pins and hardware: motors, actuator, servos, lock switches, pot, battery, pixels, index sensor, serial loop. |
+| `supervisor.py` | Hardware-free controller core: protocol handling, heartbeat, drive ramp, drive and dome interlocks. |
+| `stance.py` | Hardware-free stance state machine, sensor conditioning, the `MECHANISM CONSTANTS` block. |
+| `protocol.py` | Hardware-free parser, ramp, duty and PWM-slice maths. |
 | `test_protocol.py` | CPython unit tests for `protocol.py`. Not copied to the board. |
+| `test_stance.py` | CPython tests: pin plan, sensor conditioning, and the supervisor against a simulated plant. Not copied. |
 | `README.md` | Exact copy list, bundle libraries, pin table, bench check. |
 
 ### Raspberry Pi — `firmware/pi/`
@@ -44,7 +51,9 @@ at 20 Hz, animates the head displays, and plays the sound clips.
 | `displays.py` | Four 8x8 HT16K33 logic matrices and the radar eye. |
 | `audio.py` | WAV playback through `aplay`, or `pygame.mixer` as a fallback. |
 | `battery.py` | Optional pack voltage through an ADS1115. |
+| `stance_link.py` | Stance lease (hold-to-run), `ss` parser, the Pi-side drive and dome gate. |
 | `test_mixing.py` | CPython unit tests for `mixing.py`. |
+| `test_stance_link.py` | CPython tests for `stance_link.py`, plus Pi-to-KB2040 end-to-end runs on the simulated plant. |
 | `requirements.txt` | Pi Python dependencies. |
 | `r2d2.service` | systemd unit. |
 | `static/index.html`, `static/app.js`, `static/style.css` | The control page. |
@@ -61,7 +70,8 @@ at 20 Hz, animates the head displays, and plays the sound clips.
 
 Everything in this table is on the **Raspberry Pi's own I2C bus 1** (header pins
 3 and 5, `/dev/i2c-1`) except the radar eye, which is on the Pi's SPI0. The
-KB2040 drives no display at all; its STEMMA QT bus stays unused.
+KB2040 drives no display at all; in revision D its STEMMA QT pins (GP12/GP13) read
+the right shoulder lock switch instead of an I2C bus.
 
 | Device | Bus | Address | Driven as |
 | ------ | --- | ------- | --------- |
@@ -88,24 +98,21 @@ stops answering later, is logged with its address and dropped while the others
 keep running. If only one rear backpack answers, the strip still runs on that
 half.
 
-### Battery sensing does not touch the KB2040
+### Battery sensing: two dividers, two readers
 
-Stated here so the wiring author does not route a divider to the microcontroller:
+Revision D adds a second, independent battery reading on the KB2040, because
+the stance interlock must not depend on an optional Pi sensor.
 
-* `firmware/pi/battery.py` reads **only** an ADS1115 on the **Pi's** I2C-1 bus at
-  `0x48`, single-ended channel `A0` (`ads1115.P0`), through a 100 kilohm over
-  15 kilohm divider across the 12 V pack (`DIVIDER_TOP_OHMS` and
-  `DIVIDER_BOTTOM_OHMS` in that file).
-* It never opens a serial port and never speaks to the KB2040.
-* The KB2040 serial protocol carries **no** voltage field: `st` reports
-  `<enabled> <l> <r> <c> <h> <index>` and nothing else.
-* No KB2040 pin is free for this anyway. Its only ADC pins are `A0`-`A3`
-  (GP26-GP29): `A0` and `A1` drive the head motor, `A2` is the NeoPixel data
-  line and `A3` is the dome index sensor. The one spare pin, `D0`/GP0, has no
-  ADC on the RP2040.
-
-So the divider's tap wire goes to the **ADS1115 `A0` input on the Pi's I2C bus**,
-and nowhere near the KB2040.
+* `firmware/pi/battery.py` still reads **only** an ADS1115 on the **Pi's** I2C-1
+  bus at `0x48`, channel `A0`, through R2 100 k over R3 15 k. It is optional and
+  only drives the header gauge.
+* The KB2040 reads its own divider, R9 100 k over R10 15 k, on `A1` (GP27, an ADC
+  pin freed by moving the head drive to D4/D5). `stance.BatteryGuard` treats a
+  pack below 11.2 V for 500 ms, or above 15.2 V, or no reading, as no power; power
+  returns only at 12.0 V for 500 ms. No power blocks a stance start and latches
+  `POWER` during a change. The pack millivolts are in the `ss` line.
+* The two dividers are separate wires to separate grounds, so either reader works
+  with the other absent.
 
 ---
 
@@ -121,9 +128,11 @@ ASCII, newline terminated, 115200 8N1 on the KB2040's second USB CDC endpoint
 | `M <l> <r> <c> <h>` | Drive permille, each `-1000..1000`: left foot, right foot, centre foot, head. Both motors in a foot get that foot's value. Out of range values are clamped, not rejected. |
 | `L <r> <g> <b>` | Set all 17 pixels, each channel `0..255`. |
 | `P <i> <r> <g> <b>` | Set one pixel, `i` in `0..16`. |
-| `E <0\|1>` | DRV8833 `SLP` line: 1 wakes the drivers, 0 sleeps them and zeroes the motors. |
+| `E <0\|1>` | Arm (1) or disarm (0) the ground and dome motors. Disarming zeroes and coasts them and holds a stance change in progress. The DRV8833 `SLP` pins are tied high in revision D, so arming is done in firmware. |
 | `S` | Stop: targets and outputs to zero at once. |
-| `?` | Status request. |
+| `?` | Status request. Answered with `st` and `ss`. |
+| `T <0\|2\|3>` | Stance request, hold-to-run: 2 two feet, 3 three feet, 0 none. The Pi repeats it with every `M` line (20 Hz). A request older than 500 ms counts as none, but only an explicit `T 0` counts as the operator letting go. |
+| `C` | Clear a latched stance fault. `ok` if fresh sensors describe a consistent mechanism, else `err fault not cleared: <reason>`. |
 
 ### KB2040 to Pi
 
@@ -131,7 +140,8 @@ ASCII, newline terminated, 115200 8N1 on the KB2040's second USB CDC endpoint
 | ---- | ------- |
 | `ok` | The previous command was executed. |
 | `st <enabled> <l> <r> <c> <h> <index>` | Status. `enabled` and `index` are 0/1; the four channels are the post-ramp permille actually applied. Sent on `?` and unsolicited every 200 ms. |
-| `err <text>` | The line could not be executed, or the heartbeat expired. |
+| `ss <state> <phase> <fault> <pos> <locks> <pack_mv> <drive_ok> <head_ok> <can_two> <can_three> <reason>\|<why_two>\|<why_three>` | Stance status, with `st`. `pos` is actuator stroke in 0.1 mm and `pack_mv` the KB2040 battery reading, each -1 when invalid. `locks` is one letter per lock, left first: `E` seated, `R` released, `X` switch invalid, `W` debouncing. The flags are 0/1. The texts say why each stance request is blocked, empty when it may start. |
+| `err <text>` | The line could not be executed, the heartbeat expired, or a drive command was refused (`err drive refused (ground drive): stance change in progress`). |
 
 ### Rates and limits
 
@@ -142,7 +152,8 @@ ASCII, newline terminated, 115200 8N1 on the KB2040's second USB CDC endpoint
   motors are really being given.
 * **Heartbeat**: no line for 500 ms and every motor coasts, with
   `err heartbeat timeout, motors coasted` sent once. The Pi's 20 Hz `M` stream
-  is the heartbeat; it never stops while the server is up.
+  is the heartbeat; it never stops while the server is up. A stance change in
+  progress stops the actuator and holds on the same timeout.
 * **Pixel index range**: `0..16`. Front PSI jewel 0-6, rear PSI jewel 7-13,
   holoprojectors 14-16.
 
@@ -181,64 +192,87 @@ duty applies so the friction wheel does not stall against the dome ring.
 **Safety.** The page sends a `drive` message or a `ping` at least five times a
 second. If the server hears nothing for 500 ms it zeroes the drive; if the page
 closes, the server sends `S`; if the server dies, the KB2040's own heartbeat
-coasts the motors 500 ms later. The STOP button zeroes the drive and drops the
-enable line in one press.
+coasts the motors 500 ms later. The STOP button zeroes the drive and disarms the
+motors in one press.
+
+**Interlock (revision D).** Ground drive is allowed only when the KB2040 reports
+`THREE_FOOT`; the dome only in `THREE_FOOT` or `TWO_FOOT`. The Pi zeroes the
+refused channels before they are sent (`StanceControl.gate`) whenever the `ss`
+status is missing, older than 1 s, or does not allow them. The KB2040 refuses them
+again on its own, answers `err drive refused (...)`, and holds a stance change in
+progress.
 
 ---
 
-## 4. Deviation from the specified pin map, and why
+## 4. KB2040 pin map and why it changed
 
-The pin map is wired exactly as specified. **What changed is which of each
-motor's two DRV8833 inputs carries the PWM.**
+`firmware/kb2040/README.md` has the full revision D table. All 20 KB2040 GPIOs are
+used. `test_stance.py` (class `TestPinPlan`) and `python scripts/electronics.py`
+both parse `code.py` and fail if a pin is used twice, a PWM plan collides, an
+analogue input leaves the ADC pins, or `wiring.csv` disagrees.
+
+| Signal | Pin | GPIO | PWM slice |
+| ------ | --- | ---- | --------- |
+| Left foot PWM / direction (U1 A+B jumpered) | D3 / D2 | 3 / 2 | 1B, 20 kHz |
+| Right foot PWM / direction (U2 A+B jumpered) | D7 / D6 | 7 / 6 | 3B, 20 kHz |
+| Centre foot PWM / direction (U3 A+B jumpered) | D10 / MOSI | 10 / 19 | 5A, 20 kHz |
+| Head PWM / direction (U4 A) | D5 / D4 | 5 / 4 | 2B, 20 kHz |
+| Actuator DRV8871 IN2 (PWM) / IN1 | D9 / D8 | 9 / 8 | 4B, 20 kHz |
+| Release servo left / right (via U11) | D0 / D1 | 0 / 1 | 0A / 0B, 50 Hz |
+| Left lock switch NO / NC | SCK / MISO | 18 / 20 | input |
+| Right lock switch NO / NC (STEMMA QT, J14) | SDA / SCL | 12 / 13 | input |
+| Actuator pot wiper / battery divider | A0 / A1 | 26 / 27 | ADC |
+| NeoPixel data / dome index | A2 / A3 | 28 / 29 | — |
+| DRV8833 SLP (all four) | 3V3 pad | — | tied high |
+
+### 4.1 One PWM pin per output
 
 The RP2040 has eight PWM slices of two channels. GPIO *n* is hard-wired to slice
-`(n >> 1) & 7`, channel `n & 1`, so any two GPIOs sixteen apart are the *same*
-PWM output. Four collisions fall inside the specified map:
+`(n >> 1) & 7`, channel `n & 1`, so GPIOs sixteen apart are the *same* output, and
+both channels of one slice share one counter and so one frequency. Revision C
+already met the first rule: fourteen simultaneous PWM inputs collide at GP2/GP18,
+GP3/GP19, GP4/GP20 and GP10/GP26, so each motor gets **one** PWM pin and **one**
+plain digital pin (`test_protocol.py` still asserts both facts). All four H-bridge
+states remain reachable on the DRV8833 and the DRV8871:
 
-```
-GP2 (D2, LF-front AIN1)  / GP18 (SCK, CF-rear BIN2)  -> slice 1 channel A
-GP3 (D3, LF-front AIN2)  / GP19 (MOSI, CF-front AIN2)-> slice 1 channel B
-GP4 (D4, LF-rear BIN1)   / GP20 (MISO, CF-rear BIN1) -> slice 2 channel A
-GP10 (D10, CF-front AIN1)/ GP26 (A0, head AIN1)      -> slice 5 channel A
-```
-
-Fourteen simultaneous `pwmio.PWMOut` objects are therefore impossible on this
-board. `pwmio` raises on the first colliding allocation and the firmware would
-not start at all.
-
-`code.py` gives each motor **one** PWM pin and **one** plain digital pin,
-choosing the PWM pin so the seven land on seven different slice/channel pairs:
-GP3, GP5, GP7, GP9, GP10, GP18, GP27. All four DRV8833 states are still
-reachable, so nothing in the protocol or the behaviour changes:
-
-| Digital pin | PWM duty | DRV8833 | Used for |
-| ----------- | -------- | ------- | -------- |
-| low | 0 | both low | coast |
-| high | `65535 * (1 - m)` | forward | forward at magnitude `m`, slow decay |
-| low | `65535 * m` | reverse | reverse at magnitude `m`, fast decay |
+| Digital pin | PWM duty | Bridge | Used for |
+| ----------- | -------- | ------ | -------- |
+| low | 0 | both low | coast (the DRV8871 also sleeps) |
+| high | `65535 * (1 - m)` | forward | forward or extend at magnitude `m`, slow decay |
+| low | `65535 * m` | reverse | reverse or retract at magnitude `m`, fast decay |
 | high | `65535` | both high | brake |
 
-`protocol.pwm_conflicts()` re-checks the plan at boot and `code.py` answers
-`err pwm slice clash ...` if anyone edits the `MOTORS` table into a collision.
-`test_protocol.py` asserts both that the seven chosen pins are clash-free and
-that the fourteen input pins are not.
+Revision D adds the second rule: the 50 Hz servos cannot share a slice with a
+20 kHz output. They take both channels of slice 0 (GP0, GP1), and the five 20 kHz
+outputs sit on slices 1-5. `protocol.pwm_frequency_conflicts()` checks this at
+boot and in the tests; `code.py` answers `err pwm frequency clash ...` if the table
+is edited into a collision.
 
-**Wiring consequence.** Forward uses slow decay and reverse fast decay, so a
-motor is a little stronger in the slow-decay direction at equal duty. That is
-the direction where the digital pin is high. Wire each motor's leads so that
-direction drives the robot forward. If one runs backwards, swap its two leads at
-the DRV8833 output (preferred) or set its `invert` flag in `MOTORS`.
+### 4.2 Where the twelve new signals came from
 
-Two smaller corrections, both verified against
-`ports/raspberrypi/boards/adafruit_kb2040/pins.c`:
+Revision C used 17 GPIOs and the stance change needs 12 more. Three changes make
+room without adding a board:
 
-* On the KB2040, `board.SDA` and `board.SCL` are **GPIO 12 and 13** (the STEMMA
-  QT connector), not `D2` and `D3`. Reserving the STEMMA QT bus therefore costs
-  nothing; `D2` and `D3` stay free for the left foot. Every other `board` name
-  in the specified map exists and is used as written.
-* The round TFT driver module in `adafruit_rgb_display` is spelled **`gc9a01a`**
-  with a trailing `a` (class `GC9A01A`); there is no plain `gc9a01` module in
-  that library. `displays.py` imports `gc9a01a`.
+1. **Foot channel pairs.** Both motors in a foot always received the same value.
+   Each foot's two DRV8833 channels are now driven from one pin pair: jumper AIN1 to
+   BIN1 and AIN2 to BIN2 on U1, U2 and U3. That frees D4, D5, D8, D9, SCK and MISO.
+   The per-motor `invert` flags go with it: wire each motor so that the slow-decay
+   direction drives the robot forward, and swap its two leads at the driver output
+   if it does not.
+2. **Head off the ADC pins.** The head drive moves from A0/A1 to D4/D5, so A0 and
+   A1, two of only four ADC pins, read the actuator pot and the battery.
+3. **SLP tied high.** The four DRV8833 SLP pins go to the KB2040 3V3 pad, freeing D1
+   for the second servo. `E 0`, `S` and the heartbeat still coast every motor in
+   firmware. SLP was driven by the same MCU, so tying it high removes no independent
+   safety path; the drivers still sleep when the KB2040 is unpowered.
+
+The right lock switch uses GP12/GP13 on the STEMMA QT connector through cable J14
+(Adafruit 4209); `board.SDA` and `board.SCL` are GPIO 12 and 13 on this board.
+
+Two corrections from revision C still stand, both verified against
+`ports/raspberrypi/boards/adafruit_kb2040/pins.c` and the library source:
+`board.SDA`/`board.SCL` are GP12/GP13, not D2/D3; and the round TFT driver module
+in `adafruit_rgb_display` is spelled **`gc9a01a`** (class `GC9A01A`).
 
 ---
 
@@ -251,8 +285,10 @@ Two smaller corrections, both verified against
    appears.
 3. Copy the `.uf2` onto `RPI-RP2`. The board reboots and a drive named
    `CIRCUITPY` appears.
-4. Copy `firmware/kb2040/boot.py`, `code.py` and `protocol.py` to the root of
-   `CIRCUITPY`. Do **not** copy `test_protocol.py`.
+4. Copy `firmware/kb2040/boot.py`, `code.py`, `supervisor.py`, `stance.py` and
+   `protocol.py` to the root of `CIRCUITPY`. Do **not** copy `test_protocol.py` or
+   `test_stance.py`. If the board reports `MemoryError` on import, copy
+   `mpy-cross`-compiled `stance.mpy` and `supervisor.mpy` instead.
 5. Download the CircuitPython **9.x** library bundle from
    <https://circuitpython.org/libraries>, and copy **`neopixel.mpy`** from its
    `lib/` folder into `CIRCUITPY/lib/`. That is the only bundle file needed;
@@ -380,8 +416,8 @@ Useful switches: `--serial-port`, `--no-displays`, `--no-battery`,
 
 Open **http://192.168.4.1:8080/** on a phone.
 
-1. Tick **Motors armed**. That sends `E 1` and wakes the four DRV8833 boards.
-   Nothing moves until it is ticked.
+1. Tick **Motors armed**. That sends `E 1` and arms the motors in firmware.
+   Nothing moves, and no stance change starts, until it is ticked.
 2. Drag the round joystick. Forward is up; the knob returns to centre and the
    robot stops when you lift your finger.
 3. **Speed cap** limits every channel; 60 % is the default and is sensible
@@ -392,6 +428,19 @@ Open **http://192.168.4.1:8080/** on a phone.
    whatever the Pi actually found in `firmware/pi/sounds`.
 6. The red **STOP** bar is always on screen. It zeroes the drive, sends `S` and
    un-arms the motors.
+
+7. **Stance** (revision D). The panel shows the state, the phase, the actuator
+   stroke, both locks and the KB2040 pack voltage. **Hold: two feet** and **Hold:
+   three feet** are hold-to-run: keep a finger on the button until the state reads
+   `Two feet` or `Three feet`. Letting go, locking the phone or losing Wi-Fi for
+   0.5 s stops the actuator and holds the robot where it is; press again to finish.
+   A button is greyed out, with the reason printed below it, whenever the
+   interlock forbids that change.
+8. The joystick is greyed out except on three feet with both locks seated; the
+   dome buttons except on two or three feet.
+9. A fault shows in red with its name (for example `Fault STALL: actuator
+   stalled`). Fix the cause, then press **Clear fault**. The clear is refused while
+   the sensors still disagree, and a cleared change never restarts by itself.
 
 The header shows link state and, when an ADS1115 is fitted, pack voltage and a
 rough state of charge.
@@ -574,6 +623,44 @@ syntax check, a unit test, or an in-process test of hardware-free logic. The
 first real checks are the terminal bench check in
 `firmware/kb2040/README.md` and `aplay firmware/pi/sounds/greet.wav` on the Pi.
 
+### 9.9 Revision D stance controls, verified 2026-09-12
+
+Same machine. No hardware was connected: every result below is a host test on
+simulated hardware.
+
+```
+$ python -m unittest discover -s firmware/kb2040
+Ran 113 tests in 0.416s
+OK
+$ python -m unittest discover -s firmware/pi
+Ran 66 tests in 0.039s
+OK
+$ python scripts/electronics.py
+PASS: 5 SVG sheets parse, wiring.csv has 184 wires, all 20 KB2040 signal pins match firmware/kb2040/code.py, and the RP2040 PWM/ADC plan is legal
+$ python -c "import sys; sys.path.insert(0, 'scripts'); import verify; verify.check_wiring(); verify.check_firmware()"
+PASS wiring: 184 wires; KB2040 pins in wiring not in code.py: []
+PASS firmware: firmware/kb2040: Ran 113 tests in 0.425s, exit 0; firmware/pi: Ran 66 tests in 0.038s, exit 0; app.js syntax OK
+```
+
+The original 47 KB2040 and 44 Pi tests are unchanged and still pass inside those
+totals. The new tests run the real `Supervisor` and `Stance` against a plant with
+a non-backdrivable actuator and two spring pins, each with a tilt-0 and a tilt-18
+receiver, through the real serial protocol. They cover: both transitions end to
+end with every phase; Pi-to-KB2040 heartbeat loss in LIFT, TILT and UNLOCKING;
+phone-to-Pi loss through the Pi lease, end to end; battery undervoltage and pot
+open-circuit (low and high); actuator stall, TILT timeout and LOWER timeout; pins
+that will not leave or will not enter a receiver; a lock switch with both contacts
+open or both closed, one lock not seated at a parked endpoint, a seated reading
+between receivers, and a lock released while lifting; drive and dome refused
+during a change, on two feet, and in fault and unknown states; fault latch, clear
+refused while inconsistent, and no restart without a fresh press; the KB2040 pin
+plan.
+
+Not verified: nothing here has driven an actuator, moved a servo or read a real
+switch. The mechanism constants come from the stance-mechanism CAD values of
+2026-09-12; the pot calibration, servo pulses and creep duty are commissioning
+values (section 11.4).
+
 ---
 
 ## 10. Troubleshooting
@@ -592,3 +679,77 @@ first real checks are the terminal bench check in
 | `battery --` in the header | No ADS1115 fitted at `0x48` on the Pi's I2C-1, or the library is absent. Optional; the rest runs normally. The KB2040 is not involved. |
 | No sound | `aplay` missing and pygame absent. `which aplay`; the startup log says which back end was chosen. |
 | Dome pixels ignore `L` and `P` | `neopixel.mpy` not in `CIRCUITPY/lib/`. The board answers `err neopixel library missing`. |
+| Joystick greyed out | The robot is not on three feet with both locks seated, or no fresh `ss` status. The stance panel says which. |
+| Stance button greyed out | The reason is printed under the buttons: not armed, wheels still moving, cooling down, fault latched, or already there. |
+| `Fault FEEDBACK` | Actuator pot wiper outside 40-3000 mV: check the purple wire to A0, R7 and R8. |
+| `Fault LOCK_SENSOR` | A lock switch reads NO and NC both open or both closed for 150 ms: a broken or shorted wire. |
+| `Fault LOCK_DISAGREES` or `LOCK_TIMEOUT` | A pin is not where the stroke says it must be. Check the pin, the servo pull and the switch lever before clearing. |
+| `Fault STALL` or `TRAVEL_TIMEOUT` | The actuator did not move 0.3 mm in 1 s, or a phase took too long. Check for a jam, the 12 V branch fuse F7 and the DRV8871 limit resistor R5. |
+| `Fault REVERSED_FEEDBACK` | The actuator moves opposite to its command: swap its red and black leads at U10. |
+| `stance request ignored` notice | The phone lost the hold for 0.5 s. Lift your finger and press again. |
+
+---
+
+## 11. Revision D stance change
+
+### 11.1 Mechanism, as the firmware models it
+
+A 12 V Actuonix P16-100-256-12-P, parallel to the centre-leg guide, sets the
+stroke `s` (mm from fully closed): **5.0 mm** two feet (wheels 25 mm up, tilt 0),
+**31.6 mm** centre-foot touchdown (tilt still 0), **62.3 mm** three feet (tilt 18
+deg). Two shoulder locks, left and right, each have a spring-return pin in the body
+and two receivers in the leg: tilt 0 (seated for every `s` up to touchdown) and tilt
+18. An MG995 servo per lock pulls its pin; an Omron SS-01GL per lock, wired NO + NC,
+reads "seated". The lock state comes only from those switches. All values live in
+the `MECHANISM CONSTANTS` block of `firmware/kb2040/stance.py`.
+
+### 11.2 States and phases
+
+| State | Meaning | Ground drive | Dome |
+| ----- | ------- | ------------ | ---- |
+| `THREE_FOOT` | at 62.3 mm, both locks seated | allowed | allowed |
+| `TWO_FOOT` | at 5.0 mm, both locks seated, stationary | refused | allowed |
+| `RETRACTING` / `DEPLOYING` | a change in progress | refused | refused |
+| `HELD` | stopped between stances, or not yet confirmed | refused | refused |
+| `FAULT` | latched; needs `C` | refused | refused |
+
+Retract: `UNLOCKING` (actuator stopped, both releases pulled, wait until neither
+switch reads seated) -> `TILT` (full duty toward 32.8 mm; the releases drop once
+`s` <= 44.3 mm so the pins ride the ring face) -> `LOCKING` (150 ms settle, then a
+20 % creep through 31.6 mm until both switches read seated) -> `LIFT` (both locks
+must stay seated, full duty to 5.0 mm) -> `TWO_FOOT`.
+
+Deploy: `LOWER` (locked, to 31.6 mm) -> `UNLOCKING` -> `TILT` (releases held until
+`s` >= 37.8 mm) -> `LOCKING` (creep through 62.3 mm) -> `THREE_FOOT`.
+
+### 11.3 Interlocks and faults
+
+* A start needs: no fault, battery healthy, the Pi heartbeat, `E 1`, wheels and
+  dome stopped, a fresh press (released since the last stop), and the actuator
+  cooldown (4 ms rest per ms of travel, the P16's 20 % duty).
+* Hold-to-run. Any of these stops the actuator and holds, leaving the releases as
+  they were: the control released, the phone silent for 0.5 s (the Pi lease), the
+  Pi silent for 0.5 s (the KB2040 heartbeat), `S`, `E 0`, a reversed request, or a
+  drive or dome command. Nothing restarts without a fresh press; after a phone
+  lease lapse the Pi also ignores the button until the page releases it.
+* Latched faults, each stopping the actuator: `POWER` (battery below 11.2 V for
+  500 ms during a change), `FEEDBACK` (wiper outside 40-3000 mV), `LOCK_SENSOR` (a
+  switch with NO and NC both open or both closed for 150 ms), `LOCK_DISAGREES` (foot
+  raised without both locks seated, a lock seated between receivers, a parked
+  stance without both locks, or a lock released while lifting), `LOCK_TIMEOUT`
+  (pins not out within 400 ms, or not seated 3 s after the creep), `STALL` (under
+  0.3 mm in 1 s while driven), `TRAVEL_TIMEOUT` (LIFT/LOWER 16 s, TILT/LOCKING 20 s),
+  `DRIFT`, `OVERTRAVEL` (beyond 3.5 or 63.8 mm), `REVERSED_FEEDBACK`.
+* `C` succeeds only when fresh sensors are consistent, and the stance control must
+  still be released and pressed again.
+
+### 11.4 Commissioning values to measure before the first powered change
+
+1. Detach the actuator and measure the wiper at both ends of travel; set
+   `POT_ZERO_MV` and `POT_FULL_MV` (the pot tolerance is +/-50 %).
+2. Calibrate `RELEASE_US` per side on the built lock: 5.5-5.9 mm of pin pull with no
+   servo stall; keep `ENGAGE_US` with the horn parked 1 mm clear of the knob.
+3. Check each SS-01GL at 3.3 V and 1 mA (below Omron's 5 V 1 mA reference load):
+   `ss` must read `EE` seated and `RR` pulled, and `X` with either wire unplugged.
+4. With the wheels off the floor, time one creep through each receiver. If a pin
+   does not catch, lower `SEEK_DUTY_PERCENT`; if the creep trips `STALL`, raise it.

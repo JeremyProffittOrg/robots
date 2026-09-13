@@ -106,7 +106,7 @@
 <text x="56" y="794" font-family="Arial, Helvetica, sans-serif" font-size="15" font-weight="normal" fill="#12283d" text-anchor="start">Ratio (100k + 15k) / 15k = 7.6667, so 12.70 V reads 1.657 V and the</text>
 <text x="56" y="816" font-family="Arial, Helvetica, sans-serif" font-size="15" font-weight="normal" fill="#12283d" text-anchor="start">14.75 V charge peak reads 1.924 V: inside the 4.096 V full scale.</text>
 <text x="56" y="838" font-family="Arial, Helvetica, sans-serif" font-size="15" font-weight="normal" fill="#12283d" text-anchor="start">firmware/pi/battery.py: 12.70 V full, 11.60 V empty, 11.20 V critical.</text>
-<text x="56" y="860" font-family="Arial, Helvetica, sans-serif" font-size="15" font-weight="normal" fill="#12283d" text-anchor="start">No KB2040 pin is involved; A0 and A1 there drive the head motor.</text>
+<text x="56" y="860" font-family="Arial, Helvetica, sans-serif" font-size="15" font-weight="normal" fill="#12283d" text-anchor="start">The KB2040 has its own divider on A1 (R9 / R10) for the interlock: sheet 05.</text>
 <rect x="856" y="672" width="788" height="202" rx="7" fill="#f2f7fb" stroke="#c62828" stroke-width="1.6"/>
 <rect x="856" y="672" width="6" height="202" rx="3" fill="#c62828"/>
 <text x="876" y="702" font-family="Arial, Helvetica, sans-serif" font-size="19" font-weight="bold" fill="#12283d" text-anchor="start">Rail check with a multimeter, loads disconnected</text>
@@ -131,7 +131,7 @@
 <rect x="476" y="888" width="6" height="128" rx="3" fill="#5b7c99"/>
 <text x="496" y="918" font-family="Arial, Helvetica, sans-serif" font-size="19" font-weight="bold" fill="#12283d" text-anchor="start">What is NOT wired</text>
 <text x="496" y="942" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" fill="#12283d" text-anchor="start">GPIO18 backlight control (R1 ties the backlight on: sheet 03).</text>
-<text x="496" y="962" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" fill="#12283d" text-anchor="start">The KB2040 STEMMA QT port (GPIO12/13): reserved, unused.</text>
+<text x="496" y="962" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" fill="#12283d" text-anchor="start">KB2040 D1 to SLP: the four SLP pins are tied to 3V3 (sheet 02).</text>
 <text x="496" y="982" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" fill="#12283d" text-anchor="start">KB2040 RAW: the Pi&#x27;s USB port is the only 5 V source for it.</text>
 <text x="496" y="1002" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" fill="#12283d" text-anchor="start">Pi header pins 2 and 4: 5 V goes in through the USB-C input only.</text>
 <rect x="1056" y="888" width="588" height="158" rx="7" fill="#f2f7fb" stroke="#5b7c99" stroke-width="1.6"/>
@@ -142,5 +142,5 @@
 <text x="1076" y="1010" font-family="Arial, Helvetica, sans-serif" font-size="15" font-weight="normal" fill="#12283d" text-anchor="start">through the jack sleeve, not through a second path, so the speaker</text>
 <text x="1076" y="1032" font-family="Arial, Helvetica, sans-serif" font-size="15" font-weight="normal" fill="#12283d" text-anchor="start">never shares a return with a motor.</text>
 <line x1="36" y1="1096" x2="1644" y2="1096" stroke="#5b7c99" stroke-width="1.2"/>
-<text x="36" y="1118" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" fill="#5b7c99" text-anchor="start">fable-r2d2 electrical set, 2026-09-12  |  sheets 01-04 and electronics/wiring.csv are one drawing set  |  pin names are the final firmware names in firmware/kb2040/code.py  |  not yet validated on hardware</text>
+<text x="36" y="1118" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" fill="#5b7c99" text-anchor="start">fable-r2d2 electrical set, revision D, 2026-09-12  |  sheets 01-05 and electronics/wiring.csv are one drawing set  |  pin names are the final firmware names in firmware/kb2040/code.py  |  not yet validated on hardware</text>
 </svg>

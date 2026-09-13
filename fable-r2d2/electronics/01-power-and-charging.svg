@@ -76,8 +76,8 @@
 <rect x="1116" y="508" width="6" height="180" rx="3" fill="#ef6c00"/>
 <text x="1136" y="538" font-family="Arial, Helvetica, sans-serif" font-size="19" font-weight="bold" fill="#12283d" text-anchor="start">U7  D36V50F6  12 V -&gt; 6 V 5.5 A  (rail B)</text>
 <text x="1136" y="564" font-family="Arial, Helvetica, sans-serif" font-size="15" font-weight="normal" fill="#12283d" text-anchor="start">12V-BUS -&gt; FH5 (F5 5 A) -&gt; VIN</text>
-<text x="1136" y="586" font-family="Arial, Helvetica, sans-serif" font-size="15" font-weight="normal" fill="#12283d" text-anchor="start">VOUT -&gt; U2 VMOTOR (right foot) and U4 VMOTOR (head drive)</text>
-<text x="1136" y="608" font-family="Arial, Helvetica, sans-serif" font-size="15" font-weight="normal" fill="#12283d" text-anchor="start">Three motors at the 1 A limit: 3 A worst case</text>
+<text x="1136" y="586" font-family="Arial, Helvetica, sans-serif" font-size="15" font-weight="normal" fill="#12283d" text-anchor="start">VOUT -&gt; U2 (right foot), U4 (head), SV1 and SV2 servos</text>
+<text x="1136" y="608" font-family="Arial, Helvetica, sans-serif" font-size="15" font-weight="normal" fill="#12283d" text-anchor="start">3 A motors, or 3 A of servo stall while motors are refused</text>
 <text x="1136" y="630" font-family="Arial, Helvetica, sans-serif" font-size="15" font-weight="normal" fill="#12283d" text-anchor="start">18 W at 6 V is 1.7 A from 12 V at 90 percent efficiency</text>
 <text x="1136" y="652" font-family="Arial, Helvetica, sans-serif" font-size="15" font-weight="normal" fill="#12283d" text-anchor="start">Splitting the rails keeps a stalled foot off the head drive</text>
 <text x="1136" y="674" font-family="Arial, Helvetica, sans-serif" font-size="15" font-weight="normal" fill="#12283d" text-anchor="start">Both 6 V rails share the star ground, nothing else</text>
@@ -130,7 +130,7 @@
 <text x="96" y="1106" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" fill="#12283d" text-anchor="start">ground, star connected (16/22 AWG black)</text>
 <line x1="50" y1="1123" x2="84" y2="1123" stroke="#1565c0" stroke-width="4" stroke-linecap="round"/>
 <text x="96" y="1128" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" fill="#12283d" text-anchor="start">analogue sense</text>
-<rect x="576" y="984" width="520" height="180" rx="7" fill="#ffffff" stroke="#c62828" stroke-width="1.6"/>
+<rect x="576" y="984" width="520" height="202" rx="7" fill="#ffffff" stroke="#c62828" stroke-width="1.6"/>
 <text x="590" y="1014" font-family="Arial, Helvetica, sans-serif" font-size="19" font-weight="bold" fill="#12283d" text-anchor="start">Fuses, in order from the battery</text>
 <text x="590" y="1040" font-family="Consolas, monospace" font-size="14" font-weight="normal" fill="#00507f" text-anchor="start">F1  15 A</text>
 <text x="716" y="1040" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" fill="#12283d" text-anchor="start">main, at the battery lead, holder FH1</text>
@@ -149,6 +149,9 @@
 <line x1="590" y1="1135" x2="1082" y2="1135" stroke="#dde7ef" stroke-width="1.2"/>
 <text x="590" y="1150" font-family="Consolas, monospace" font-size="14" font-weight="normal" fill="#00507f" text-anchor="start">F6  2 A</text>
 <text x="716" y="1150" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" fill="#12283d" text-anchor="start">5 V dome feed to the slip ring, holder FH6</text>
+<line x1="590" y1="1157" x2="1082" y2="1157" stroke="#dde7ef" stroke-width="1.2"/>
+<text x="590" y="1172" font-family="Consolas, monospace" font-size="14" font-weight="normal" fill="#00507f" text-anchor="start">F7  2 A</text>
+<text x="716" y="1172" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" fill="#12283d" text-anchor="start">12 V actuator driver U10 (sheet 05), holder FH7</text>
 <rect x="1116" y="984" width="528" height="180" rx="7" fill="#f2f7fb" stroke="#c62828" stroke-width="1.6"/>
 <rect x="1116" y="984" width="6" height="180" rx="3" fill="#c62828"/>
 <text x="1136" y="1014" font-family="Arial, Helvetica, sans-serif" font-size="19" font-weight="bold" fill="#12283d" text-anchor="start">Safety, before the battery goes in</text>
@@ -159,5 +162,5 @@
 <text x="1136" y="1128" font-family="Arial, Helvetica, sans-serif" font-size="15" font-weight="normal" fill="#12283d" text-anchor="start">4. Charge upright, in free air, above 0 C.</text>
 <text x="1136" y="1150" font-family="Arial, Helvetica, sans-serif" font-size="15" font-weight="normal" fill="#12283d" text-anchor="start">5. Meter every rail before any load is connected (sheet 04).</text>
 <line x1="36" y1="1191" x2="1644" y2="1191" stroke="#5b7c99" stroke-width="1.2"/>
-<text x="36" y="1213" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" fill="#5b7c99" text-anchor="start">fable-r2d2 electrical set, 2026-09-12  |  sheets 01-04 and electronics/wiring.csv are one drawing set  |  pin names are the final firmware names in firmware/kb2040/code.py  |  not yet validated on hardware</text>
+<text x="36" y="1213" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" fill="#5b7c99" text-anchor="start">fable-r2d2 electrical set, revision D, 2026-09-12  |  sheets 01-05 and electronics/wiring.csv are one drawing set  |  pin names are the final firmware names in firmware/kb2040/code.py  |  not yet validated on hardware</text>
 </svg>

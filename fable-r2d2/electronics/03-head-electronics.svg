@@ -154,5 +154,5 @@
 <text x="836" y="1034" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" fill="#12283d" text-anchor="start">nothing and can be left unconnected. If a dimmable backlight is wanted later,</text>
 <text x="836" y="1054" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" fill="#12283d" text-anchor="start">give up the dome index sensor wire or move to a 2-wire dome controller.</text>
 <line x1="36" y1="1076" x2="1644" y2="1076" stroke="#5b7c99" stroke-width="1.2"/>
-<text x="36" y="1098" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" fill="#5b7c99" text-anchor="start">fable-r2d2 electrical set, 2026-09-12  |  sheets 01-04 and electronics/wiring.csv are one drawing set  |  pin names are the final firmware names in firmware/kb2040/code.py  |  not yet validated on hardware</text>
+<text x="36" y="1098" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" fill="#5b7c99" text-anchor="start">fable-r2d2 electrical set, revision D, 2026-09-12  |  sheets 01-05 and electronics/wiring.csv are one drawing set  |  pin names are the final firmware names in firmware/kb2040/code.py  |  not yet validated on hardware</text>
 </svg>
