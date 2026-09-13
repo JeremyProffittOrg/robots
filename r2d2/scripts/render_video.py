@@ -1,28 +1,38 @@
-"""Render the actual CAD poses, then encode a labelled MP4. No hardware footage."""
+"""Render the actual CAD poses, then encode a labelled MP4. No hardware footage.
+
+`--revision C` (default) writes the published revision C video path; `--revision D`
+writes output/delivery/revision-d with revision D titles.
+"""
 from pathlib import Path
 from concurrent.futures import ThreadPoolExecutor, as_completed
 import argparse, hashlib, json, math, subprocess, tempfile
 from PIL import Image, ImageDraw, ImageFont
 from export_cad import ROOT, EXE
+from package import DEFAULT_REVISION, profile, path, video_title, printed_counts, add_revision_argument
 
 FPS=12
 SECONDS=30
-OUT=ROOT/'output/delivery'
+REVISION=DEFAULT_REVISION
+OUT=path(REVISION,'delivery')
 SMIN=5.03832
 SMAX=72
 FONT='C:/Windows/Fonts/arial.ttf'
 
 def smooth(x):return (1-math.cos(math.pi*min(1,max(0,x))))/2
-def scene(t):
+def captions(revision):
+    counts=printed_counts()
+    return [(title or video_title(revision),caption.format(**counts)) for title,caption in profile(revision)['video_scenes']]
+def scene(t,text=None):
+    text=text or captions(REVISION)
     if t<6:
-        return 'assembly',SMIN,120*math.sin(t*math.pi/6),(1000,1600,900,0,-40,305),'Detailed shell and powered head','Two whole body prints; one print per side leg.'
+        return ('assembly',SMIN,120*math.sin(t*math.pi/6),(1000,1600,900,0,-40,305))+text[0]
     if t<14:
-        return 'assembly',SMIN+(SMAX-SMIN)*smooth((t-6)/8),0,(1100,-1600,950,0,-50,305),'Rear post extends; body tilts','Supported three-foot motion. Timing is illustrative.'
+        return ('assembly',SMIN+(SMAX-SMIN)*smooth((t-6)/8),0,(1100,-1600,950,0,-50,305))+text[1]
     if t<22:
-        return 'section',SMAX-(SMAX-SMIN)*smooth((t-14)/8),0,(1100,-1600,950,0,-50,305),'Metal frame and rear guide exposed','12 mm shoulder shafts; separate actuator and sliding guide.'
+        return ('section',SMAX-(SMAX-SMIN)*smooth((t-14)/8),0,(1100,-1600,950,0,-50,305))+text[2]
     if t<26:
-        return 'exploded',SMIN,0,(1300,1800,1200,0,-40,365),'Printed covers separated for assembly','10 STL designs / 14 printed pieces. Metal frame stays assembled.'
-    return 'assembly',SMIN,90*math.sin((t-26)*math.pi/4),(1000,1600,900,0,-40,305),'R2-24 | revision C','609.6 mm nominal height; twelve ground wheels; phone Wi-Fi.'
+        return ('exploded',SMIN,0,(1300,1800,1200,0,-40,365))+text[3]
+    return ('assembly',SMIN,90*math.sin((t-26)*math.pi/4),(1000,1600,900,0,-40,305))+text[4]
 
 def frame(index,tmp):
     t=index/FPS;part,stroke,head,camera,title,caption=scene(t)
@@ -44,7 +54,9 @@ def frame(index,tmp):
     return index
 
 def main():
-    p=argparse.ArgumentParser();p.add_argument('--preview',action='store_true');a=p.parse_args()
+    global REVISION,OUT
+    p=argparse.ArgumentParser();p.add_argument('--preview',action='store_true');add_revision_argument(p);a=p.parse_args()
+    REVISION=a.revision;OUT=path(REVISION,'delivery')
     OUT.mkdir(parents=True,exist_ok=True)
     sources=sorted((ROOT/'cad').glob('*.scad'))+[Path(__file__).resolve()]
     source_hashes={str(p.relative_to(ROOT)):hashlib.sha256(p.read_bytes()).hexdigest() for p in sources}
@@ -58,7 +70,7 @@ def main():
             sheet=Image.new('RGB',(1920,1080),'white')
             for n,i in enumerate(indices):
                 with Image.open(tmp/f'frame-{i:04}.png') as im:sheet.paste(im.resize((960,540)),((n%2)*960,(n//2)*540))
-            sheet.save(ROOT/'tmp/reference/video-preview.png');return
+            preview=path(REVISION,'video_preview');preview.parent.mkdir(parents=True,exist_ok=True);sheet.save(preview);return
         assert all(hashlib.sha256(p.read_bytes()).hexdigest()==source_hashes[str(p.relative_to(ROOT))] for p in sources),'CAD changed during video rendering'
         result=subprocess.run(['ffmpeg','-y','-v','error','-framerate',str(FPS),'-i',str(tmp/'frame-%04d.png'),
                                '-c:v','libx264','-preset','medium','-crf','19','-pix_fmt','yuv420p','-r','24','-movflags','+faststart',str(OUT/'motion.mp4')],capture_output=True,text=True,timeout=180)
@@ -67,10 +79,10 @@ def main():
     v=next(s for s in probe['streams'] if s['codec_type']=='video')
     assert v['width']==1920 and v['height']==1080 and abs(float(probe['format']['duration'])-SECONDS)<.1
     subprocess.run(['ffmpeg','-v','error','-i',str(OUT/'motion.mp4'),'-f','null','-'],check=True,timeout=120)
-    report={'simulation':True,'physical_test':False,'duration_s':SECONDS,'width':1920,'height':1080,'fps':24,
+    report={'revision':REVISION,'simulation':True,'physical_test':False,'duration_s':SECONDS,'width':1920,'height':1080,'fps':24,
             'rendered_frames':FPS*SECONDS,'sha256':hashlib.sha256((OUT/'motion.mp4').read_bytes()).hexdigest(),
             'source_sha256':source_hashes}
     (OUT/'video.json').write_text(json.dumps(report,indent=2))
-    print(f'PASS: {SECONDS}s 1920x1080 MP4; full decode; current CAD source hashes recorded')
+    print(f'PASS: {video_title(REVISION)} {SECONDS}s 1920x1080 MP4 at {OUT/"motion.mp4"}; full decode; current CAD source hashes recorded')
 
 if __name__=='__main__':main()

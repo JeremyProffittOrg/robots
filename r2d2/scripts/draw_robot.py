@@ -1,10 +1,15 @@
-"""MATLAB-style engineering PNGs from the current revision C STL meshes.
+"""MATLAB-style engineering PNGs from the current release STL meshes.
 No CAD/firmware changes. Purchased parts are explicitly schematic envelopes.
+
+`--revision C` (default) writes the published revision C set to output/drawings;
+`--revision D` is the revision D release set in output/drawings/revision-d.
+`--development` is the separate, non-release revision D geometry study.
 """
 from pathlib import Path
-import hashlib,json,zipfile,subprocess,io
+import hashlib,json,math,zipfile,subprocess,io
 import fitz
 from export_cad import EXE,DEVELOPMENT_PARTS,PURCHASED_PIECE_LIMIT
+from package import DEFAULT_REVISION,profile,revision_key,path as release_path,printed_counts,add_revision_argument
 import numpy as np
 import trimesh
 import matplotlib
@@ -14,7 +19,10 @@ from matplotlib.colors import to_rgba
 from PIL import Image
 
 ROOT=Path(__file__).resolve().parents[1]
-OUT=ROOT/'output/drawings'
+REVISION=DEFAULT_REVISION
+OUT=release_path(REVISION,'drawings')
+NUMBER_WORDS='zero one two three four five six seven eight nine ten eleven twelve thirteen fourteen fifteen sixteen seventeen eighteen nineteen twenty'.split()
+def number_word(n):return NUMBER_WORDS[n] if 0<=n<len(NUMBER_WORDS) else str(n)
 BLUE='#0072BD';ORANGE='#D95319';GOLD='#EDB120';GRAY='#AAB7C4';INK='#23384D'
 plt.rcParams.update({'font.family':'Arial','font.size':10,'axes.titlesize':13,
  'axes.labelsize':10,'axes.edgecolor':'#63788C','axes.linewidth':.7,
@@ -127,6 +135,7 @@ def cad_views():
   r=subprocess.run([EXE,'-o',str(ROOT/'cad'/f'{name}.png'),'--imgsize=1600,1600','--colorscheme=Tomorrow','--projection=o','--viewall','--autocenter',f'--camera={camera}','-D',f'part="{part}"',str(ROOT/'cad/r2d2.scad')],capture_output=True,text=True,timeout=90)
   if r.returncode or 'ERROR:' in r.stderr or 'WARNING:' in r.stderr:raise RuntimeError(r.stderr)
   print('CAD view '+name,flush=True)
+ if not profile(REVISION)['metal_profiles']:return
  (ROOT/'cad/metal').mkdir(exist_ok=True)
  for name,(thickness,quantity,material) in METALS.items():
   base=ROOT/'cad/metal'/name
@@ -138,9 +147,10 @@ def cad_views():
 def overview():
  fig=plt.figure(figsize=(13,10));ax=fig.add_axes([.01,.06,.74,.86]);ax.imshow(Image.open(ROOT/'cad/assembly.png'));ax.axis('off')
  fig.suptitle('R2-24 | detailed assembled robot',x=.04,ha='left',fontsize=21,fontweight='bold',y=.97)
- fig.text(.76,.80,'REVISION C',color=BLUE,fontsize=15,fontweight='bold')
- fig.text(.76,.75,'609.6 mm nominal height\n259.25 mm body diameter\n10 STL designs / 14 prints\nTwo whole body sections\nOne print per side leg',linespacing=1.8,fontsize=11,va='top')
- fig.text(.76,.49,'Metal shoulder pivots\nGuided rear telescoping post\nSupported body tilt\nInternal head friction wheel\nSix ground motors / 12 wheels\nPhone control over Wi-Fi',linespacing=1.8,fontsize=10,va='top')
+ counts=printed_counts()
+ fig.text(.76,.80,'REVISION '+REVISION,color=BLUE,fontsize=15,fontweight='bold')
+ fig.text(.76,.75,f'609.6 mm nominal height\n259.25 mm body diameter\n{counts["designs"]} STL designs / {counts["pieces"]} prints\nTwo whole body sections\nOne print per side leg',linespacing=1.8,fontsize=11,va='top')
+ fig.text(.76,.49,profile(REVISION)['drawing_features'],linespacing=1.8,fontsize=10,va='top')
  footer(fig,'Source CAD, with paint colors. Purchased parts are dimensional envelopes. Digital prototype; hardware untested.');save(fig,'01-robot-isometric')
 
 def ortho():
@@ -163,7 +173,7 @@ def mechanisms():
   ax.imshow(Image.open(ROOT/'cad'/f'{name}.png'));ax.axis('off');ax.set_title(title)
  fig.suptitle('R2-24 | internal mechanisms',x=.04,ha='left',fontsize=22,fontweight='bold')
  fig.subplots_adjust(top=.88,bottom=.12)
- footer(fig,'Actual mounting geometry; purchased motors/wheels/bearings are envelopes. Metal frame carries the vertical load.');save(fig,'04-mechanisms-exploded')
+ footer(fig,profile(REVISION)['mechanism_footer']);save(fig,'04-mechanisms-exploded')
 
 def component(ax,name,axes=False):
  r=ROWS[name];m=MESH[name].copy();m.apply_translation(-m.bounds[0]);p=[(m,BLUE if r['material']=='PETG' else GRAY,name)]
@@ -174,8 +184,9 @@ def component(ax,name,axes=False):
  ax.text2D(.5,-.03,f'{r["x_mm"]:g} x {r["y_mm"]:g} x {r["z_mm"]:g} mm | {r["material"]}',transform=ax.transAxes,ha='center',fontsize=9,color=INK)
 
 def catalog():
- fig=plt.figure(figsize=(20,11));fig.suptitle('R2-24 | all ten printable components',x=.035,ha='left',fontsize=22,fontweight='bold')
- for i,name in enumerate(ROWS,1):component(fig.add_subplot(2,5,i,projection='3d'),name)
+ rows=math.ceil(len(ROWS)/5)
+ fig=plt.figure(figsize=(20,5.5*rows));fig.suptitle(f'R2-24 | all {number_word(len(ROWS))} printable components',x=.035,ha='left',fontsize=22,fontweight='bold')
+ for i,name in enumerate(ROWS,1):component(fig.add_subplot(rows,5,i,projection='3d'),name)
  fig.subplots_adjust(left=.025,right=.975,bottom=.10,top=.89,wspace=.08,hspace=.28)
  footer(fig,'Actual STL surfaces in their bed orientations; panels scaled independently. Print the outer foot once mirrored in X.');save(fig,'05-printed-components')
  for i,name in enumerate(ROWS,1):
@@ -204,22 +215,27 @@ def posture_plot():
  fig.suptitle('R2-24 | rear post and body tilt',x=.045,ha='left',fontsize=22,fontweight='bold');fig.subplots_adjust(left=.09,right=.96,top=.86,bottom=.16,wspace=.25)
  footer(fig,'Calculated kinematics only. Rear placement follows the requested layout; all three feet stay down. Not measured hardware motion.');save(fig,'08-posture-geometry')
 
-def main():
+def main(revision=DEFAULT_REVISION):
+ global OUT,REVISION
+ REVISION=revision_key(revision);OUT=release_path(REVISION,'drawings');p=profile(REVISION)
  sources=sorted((ROOT/'cad').glob('*.scad'))+[Path(__file__).resolve()]
  source_hashes={str(p.relative_to(ROOT)):hashlib.sha256(p.read_bytes()).hexdigest() for p in sources}
- OUT.mkdir(parents=True,exist_ok=True);cad_views();overview();ortho();exploded();mechanisms();catalog();metal_drawings();posture_plot()
+ OUT.mkdir(parents=True,exist_ok=True);cad_views();overview();ortho();exploded();mechanisms();catalog()
+ if p['metal_profiles']:metal_drawings()
+ if p['posture_plot']:posture_plot()
  for name in ['05-body-and-arm-components','06-foot-and-steering-components','07-head-drive-components','08-mounts-and-small-components']:
   p=OUT/(name+'.png')
   if p.exists():p.unlink()
  assert all(hashlib.sha256(p.read_bytes()).hexdigest()==source_hashes[str(p.relative_to(ROOT))] for p in sources),'CAD changed during drawing render'
- report={'style':'MATLAB-style Matplotlib engineering drawings','revision':'C','printed_components':10,'cad_sources':source_hashes,
+ report={'style':'MATLAB-style Matplotlib engineering drawings','revision':REVISION,'printed_components':len(ROWS),'cad_sources':source_hashes,
  'sources':{n:hashlib.sha256((ROOT/'stl'/f'{n}.stl').read_bytes()).hexdigest() for n in ROWS},
  'pngs':[{'file':p.relative_to(OUT).as_posix(),'pixels':list(Image.open(p).size),'sha256':hashlib.sha256(p.read_bytes()).hexdigest()} for p in ARTIFACTS]}
  (OUT/'index.json').write_text(json.dumps(report,indent=2))
  with zipfile.ZipFile(OUT/'r2d2-matlab-style-drawings.zip','w',zipfile.ZIP_DEFLATED) as z:
   for p in ARTIFACTS:z.write(p,p.relative_to(OUT))
   z.write(OUT/'index.json','index.json')
- print(f'PASS: {len(ARTIFACTS)} PNGs; all10 printable components and13 cut profiles; current STL hashes recorded')
+ profiles=f' and {len(METALS)} cut profiles' if p['metal_profiles'] else ''
+ print(f'PASS: revision {REVISION} {len(ARTIFACTS)} PNGs in {OUT}; all {len(ROWS)} printable components{profiles}; current STL hashes recorded')
 def development():
  global OUT
  OUT=ROOT/'output/drawings/development';OUT.mkdir(parents=True,exist_ok=True)
@@ -264,5 +280,7 @@ def development():
 
 if __name__=='__main__':
  import argparse
- parser=argparse.ArgumentParser();parser.add_argument('--development',action='store_true');args=parser.parse_args()
- development() if args.development else main()
+ parser=argparse.ArgumentParser();mode=parser.add_mutually_exclusive_group()
+ mode.add_argument('--development',action='store_true',help='non-release revision D geometry study')
+ add_revision_argument(mode);args=parser.parse_args()
+ development() if args.development else main(args.revision)
