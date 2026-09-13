@@ -115,7 +115,8 @@ with revision D labels.
 
 ### revision-d-delivery — one email with the manual attached and the video link
 
-- [ ] revision-d-delivery — depends on: revision-d-integration.
+- [x] revision-d-delivery — depends on: revision-d-integration. Delivered in b4aa234. SES MessageId
+  `010001a099273eba-e67d4e45-2cb0-4fa3-828f-65e30b5e783f-000000`.
   - Commit and push `fable-r2d2`.
   - From a subagent, run `python scripts/deliver.py`. It uses the private bucket
     `robots-deliverables-759775734231`, a 7-day presigned link and SESv2.
@@ -232,6 +233,18 @@ with revision D labels.
   - Fix during the run: stage 4B shaft length corrected to 182 mm.
   - Gaps: ACT1 (P16) on back order; MG995 and J13 out of stock; nothing physically validated.
   - Launched the revision-d-delivery send subagent.
+- 2026-09-13 05:04 UTC: revision-d-delivery done (b4aa234, agent a85a2797a30d0147d).
+  - SES MessageId `010001a099273eba-e67d4e45-2cb0-4fa3-828f-65e30b5e783f-000000`, sent to
+    proffitt.jeremy@gmail.com. The manual is attached, and the email carries a 7-day presigned video link.
+  - S3 keys: `fable-r2d2/revision-d/r2d2-assembly-and-operation.mp4` (73186443 bytes) and
+    `fable-r2d2/revision-d/r2d2-assembly-manual.pdf` (17726408 bytes). Both sizes match the local files.
+  - A range GET returned HTTP 206 on both links. The links expire 2026-09-20T05:04 UTC.
+  - Revision C S3 objects are untouched. The revision C receipt is archived as
+    `output/delivery-receipt-revision-c.json`.
+  - Parent confirmed that `output/delivery-receipt.json` has revision D, the MessageId, both keys and
+    head sha b94f4d63.
+  - Revision D is complete. The digital package is verified. Nothing is physically validated.
+  - Open supplier gaps: ACT1 (P16) is on back order; MG995 and J13 are out of stock.
 
 ## Locked decisions (user-confirmed; do not revisit)
 
