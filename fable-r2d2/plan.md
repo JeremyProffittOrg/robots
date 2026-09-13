@@ -6,6 +6,143 @@ directory. The sibling `C:/dev/robots/r2d2` and `C:/dev/robots/dalek` packages a
 separate designs and are read only for tooling patterns and research; they are not modified.
 The repository root `plan.md` belongs to concurrent sessions and is not edited by this task.
 
+## revision-d — motorized, interlocked two-foot / three-leg stance change
+
+Revision C (every section after this one) is frozen as git tag `fable-r2d2-revision-c`. The hashes of its
+STLs, manual, video, mock-up and drawing ZIP are in `docs/revision-c.json`. Restore it with
+`git checkout fable-r2d2-revision-c -- fable-r2d2`. Revision D outputs replace the files in place,
+with revision D labels.
+
+### Revision D locked decisions (user-confirmed; do not revisit)
+
+- 2026-09-12, operator, verbatim: "save this as verison c and build out a version d" ("this" = the
+  fable-r2d2 final build mock-up).
+- 2026-09-12, operator answers, verbatim: transition "Motorized, interlocked (Recommended)";
+  controller "Keep Pi 4 + KB2040 (Recommended)"; delivery "Email PDF + video link (Recommended)".
+- 2026-09-12, operator, verbatim: "NO!!!  copy your work and only write to fable-r2d3". Then: "make
+  the copy, and coninue wsorking in fable-r2d2". Then the operator chose "fable-r2d2" as the place
+  where revision D continues.
+  - The copy is `C:/dev/robots/fable-r2d3` (commit aab24c3, see its COPY.md).
+  - This run writes only in `C:/dev/robots/fable-r2d2`.
+  - It never writes to `C:/dev/robots/r2d2`, the root `plan.md`, `.github`, or other packages.
+- Derived, recorded so it is not re-litigated:
+  - The DFRobot DFR0994 confirmation was for the sibling r2d2 package only.
+  - fable-r2d2 revision D keeps the Raspberry Pi 4 + Adafruit KB2040 architecture.
+  - The r2d2 revision D work is design input only: the interlock state machine and its tests, and
+    the sensed lock, actuator and sensor selections.
+- Revision D requirements:
+  - The centre leg deploys toward the front for the three-leg stance.
+  - For a stationary two-foot stance, it fully retracts so its wheels lift. There is no two-foot
+    driving.
+  - A linear actuator moves the centre leg and the body tilt, 0 deg to 18 deg.
+  - A positive shoulder lock holds each endpoint. A sensor reads its engaged state; it is never
+    inferred from actuator position.
+  - Drive is refused during a transition, in the two-foot stance, and in any unknown or fault state.
+  - Command loss, a power or feedback fault, or an interrupted transition stops the actuator and
+    leaves a held, reported state.
+- Unchanged from revision C:
+  - 317 mm body, nine-STL minimum, H2D Z limit 315 mm, 3 mm XY buffer.
+  - Six 3777 ground motors and twelve 3766 wheels, the head drive, and the 12 V 7 Ah SLA with its
+    charge port.
+  - No purchases, no physical-test claims, no scheduled automation.
+- The purchased-piece total is reported but not gated. The 199-piece ceiling belongs to r2d2.
+
+### Revision D verified facts (read 2026-09-12)
+
+- `cad/params.scad`:
+  - Shoulder: `shoulder_index_r = 45`, `shoulder_index_d = 6.2`, `shoulder_index_angles = [0, 18]`
+    (hand-set 6 mm dowels), `shoulder_bolt_m = 12`.
+  - Stance: `body_tilt = 18`, `leg_lean = 18`, `leg_len = 375.9`, `ankle_z = 105.5`.
+  - Centre leg: `center_leg_y_in_body = -45`, `caster_trail = 35`, `center_leg_flange = [140, 100, 8]`
+    with four M8 bolts.
+  - The centre leg is unbolted for the two-leg stance (`docs/mechanical.md` section 1.4).
+- `docs/stability.json`:
+  - Mass 11818.7 g, CG [0.0, 55.2, 303.6] mm.
+  - Three-leg tip-back margin 81.0 mm / 14.9 deg; tip-forward margin 105.9 mm / 19.2 deg.
+- Reference selections for the larger robot are in `fable-r2d3/docs/revision-d-mechanism.md` and
+  `fable-r2d3/docs/revision-d-controls.md`:
+  - Actuonix P16-100-256-12-P actuator.
+  - J.W. Winco GN 412-6-35-B-1 plunger with two GN 412.2-M12X1.5-B6.2 receivers.
+  - Omron SS-01GL lock sensor, MG995 release servo, Adafruit DRV8871 actuator driver.
+  - Stance state machine in `fable-r2d3/firmware/include/stance.h`.
+- Firmware layout:
+  - KB2040 runs CircuitPython (`firmware/kb2040/code.py`, `protocol.py`, `test_protocol.py`).
+  - Pi server is `firmware/pi/server.py`, tested by `test_mixing.py`.
+  - `scripts/verify.py` runs nine checks.
+
+### stance-mechanism — actuator, sensed lock and centre-leg retraction as real CAD, proven by a transition check
+
+- [~] stance-mechanism — owner: background agent a9a5298ea055bf0d4.
+  - Owned files: `cad/**`, `stl/**`, `scripts/export_cad.py`, `slice_check.py`, `stability.py`,
+    `parts.json`, `check_stance.py`, `tests/test_stance*.py`, `bom/hardware.csv`,
+    `bom/printed-parts.csv`, `docs/mechanical.md`, `docs/stability.json`, `docs/stance-check.json`.
+  - `scripts/verify.py`: small anchored changes in `check_cad` only.
+  - Done when, run from `C:/dev/robots/fable-r2d2`:
+    - `python scripts/check_stance.py` exits 0 across the sampled transition. The check fails on:
+      lifted-wheel clearance, support margin (both stances and transition poses), actuator load
+      above rating, lock not engaged at an endpoint, or interference.
+    - `python -m unittest discover -s tests -p "test_stance*.py"` passes.
+    - `python scripts/export_cad.py` and `python scripts/slice_check.py` pass.
+    - `python scripts/stability.py` reports both stances.
+
+### stance-controls — Pi 4 + KB2040 interlocked stance change, wiring and electronics BOM
+
+- [~] stance-controls — owner: background agent afe574ec95dfd2461.
+  - Owned files: `firmware/**`, `scripts/electronics.py`, `electronics/**`, `bom/electronics.csv`,
+    `docs/electrical.md`, `docs/firmware.md`.
+  - `scripts/verify.py`: small anchored changes in `check_wiring` and `check_firmware` only.
+  - Actuator and sensor values are bound when stance-mechanism messages them.
+  - Done when:
+    - `python -m unittest discover -s firmware/kb2040` passes.
+    - `python -m unittest discover -s firmware/pi` passes.
+    - The new stance tests cover: both transitions, command loss, power or feedback fault, stall or
+      timeout, lock disagreement, drive refusal, fault latch and clear.
+    - `python scripts/electronics.py` exits 0.
+    - `check_wiring()` and `check_firmware()` pass.
+
+### revision-d-integration — regenerate the package with revision D labels
+
+- [ ] revision-d-integration — depends on: stance-mechanism, stance-controls.
+  - Update the labels and asserts in `scripts/build_bom.py`, `draw_robot.py`, `build_manual.py`,
+    `render_video.py`, `render_mockup.py`, `assembly_layout.py` and `verify.py`.
+  - `render_mockup.py` must show both stances and the transition.
+  - Done when `python scripts/verify.py` writes `docs/verification.json` with `"all_pass": true` and
+    `"revision": "D"`, and the endpoint and transition renders have been inspected.
+
+### revision-d-delivery — one email with the manual attached and the video link
+
+- [ ] revision-d-delivery — depends on: revision-d-integration.
+  - Commit and push `fable-r2d2`.
+  - From a subagent, run `python scripts/deliver.py`. It uses the private bucket
+    `robots-deliverables-759775734231`, a 7-day presigned link and SESv2.
+  - Done when the accepted MessageId is in `output/delivery-receipt.json`. An accepted MessageId
+    ends all retries.
+
+### Revision D stop conditions (only these)
+
+- A purchase, a physical action, or a write outside `C:/dev/robots/fable-r2d2` would be required.
+- Credentials are missing for the push or the SES send.
+
+### Revision D jobs and restart policy
+
+- Each background agent is tracked by its id in the execution log.
+- Failure is detected when an agent returns without its definition-of-done output.
+- Restart: re-spawn once with narrower scope, then do the work inline in the parent.
+- Bounds: OpenSCAD export 600 s per part; slicing 300 s per part.
+- A deterministic failure is fixed before any retry, with at most two corrected attempts per failure
+  class. This ceiling governs, and agents add no retry budgets of their own.
+
+### Revision D execution log
+
+- 2026-09-12 21:45:
+  - Copied the r2d2 revision D work to `fable-r2d3` (aab24c3).
+  - Stopped all of this session's r2d2 writers: the mechanism agent was killed, the controls agent
+    had finished, the watcher was stopped.
+  - Recorded revision D for fable-r2d2.
+  - Launched stance-mechanism (a9a5298ea055bf0d4) and stance-controls (afe574ec95dfd2461).
+  - Untracked `c-design.pdf`, `c-motion.mp4` and `.playwright-mcp/` in this folder are download
+    checks, not package files. They are left uncommitted.
+
 ## Locked decisions (user-confirmed; do not revisit)
 
 2026-09-12, operator, verbatim: "creeate for me an extensively detailed r2d2 robot which uses
