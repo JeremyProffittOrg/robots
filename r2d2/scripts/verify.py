@@ -109,7 +109,51 @@ def cad_checks():
  if failures:raise AssertionError(json.dumps(failures,indent=2))
  return results
 
+def firmware_checks():
+ """Revision D controls: host tests, phone UI, DFR0994 pin/wiring agreement and image sizes. Drives no hardware."""
+ results=[]
+ with tempfile.TemporaryDirectory(prefix='r2-verify-') as tmp:
+  env=os.environ.copy();env['PATH']=r'C:\msys64\mingw64\bin;'+env['PATH']
+  for name in ['control_test','stance_test']:
+   exe=Path(tmp)/(name+'.exe')
+   run([r'C:\msys64\mingw64\bin\g++.exe','-std=c++11','-Wall','-Wextra','-Werror','-I','firmware/include',f'firmware/test/{name}.cpp','-o',str(exe)],env=env)
+   results.append(run([str(exe)],env=env))
+ results.append(run(['node','--check','firmware/data/app.js']) or 'JavaScript syntax: PASS')
+ results.append(run(['node','firmware/test/ui_test.js']))
+ wires=list(csv.DictReader((ROOT/'electronics/wiring.csv').open(encoding='utf-8')))
+ config=(ROOT/'firmware/include/config.h').read_text(encoding='utf-8')
+ def pin(name):
+  found=re.search(fr'\b{name}=(\d+)\b',config);assert found,name;return int(found.group(1))
+ onboard={'LEFT_EN':12,'LEFT_PH':13,'RIGHT_EN':14,'RIGHT_PH':21,'CENTER_EN':9,'CENTER_PH':10,'HEAD_EN':47,'HEAD_PH':11}
+ for name,value in onboard.items():assert pin(name)==value,(name,'DFR0994 V1.1.0 onboard motor pin')
+ wired={'POST_EXTEND':'U7 pin2 / 1A','POST_RETRACT':'U7 pin5 / 2A','STEER':'U7 pin9 / 3A','LOCK_SERVO':'U7 pin12 / 4A','BCLK':'U8 BCLK','LRCLK':'U8 LRC','AUDIO':'U8 DIN',
+  'LIMIT_EXTEND_OPEN':'U7 pin1 / 1OE','LIMIT_RETRACT_OPEN':'U7 pin4 / 2OE','LOCK_NO':'LS_LOCK NO','LOCK_NC':'LS_LOCK NC','POST_POSITION':'ACT purple / pin2','PACK':'R_PACK_TOP 100k pin2','POWER':'R_RUN_TOP 10k pin2'}
+ def edge(a,b):assert any({r['source'],r['target']}=={a,b} for r in wires),(a,b)
+ for name,other in wired.items():edge(f'U1 GPIO{pin(name)}',other)
+ used=[pin(n) for n in list(onboard)+list(wired)]
+ assert len(used)==len(set(used)),'GPIO assigned twice'
+ gpios={int(g) for r in wires for g in re.findall(r'U1 GPIO(\d+)\b',r['source']+' '+r['target'])}
+ assert gpios=={pin(n) for n in wired},gpios
+ assert not set(used)&({0,3,19,20,43,44,45,46}|set(range(26,38))),'strapping, USB, UART0, flash or PSRAM pin used'
+ for a,b in [('U7 pin3 / 1Y','D5 IN1'),('U7 pin6 / 2Y','D5 IN2'),('U7 pin8 / 3Y','SV1 signal'),('U7 pin11 / 4Y','SV2 signal'),
+  ('U7 pin1 / 1OE','LS_EXT COM'),('B1 PP30 -','LS_EXT NC'),('U7 pin4 / 2OE','LS_RET COM'),('B1 PP30 -','LS_RET NC'),('B1 PP30 -','U7 pin10 / 3OE'),('B1 PP30 -','U7 pin13 / 4OE'),
+  ('B1 PP30 -','LS_LOCK SS-01GL COM'),('LS_LOCK NO','R_LOCK_NO 3.3k pin1'),('LS_LOCK NC','R_LOCK_NC 3.3k pin1'),
+  ('P2 VOUT','D5 DRV8871 VM'),('D5 OUT1','ACT red / pin3'),('D5 OUT2','ACT black / pin4'),('D5 ILIM','R_ILIM 71.5k pin2'),
+  ('R_POT_TOP 2.2k pin2','ACT yellow / pin5'),('B1 PP30 -','ACT orange / pin1'),('ACT purple / pin2','R_POT_FAIL 470k pin1'),
+  ('S1 output','U1 VIN+ / P23 pin1'),('P1 OUT+','U1 VM+ / P22 pin1'),('P1 OUT+','SV1 steering red'),('P1 OUT+','SV2 lock release red'),
+  ('U1 M1 OUT1','M1 red'),('U1 M1 OUT1','M2 red'),('U1 M2 OUT1','M3 red'),('U1 M2 OUT1','M4 red'),('U1 M3 OUT1','M5 red'),('U1 M3 OUT1','M6 red'),('U1 M4 OUT1','M7 red')]:edge(a,b)
+ assert not any('VM' in r['target'] and r['source']!='P1 OUT+' and r['net']!='GND' and 'D5' not in r['target'] for r in wires),'Romeo VM fed from anything but the motor regulator'
+ assert not any(k in r['source']+' '+r['target'] for r in wires for k in ['HUZZAH','DRV8833','ADS1115','INA219','U9 ','U10 ','J_USB','D1 ','D4 ','5V_Servo'])
+ assert 14.6*22/122<2.9 and 6.0*10/20<3.3 and 5.5*10/20>.75*3.3 and 3300*16.5/(16.5+2.2)<3000
+ assert len(wires)==98,len(wires)
+ results.append(f'{len(wires)} wiring rows: DFR0994 pins match config.h, gated NC post limits, NO/NC lock sensor, P16 feedback, isolated VM and divider bounds PASS')
+ fs=ROOT/'firmware/.pio/build/romeo/littlefs.bin';fw=ROOT/'firmware/.pio/build/romeo/firmware.bin'
+ assert fs.exists() and fs.stat().st_size<=2097152 and fw.exists() and fw.stat().st_size<=2031616,'run pio run and pio run -t buildfs first'
+ results.append(f'Firmware image {fw.stat().st_size} bytes; filesystem image {fs.stat().st_size} bytes: fit partitions')
+ return results
+
 def main():
+ from package import cli_revision,path as release_path;revision=cli_revision(sys.argv)
  (ROOT/'docs/verification.json').write_text(json.dumps({'all_pass':False,'revision':'D-development','status':'checks in progress; complete purchased-piece ledger required','physical_validation':False},indent=2))
  if '--cad-only' not in sys.argv:check_purchased_bom()
  inputs=sorted((ROOT/'cad').glob('*.scad'))+sorted((ROOT/'stl').glob('*.stl'))+sorted((ROOT/'firmware/include').glob('*.h'))+[ROOT/'firmware/src/main.cpp',ROOT/'firmware/data/app.js',ROOT/'electronics/wiring.csv',ROOT/'bom/fastener-stacks.csv']+[ROOT/'scripts'/n for n in ['verify.py','check_kinematics.py','export_cad.py','slice_structure.py']]
@@ -117,7 +161,7 @@ def main():
  results=[];validate();results.append('STL geometry: all meshes closed, connected, positive and inside300mm; nonnegative bed Z')
  results.extend(cad_checks())
  if '--cad-only' in sys.argv:
-  (ROOT/'docs/verification.json').write_text(json.dumps({'all_pass':False,'revision':'C','cad_checks_pass':True,'checks':results,'status':'other package checks pending','physical_validation':False},indent=2));return
+  (ROOT/'docs/verification.json').write_text(json.dumps({'all_pass':False,'revision':revision,'cad_checks_pass':True,'checks':results,'status':'other package checks pending','physical_validation':False},indent=2));return
  results.append(run([sys.executable,'scripts/check_kinematics.py']))
  results.append(nut_pocket_checks())
  stacks=list(csv.DictReader((ROOT/'bom/fastener-stacks.csv').open()))
@@ -127,12 +171,7 @@ def main():
   else:assert float(r['min_thread_mm'])-1e-6<=remaining<=float(r['usable_thread_mm'])-.25+1e-6,r['joint']
  assert 15.4*3**.5/2>=13.25 and 6.8*3**.5/2>=5.75
  results.append('22 fastener stacks: nut engagement, blind-depth margins and hex-pocket across-flats checks PASS')
- with tempfile.TemporaryDirectory(prefix='r2-verify-') as tmp:
-  env=os.environ.copy();env['PATH']=r'C:\msys64\mingw64\bin;'+env['PATH'];exe=Path(tmp)/'control.exe'
-  run([r'C:\msys64\mingw64\bin\g++.exe','-std=c++11','-Wall','-Wextra','-Werror','-I','firmware/include','firmware/test/control_test.cpp','-o',str(exe)],env=env)
-  results.append(run([str(exe)],env=env))
- results.append(run(['node','--check','firmware/data/app.js']) or 'JavaScript syntax: PASS')
- results.append(run(['node','firmware/test/ui_test.js']))
+ results.extend(firmware_checks())
  audio=list(csv.DictReader((ROOT/'audio/catalog.csv').open()))
  assert len(audio)==16
  for row in audio:
@@ -145,38 +184,21 @@ def main():
   assert row['return_code']==0 and not row['warning']
   assert hashlib.sha256((ROOT/row['part']).read_bytes()).hexdigest()==row['sha256']
  results.append('Ten whole-part H2D slices: success, no warnings and current STL hashes verified')
- wires=list(csv.DictReader((ROOT/'electronics/wiring.csv').open()))
- config=(ROOT/'firmware/include/config.h').read_text()
- expected={'LEFT':(14,32),'RIGHT':(15,33),'REAR':(27,12)}
- for i,(side,pins) in enumerate(expected.items(),1):
-  for direction,pin,suffix in [('FWD',pins[0],'1'),('REV',pins[1],'2')]:
-   for channel in ['A','B']:
-    assert any(r['net']==side+'_'+direction and r['source']==f'U1 GPIO{pin}' and r['target']==f'D{i} {channel}IN{suffix}' for r in wires)
- assert re.search(r'MOTOR\[6\]=\{14,32,15,33,27,12\}',config)
- for name,pin in [('SLEEP',13),('STEER',25),('HEAD',26),('HEAD_REVERSE',17),('POST_EXTEND',4),('POST_RETRACT',16),('SDA',21),('SCL',22),('FAULT',36),('POWER',39),('PACK',34),('BCLK',18),('LRCLK',19),('AUDIO',23)]:assert re.search(fr'{name}={pin}\b',config)
- assert 14.6*22/122<3.3 and 5.25*15/25<3.3
- assert len(wires)==220
- def edge(source,target):assert any(r['source']==source and r['target']==target for r in wires),(source,target)
- for source,target in [('U1 GPIO26','D4 AIN1'),('U1 GPIO17','D4 AIN2'),('U1 GPIO4','U7 pin5'),('U7 pin6','LS_EXT COM'),('LS_EXT NC','D5 IN1'),('D5 IN1','R_LS_EXT 4.7k pin1'),('U1 GPIO16','U7 pin9'),('U7 pin8','LS_RET COM'),('LS_RET NC','D5 IN2'),('D5 IN2','R_LS_RET 4.7k pin1'),('D5 OUT1','ACT red / pin3'),('D5 OUT2','ACT black / pin4'),('ACT purple / pin2','R_POT 1k pin1'),('P6 VOUT','U10 INA219 VIN+'),('U10 VIN-','D5 DRV8871 VM')]:edge(source,target)
- for n,pin in [('SDA',21),('SCL',22)]:
-  for board in ['U9','U10']:edge(f'U1 GPIO{pin}',f'{board} {n}')
- assert not any('SV2' in r['source']+r['target'] for r in wires)
- results.append('220 wiring rows: drive/head outputs, independent NC post limits, feedback, I2C, pins and divider bounds PASS')
- fs=ROOT/'firmware/.pio/build/feather/littlefs.bin';fw=ROOT/'firmware/.pio/build/feather/firmware.bin'
- assert fs.exists() and fs.stat().st_size<=2097152 and fw.exists() and fw.stat().st_size<=2031616
- results.append(f'Firmware image {fw.stat().st_size} bytes; filesystem image {fs.stat().st_size} bytes: fit partitions')
- video=json.loads((ROOT/'output/delivery/video.json').read_text())
- assert hashlib.sha256((ROOT/'output/delivery/motion.mp4').read_bytes()).hexdigest()==video['sha256']
+ delivery=release_path(revision,'delivery');video=json.loads((delivery/'video.json').read_text())
+ assert hashlib.sha256((delivery/'motion.mp4').read_bytes()).hexdigest()==video['sha256']
  for name,sha in video['source_sha256'].items():assert hashlib.sha256((ROOT/name).read_bytes()).hexdigest()==sha,name+' changed since video render'
  results.append('30-second CAD video: encoded bytes and source hashes match')
- drawings=json.loads((ROOT/'output/drawings/index.json').read_text())
- assert drawings['revision']=='C' and len(drawings['pngs'])==18
+ drawing_dir=release_path(revision,'drawings');drawings=json.loads((drawing_dir/'index.json').read_text())
+ assert drawings['revision']==revision and drawings['pngs'],f'{drawing_dir} is not a revision {revision} drawing set'
  for name,sha in drawings['cad_sources'].items():assert hashlib.sha256((ROOT/name).read_bytes()).hexdigest()==sha,name+' changed since drawings'
- for row in drawings['pngs']:assert hashlib.sha256((ROOT/'output/drawings'/row['file']).read_bytes()).hexdigest()==row['sha256']
+ for row in drawings['pngs']:assert hashlib.sha256((drawing_dir/row['file']).read_bytes()).hexdigest()==row['sha256']
  assert all(hashlib.sha256(p.read_bytes()).hexdigest()==initial_hashes[str(p.relative_to(ROOT))] for p in inputs),'Design changed while checks ran'
- results.append('18 PNGs: current bytes and CAD source hashes verified')
- report={'all_pass':True,'revision':'C','checks':results,'source_sha256':initial_hashes,'physical_validation':False}
+ results.append(f"{len(drawings['pngs'])} revision {revision} PNGs: current bytes and CAD source hashes verified")
+ report={'all_pass':True,'revision':revision,'checks':results,'source_sha256':initial_hashes,'physical_validation':False}
  (ROOT/'docs/verification.json').write_text(json.dumps(report,indent=2))
  print('\n'.join(results));print('PASS: all digital package checks; physical build tests remain unverified')
 if __name__=='__main__':
- check_purchased_bom() if '--bom-only' in sys.argv else main()
+ if '--bom-only' in sys.argv:check_purchased_bom()
+ elif '--firmware-only' in sys.argv:
+  print('\n'.join(firmware_checks()));print('PASS: firmware host tests, phone UI, DFR0994 wiring and image checks; no hardware was driven')
+ else:main()
