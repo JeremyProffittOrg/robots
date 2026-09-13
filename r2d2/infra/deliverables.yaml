@@ -1,5 +1,5 @@
 AWSTemplateFormatVersion: '2010-09-09'
-Description: R2-D2 video and PDF in private S3, served through CloudFront
+Description: R2-D2 revision C and D videos and PDFs in private S3, served through CloudFront
 Resources:
   Artifacts:
     Type: AWS::S3::Bucket
@@ -65,13 +65,15 @@ Resources:
             Resource: [!GetAtt Artifacts.Arn, !Sub '${Artifacts.Arn}/*']
             Condition:
               Bool: {'aws:SecureTransport': 'false'}
-          - Sid: OnlyDistributionAndTwoArtifacts
+          - Sid: OnlyDistributionAndReleasedArtifacts
             Effect: Allow
             Principal: {Service: cloudfront.amazonaws.com}
             Action: s3:GetObject
             Resource:
               - !Sub '${Artifacts.Arn}/r2d2/revision-c/motion.mp4'
               - !Sub '${Artifacts.Arn}/r2d2/revision-c/design.pdf'
+              - !Sub '${Artifacts.Arn}/r2d2/revision-d/motion.mp4'
+              - !Sub '${Artifacts.Arn}/r2d2/revision-d/design.pdf'
             Condition:
               StringEquals:
                 AWS:SourceArn: !Sub 'arn:${AWS::Partition}:cloudfront::${AWS::AccountId}:distribution/${Delivery}'
@@ -82,3 +84,5 @@ Outputs:
     Value: !Ref Delivery
   BaseUrl:
     Value: !Sub 'https://${Delivery.DomainName}/r2d2/revision-c'
+  DeliveryOrigin:
+    Value: !Sub 'https://${Delivery.DomainName}'

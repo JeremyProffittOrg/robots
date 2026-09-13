@@ -32,44 +32,70 @@ jobs:
           set -euo pipefail
           aws cloudformation deploy --stack-name robots-r2d2-deliverables --template-file r2d2/infra/deliverables.yaml --no-fail-on-empty-changeset --tags Project=robots CostCenter=home-iot Environment=prod ManagedBy=sam DeployedVia=github-actions Owner=jeremy
           aws cloudformation describe-stacks --stack-name robots-r2d2-deliverables --query 'Stacks[0].Outputs' --output json > /tmp/r2d2-outputs.json
-      - name: Upload and verify final artifacts when present
+      - name: Upload and verify every packaged revision
         shell: bash
         run: |
           set -euo pipefail
-          if [[ ! -f r2d2/output/delivery/manifest.json ]]; then
-            echo 'Infrastructure is ready. No final R2-D2 files have been published.' >> "$GITHUB_STEP_SUMMARY"
-            exit 0
-          fi
-          cd r2d2/output/delivery
-          python - <<'PY'
-          import hashlib,json,pathlib
-          manifest=json.loads(pathlib.Path('manifest.json').read_text())
-          assert set(manifest['files']) == {'motion.mp4','design.pdf'}
-          for name,sha in manifest['files'].items():
-              assert hashlib.sha256(pathlib.Path(name).read_bytes()).hexdigest()==sha,name
-          PY
           bucket=$(jq -r '.[]|select(.OutputKey=="Bucket")|.OutputValue' /tmp/r2d2-outputs.json)
           distribution=$(jq -r '.[]|select(.OutputKey=="Distribution")|.OutputValue' /tmp/r2d2-outputs.json)
-          base=$(jq -r '.[]|select(.OutputKey=="BaseUrl")|.OutputValue' /tmp/r2d2-outputs.json)
-          for name in motion.mp4 design.pdf; do
-            type=application/pdf
-            [[ "$name" != motion.mp4 ]] || type=video/mp4
-            sha=$(sha256sum "$name" | cut -d' ' -f1)
-            aws s3 cp "$name" "s3://$bucket/r2d2/revision-c/$name" --content-type "$type" --content-disposition inline --cache-control 'public,max-age=300' --checksum-algorithm SHA256 --metadata "sha256=$sha" --only-show-errors
+          origin=$(jq -r '.[]|select(.OutputKey=="DeliveryOrigin")|.OutputValue' /tmp/r2d2-outputs.json)
+          [[ -n "$bucket" && -n "$distribution" && "$origin" == https://* ]]
+          # Revision C keeps its original root delivery path; each later revision owns output/delivery/revision-<x>/.
+          entries=("C r2d2/output/delivery")
+          shopt -s nullglob
+          for folder in r2d2/output/delivery/revision-*/; do
+            folder=${folder%/}; letter=${folder##*/revision-}
+            [[ "$letter" =~ ^[d-z]$ ]] || { echo "Unexpected revision directory: $folder" >&2; exit 1; }
+            entries+=("${letter^^} $folder")
           done
-          invalidation=$(aws cloudfront create-invalidation --distribution-id "$distribution" --paths '/r2d2/revision-c/motion.mp4' '/r2d2/revision-c/design.pdf' --query Invalidation.Id --output text)
-          aws cloudfront wait invalidation-completed --distribution-id "$distribution" --id "$invalidation"
-          for name in motion.mp4 design.pdf; do
-            curl --fail --silent --show-error --retry 2 "$base/$name" -o "/tmp/$name"
-            cmp "$name" "/tmp/$name"
-            printf '%s\n' "$base/$name" >> "$GITHUB_STEP_SUMMARY"
-            sha256sum "$name" >> "$GITHUB_STEP_SUMMARY"
+          published=0
+          for entry in "${entries[@]}"; do
+            revision=${entry%% *}; dir=${entry#* }
+            if [[ ! -f "$dir/manifest.json" ]]; then
+              echo "Revision $revision: no manifest in $dir; nothing published for this revision." >> "$GITHUB_STEP_SUMMARY"
+              continue
+            fi
+            prefix="r2d2/revision-${revision,,}"
+            base="$origin/$prefix"
+            python - "$dir" "$revision" <<'PY'
+          import hashlib,json,pathlib,sys
+          folder=pathlib.Path(sys.argv[1]);revision=sys.argv[2]
+          manifest=json.loads((folder/'manifest.json').read_text())
+          assert manifest['revision']==revision,(manifest['revision'],revision)
+          assert set(manifest['files'])=={'motion.mp4','design.pdf'}
+          for name,sha in manifest['files'].items():
+              assert hashlib.sha256((folder/name).read_bytes()).hexdigest()==sha,name
+          PY
+            for name in motion.mp4 design.pdf; do
+              type=application/pdf
+              [[ "$name" != motion.mp4 ]] || type=video/mp4
+              sha=$(sha256sum "$dir/$name" | cut -d' ' -f1)
+              aws s3 cp "$dir/$name" "s3://$bucket/$prefix/$name" --content-type "$type" --content-disposition inline --cache-control 'public,max-age=300' --checksum-algorithm SHA256 --metadata "sha256=$sha" --only-show-errors
+            done
+            invalidation=$(aws cloudfront create-invalidation --distribution-id "$distribution" --paths "/$prefix/motion.mp4" "/$prefix/design.pdf" --query Invalidation.Id --output text)
+            aws cloudfront wait invalidation-completed --distribution-id "$distribution" --id "$invalidation"
+            echo "Revision $revision" >> "$GITHUB_STEP_SUMMARY"
+            for name in motion.mp4 design.pdf; do
+              download="/tmp/r2d2-$revision-$name"
+              curl --fail --silent --show-error --retry 2 "$base/$name" -o "$download"
+              cmp "$dir/$name" "$download"
+              printf '%s\n' "$base/$name" >> "$GITHUB_STEP_SUMMARY"
+              (cd "$dir" && sha256sum "$name") >> "$GITHUB_STEP_SUMMARY"
+            done
+            code=$(curl -sS -H 'Range: bytes=0-1023' -D "/tmp/r2d2-$revision-range.headers" -o "/tmp/r2d2-$revision-range.bin" -w '%{http_code}' "$base/motion.mp4")
+            test "$code" = 206
+            test "$(wc -c < "/tmp/r2d2-$revision-range.bin")" = 1024
+            grep -qi '^content-type: video/mp4' "/tmp/r2d2-$revision-range.headers"
+            curl --fail --silent --head "$base/design.pdf" > "/tmp/r2d2-$revision-pdf.headers"
+            grep -qi '^content-type: application/pdf' "/tmp/r2d2-$revision-pdf.headers"
+            test "$(curl -sS -o /dev/null -w '%{http_code}' "https://$bucket.s3.us-east-1.amazonaws.com/$prefix/motion.mp4")" = 403
+            test "$(curl -sS -o /dev/null -w '%{http_code}' "https://$bucket.s3.us-east-1.amazonaws.com/$prefix/design.pdf")" = 403
+            echo "PASS revision $revision: public downloads match committed bytes; video ranges work; S3 objects stay private." >> "$GITHUB_STEP_SUMMARY"
+            published=$((published+1))
           done
-          code=$(curl -sS -H 'Range: bytes=0-1023' -D /tmp/range.headers -o /tmp/range.bin -w '%{http_code}' "$base/motion.mp4")
-          test "$code" = 206
-          test "$(wc -c < /tmp/range.bin)" = 1024
-          grep -qi '^content-type: video/mp4' /tmp/range.headers
-          curl --fail --silent --head "$base/design.pdf" | grep -qi '^content-type: application/pdf'
-          test "$(curl -sS -o /dev/null -w '%{http_code}' "https://$bucket.s3.us-east-1.amazonaws.com/r2d2/revision-c/motion.mp4")" = 403
           test "$(curl -sS -o /dev/null -w '%{http_code}' "https://$bucket.s3.us-east-1.amazonaws.com/?list-type=2")" = 403
-          echo 'PASS: public downloads match committed bytes; video ranges work; S3 stays private.' >> "$GITHUB_STEP_SUMMARY"
+          if [[ "$published" -eq 0 ]]; then
+            echo 'Infrastructure is ready. No final R2-D2 files have been published.' >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "PASS: $published revision(s) published; S3 bucket listing stays private." >> "$GITHUB_STEP_SUMMARY"
+          fi
