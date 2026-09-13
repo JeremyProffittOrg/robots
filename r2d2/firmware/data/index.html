@@ -1,11 +1,14 @@
 <!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>R2-24 control</title><style>body{font:18px system-ui;margin:auto;padding:20px;max-width:560px;background:#f3f6fa;color:#142337}button{font:inherit;padding:16px;margin:5px;border:1px solid #9baabc;border-radius:10px;background:white;color:#142337;touch-action:none}#stop{background:#b81825;color:white;width:95%}label{display:block;margin:20px 0}input{width:100%}.pad{display:grid;grid-template-columns:1fr 1fr}small{display:block}</style>
+<title>R2-24 control</title><style>body{font:18px system-ui;margin:auto;padding:20px;max-width:560px;background:#f3f6fa;color:#142337}button{font:inherit;padding:16px;margin:5px;border:1px solid #9baabc;border-radius:10px;background:white;color:#142337;touch-action:none}button:disabled{background:#dfe5ec;color:#5b6878;border-style:dashed}#stop{background:#b81825;color:white;width:95%}label{display:block;margin:20px 0}input{width:100%}.pad{display:grid;grid-template-columns:1fr 1fr}small{display:block}#fault{color:#8a1020;font-weight:600}</style>
 <h1>R2-24</h1><p id="status">Connecting...</p><button id="arm">Arm</button><button id="stop">STOP</button>
-<label>Speed limit <span id="speedLabel">35%</span><input id="speed" type="range" min="15" max="100" value="35"></label>
-<label>Rear steering <span id="turnLabel">0°</span><input id="turn" type="range" min="-100" max="100" value="0"></label><button id="center">Center steering</button>
-<p id="pose">Post position unavailable</p><div class="pad"><button data-posture="0">Hold: upright</button><button data-posture="100">Hold: tilt body</button></div>
-<small>Posture changes center steering and stop the wheels and head. Release to hold position. After a move, release and wait for actuator cooldown before moving again.</small>
-<div class="pad"><button data-speed="1">Hold: forward</button><button data-speed="-1">Hold: reverse</button><button data-head="-1">Hold: head left</button><button data-head="1">Hold: head right</button></div>
+<h2>Stance</h2><p id="stanceState">Stance unknown</p><p id="pose">Post position unavailable</p><p id="fault"></p>
+<div class="pad"><button data-stance="2" disabled>Hold: stand on two feet</button><button data-stance="3" disabled>Hold: three-foot stance</button></div>
+<small id="stanceBlocks"></small><button id="clear" disabled>Clear stance fault</button>
+<small>Stop the wheels and head and centre steering first. Hold the button for the whole change; releasing, disconnecting or any fault stops the post and holds the robot. The shoulder lock must be sensed in before the foot lifts or the robot drives.</small>
+<h2>Drive</h2><label>Speed limit <span id="speedLabel">35%</span><input id="speed" type="range" min="15" max="100" value="35"></label>
+<label>Centre-foot steering <span id="turnLabel">0°</span><input id="turn" type="range" min="-100" max="100" value="0"></label><button id="center">Center steering</button>
+<small id="driveNote"></small>
+<div class="pad"><button data-speed="1" disabled>Hold: forward</button><button data-speed="-1" disabled>Hold: reverse</button><button data-head="-1" disabled>Hold: head left</button><button data-head="1" disabled>Hold: head right</button></div>
 <p>Release to stop motion. Re-arm after connection loss. Use gentle turns on a level hard floor.</p>
 <label>Robot sound<select id="sound"></select></label><button id="play">Play sound</button>
-<small>The physical RUN switch removes motor and servo power.</small><script src="/app.js"></script></html>
+<small>The physical RUN switch removes motor, servo and actuator power.</small><script src="/app.js"></script></html>
