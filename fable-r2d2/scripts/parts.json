@@ -58,9 +58,17 @@
       "quantity": 1,
       "material": "PETG",
       "mirror": false,
-      "orientation": "Body flange down",
+      "orientation": "Bearing face down",
       "print_rotation_z": 0,
-      "notes": "Centre leg with caster pivot boss"
+      "notes": "Revision D centre-leg housing: caster bearings, pitch-hinge nut pockets, heel and toe stop faces"
+    },
+    "leg_carriage": {
+      "quantity": 1,
+      "material": "PETG",
+      "mirror": false,
+      "orientation": "Top frame down; tree supports under the cross-web",
+      "print_rotation_z": 0,
+      "notes": "Revision D centre-leg carriage: two LM12LUU seats, pitch-hinge cheeks, P16 rod-eye web. Added because the pitch hinge must join the guide bearings, the actuator eye and the housing and no purchased joint does all three"
     },
     "foot_center": {
       "quantity": 1,

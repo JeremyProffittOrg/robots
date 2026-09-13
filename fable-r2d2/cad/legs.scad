@@ -181,6 +181,7 @@ lg_upper_channel_bottom_z = -172;
 lg_bracelet_z = -300; lg_bracelet_h = 8.7; lg_bracelet_proud = 1.5;
 // centre leg
 // NOTE keep this on ONE line: scripts/assembly_layout.py evaluates the assignment as written.
+// Revision C placement constant: the revision D housing no longer uses it (see stance.scad).
 lg_center_plane_z = (shoulder_z_three_leg - shoulder_z*cos(body_tilt) + center_leg_y_in_body*sin(body_tilt)) - (foot_clear + foot_center_h);   // 51.7: flange top plane above the centre-foot top plane
 lg_center_col = [83.3, 64];
 lg_center_bottom_z = 26;                                       // 1 mm above the 25 mm stem block
@@ -271,8 +272,8 @@ module leg_upper_native() {
         // shoulder bolt bore and hub counterbore
         lg_bore_x(-1, 60, clearance_d(shoulder_bolt_m));
         lg_bore_x(lg_hs_x0 + lg_hub_rings[2][1] - lg_hub_cbore[1], 30, lg_hub_cbore[0], fn = 64);
-        // index dowel holes (through plate and cover), toward the rear for angle > 0
-        for (a = shoulder_index_angles) rotate([-a, 0, 0]) translate([0, 0, -shoulder_index_r]) lg_bore_x(-1, 60, shoulder_index_d, fn = 32);
+        // revision D: two GN 412.2 lock receivers in the inboard face (stance.scad st_receiver_cuts)
+        st_receiver_cuts();
         // rod bores from the split face up to leg_rod_top_z, captive nut traps opening inboard
         for (s = [-1, 1]) translate([lg_rod_x, s*leg_rod_offset, 0]) {
             translate([0, 0, leg_split_z - 1]) cyl(leg_rod_d, leg_rod_top_z - leg_split_z + 1, fn = 32);
@@ -370,33 +371,30 @@ module lg_at_plane() { translate([0, 0, lg_center_plane_z]) rotate([body_tilt, 0
 
 module lg_wedge2d(a0, a1, r = 200) { polygon([[0, 0], [r*cos(a0), r*sin(a0)], [r*cos((a0 + a1)/2), r*sin((a0 + a1)/2)], [r*cos(a1), r*sin(a1)]]); }
 
+// Revision D housing top profile (y, z above the hinge): below the carriage web plane at the
+// heel stop (tilt 0) and at the toe stop (st_toe_stop), and 1 mm inside the circle the web
+// sweeps between them. The two plane faces ARE the pitch stops.
+function lg_top_z(y) = let(a1 = st_guide_angle, a2 = st_guide_angle + st_toe_stop, w = st_web[0],
+                           p1 = (w + y*sin(a1))/cos(a1), p2 = (w + y*sin(a2))/cos(a2), rc = w - 1)
+                       min(p1, p2, (y >= -w*sin(a2) && y <= -w*sin(a1)) ? sqrt(rc*rc - y*y) : 1e3);
 module leg_center_native() {
-    fl = center_leg_flange;
+    hw = lg_center_col[1]/2;
     difference() {
-        // Nothing may dip below the bearing/stop face: the collar is a box in the TILTED
-        // frame, so its rear corners would otherwise reach into the foot's caster stem block.
         intersection() {
-        translate([-200, -200, lg_center_bottom_z]) cube([400, 400, 400]);
-        union() {
-            // column from the bearing housing up past the plane, clipped to the plane below
-            intersection() {
-                translate([0, 0, lg_center_bottom_z]) rbox([lg_center_col[0], lg_center_col[1], 120], 8);
-                lg_at_plane() translate([0, 0, -100]) cube([400, 400, 200], center = true);
-            }
-            // collar and flange in the tilted frame
-            lg_at_plane() {
-                translate([0, 0, -fl[2] - lg_collar_h]) rbox([center_leg_section[0], center_leg_section[1], lg_collar_h + 1], 12);
-                translate([0, 0, -fl[2]]) rbox([fl[0], fl[1], fl[2]], 8);
+            translate([0, 0, lg_center_bottom_z]) rbox([lg_center_col[0], lg_center_col[1], 80], 8);
+            union() {
+                translate([-50, -50, lg_center_bottom_z]) cube([100, 100, st_hinge_up - lg_center_bottom_z + 0.5]);
+                translate([-50, 0, st_hinge_up]) rotate([90, 0, 90]) linear_extrude(height = 100)
+                    polygon(concat([[hw + 1, -1]], [for (y = [hw + 1 : -1 : -hw - 1]) [y, lg_top_z(y)]], [[-hw - 1, -1]]));
             }
         }
+        // pitch hinge: M8 x 35 bolts from the carriage cheeks into captive nuts, slots open to the front face
+        for (sx = [-1, 1]) {
+            translate([sx > 0 ? 24 : -lg_center_col[0]/2 - 1, 0, st_hinge_up]) rotate([0, 90, 0]) cyl(clearance_d(8), lg_center_col[0]/2 - 23, fn = 32);
+            translate([sx > 0 ? 26 : -26 - nut_h(8) - 0.6, 0, st_hinge_up]) rotate([0, 90, 0]) rotate([0, 0, 30]) cylinder(d = nut_af(8)/cos(30), h = nut_h(8) + 0.6, $fn = 6);
+            translate([sx > 0 ? 26 : -26 - nut_h(8) - 0.6, 0, st_hinge_up - nut_af(8)/2]) cube([nut_h(8) + 0.6, hw + 1, nut_af(8)]);
         }
-        // flange bolts, wire hole and label on the flange top (against the body floor)
-        lg_at_plane() {
-            for (p = center_leg_bolts) translate([p[0], p[1], -fl[2] - 1]) cyl(clearance_d(center_leg_bolt_m), fl[2] + 2, fn = 32);
-            // bolt head / 13 mm socket notches through the collar corners
-            for (p = center_leg_bolts) translate([p[0], p[1], -fl[2] - lg_collar_h - 2]) cyl(19, lg_collar_h + 2.5, fn = 48);
-            translate([45, 0, 0]) rotate([0, 0, 90]) label("LEG CENTER", 4);
-        }
+        translate([0, 12, 60]) rotate([0, 0, 0]) label("LEG CENTER", 3.5);
         // bearing seats, bolt bore, head counterbore
         translate([0, 0, lg_bearing1_z - 1]) cyl(caster_bearing_od + lg_bearing_fit, caster_bearing_t + lg_bearing_fit + 1, fn = 96);
         translate([0, 0, lg_bearing2_z]) cyl(caster_bearing_od + lg_bearing_fit, caster_bearing_t + lg_bearing_fit, fn = 96);
@@ -418,5 +416,5 @@ module leg_center_native() {
     }
 }
 
-// print module: flange face down
-module leg_center() { rotate([180, 0, 0]) rotate([-body_tilt, 0, 0]) translate([0, 0, -lg_center_plane_z]) leg_center_native(); }
+// print module: bearing (bottom) face down
+module leg_center() { translate([0, 0, -lg_center_bottom_z]) leg_center_native(); }

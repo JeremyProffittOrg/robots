@@ -47,7 +47,7 @@ def export_one(name, executable):
     backend = ["--backend=manifold"] if "nightly" in executable.lower() else []
     result = subprocess.run(
         [executable, *backend, "--export-format", "binstl", "-o", str(target), "-D", f'part="{name}"', str(SCAD)],
-        capture_output=True, text=True, timeout=1800, startupinfo=startup)
+        capture_output=True, text=True, timeout=600, startupinfo=startup)
     if result.returncode or not target.exists() or "ERROR:" in result.stderr:
         raise RuntimeError(f"{name}: rc={result.returncode}\n{result.stderr[-4000:]}")
     warnings = [line for line in result.stderr.splitlines() if "WARNING" in line]

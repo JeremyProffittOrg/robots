@@ -366,7 +366,9 @@ module foot_outer() {
                     difference() { ft_hull_o(); ft_inner_o(); }
                     intersection() { ft_hull_o(); ft_interior_o(); }
                     ft_ankle_block();
-                    ft_battery_box();
+                    // revision D: the battery box is on the OUTBOARD side. With the legs vertical in
+                    // both stances the inboard box left 4.9 mm to the centre foot, so it could not swivel.
+                    mirror([1, 0, 0]) ft_battery_box();
                     // end faces: half-moon tombstone + inner plate on the outboard half, trim strip
                     // (front: hose-socket bosses, rear: two small holes)
                     for (sy = [-1, 1]) ft_end_o(sy) {
@@ -379,16 +381,16 @@ module foot_outer() {
                         }
                         if (sy > 0) for (u = hose_u) ft_hose_boss(u, hose_v);
                     }
-                    // outboard side: panel trim strip and two corner trims above the door
-                    ft_side_o(1) {
+                    // inboard side (revision D, box moved outboard): panel trim strip and two corner trims above the door
+                    ft_side_o(-1) {
                         ft_raise(0.8) translate([-50, 82]) square([100, 4]);
                         for (u = [-42, 42]) ft_raise(0.8) translate([u, 0]) polygon([[-10, 81.5], [10, 81.5], [7, 89.5], [-7, 89.5]]);
                     }
                 }
                 // recesses: side door frame (outboard), straight side panel scribe (inboard),
                 // end notch scribes, inner-plate slots, apron slots
-                ft_side_o(1) ft_recess(0.6) ft_trap(206, 122, door_h, door_v0);
-                ft_side_o(-1) ft_recess(0.6) ft_outline(1.5) difference() {
+                ft_side_o(-1) ft_recess(0.6) ft_trap(206, 122, door_h, door_v0);
+                ft_side_o(1) ft_recess(0.6) ft_outline(1.5) difference() {
                     ft_trap(198.9, 198.9 - 2*54.3*tan(35.1), 54.3, 12);
                     translate([-34.75, 66.3 - 26]) square([69.5, 30]);
                 }
@@ -398,14 +400,14 @@ module foot_outer() {
                     for (v = [33.5, 38]) translate([uo - 8, v, 1.0]) cube([16, 2.5, 3]);
                     for (u = [-40, 40]) ft_apron_slot(u);
                 }
-                ft_side_o(1) for (u = [-96 : 32 : 96]) ft_apron_slot(u);
-                ft_side_o(-1) for (u = [-96, -64, -32]) ft_apron_slot(u);
+                ft_side_o(-1) for (u = [-96 : 32 : 96]) ft_apron_slot(u);
+                ft_side_o(1) for (u = [-96, -64, -32]) ft_apron_slot(u);
             }
             // side door panel raised inside its frame recess, 0.3 below the face
-            ft_side_o(1) translate([0, 0, -0.8]) linear_extrude(height = 0.5) ft_trap(201.6, 117.6, 63.6, door_v0 + 2.2);
+            ft_side_o(-1) translate([0, 0, -0.8]) linear_extrude(height = 0.5) ft_trap(201.6, 117.6, 63.6, door_v0 + 2.2);
         }
         // door inner scribe (0.5 into the panel, wall stays >= 2.4)
-        ft_side_o(1) translate([0, 0, -0.7]) linear_extrude(height = 2) ft_outline(1.2) ft_trap(193, 109, 59, door_v0 + 4.5);
+        ft_side_o(-1) translate([0, 0, -0.7]) linear_extrude(height = 2) ft_outline(1.2) ft_trap(193, 109, 59, door_v0 + 4.5);
         // hose sockets in the front bosses
         ft_end_o(1) for (u = hose_u) translate([u, hose_v, -3]) cylinder(d = 8.7, h = 9, $fn = 32);
         // ankle slot through block and plate, tongue sweep below the plate

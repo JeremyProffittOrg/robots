@@ -1,50 +1,60 @@
 {
   "method": "STL volumes x 1.27 g/cm3 x fill fraction; purchased parts as point masses; screening only",
+  "revision": "D",
   "fill_fraction": 0.45,
-  "total_mass_g": 11818.7,
-  "printed_mass_g": 6160.1,
-  "purchased_mass_g": 5658.6,
+  "stance_note": "Top-level figures are the three-leg operating stance; 'stances' carries both.",
+  "stroke_mm": 81.29,
+  "body_tilt_deg": 18.001,
+  "centre_foot_on_floor": true,
+  "centre_foot_yaw_deg": 0.0,
+  "total_mass_g": 13196.3,
+  "printed_mass_g": 6552.1,
+  "purchased_mass_g": 6644.2,
   "centre_of_gravity_mm": [
     0.0,
-    55.2,
-    303.6
+    44.2,
+    319.9
   ],
   "wheel_contact_y_range_mm": [
-    -25.8,
-    161.2
+    -45.0,
+    197.1
   ],
   "wheel_contact_x_range_mm": [
     -205.5,
     205.5
   ],
-  "outer_foot_axle_mean_y_mm": 116.2,
-  "center_foot_axle_mean_y_mm": 19.2,
-  "center_foot_static_share": 0.628,
-  "tip_back_margin_mm": 81.0,
-  "tip_forward_margin_mm": 105.9,
-  "tip_back_angle_deg": 14.9,
-  "tip_forward_angle_deg": 19.2,
-  "tip_side_angle_deg": 34.1,
+  "support_margin_mm": 89.2,
+  "support_tip_angle_deg": 15.6,
+  "outer_foot_axle_mean_y_mm": 0.0,
+  "tip_back_margin_mm": 89.2,
+  "tip_forward_margin_mm": 152.9,
+  "tip_back_angle_deg": 15.6,
+  "tip_forward_angle_deg": 25.5,
+  "tip_side_angle_deg": 32.7,
+  "center_foot_axle_mean_y_mm": 152.1,
+  "center_foot_static_share": 0.291,
   "items": [
     {
       "name": "body_lower",
-      "mass_g": 964.6,
+      "mass_g": 1025.6,
       "centre_mm": [
-        1.1,
-        80.7,
-        213.3
+        0.5,
+        72.5,
+        239.0
       ],
-      "kind": "printed"
+      "kind": "printed",
+      "group": "body"
     },
     {
       "name": "body_upper",
-      "mass_g": 1550.4,
+      "mass_g": 1681.5,
       "centre_mm": [
         0.1,
-        17.8,
-        429.4
+        18.6,
+        443.8
       ],
-      "kind": "printed"
+      "kind": "printed",
+      "group": "body"
     },
     {
       "name": "dome",
@@ -52,9 +62,10 @@
       "centre_mm": [
         -1.2,
         -38.2,
-        590.9
+        609.3
       ],
-      "kind": "printed"
+      "kind": "printed",
+      "group": "body"
     },
     {
       "name": "head_drive",
@@ -62,349 +73,2017 @@
       "centre_mm": [
         0.5,
         -106.1,
-        470.4
+        488.8
       ],
-      "kind": "printed"
+      "kind": "printed",
+      "group": "body"
     },
     {
       "name": "leg_upper_right",
-      "mass_g": 650.4,
+      "mass_g": 650.3,
       "centre_mm": [
-        187.2,
-        15.7,
-        414.8
+        187.3,
+        -0.0,
+        430.7
       ],
-      "kind": "printed"
+      "kind": "printed",
+      "group": "legs"
     },
     {
       "name": "leg_lower_right",
-      "mass_g": 299.7,
+      "mass_g": 300.3,
       "centre_mm": [
         186.9,
-        93.6,
-        174.5
+        -0.0,
+        178.0
       ],
-      "kind": "printed"
+      "kind": "printed",
+      "group": "legs"
     },
     {
       "name": "foot_outer_right",
       "mass_g": 384.7,
       "centre_mm": [
-        161.9,
-        132.1,
+        201.9,
+        15.9,
         59.0
       ],
-      "kind": "printed"
+      "kind": "printed",
+      "group": "feet"
     },
     {
       "name": "leg_upper_left",
-      "mass_g": 650.4,
+      "mass_g": 650.3,
       "centre_mm": [
-        -187.2,
-        15.7,
-        414.8
+        -187.3,
+        -0.0,
+        430.7
       ],
-      "kind": "printed"
+      "kind": "printed",
+      "group": "legs"
     },
     {
       "name": "leg_lower_left",
-      "mass_g": 299.7,
+      "mass_g": 300.3,
       "centre_mm": [
         -186.9,
-        93.6,
-        174.5
+        -0.0,
+        178.0
       ],
-      "kind": "printed"
+      "kind": "printed",
+      "group": "legs"
     },
     {
       "name": "foot_outer_left",
       "mass_g": 384.7,
       "centre_mm": [
-        -161.9,
-        132.1,
+        -201.9,
+        15.9,
         59.0
       ],
-      "kind": "printed"
+      "kind": "printed",
+      "group": "feet"
+    },
+    {
+      "name": "leg_carriage",
+      "mass_g": 198.5,
+      "centre_mm": [
+        0.0,
+        118.0,
+        196.8
+      ],
+      "kind": "printed",
+      "group": "carriage"
     },
     {
       "name": "leg_center",
-      "mass_g": 111.1,
+      "mass_g": 111.2,
       "centre_mm": [
         -0.0,
-        59.9,
-        141.9
+        193.0,
+        150.2
       ],
-      "kind": "printed"
+      "kind": "printed",
+      "group": "housing"
     },
     {
       "name": "foot_center",
       "mass_g": 229.5,
       "centre_mm": [
         0.0,
-        26.7,
+        159.7,
         63.8
       ],
-      "kind": "printed"
+      "kind": "printed",
+      "group": "foot"
     },
     {
-      "name": "battery",
+      "name": "battery 12 V 7 Ah SLA",
       "mass_g": 2260.0,
       "centre_mm": [
         0.0,
-        115.8,
-        252.1
+        123.3,
+        296.0
       ],
-      "kind": "purchased"
+      "kind": "purchased",
+      "group": "body"
     },
     {
-      "name": "electronics_and_harness",
+      "name": "electronics and harness allowance",
       "mass_g": 750.0,
       "centre_mm": [
         0.0,
         38.3,
-        345.3
+        363.7
       ],
-      "kind": "purchased"
+      "kind": "purchased",
+      "group": "body"
     },
     {
-      "name": "lazy_susan",
+      "name": "lazy susan",
       "mass_g": 250.0,
       "centre_mm": [
         0.0,
         -20.1,
-        525.0
+        543.4
       ],
-      "kind": "purchased"
+      "kind": "purchased",
+      "group": "body"
     },
     {
-      "name": "dome_electronics",
+      "name": "dome electronics allowance",
       "mass_g": 200.0,
       "centre_mm": [
         0.0,
         -39.3,
-        584.0
+        602.4
       ],
-      "kind": "purchased"
+      "kind": "purchased",
+      "group": "body"
     },
     {
-      "name": "body_rods_and_fasteners",
+      "name": "body rods and fasteners allowance",
       "mass_g": 850.0,
       "centre_mm": [
         0.0,
         38.1,
-        345.7
+        364.1
       ],
-      "kind": "purchased"
+      "kind": "purchased",
+      "group": "body"
     },
     {
-      "name": "foot_outer_right_motor",
-      "mass_g": 30.6,
-      "centre_mm": [
-        181.7,
-        71.2,
-        31.5
-      ],
-      "kind": "purchased"
-    },
-    {
-      "name": "foot_outer_right_motor",
-      "mass_g": 30.6,
-      "centre_mm": [
-        181.7,
-        161.2,
-        31.5
-      ],
-      "kind": "purchased"
-    },
-    {
-      "name": "foot_outer_right_wheel",
-      "mass_g": 38.0,
-      "centre_mm": [
-        157.9,
-        71.2,
-        31.5
-      ],
-      "kind": "purchased"
-    },
-    {
-      "name": "foot_outer_right_wheel",
-      "mass_g": 38.0,
-      "centre_mm": [
-        205.5,
-        71.2,
-        31.5
-      ],
-      "kind": "purchased"
-    },
-    {
-      "name": "foot_outer_right_wheel",
-      "mass_g": 38.0,
-      "centre_mm": [
-        157.9,
-        161.2,
-        31.5
-      ],
-      "kind": "purchased"
-    },
-    {
-      "name": "foot_outer_right_wheel",
-      "mass_g": 38.0,
-      "centre_mm": [
-        205.5,
-        161.2,
-        31.5
-      ],
-      "kind": "purchased"
-    },
-    {
-      "name": "foot_outer_left_motor",
-      "mass_g": 30.6,
-      "centre_mm": [
-        -181.7,
-        71.2,
-        31.5
-      ],
-      "kind": "purchased"
-    },
-    {
-      "name": "foot_outer_left_motor",
-      "mass_g": 30.6,
-      "centre_mm": [
-        -181.7,
-        161.2,
-        31.5
-      ],
-      "kind": "purchased"
-    },
-    {
-      "name": "foot_outer_left_wheel",
-      "mass_g": 38.0,
-      "centre_mm": [
-        -157.9,
-        71.2,
-        31.5
-      ],
-      "kind": "purchased"
-    },
-    {
-      "name": "foot_outer_left_wheel",
-      "mass_g": 38.0,
-      "centre_mm": [
-        -205.5,
-        71.2,
-        31.5
-      ],
-      "kind": "purchased"
-    },
-    {
-      "name": "foot_outer_left_wheel",
-      "mass_g": 38.0,
-      "centre_mm": [
-        -157.9,
-        161.2,
-        31.5
-      ],
-      "kind": "purchased"
-    },
-    {
-      "name": "foot_outer_left_wheel",
-      "mass_g": 38.0,
-      "centre_mm": [
-        -205.5,
-        161.2,
-        31.5
-      ],
-      "kind": "purchased"
-    },
-    {
-      "name": "foot_center_motor",
-      "mass_g": 30.6,
-      "centre_mm": [
-        0.0,
-        -25.8,
-        31.5
-      ],
-      "kind": "purchased"
-    },
-    {
-      "name": "foot_center_motor",
-      "mass_g": 30.6,
-      "centre_mm": [
-        0.0,
-        64.2,
-        31.5
-      ],
-      "kind": "purchased"
-    },
-    {
-      "name": "foot_center_wheel",
-      "mass_g": 38.0,
-      "centre_mm": [
-        -23.8,
-        -25.8,
-        31.5
-      ],
-      "kind": "purchased"
-    },
-    {
-      "name": "foot_center_wheel",
-      "mass_g": 38.0,
-      "centre_mm": [
-        23.8,
-        -25.8,
-        31.5
-      ],
-      "kind": "purchased"
-    },
-    {
-      "name": "foot_center_wheel",
-      "mass_g": 38.0,
-      "centre_mm": [
-        -23.8,
-        64.2,
-        31.5
-      ],
-      "kind": "purchased"
-    },
-    {
-      "name": "foot_center_wheel",
-      "mass_g": 38.0,
-      "centre_mm": [
-        23.8,
-        64.2,
-        31.5
-      ],
-      "kind": "purchased"
-    },
-    {
-      "name": "head_drive_motor_wheel",
+      "name": "head drive motor and wheel",
       "mass_g": 69.0,
       "centre_mm": [
         0.0,
         -137.7,
-        456.3
+        474.7
       ],
-      "kind": "purchased"
+      "kind": "purchased",
+      "group": "body"
     },
     {
-      "name": "leg_rods_-1",
+      "name": "Actuonix P16-100 case (110 g less 15 g rod)",
+      "mass_g": 95.0,
+      "centre_mm": [
+        0.0,
+        36.8,
+        274.3
+      ],
+      "kind": "purchased",
+      "group": "body"
+    },
+    {
+      "name": "Actuonix P16-100 rod and eye",
+      "mass_g": 15.0,
+      "centre_mm": [
+        0.0,
+        138.8,
+        182.4
+      ],
+      "kind": "purchased",
+      "group": "carriage"
+    },
+    {
+      "name": "12 mm x 182 mm steel guide shaft -1",
+      "mass_g": 162.0,
+      "centre_mm": [
+        -66.0,
+        56.9,
+        256.2
+      ],
+      "kind": "purchased",
+      "group": "body"
+    },
+    {
+      "name": "LM12LUU bearing -1",
+      "mass_g": 42.0,
+      "centre_mm": [
+        -66.0,
+        91.7,
+        224.9
+      ],
+      "kind": "purchased",
+      "group": "carriage"
+    },
+    {
+      "name": "hinge M8 x 35 bolt, spacer tube, washer, nut -1",
+      "mass_g": 28.0,
+      "centre_mm": [
+        -48.0,
+        187.1,
+        138.9
+      ],
+      "kind": "purchased",
+      "group": "carriage"
+    },
+    {
+      "name": "12 mm x 182 mm steel guide shaft +1",
+      "mass_g": 162.0,
+      "centre_mm": [
+        66.0,
+        56.9,
+        256.2
+      ],
+      "kind": "purchased",
+      "group": "body"
+    },
+    {
+      "name": "LM12LUU bearing +1",
+      "mass_g": 42.0,
+      "centre_mm": [
+        66.0,
+        91.7,
+        224.9
+      ],
+      "kind": "purchased",
+      "group": "carriage"
+    },
+    {
+      "name": "hinge M8 x 35 bolt, spacer tube, washer, nut +1",
+      "mass_g": 28.0,
+      "centre_mm": [
+        48.0,
+        187.1,
+        138.9
+      ],
+      "kind": "purchased",
+      "group": "carriage"
+    },
+    {
+      "name": "rod-eye M4 x 45 pin and nut",
+      "mass_g": 5.0,
+      "centre_mm": [
+        0.0,
+        153.7,
+        169.0
+      ],
+      "kind": "purchased",
+      "group": "carriage"
+    },
+    {
+      "name": "caster M12 x 70 bolt, 2 x 6001, spacer, washers",
+      "mass_g": 60.0,
+      "centre_mm": [
+        0.0,
+        187.1,
+        138.9
+      ],
+      "kind": "purchased",
+      "group": "housing"
+    },
+    {
+      "name": "Winco GN 412-6-35-B-1 plunger -1",
+      "mass_g": 68.9,
+      "centre_mm": [
+        -148.5,
+        7.8,
+        432.0
+      ],
+      "kind": "purchased",
+      "group": "body"
+    },
+    {
+      "name": "MG995 release servo -1",
+      "mass_g": 62.4,
+      "centre_mm": [
+        -133.5,
+        48.2,
+        398.3
+      ],
+      "kind": "purchased",
+      "group": "body"
+    },
+    {
+      "name": "Omron SS-01GL switch -1 (allowance)",
+      "mass_g": 2.0,
+      "centre_mm": [
+        -150.5,
+        0.7,
+        453.9
+      ],
+      "kind": "purchased",
+      "group": "body"
+    },
+    {
+      "name": "Winco GN 412-6-35-B-1 plunger +1",
+      "mass_g": 68.9,
+      "centre_mm": [
+        148.5,
+        7.8,
+        432.0
+      ],
+      "kind": "purchased",
+      "group": "body"
+    },
+    {
+      "name": "MG995 release servo +1",
+      "mass_g": 62.4,
+      "centre_mm": [
+        133.5,
+        48.2,
+        398.3
+      ],
+      "kind": "purchased",
+      "group": "body"
+    },
+    {
+      "name": "Omron SS-01GL switch +1 (allowance)",
+      "mass_g": 2.0,
+      "centre_mm": [
+        150.5,
+        0.7,
+        453.9
+      ],
+      "kind": "purchased",
+      "group": "body"
+    },
+    {
+      "name": "lock and guide fasteners and inserts allowance",
+      "mass_g": 40.0,
+      "centre_mm": [
+        0.0,
+        18.5,
+        424.3
+      ],
+      "kind": "purchased",
+      "group": "body"
+    },
+    {
+      "name": "GN 412.2 receiver -1 0",
+      "mass_g": 10.0,
+      "centre_mm": [
+        -173.0,
+        -7.8,
+        432.0
+      ],
+      "kind": "purchased",
+      "group": "world"
+    },
+    {
+      "name": "GN 412.2 receiver -1 18",
+      "mass_g": 10.0,
+      "centre_mm": [
+        -173.0,
+        7.8,
+        432.0
+      ],
+      "kind": "purchased",
+      "group": "world"
+    },
+    {
+      "name": "leg M8 rods -1",
       "mass_g": 320.0,
       "centre_mm": [
         -181.5,
-        46.4,
-        320.3
+        0.0,
+        331.4
       ],
-      "kind": "purchased"
+      "kind": "purchased",
+      "group": "world"
     },
     {
-      "name": "leg_rods_1",
+      "name": "outer foot motor -1",
+      "mass_g": 30.6,
+      "centre_mm": [
+        -181.7,
+        -45.0,
+        31.5
+      ],
+      "kind": "purchased",
+      "group": "world"
+    },
+    {
+      "name": "outer foot motor -1",
+      "mass_g": 30.6,
+      "centre_mm": [
+        -181.7,
+        45.0,
+        31.5
+      ],
+      "kind": "purchased",
+      "group": "world"
+    },
+    {
+      "name": "outer foot wheel -1",
+      "mass_g": 38.0,
+      "centre_mm": [
+        -157.9,
+        -45.0,
+        31.5
+      ],
+      "kind": "purchased",
+      "group": "world"
+    },
+    {
+      "name": "outer foot wheel -1",
+      "mass_g": 38.0,
+      "centre_mm": [
+        -205.5,
+        -45.0,
+        31.5
+      ],
+      "kind": "purchased",
+      "group": "world"
+    },
+    {
+      "name": "outer foot wheel -1",
+      "mass_g": 38.0,
+      "centre_mm": [
+        -157.9,
+        45.0,
+        31.5
+      ],
+      "kind": "purchased",
+      "group": "world"
+    },
+    {
+      "name": "outer foot wheel -1",
+      "mass_g": 38.0,
+      "centre_mm": [
+        -205.5,
+        45.0,
+        31.5
+      ],
+      "kind": "purchased",
+      "group": "world"
+    },
+    {
+      "name": "GN 412.2 receiver +1 0",
+      "mass_g": 10.0,
+      "centre_mm": [
+        173.0,
+        -7.8,
+        432.0
+      ],
+      "kind": "purchased",
+      "group": "world"
+    },
+    {
+      "name": "GN 412.2 receiver +1 18",
+      "mass_g": 10.0,
+      "centre_mm": [
+        173.0,
+        7.8,
+        432.0
+      ],
+      "kind": "purchased",
+      "group": "world"
+    },
+    {
+      "name": "leg M8 rods +1",
       "mass_g": 320.0,
       "centre_mm": [
         181.5,
-        46.4,
-        320.3
+        0.0,
+        331.4
       ],
-      "kind": "purchased"
+      "kind": "purchased",
+      "group": "world"
+    },
+    {
+      "name": "outer foot motor +1",
+      "mass_g": 30.6,
+      "centre_mm": [
+        181.7,
+        -45.0,
+        31.5
+      ],
+      "kind": "purchased",
+      "group": "world"
+    },
+    {
+      "name": "outer foot motor +1",
+      "mass_g": 30.6,
+      "centre_mm": [
+        181.7,
+        45.0,
+        31.5
+      ],
+      "kind": "purchased",
+      "group": "world"
+    },
+    {
+      "name": "outer foot wheel +1",
+      "mass_g": 38.0,
+      "centre_mm": [
+        157.9,
+        -45.0,
+        31.5
+      ],
+      "kind": "purchased",
+      "group": "world"
+    },
+    {
+      "name": "outer foot wheel +1",
+      "mass_g": 38.0,
+      "centre_mm": [
+        205.5,
+        -45.0,
+        31.5
+      ],
+      "kind": "purchased",
+      "group": "world"
+    },
+    {
+      "name": "outer foot wheel +1",
+      "mass_g": 38.0,
+      "centre_mm": [
+        157.9,
+        45.0,
+        31.5
+      ],
+      "kind": "purchased",
+      "group": "world"
+    },
+    {
+      "name": "outer foot wheel +1",
+      "mass_g": 38.0,
+      "centre_mm": [
+        205.5,
+        45.0,
+        31.5
+      ],
+      "kind": "purchased",
+      "group": "world"
+    },
+    {
+      "name": "centre foot motor",
+      "mass_g": 30.6,
+      "centre_mm": [
+        0.0,
+        107.1,
+        31.5
+      ],
+      "kind": "purchased",
+      "group": "foot"
+    },
+    {
+      "name": "centre foot motor",
+      "mass_g": 30.6,
+      "centre_mm": [
+        0.0,
+        197.1,
+        31.5
+      ],
+      "kind": "purchased",
+      "group": "foot"
+    },
+    {
+      "name": "centre foot wheel",
+      "mass_g": 38.0,
+      "centre_mm": [
+        -23.8,
+        107.1,
+        31.5
+      ],
+      "kind": "purchased",
+      "group": "foot"
+    },
+    {
+      "name": "centre foot wheel",
+      "mass_g": 38.0,
+      "centre_mm": [
+        23.8,
+        107.1,
+        31.5
+      ],
+      "kind": "purchased",
+      "group": "foot"
+    },
+    {
+      "name": "centre foot wheel",
+      "mass_g": 38.0,
+      "centre_mm": [
+        -23.8,
+        197.1,
+        31.5
+      ],
+      "kind": "purchased",
+      "group": "foot"
+    },
+    {
+      "name": "centre foot wheel",
+      "mass_g": 38.0,
+      "centre_mm": [
+        23.8,
+        197.1,
+        31.5
+      ],
+      "kind": "purchased",
+      "group": "foot"
     }
-  ]
+  ],
+  "stances": {
+    "two_foot": {
+      "stroke_mm": 5.0,
+      "body_tilt_deg": 0.0,
+      "centre_foot_on_floor": false,
+      "centre_foot_yaw_deg": 0.0,
+      "total_mass_g": 13196.3,
+      "printed_mass_g": 6552.1,
+      "purchased_mass_g": 6644.2,
+      "centre_of_gravity_mm": [
+        0.0,
+        10.5,
+        315.6
+      ],
+      "wheel_contact_y_range_mm": [
+        -45.0,
+        45.0
+      ],
+      "wheel_contact_x_range_mm": [
+        -205.5,
+        205.5
+      ],
+      "support_margin_mm": 34.5,
+      "support_tip_angle_deg": 6.2,
+      "outer_foot_axle_mean_y_mm": 0.0,
+      "tip_back_margin_mm": 55.5,
+      "tip_forward_margin_mm": 34.5,
+      "tip_back_angle_deg": 10.0,
+      "tip_forward_angle_deg": 6.2,
+      "tip_side_angle_deg": 33.1,
+      "center_foot_axle_mean_y_mm": null,
+      "center_foot_static_share": 0.0,
+      "centre_wheel_floor_clearance_mm": 25.0,
+      "items": [
+        {
+          "name": "body_lower",
+          "mass_g": 1025.6,
+          "centre_mm": [
+            0.5,
+            -5.9,
+            228.5
+          ],
+          "kind": "printed",
+          "group": "body"
+        },
+        {
+          "name": "body_upper",
+          "mass_g": 1681.5,
+          "centre_mm": [
+            0.1,
+            6.1,
+            439.9
+          ],
+          "kind": "printed",
+          "group": "body"
+        },
+        {
+          "name": "dome",
+          "mass_g": 586.9,
+          "centre_mm": [
+            -1.2,
+            3.2,
+            614.8
+          ],
+          "kind": "printed",
+          "group": "body"
+        },
+        {
+          "name": "head_drive",
+          "mass_g": 48.1,
+          "centre_mm": [
+            0.5,
+            -98.6,
+            521.2
+          ],
+          "kind": "printed",
+          "group": "body"
+        },
+        {
+          "name": "leg_upper_right",
+          "mass_g": 650.3,
+          "centre_mm": [
+            187.3,
+            -0.0,
+            430.7
+          ],
+          "kind": "printed",
+          "group": "legs"
+        },
+        {
+          "name": "leg_lower_right",
+          "mass_g": 300.3,
+          "centre_mm": [
+            186.9,
+            -0.0,
+            178.0
+          ],
+          "kind": "printed",
+          "group": "legs"
+        },
+        {
+          "name": "foot_outer_right",
+          "mass_g": 384.7,
+          "centre_mm": [
+            201.9,
+            15.9,
+            59.0
+          ],
+          "kind": "printed",
+          "group": "feet"
+        },
+        {
+          "name": "leg_upper_left",
+          "mass_g": 650.3,
+          "centre_mm": [
+            -187.3,
+            -0.0,
+            430.7
+          ],
+          "kind": "printed",
+          "group": "legs"
+        },
+        {
+          "name": "leg_lower_left",
+          "mass_g": 300.3,
+          "centre_mm": [
+            -186.9,
+            -0.0,
+            178.0
+          ],
+          "kind": "printed",
+          "group": "legs"
+        },
+        {
+          "name": "foot_outer_left",
+          "mass_g": 384.7,
+          "centre_mm": [
+            -201.9,
+            15.9,
+            59.0
+          ],
+          "kind": "printed",
+          "group": "feet"
+        },
+        {
+          "name": "leg_carriage",
+          "mass_g": 198.5,
+          "centre_mm": [
+            0.0,
+            -13.8,
+            240.3
+          ],
+          "kind": "printed",
+          "group": "carriage"
+        },
+        {
+          "name": "leg_center",
+          "mass_g": 111.2,
+          "centre_mm": [
+            -0.0,
+            39.8,
+            175.2
+          ],
+          "kind": "printed",
+          "group": "housing"
+        },
+        {
+          "name": "foot_center",
+          "mass_g": 229.5,
+          "centre_mm": [
+            0.0,
+            6.5,
+            88.8
+          ],
+          "kind": "printed",
+          "group": "foot"
+        },
+        {
+          "name": "battery 12 V 7 Ah SLA",
+          "mass_g": 2260.0,
+          "centre_mm": [
+            0.0,
+            60.0,
+            267.0
+          ],
+          "kind": "purchased",
+          "group": "body"
+        },
+        {
+          "name": "electronics and harness allowance",
+          "mass_g": 750.0,
+          "centre_mm": [
+            0.0,
+            0.0,
+            357.6
+          ],
+          "kind": "purchased",
+          "group": "body"
+        },
+        {
+          "name": "lazy susan",
+          "mass_g": 250.0,
+          "centre_mm": [
+            0.0,
+            0.0,
+            546.5
+          ],
+          "kind": "purchased",
+          "group": "body"
+        },
+        {
+          "name": "dome electronics allowance",
+          "mass_g": 200.0,
+          "centre_mm": [
+            0.0,
+            0.0,
+            608.6
+          ],
+          "kind": "purchased",
+          "group": "body"
+        },
+        {
+          "name": "body rods and fasteners allowance",
+          "mass_g": 850.0,
+          "centre_mm": [
+            0.0,
+            0.0,
+            358.0
+          ],
+          "kind": "purchased",
+          "group": "body"
+        },
+        {
+          "name": "head drive motor and wheel",
+          "mass_g": 69.0,
+          "centre_mm": [
+            0.0,
+            -133.0,
+            517.6
+          ],
+          "kind": "purchased",
+          "group": "body"
+        },
+        {
+          "name": "Actuonix P16-100 case (110 g less 15 g rod)",
+          "mass_g": 95.0,
+          "centre_mm": [
+            0.0,
+            -29.0,
+            273.0
+          ],
+          "kind": "purchased",
+          "group": "body"
+        },
+        {
+          "name": "Actuonix P16-100 rod and eye",
+          "mass_g": 15.0,
+          "centre_mm": [
+            0.0,
+            1.5,
+            220.2
+          ],
+          "kind": "purchased",
+          "group": "carriage"
+        },
+        {
+          "name": "12 mm x 182 mm steel guide shaft -1",
+          "mass_g": 162.0,
+          "centre_mm": [
+            -66.0,
+            -15.5,
+            249.6
+          ],
+          "kind": "purchased",
+          "group": "body"
+        },
+        {
+          "name": "LM12LUU bearing -1",
+          "mass_g": 42.0,
+          "centre_mm": [
+            -66.0,
+            -30.2,
+            275.2
+          ],
+          "kind": "purchased",
+          "group": "carriage"
+        },
+        {
+          "name": "hinge M8 x 35 bolt, spacer tube, washer, nut -1",
+          "mass_g": 28.0,
+          "centre_mm": [
+            -48.0,
+            34.0,
+            163.9
+          ],
+          "kind": "purchased",
+          "group": "carriage"
+        },
+        {
+          "name": "12 mm x 182 mm steel guide shaft +1",
+          "mass_g": 162.0,
+          "centre_mm": [
+            66.0,
+            -15.5,
+            249.6
+          ],
+          "kind": "purchased",
+          "group": "body"
+        },
+        {
+          "name": "LM12LUU bearing +1",
+          "mass_g": 42.0,
+          "centre_mm": [
+            66.0,
+            -30.2,
+            275.2
+          ],
+          "kind": "purchased",
+          "group": "carriage"
+        },
+        {
+          "name": "hinge M8 x 35 bolt, spacer tube, washer, nut +1",
+          "mass_g": 28.0,
+          "centre_mm": [
+            48.0,
+            34.0,
+            163.9
+          ],
+          "kind": "purchased",
+          "group": "carriage"
+        },
+        {
+          "name": "rod-eye M4 x 45 pin and nut",
+          "mass_g": 5.0,
+          "centre_mm": [
+            0.0,
+            11.5,
+            202.9
+          ],
+          "kind": "purchased",
+          "group": "carriage"
+        },
+        {
+          "name": "caster M12 x 70 bolt, 2 x 6001, spacer, washers",
+          "mass_g": 60.0,
+          "centre_mm": [
+            0.0,
+            34.0,
+            163.9
+          ],
+          "kind": "purchased",
+          "group": "housing"
+        },
+        {
+          "name": "Winco GN 412-6-35-B-1 plunger -1",
+          "mass_g": 68.9,
+          "centre_mm": [
+            -148.5,
+            -7.8,
+            432.0
+          ],
+          "kind": "purchased",
+          "group": "body"
+        },
+        {
+          "name": "MG995 release servo -1",
+          "mass_g": 62.4,
+          "centre_mm": [
+            -133.5,
+            20.2,
+            387.5
+          ],
+          "kind": "purchased",
+          "group": "body"
+        },
+        {
+          "name": "Omron SS-01GL switch -1 (allowance)",
+          "mass_g": 2.0,
+          "centre_mm": [
+            -150.5,
+            -7.8,
+            455.0
+          ],
+          "kind": "purchased",
+          "group": "body"
+        },
+        {
+          "name": "Winco GN 412-6-35-B-1 plunger +1",
+          "mass_g": 68.9,
+          "centre_mm": [
+            148.5,
+            -7.8,
+            432.0
+          ],
+          "kind": "purchased",
+          "group": "body"
+        },
+        {
+          "name": "MG995 release servo +1",
+          "mass_g": 62.4,
+          "centre_mm": [
+            133.5,
+            20.2,
+            387.5
+          ],
+          "kind": "purchased",
+          "group": "body"
+        },
+        {
+          "name": "Omron SS-01GL switch +1 (allowance)",
+          "mass_g": 2.0,
+          "centre_mm": [
+            150.5,
+            -7.8,
+            455.0
+          ],
+          "kind": "purchased",
+          "group": "body"
+        },
+        {
+          "name": "lock and guide fasteners and inserts allowance",
+          "mass_g": 40.0,
+          "centre_mm": [
+            0.0,
+            0.0,
+            421.4
+          ],
+          "kind": "purchased",
+          "group": "body"
+        },
+        {
+          "name": "GN 412.2 receiver -1 0",
+          "mass_g": 10.0,
+          "centre_mm": [
+            -173.0,
+            -7.8,
+            432.0
+          ],
+          "kind": "purchased",
+          "group": "world"
+        },
+        {
+          "name": "GN 412.2 receiver -1 18",
+          "mass_g": 10.0,
+          "centre_mm": [
+            -173.0,
+            7.8,
+            432.0
+          ],
+          "kind": "purchased",
+          "group": "world"
+        },
+        {
+          "name": "leg M8 rods -1",
+          "mass_g": 320.0,
+          "centre_mm": [
+            -181.5,
+            0.0,
+            331.4
+          ],
+          "kind": "purchased",
+          "group": "world"
+        },
+        {
+          "name": "outer foot motor -1",
+          "mass_g": 30.6,
+          "centre_mm": [
+            -181.7,
+            -45.0,
+            31.5
+          ],
+          "kind": "purchased",
+          "group": "world"
+        },
+        {
+          "name": "outer foot motor -1",
+          "mass_g": 30.6,
+          "centre_mm": [
+            -181.7,
+            45.0,
+            31.5
+          ],
+          "kind": "purchased",
+          "group": "world"
+        },
+        {
+          "name": "outer foot wheel -1",
+          "mass_g": 38.0,
+          "centre_mm": [
+            -157.9,
+            -45.0,
+            31.5
+          ],
+          "kind": "purchased",
+          "group": "world"
+        },
+        {
+          "name": "outer foot wheel -1",
+          "mass_g": 38.0,
+          "centre_mm": [
+            -205.5,
+            -45.0,
+            31.5
+          ],
+          "kind": "purchased",
+          "group": "world"
+        },
+        {
+          "name": "outer foot wheel -1",
+          "mass_g": 38.0,
+          "centre_mm": [
+            -157.9,
+            45.0,
+            31.5
+          ],
+          "kind": "purchased",
+          "group": "world"
+        },
+        {
+          "name": "outer foot wheel -1",
+          "mass_g": 38.0,
+          "centre_mm": [
+            -205.5,
+            45.0,
+            31.5
+          ],
+          "kind": "purchased",
+          "group": "world"
+        },
+        {
+          "name": "GN 412.2 receiver +1 0",
+          "mass_g": 10.0,
+          "centre_mm": [
+            173.0,
+            -7.8,
+            432.0
+          ],
+          "kind": "purchased",
+          "group": "world"
+        },
+        {
+          "name": "GN 412.2 receiver +1 18",
+          "mass_g": 10.0,
+          "centre_mm": [
+            173.0,
+            7.8,
+            432.0
+          ],
+          "kind": "purchased",
+          "group": "world"
+        },
+        {
+          "name": "leg M8 rods +1",
+          "mass_g": 320.0,
+          "centre_mm": [
+            181.5,
+            0.0,
+            331.4
+          ],
+          "kind": "purchased",
+          "group": "world"
+        },
+        {
+          "name": "outer foot motor +1",
+          "mass_g": 30.6,
+          "centre_mm": [
+            181.7,
+            -45.0,
+            31.5
+          ],
+          "kind": "purchased",
+          "group": "world"
+        },
+        {
+          "name": "outer foot motor +1",
+          "mass_g": 30.6,
+          "centre_mm": [
+            181.7,
+            45.0,
+            31.5
+          ],
+          "kind": "purchased",
+          "group": "world"
+        },
+        {
+          "name": "outer foot wheel +1",
+          "mass_g": 38.0,
+          "centre_mm": [
+            157.9,
+            -45.0,
+            31.5
+          ],
+          "kind": "purchased",
+          "group": "world"
+        },
+        {
+          "name": "outer foot wheel +1",
+          "mass_g": 38.0,
+          "centre_mm": [
+            205.5,
+            -45.0,
+            31.5
+          ],
+          "kind": "purchased",
+          "group": "world"
+        },
+        {
+          "name": "outer foot wheel +1",
+          "mass_g": 38.0,
+          "centre_mm": [
+            157.9,
+            45.0,
+            31.5
+          ],
+          "kind": "purchased",
+          "group": "world"
+        },
+        {
+          "name": "outer foot wheel +1",
+          "mass_g": 38.0,
+          "centre_mm": [
+            205.5,
+            45.0,
+            31.5
+          ],
+          "kind": "purchased",
+          "group": "world"
+        },
+        {
+          "name": "centre foot motor",
+          "mass_g": 30.6,
+          "centre_mm": [
+            0.0,
+            -46.0,
+            56.5
+          ],
+          "kind": "purchased",
+          "group": "foot"
+        },
+        {
+          "name": "centre foot motor",
+          "mass_g": 30.6,
+          "centre_mm": [
+            0.0,
+            44.0,
+            56.5
+          ],
+          "kind": "purchased",
+          "group": "foot"
+        },
+        {
+          "name": "centre foot wheel",
+          "mass_g": 38.0,
+          "centre_mm": [
+            -23.8,
+            -46.0,
+            56.5
+          ],
+          "kind": "purchased",
+          "group": "foot"
+        },
+        {
+          "name": "centre foot wheel",
+          "mass_g": 38.0,
+          "centre_mm": [
+            23.8,
+            -46.0,
+            56.5
+          ],
+          "kind": "purchased",
+          "group": "foot"
+        },
+        {
+          "name": "centre foot wheel",
+          "mass_g": 38.0,
+          "centre_mm": [
+            -23.8,
+            44.0,
+            56.5
+          ],
+          "kind": "purchased",
+          "group": "foot"
+        },
+        {
+          "name": "centre foot wheel",
+          "mass_g": 38.0,
+          "centre_mm": [
+            23.8,
+            44.0,
+            56.5
+          ],
+          "kind": "purchased",
+          "group": "foot"
+        }
+      ]
+    },
+    "three_leg": {
+      "stroke_mm": 81.29,
+      "body_tilt_deg": 18.001,
+      "centre_foot_on_floor": true,
+      "centre_foot_yaw_deg": 0.0,
+      "total_mass_g": 13196.3,
+      "printed_mass_g": 6552.1,
+      "purchased_mass_g": 6644.2,
+      "centre_of_gravity_mm": [
+        0.0,
+        44.2,
+        319.9
+      ],
+      "wheel_contact_y_range_mm": [
+        -45.0,
+        197.1
+      ],
+      "wheel_contact_x_range_mm": [
+        -205.5,
+        205.5
+      ],
+      "support_margin_mm": 89.2,
+      "support_tip_angle_deg": 15.6,
+      "outer_foot_axle_mean_y_mm": 0.0,
+      "tip_back_margin_mm": 89.2,
+      "tip_forward_margin_mm": 152.9,
+      "tip_back_angle_deg": 15.6,
+      "tip_forward_angle_deg": 25.5,
+      "tip_side_angle_deg": 32.7,
+      "center_foot_axle_mean_y_mm": 152.1,
+      "center_foot_static_share": 0.291,
+      "items": [
+        {
+          "name": "body_lower",
+          "mass_g": 1025.6,
+          "centre_mm": [
+            0.5,
+            72.5,
+            239.0
+          ],
+          "kind": "printed",
+          "group": "body"
+        },
+        {
+          "name": "body_upper",
+          "mass_g": 1681.5,
+          "centre_mm": [
+            0.1,
+            18.6,
+            443.8
+          ],
+          "kind": "printed",
+          "group": "body"
+        },
+        {
+          "name": "dome",
+          "mass_g": 586.9,
+          "centre_mm": [
+            -1.2,
+            -38.2,
+            609.3
+          ],
+          "kind": "printed",
+          "group": "body"
+        },
+        {
+          "name": "head_drive",
+          "mass_g": 48.1,
+          "centre_mm": [
+            0.5,
+            -106.1,
+            488.8
+          ],
+          "kind": "printed",
+          "group": "body"
+        },
+        {
+          "name": "leg_upper_right",
+          "mass_g": 650.3,
+          "centre_mm": [
+            187.3,
+            -0.0,
+            430.7
+          ],
+          "kind": "printed",
+          "group": "legs"
+        },
+        {
+          "name": "leg_lower_right",
+          "mass_g": 300.3,
+          "centre_mm": [
+            186.9,
+            -0.0,
+            178.0
+          ],
+          "kind": "printed",
+          "group": "legs"
+        },
+        {
+          "name": "foot_outer_right",
+          "mass_g": 384.7,
+          "centre_mm": [
+            201.9,
+            15.9,
+            59.0
+          ],
+          "kind": "printed",
+          "group": "feet"
+        },
+        {
+          "name": "leg_upper_left",
+          "mass_g": 650.3,
+          "centre_mm": [
+            -187.3,
+            -0.0,
+            430.7
+          ],
+          "kind": "printed",
+          "group": "legs"
+        },
+        {
+          "name": "leg_lower_left",
+          "mass_g": 300.3,
+          "centre_mm": [
+            -186.9,
+            -0.0,
+            178.0
+          ],
+          "kind": "printed",
+          "group": "legs"
+        },
+        {
+          "name": "foot_outer_left",
+          "mass_g": 384.7,
+          "centre_mm": [
+            -201.9,
+            15.9,
+            59.0
+          ],
+          "kind": "printed",
+          "group": "feet"
+        },
+        {
+          "name": "leg_carriage",
+          "mass_g": 198.5,
+          "centre_mm": [
+            0.0,
+            118.0,
+            196.8
+          ],
+          "kind": "printed",
+          "group": "carriage"
+        },
+        {
+          "name": "leg_center",
+          "mass_g": 111.2,
+          "centre_mm": [
+            -0.0,
+            193.0,
+            150.2
+          ],
+          "kind": "printed",
+          "group": "housing"
+        },
+        {
+          "name": "foot_center",
+          "mass_g": 229.5,
+          "centre_mm": [
+            0.0,
+            159.7,
+            63.8
+          ],
+          "kind": "printed",
+          "group": "foot"
+        },
+        {
+          "name": "battery 12 V 7 Ah SLA",
+          "mass_g": 2260.0,
+          "centre_mm": [
+            0.0,
+            123.3,
+            296.0
+          ],
+          "kind": "purchased",
+          "group": "body"
+        },
+        {
+          "name": "electronics and harness allowance",
+          "mass_g": 750.0,
+          "centre_mm": [
+            0.0,
+            38.3,
+            363.7
+          ],
+          "kind": "purchased",
+          "group": "body"
+        },
+        {
+          "name": "lazy susan",
+          "mass_g": 250.0,
+          "centre_mm": [
+            0.0,
+            -20.1,
+            543.4
+          ],
+          "kind": "purchased",
+          "group": "body"
+        },
+        {
+          "name": "dome electronics allowance",
+          "mass_g": 200.0,
+          "centre_mm": [
+            0.0,
+            -39.3,
+            602.4
+          ],
+          "kind": "purchased",
+          "group": "body"
+        },
+        {
+          "name": "body rods and fasteners allowance",
+          "mass_g": 850.0,
+          "centre_mm": [
+            0.0,
+            38.1,
+            364.1
+          ],
+          "kind": "purchased",
+          "group": "body"
+        },
+        {
+          "name": "head drive motor and wheel",
+          "mass_g": 69.0,
+          "centre_mm": [
+            0.0,
+            -137.7,
+            474.7
+          ],
+          "kind": "purchased",
+          "group": "body"
+        },
+        {
+          "name": "Actuonix P16-100 case (110 g less 15 g rod)",
+          "mass_g": 95.0,
+          "centre_mm": [
+            0.0,
+            36.8,
+            274.3
+          ],
+          "kind": "purchased",
+          "group": "body"
+        },
+        {
+          "name": "Actuonix P16-100 rod and eye",
+          "mass_g": 15.0,
+          "centre_mm": [
+            0.0,
+            138.8,
+            182.4
+          ],
+          "kind": "purchased",
+          "group": "carriage"
+        },
+        {
+          "name": "12 mm x 182 mm steel guide shaft -1",
+          "mass_g": 162.0,
+          "centre_mm": [
+            -66.0,
+            56.9,
+            256.2
+          ],
+          "kind": "purchased",
+          "group": "body"
+        },
+        {
+          "name": "LM12LUU bearing -1",
+          "mass_g": 42.0,
+          "centre_mm": [
+            -66.0,
+            91.7,
+            224.9
+          ],
+          "kind": "purchased",
+          "group": "carriage"
+        },
+        {
+          "name": "hinge M8 x 35 bolt, spacer tube, washer, nut -1",
+          "mass_g": 28.0,
+          "centre_mm": [
+            -48.0,
+            187.1,
+            138.9
+          ],
+          "kind": "purchased",
+          "group": "carriage"
+        },
+        {
+          "name": "12 mm x 182 mm steel guide shaft +1",
+          "mass_g": 162.0,
+          "centre_mm": [
+            66.0,
+            56.9,
+            256.2
+          ],
+          "kind": "purchased",
+          "group": "body"
+        },
+        {
+          "name": "LM12LUU bearing +1",
+          "mass_g": 42.0,
+          "centre_mm": [
+            66.0,
+            91.7,
+            224.9
+          ],
+          "kind": "purchased",
+          "group": "carriage"
+        },
+        {
+          "name": "hinge M8 x 35 bolt, spacer tube, washer, nut +1",
+          "mass_g": 28.0,
+          "centre_mm": [
+            48.0,
+            187.1,
+            138.9
+          ],
+          "kind": "purchased",
+          "group": "carriage"
+        },
+        {
+          "name": "rod-eye M4 x 45 pin and nut",
+          "mass_g": 5.0,
+          "centre_mm": [
+            0.0,
+            153.7,
+            169.0
+          ],
+          "kind": "purchased",
+          "group": "carriage"
+        },
+        {
+          "name": "caster M12 x 70 bolt, 2 x 6001, spacer, washers",
+          "mass_g": 60.0,
+          "centre_mm": [
+            0.0,
+            187.1,
+            138.9
+          ],
+          "kind": "purchased",
+          "group": "housing"
+        },
+        {
+          "name": "Winco GN 412-6-35-B-1 plunger -1",
+          "mass_g": 68.9,
+          "centre_mm": [
+            -148.5,
+            7.8,
+            432.0
+          ],
+          "kind": "purchased",
+          "group": "body"
+        },
+        {
+          "name": "MG995 release servo -1",
+          "mass_g": 62.4,
+          "centre_mm": [
+            -133.5,
+            48.2,
+            398.3
+          ],
+          "kind": "purchased",
+          "group": "body"
+        },
+        {
+          "name": "Omron SS-01GL switch -1 (allowance)",
+          "mass_g": 2.0,
+          "centre_mm": [
+            -150.5,
+            0.7,
+            453.9
+          ],
+          "kind": "purchased",
+          "group": "body"
+        },
+        {
+          "name": "Winco GN 412-6-35-B-1 plunger +1",
+          "mass_g": 68.9,
+          "centre_mm": [
+            148.5,
+            7.8,
+            432.0
+          ],
+          "kind": "purchased",
+          "group": "body"
+        },
+        {
+          "name": "MG995 release servo +1",
+          "mass_g": 62.4,
+          "centre_mm": [
+            133.5,
+            48.2,
+            398.3
+          ],
+          "kind": "purchased",
+          "group": "body"
+        },
+        {
+          "name": "Omron SS-01GL switch +1 (allowance)",
+          "mass_g": 2.0,
+          "centre_mm": [
+            150.5,
+            0.7,
+            453.9
+          ],
+          "kind": "purchased",
+          "group": "body"
+        },
+        {
+          "name": "lock and guide fasteners and inserts allowance",
+          "mass_g": 40.0,
+          "centre_mm": [
+            0.0,
+            18.5,
+            424.3
+          ],
+          "kind": "purchased",
+          "group": "body"
+        },
+        {
+          "name": "GN 412.2 receiver -1 0",
+          "mass_g": 10.0,
+          "centre_mm": [
+            -173.0,
+            -7.8,
+            432.0
+          ],
+          "kind": "purchased",
+          "group": "world"
+        },
+        {
+          "name": "GN 412.2 receiver -1 18",
+          "mass_g": 10.0,
+          "centre_mm": [
+            -173.0,
+            7.8,
+            432.0
+          ],
+          "kind": "purchased",
+          "group": "world"
+        },
+        {
+          "name": "leg M8 rods -1",
+          "mass_g": 320.0,
+          "centre_mm": [
+            -181.5,
+            0.0,
+            331.4
+          ],
+          "kind": "purchased",
+          "group": "world"
+        },
+        {
+          "name": "outer foot motor -1",
+          "mass_g": 30.6,
+          "centre_mm": [
+            -181.7,
+            -45.0,
+            31.5
+          ],
+          "kind": "purchased",
+          "group": "world"
+        },
+        {
+          "name": "outer foot motor -1",
+          "mass_g": 30.6,
+          "centre_mm": [
+            -181.7,
+            45.0,
+            31.5
+          ],
+          "kind": "purchased",
+          "group": "world"
+        },
+        {
+          "name": "outer foot wheel -1",
+          "mass_g": 38.0,
+          "centre_mm": [
+            -157.9,
+            -45.0,
+            31.5
+          ],
+          "kind": "purchased",
+          "group": "world"
+        },
+        {
+          "name": "outer foot wheel -1",
+          "mass_g": 38.0,
+          "centre_mm": [
+            -205.5,
+            -45.0,
+            31.5
+          ],
+          "kind": "purchased",
+          "group": "world"
+        },
+        {
+          "name": "outer foot wheel -1",
+          "mass_g": 38.0,
+          "centre_mm": [
+            -157.9,
+            45.0,
+            31.5
+          ],
+          "kind": "purchased",
+          "group": "world"
+        },
+        {
+          "name": "outer foot wheel -1",
+          "mass_g": 38.0,
+          "centre_mm": [
+            -205.5,
+            45.0,
+            31.5
+          ],
+          "kind": "purchased",
+          "group": "world"
+        },
+        {
+          "name": "GN 412.2 receiver +1 0",
+          "mass_g": 10.0,
+          "centre_mm": [
+            173.0,
+            -7.8,
+            432.0
+          ],
+          "kind": "purchased",
+          "group": "world"
+        },
+        {
+          "name": "GN 412.2 receiver +1 18",
+          "mass_g": 10.0,
+          "centre_mm": [
+            173.0,
+            7.8,
+            432.0
+          ],
+          "kind": "purchased",
+          "group": "world"
+        },
+        {
+          "name": "leg M8 rods +1",
+          "mass_g": 320.0,
+          "centre_mm": [
+            181.5,
+            0.0,
+            331.4
+          ],
+          "kind": "purchased",
+          "group": "world"
+        },
+        {
+          "name": "outer foot motor +1",
+          "mass_g": 30.6,
+          "centre_mm": [
+            181.7,
+            -45.0,
+            31.5
+          ],
+          "kind": "purchased",
+          "group": "world"
+        },
+        {
+          "name": "outer foot motor +1",
+          "mass_g": 30.6,
+          "centre_mm": [
+            181.7,
+            45.0,
+            31.5
+          ],
+          "kind": "purchased",
+          "group": "world"
+        },
+        {
+          "name": "outer foot wheel +1",
+          "mass_g": 38.0,
+          "centre_mm": [
+            157.9,
+            -45.0,
+            31.5
+          ],
+          "kind": "purchased",
+          "group": "world"
+        },
+        {
+          "name": "outer foot wheel +1",
+          "mass_g": 38.0,
+          "centre_mm": [
+            205.5,
+            -45.0,
+            31.5
+          ],
+          "kind": "purchased",
+          "group": "world"
+        },
+        {
+          "name": "outer foot wheel +1",
+          "mass_g": 38.0,
+          "centre_mm": [
+            157.9,
+            45.0,
+            31.5
+          ],
+          "kind": "purchased",
+          "group": "world"
+        },
+        {
+          "name": "outer foot wheel +1",
+          "mass_g": 38.0,
+          "centre_mm": [
+            205.5,
+            45.0,
+            31.5
+          ],
+          "kind": "purchased",
+          "group": "world"
+        },
+        {
+          "name": "centre foot motor",
+          "mass_g": 30.6,
+          "centre_mm": [
+            0.0,
+            107.1,
+            31.5
+          ],
+          "kind": "purchased",
+          "group": "foot"
+        },
+        {
+          "name": "centre foot motor",
+          "mass_g": 30.6,
+          "centre_mm": [
+            0.0,
+            197.1,
+            31.5
+          ],
+          "kind": "purchased",
+          "group": "foot"
+        },
+        {
+          "name": "centre foot wheel",
+          "mass_g": 38.0,
+          "centre_mm": [
+            -23.8,
+            107.1,
+            31.5
+          ],
+          "kind": "purchased",
+          "group": "foot"
+        },
+        {
+          "name": "centre foot wheel",
+          "mass_g": 38.0,
+          "centre_mm": [
+            23.8,
+            107.1,
+            31.5
+          ],
+          "kind": "purchased",
+          "group": "foot"
+        },
+        {
+          "name": "centre foot wheel",
+          "mass_g": 38.0,
+          "centre_mm": [
+            -23.8,
+            197.1,
+            31.5
+          ],
+          "kind": "purchased",
+          "group": "foot"
+        },
+        {
+          "name": "centre foot wheel",
+          "mass_g": 38.0,
+          "centre_mm": [
+            23.8,
+            197.1,
+            31.5
+          ],
+          "kind": "purchased",
+          "group": "foot"
+        }
+      ]
+    }
+  }
 }

@@ -118,7 +118,7 @@ def slice_part(name, settings_cache):
         startup.dwFlags |= subprocess.STARTF_USESHOWWINDOW
         startup.wShowWindow = 0
         result = subprocess.run(args, cwd=tmp, env=env, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
-                                timeout=3600, startupinfo=startup, creationflags=subprocess.CREATE_NO_WINDOW)
+                                timeout=300, startupinfo=startup, creationflags=subprocess.CREATE_NO_WINDOW)
         report_path = tmp / "result.json"
         if not report_path.exists():
             raise RuntimeError(f"{name}: no result.json; rc={result.returncode}\n{result.stderr.decode(errors='replace')[-3000:]}")

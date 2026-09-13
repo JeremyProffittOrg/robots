@@ -45,8 +45,7 @@ shoulder_z_upper = shoulder_z - body_lower_h;           // 178.8 in body_upper l
 shoulder_pad_d = 116;            // flat pad on the body side, face at X = +/- body_r
 shoulder_boss_d = 120; shoulder_boss_t = 30;            // internal boss behind the pad
 shoulder_bolt_m = 12;            // M12 x 130 class 8.8 through leg + boss, nyloc inside
-shoulder_index_r = 45; shoulder_index_d = 6.2;          // 6 mm dowel index pins
-shoulder_index_angles = [0, 18];                        // 0 = two-leg, 18 = three-leg (leg forward)
+// Revision D: the hand-set 6 mm index dowels are replaced by the sensed shoulder lock (st_lock_* below).
 shoulder_spacer = 8;             // flanged bushing + washer stack between pad and leg
 
 // electronics deck: an INTEGRAL horizontal deck inside body_upper (no separate tray part)
@@ -56,8 +55,8 @@ tray_size = [230, 190, 4];
 
 // battery (12 V 7 Ah SLA on its side: 151 long X, 94 deep Y, 65 tall)
 battery = [151, 94, 65];
-battery_shelf_z = 45;            // body_lower local (above the centre-leg flange nuts)
-battery_y = 45;                  // shelf centre shifted toward the front for stance balance (stability screening 2026-09-12)
+battery_shelf_z = 67;            // body_lower local; revision D raised 22 mm so the battery clears the carriage up to its 86 mm hard stop
+battery_y = 60;                // revision D: ahead of the centre-leg carriage sweep; keeps the body CG ahead of the shoulder so the post stays in compression (scripts/check_stance.py)
 battery_strap_w = 25;
 
 // ---------- dome ----------
@@ -133,13 +132,61 @@ booster_cover = [41.7, 78.2, 17.4];
 ankle_cyl_d = 21.7; ankle_cyl_l = 43.4;
 
 // ---------- stance ----------
+// Revision D (user-confirmed 2026-09-12): the outer legs stay vertical in BOTH stances and the
+// body pitches about the shoulder axis between 0 deg (two-foot) and body_tilt (three-leg). A
+// linear actuator drives the centre leg forward-down along an inclined guide; a sensed spring
+// plunger locks each shoulder at both endpoints.
 body_tilt = 18;                  // three-leg stance: body top tilted toward the rear
-leg_lean = 18;                   // outer legs lean 18 deg, feet forward of the shoulders
-ankle_z = 105.5;                 // ankle pivot height above the floor (two-leg reference)
+leg_lean = 0;                    // outer legs vertical in both stances (revision C leaned them 18 deg)
+ankle_z = 105.5;                 // ankle pivot height above the floor
 shoulder_h = shoulder_z;         // body-frame height of the shoulder axis (alias)
 shoulder_y_in_body = 0;
-center_leg_y_in_body = -45;      // centre-leg axis on the body floor, rearward of the body axis (tip-back margin; stability.py)
-shoulder_z_three_leg = ankle_z + leg_len * cos(leg_lean);   // 463.0 above the floor
+center_leg_y_in_body = -45;      // revision C only: read by scripts/assembly_layout.py; the revision D centre leg is placed by st_* below
+shoulder_z_three_leg = ankle_z + leg_len * cos(leg_lean);   // 481.4 above the floor (legs vertical)
+shoulder_z_two_leg = ankle_z + leg_len;                     // 481.4, the same shoulder height in both stances
+
+// ---------- revision D stance mechanism (every number is checked by scripts/check_stance.py) ----------
+// Stroke s = Actuonix P16-100-256-12-P extension from fully closed, mm. The actuator is parallel
+// to the guide, so s is also the centre-leg travel.
+st_s_two = 5.0;                  // two-foot endpoint: foot stowed, both pins in the 0 deg receivers
+st_s_three = 81.29;              // three-leg endpoint: body at body_tilt, both pins in the 18 deg receivers
+st_guide_angle = 30;             // guide axis, forward-down from the body -Z axis (20 tolerated only 4 % floor drag at touchdown; 30 tolerates 8 %)
+st_stow_lift = 25;               // wheel-bottom height above the floor at st_s_two (check minimum 20)
+st_hinge_up = 40;                // pitch-hinge axis above the centre-foot top plane (leg_center frame z)
+st_hinge_y = 34;                 // body-frame y of the hinge axis at st_s_two (the touchdown lever: floor drag jams the tilt above (hinge y at touchdown) / 342.5)
+// st_floor_hinge_z and st_hinge_z are defined after the feet section (they need foot_clear and foot_center_h)
+// actuator (Actuonix P16 datasheet Rev B: 100 mm stroke, 147 mm closed hole to hole)
+st_act_closed = 147; st_act_stroke = 100;
+st_act_case = [36, 20];          // case envelope across the guide (X, guide-normal)
+st_act_case_t = [12, 130];       // case from this far below the fixed eye to this far (along the guide)
+st_act_rod_d = 8; st_act_eye_d = 9; st_act_eye_w = 8; st_act_pin_d = 4.5;
+st_eye_up = 45;                  // rod-eye pin above the hinge along the guide (carriage frame z)
+// guide: two 12 mm shafts fixed in body_lower, LM12LUU bearings in the carriage
+st_shaft_x = 66; st_shaft_d = 12; st_shaft_t = [8, 190];      // shaft ends along the guide from the stowed hinge (182 mm shaft cut from 200)
+st_brg = [12, 21, 57];           // LM12LUU bore, OD, length
+st_brg_t = 100;                  // bearing bottom above the hinge (carriage frame z)
+st_cheek_in = 42.15; st_cheek_t = 11.0;                         // cheek inner face |x| and thickness
+st_web = [28, 58];               // cross-web z range (carriage frame); its bottom face is the pitch stop plane
+st_top = [143, 159];             // carriage top frame z range
+st_shaft_boss_bot = 17;          // bottom shaft boss top along the guide (hard stop for the bearing housing)
+st_shaft_boss_top = 166;         // top shaft boss bottom along the guide
+st_toe_stop = body_tilt + 1.5;   // housing pitch stop: foot may pitch toe-down this far relative to the stowed attitude
+// sensed shoulder lock, one per shoulder (Winco GN 412-6-35-B-1 plunger, two GN 412.2-M12X1.5-B6.2 receivers)
+st_lock_r = 50;                  // pin radius from the shoulder axis
+st_lock_angle = 261;             // pin angle in the body (y, z) plane, atan2(z, y); receivers in the leg at this and this + body_tilt
+st_land_d = 44; st_land_gap = 1; // land boss on the shoulder pad, 1 mm from the leg face
+st_land_x = body_r + shoulder_spacer - st_land_gap;            // 165.5 pin-exit face |x|
+st_pin_d = 6; st_pin_ext = 6;    // GN 412: 6 mm pin, 6 mm extension
+st_flange = [12, 35, 26];        // GN 412 flange thickness, length (body Y), width (body Z)
+st_flange_bolt = 12.5;           // M4 counterbored bores at +/-12.5 along the flange length
+st_hex = [10, 13]; st_knob = [10, 25];          // plunger body hex length / AF, knob length / diameter
+st_recv = [13, 12, 13, 3, 6.2];  // GN 412.2: overall length, thread d, hex AF, hex length, bore
+st_switch_ot = 0.9; st_switch_adj = 0.2;        // Omron SS-01GL set overtravel and adjustment
+st_release_pull = 5.8;           // pin pull at the release command (engagement is st_pin_ext - st_land_gap = 5)
+st_horn_arm = [12.5, 22.5];      // MG995 horn: tip-pin centre minus shaft centre in (lock X, lock Z) at rest
+st_horn_tip_r = 1.5;             // 3 mm tip pin on the horn arm (the purchased horn is drilled for an M3 screw used as the pin)
+st_horn_rest_gap = 1;            // horn tip to knob underside at rest
+st_servo_h = 42.9; st_servo_l = 40.7; st_servo_w = 19.7; st_servo_shaft_end = 10.35;
 
 // ---------- feet ----------
 foot_clear = 12;                 // shell bottom edge above the floor
@@ -159,8 +206,10 @@ foot_slot_w = 17.6; foot_slot_depth = 30;            // ankle tongue slot (outer
 battery_box = [119.4, 53.5, 84.7];                    // decorative boxes on the outer feet
 caster_bolt_m = 12; caster_bearing_od = 28; caster_bearing_t = 8; caster_bearing_gap = 18;   // bearing centre spacing 18 (legs.scad lg_bearing_cc)
 caster_trail = 35;               // pivot axis ahead of the foot's axle midpoint (rear wheels further back for tip-back margin)
-caster_stop_deg = 60;            // swivel limit each way
+caster_stop_deg = 30;            // swivel limit each way (revision D: 60 swept the foot into the outer feet between the vertical legs)
 center_leg_section = [100.3, 71.7];                   // ankle ring size (X, Y)
+st_floor_hinge_z = foot_clear + foot_center_h + st_hinge_up;                                // 138.9 world z of the hinge, foot on the floor
+st_hinge_z = st_floor_hinge_z + st_stow_lift - (shoulder_z_two_leg - shoulder_z);           // -3.6 body-frame z of the hinge at st_s_two
 center_leg_flange = [140, 100, 8]; center_leg_bolt_m = 8; center_leg_bolts = [[-50, -32], [50, -32], [-50, 32], [50, 32]];
 
 // ---------- purchased envelopes (for placement and renders) ----------

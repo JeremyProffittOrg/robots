@@ -58,62 +58,77 @@ limited by the smaller bed axis. The whole model is then scaled 0.68386 from the
 | Shell bottom edge above the floor | `foot_clear` | 12 |
 | Ankle pivot above the floor, legs vertical | `ankle_z` | 105.5 |
 
-### 1.3 Three-leg operating stance
+### 1.3 Revision D stances (user-confirmed 2026-09-12)
 
-This is the stance the robot drives in. The body tilts back 18 degrees (`body_tilt`) and the
-two outer legs lean 18 degrees (`leg_lean`) so the outer feet stand forward of the shoulders.
-The centre leg trails at the rear and carries the castering third foot.
+Revision D makes the stance change motorized and interlocked. The requirement is:
 
-| Measure | Value | Source |
-| --- | --- | --- |
-| Shoulder axis above the floor | 463.0 mm | `shoulder_z_three_leg` |
-| Skirt bottom above the floor | 164.5 mm | `r2d2.scad` `skirt_bottom_z_three_leg` |
-| Skirt bottom forward of the shoulder axis | 97.0 mm | `r2d2.scad` `skirt_bottom_y_three_leg` |
-| Outer foot centre forward of the shoulder axis | 116.2 mm | `r2d2.scad` `ankle_y_three_leg` |
-| Centre foot centre forward of the shoulder axis | 77.0 mm | `skirt_bottom_y_three_leg` minus `caster_trail` |
-| Dome crown above the floor | 715.9 mm (computed) | 463.0 + 265.9 cos 18 |
+- The centre leg deploys toward the **front** for the three-leg stance.
+- For the two-foot stance the centre leg retracts fully and its wheels lift clear of the floor.
+  Two-foot is for standing still only.
+- A linear actuator moves the centre leg and changes body tilt between 0 and 18 degrees.
+- A positive shoulder lock engages at both endpoints. Its state is read from a switch, never
+  inferred from actuator position. Release is powered.
 
-`research/proportions.md` section 6 gives 713.9 mm for this height as an estimate from the
-club drawings. The 715.9 mm figure is the arithmetic on `params.scad` and the two agree
-within 2 mm.
+The outer legs now stay **vertical in both stances** (`leg_lean` = 0). The body pitches about
+the two shoulder axes. The hinge-to-floor geometry and not the legs sets the tilt, so the
+ankles never move and the ankle lock bolt stays in tongue hole A.
 
-**Note on the wheelbase.** In this stance the centre foot sits 39.2 mm *behind* the outer foot
-line, not ahead of it. `research/loads.md` section 7 assumed the centre foot 290 mm *ahead* of
-the outer feet with the outer legs vertical. The two geometries are not the same, so every
-centre-of-gravity and foot-share number in that section must be re-run against `params.scad`.
-Section 5 below flags what this changes. The wheel contact patches still overlap: the outer
-foot wheels sit at 116.2 +/- 45 mm and the centre foot wheels at 77.0 +/- 45 mm
-(`foot_axle_y` = 45), so the support polygon runs from 32.0 mm to 161.2 mm forward of the
-shoulder axis.
+| Measure | Two-foot stance | Three-leg stance | Source |
+| --- | --- | --- | --- |
+| Actuator stroke (P16 extension) | 5.0 mm (`st_s_two`) | 81.29 mm (`st_s_three`) | `cad/params.scad` |
+| Body tilt, top toward the rear | 0 deg | 18.00 deg | `st_tilt()` in `cad/stance.scad` |
+| Shoulder axis above the floor | 481.4 mm | 481.4 mm | `shoulder_z_two_leg` |
+| Outer foot centres forward of the shoulder axis | 0 mm | 0 mm | legs vertical |
+| Centre-foot caster axis forward of the shoulder axis | 34 mm, lifted | 187.1 mm, on the floor | `st_hinge_world()` |
+| Centre wheels above the floor | 25.0 mm | 0 | `st_stow_lift` |
+| Dome crown above the floor | 747.3 mm | 481.4 + 265.9 cos 18 = 734.3 mm | computed |
 
-### 1.4 Two-leg display stance
+Why the legs stay vertical: with the legs fixed and the body hanging from the shoulders, the
+body centre of gravity is about 125 mm below the shoulder axis, so the unlocked body is a
+pendulum that always wants to return toward upright. The centre leg pushes on the floor to hold
+the tilt, so the leg is always in compression and the robot is held even with the locks out.
+Revision C leaned the legs 18 degrees and pivoted the robot about the ankles, which has no
+stable unlocked state.
 
-The display stance is the tall, straight, two-legged pose. The centre leg is unbolted and
-lifted out as one assembly with its foot.
+Why the outer-foot battery boxes moved outboard: between two vertical legs the inboard boxes
+left only 4.9 mm on each side of the 123.3 mm centre foot, so the caster could not swivel. On
+the outboard side the gap from a centre foot swivelled 30 degrees to an outer shell is 4.1 mm
+at the sole and 15.6 mm at the stowed height. This is a deliberate departure from the club
+drawings.
 
-| Measure | Value | Source |
-| --- | --- | --- |
-| Shoulder axis above the floor | 481.4 mm | `ankle_z` + `leg_len` |
-| Dome crown above the floor | 747.3 mm (computed) | 481.4 + 67.2 + 1.9 + 196.8 |
+### 1.4 The transition
 
-`research/proportions.md` section 6 gives 745.4 mm scaled from the club drawing. The two agree
-within 2 mm.
+`scripts/check_stance.py` models this sequence. The controls workstream owns the firmware that
+runs it.
 
-Changing stance needs three things per side and nothing else:
+Deploy, two-foot to three-leg:
 
-1. the 6 mm index dowel moved from the leg's 18 degree hole to its 0 degree hole;
-2. the M8 ankle lock bolt moved from tongue hole B to tongue hole A;
-3. the four M8 centre-leg flange bolts removed and the centre leg taken out.
+1. Locked at 5.0 mm, centre foot lifted 25 mm.
+2. Extend, still locked, to 33.9 mm: the wheels touch the floor (`st_s_contact`). The body stays at 0 deg.
+3. Release both pins (MG995 16.3 deg). Hold the release until 44.4 mm, where the pins have cleared the bores.
+4. Extend, unlocked, to 81.29 mm. The pins ride the leg faces. The body tilts to 18 deg and the
+   centre foot rolls forward from 48 mm to 187 mm ahead of the shoulders. Drive the centre-foot
+   motors at that ground speed.
+5. Creep through 81.29 +/- 1.5 mm until both switches read seated.
 
-The robot **cannot drive in the two-leg stance.** It has no balance system. The display stance
-is for standing still, with the robot supported or watched.
+Retract is the reverse: release at 81.29 mm, hold the release to 54.5 mm, retract unlocked, creep
+through 33.9 mm until both switches read seated, then lift, locked, to 5.0 mm.
+
+The robot **cannot drive in the two-foot stance.** It has no balance system. Drive is refused
+during a transition.
 
 ---
 
 ## 2. The nine STL files
 
-Nine files. Twelve printed pieces. `leg_upper`, `leg_lower` and `foot_outer` are each printed
+Ten files. Thirteen printed pieces. `leg_upper`, `leg_lower` and `foot_outer` are each printed
 twice, the second one mirrored in the slicer. The supplied file is the right-hand part.
+
+Revision D adds one file, `leg_carriage.stl`. The pitch hinge must join the two guide
+bearings, the actuator rod eye and the caster housing, and no purchased joint does all three.
+Every other revision D function uses a purchased joint or a feature of an existing print. The
+table below is the revision C measurement; `cad/validation.json` and `bom/printed-parts.csv`
+carry the current sizes.
 
 | File | Qty | Printed size X x Y x Z mm | Orientation | Material | Supports |
 | --- | --- | --- | --- | --- | --- |
@@ -361,18 +376,10 @@ Each shoulder is a bolted steel pivot. It is not motorised.
   size to the 40 mm `research/loads.md` asks for. At 5 N.m the preload is about 2.1 kN and the
   face pressure about 1.9 MPa. A 24 mm washer would give 6.6 MPa, which creeps.
 
-**Index pins carry the moment, not the bolt.** The leg plate carries two 6.2 mm holes
-(`shoulder_index_d`) at a 45 mm radius (`shoulder_index_r`), at 0 and 18 degrees
-(`shoulder_index_angles`) from straight below the axis, placed toward the **rear**. The body
-pad carries **two** holes at the same radius and angles, 20 mm deep, placed toward the
-**front**: (y, z) = (0, -45) and (13.90, -42.80).
-
-That pairing has a useful consequence. Rotating the leg forward by `leg_lean` puts leg hole 18
-on body hole 0 **and** leg hole 0 on body hole 18 at the same time. So the **three-leg
-operating stance takes two dowels per shoulder** and the two-leg display stance takes one. Use
-both in the operating stance: `research/loads.md` section 7 asks for two pins rather than
-relying on one. Both leg holes run through the plate and the booster cover, so each 6 x 30 mm
-steel dowel is pushed in from outboard.
+**The lock pins carry the moment, not the bolt.** Revision D removes the hand-set 6 mm dowels.
+Each shoulder has a sensed spring-plunger lock, described in section 3.9. The pin is 50 mm from
+the axis. At that radius the two receivers are 15.6 mm apart, leaving 4.6 mm of printed web
+between their 11 mm thread bores and 2.3 mm between their hex pockets.
 
 Load screening (`research/loads.md` section 7): bolt shear 1.6 MPa against a 48.9 kN proof
 load; bearing on the printed boss 0.49 MPa against about 8 MPa allowable, a 16x margin; index
@@ -436,26 +443,29 @@ The pivot bolt takes the shear. The lock bolt takes the moment and sets the stan
 torqued against the printed cheeks; the nyloc is run down until the play is gone and the
 tongue still turns by hand with the lock bolt out.
 
-### 3.5 Centre leg — four M8 flange bolts
+### 3.5 Centre leg — guide shafts, carriage and pitch hinge
 
-The centre leg bolts to the underside of the skirt floor. The flange is 140 x 100 x 8 mm
-(`center_leg_flange`) and lies in the tilted body plane, so the leg and the 18 degree body
-tilt are built into one part.
+Revision D replaces the bolted flange with a guided, driven centre leg (section 3.9).
 
-- **Four M8 through-bolts** at (+/-50, +/-32) mm (`center_leg_bolts`, `center_leg_bolt_m`).
-  Heads go below, in 19 mm socket notches cut through the collar corners. The nuts sit in
-  **hex pockets moulded into the top face of the floor**, each in a 22 mm boss, so they cannot
-  turn.
-- `cad/legs.scad` calls for **4 x M8 x 30 and nuts**.
-- The battery shelf above carries **four 26 mm socket windows** over these four nuts, so a
-  socket reaches them after the shelf and the battery are in place.
-- Below the flange the collar is `center_leg_section` (100.3 x 71.7 mm) by 14 mm, then the
-  column 83.3 x 64 mm down to the bearing housing.
-
-Torque these to about **2 N.m (estimated)** with a 24 mm fender washer under each nut. That
-gives about 3 MPa on the printed floor, below the 6.6 MPa at which `research/loads.md` warns
-of PETG creep. Four bolts are the only thing holding the third leg on, so check them at every
-service.
+- **Guide.** Two 12 mm hardened shafts (cut to 182 mm) are fixed in `body_lower` at x = +/-66 mm
+  on a guide inclined **30 degrees forward-down** from the body axis (`st_guide_angle`). Each
+  shaft sits in a blind bottom boss on the floor and an open top boss tied to the skin by a
+  sloped arm, with an M4 set screw in a heat-set insert.
+- **Carriage.** `leg_carriage` rides the shafts on two LM12LUU bearings (12 x 21 x 57 mm), each
+  clamped by a slit and two M4 x 25 screws. Its cross-web carries the P16 rod eye on an M4 x 45
+  pin, 45 mm above the hinge.
+- **Pitch hinge.** The carriage cheeks turn on two 8 x 12 x 12 mm bronze sleeves. M8 x 35 bolts
+  clamp each sleeve to the `leg_center` housing through captive M8 nuts. The housing stays level:
+  hanging, it rests on its heel stop face; on the floor, the floor keeps it level while the body
+  tilts. The toe stop face allows 19.5 degrees of relative pitch against 18 needed.
+- **Floor.** The four flange bolts, their bosses and the socket windows are gone. The floor and
+  the battery shelf are cut by the swept envelope of the carriage and housing with 2 mm
+  clearance (`st_carriage_sweep`, `st_housing_sweep`).
+- **Hard stops.** The actuator closed stop is at s = 0, 5 mm short of the two-foot endpoint. The
+  bearing housings land on the bottom shaft bosses at s = 86 mm, 4.7 mm past the three-leg
+  endpoint.
+- **Battery.** The shelf rose from z 45 to z 67 (`battery_shelf_z`) and the battery centre sits
+  at y 60 (`battery_y`), so the battery clears the sloping carriage face and the seam flange.
 
 ### 3.6 Centre foot caster — M12 bolt, two 6001 bearings, swivel stop pin
 
@@ -475,8 +485,9 @@ the robot without scrubbing the centre foot.
   foot's top plate (19.4 mm across flats, 8.4 mm deep), which is loaded from +X through the
   open sole before the motors go in.
 - The **swivel stop** is an arc groove in the leg's bottom face, 7.6 mm wide and 8 mm deep,
-  at a pin radius of 22 mm (`lg_stop_r`), spanning +/-60 degrees about forward
-  (`caster_stop_deg`). The foot's **6 x 8 mm pin stands on the stem-block top** at
+  at a pin radius of 22 mm (`lg_stop_r`), spanning +/-30 degrees about forward
+  (`caster_stop_deg`; revision D, see section 1.3). At 30 degrees the minimum turn radius about
+  the outer-foot midpoint is about 270 mm. The foot's **6 x 8 mm pin stands on the stem-block top** at
   (0, `caster_trail` + 22) and runs in that groove. The pin moved in from radius 35 to 22 so
   the leg groove could reach it; radius 22 also puts it on solid stem-block material, so the
   16 mm ledge fin the old radius needed is gone. `ft_stop_r` and `lg_stop_r` are tied by an
@@ -571,6 +582,110 @@ mu 0.8, so a 3 to 5 N preload is 2 to 3x. Run the head motor at **50 percent PWM
 rail** for about 8.7 RPM loaded. Below 35 percent it stalls.
 
 ---
+
+### 3.9 Stance mechanism and sensed shoulder lock (revision D)
+
+Source: `cad/stance.scad` (kinematics, `leg_carriage`, lock block, purchased envelopes), with
+every number in the `st_` block of `cad/params.scad`. `scripts/check_stance.py` proves the
+transition and writes `docs/stance-check.json`.
+
+#### Purchased parts
+
+| Function | Part | Qty | Primary data used | Source |
+| --- | --- | --- | --- | --- |
+| Centre-leg actuator | Actuonix P16-100-256-12-P | 1 | 100 mm stroke; 147 mm closed hole to hole; 300 N max lifted; >500 N back-drive; 4.8 mm/s no load, 250 N at 2.5 mm/s; 1000 mA stall at 12 V; 20 % duty; 110 g; 11 kOhm +/-50 % pot; 0.4 mm repeatability, 0.3 mm backlash; 15 N max side load | [datasheet Rev B](https://www.actuonix.com/assets/images/datasheets/ActuonixP16Datasheet.pdf); listed in `bom/electronics.csv` by the controls workstream |
+| Shoulder lock | J.W. Winco GN 412-6-35-B-1 | 2 | 6 mm pin, 6 mm extension; spring 5 N / 15 N; flange 35 x 26 x 12 mm, M4 counterbores at 25 mm; knob 25 mm; 0.152 lb; US$11.77 | [drawing](https://live-catalog.jwwinco.com/pdf/winco/us/412.pdf), `bom/hardware.csv` H34 |
+| Lock receivers | J.W. Winco GN 412.2-M12X1.5-B6.2 | 4 | bore 6.2 mm; M12 x 1.5 x 10 mm; hex 13 A/F x 3 mm; 0.022 lb; US$5.66 | [drawing](https://live-catalog.jwwinco.com/pdf/winco/us/412_2.pdf), H35 |
+| Lock sensor | Omron SS-01GL | 2 | SPDT gold contact; OF 0.49 N max; OT 1.2 mm min; MD 0.8 mm max; OP 8.8 +/-0.8 mm | [datasheet](https://omronfs.omron.com/en_US/ecb/products/pdf/en-ss.pdf); `bom/electronics.csv` |
+| Lock release | MG995-class servo, Adafruit 1142 | 2 | 8.5 kg-cm at 4.8 V, 10 kg-cm at 6 V; 0.20 s/60 deg at 4.8 V; 40.7 x 19.7 x 42.9 mm; 62.41 g; US$19.95 | [product](https://www.adafruit.com/product/1142); `bom/electronics.csv` |
+| Guide shafts | VXB 12 mm x 200 mm hardened shaft | 2 | cut to 160 mm | [product](https://vxb.com/products/12mm-shaft-hardened-rod-linear-motion-200mm-long), H40 |
+| Guide bearings | LM12LUU, 12 x 21 x 57 mm | 2 | 657 N dynamic, 1200 N static | [product](https://vxb.com/products/two-pack-lm12luu-12mm-long-linear-ball-bearing-bus), H38 |
+
+The actuator runs well inside its rating; the check result is in the table below. The P16-100
+was kept because the 81.29 mm endpoint needs more than the 50 mm version's stroke.
+
+#### Geometry
+
+- **Guide and stroke.** The hinge moves along the 30 degree guide from body (y 34, z -3.6) at
+  s = 5.0 mm. The wheels are 25 mm above the floor there. They touch at s = 33.9 mm, with the
+  hinge 48 mm ahead of the shoulder. Past contact, the body tilt follows `st_tilt(s)`: 1.0 deg/mm
+  just after touchdown, 0.20 deg/mm at 18 deg. The guide angle and stowed hinge position were
+  set by floor drag: the tilt jams if the floor force on the centre foot exceeds
+  (hinge y at touchdown) / (shoulder height above the hinge) = 48 / 342.5 = 14 % of its load.
+  With the first choice, a 20 degree guide and hinge y 15 or 22, that limit was 9 %.
+- **Actuator.** Fixed eye at body (0, -64.5, 167.0) on two cheeks hanging from the underside of
+  the `body_upper` deck, M4 x 60 pin. The actuator is parallel to the guide, so its stroke equals the
+  centre-leg travel and it has no side load. The Raspberry Pi 4 moved 14 mm to -X to clear the
+  cheeks.
+- **Lock.** On each shoulder, the GN 412 flange sits 5 mm deep in the `body_upper` pad and stands
+  7 mm proud, so its pin face is 1 mm from the leg face. The pin is at 50 mm radius, 261 deg in
+  the body (y, z) plane. The leg carries receivers at 261 deg (tilt 0) and 279 deg (tilt 18).
+  Pin engagement is 5.0 mm. The flange is proud of the pad and not the print because the ring
+  already fills the 317 mm bed.
+- **Sensing.** The SS-01GL lever rides the knob underside 11.5 mm above the pin axis. It is
+  pressed only when the pin is fully seated. Set overtravel is 0.9 +/-0.2 mm, within the 1.2 mm
+  rating. With the 0.8 mm differential, a closed switch guarantees at least 3.1 mm of pin in the
+  bushing. A pin that is pulled, riding the leg face or part seated reads "not engaged".
+- **Release.** A 3 mm pin on the MG995 horn sits 1 mm below the knob rim. Turning the horn 16.3
+  deg pulls the pin 5.8 mm, which is 0.8 mm more than the engagement and 0.2 mm short of the
+  plunger's own stop. The servo sits in a pocket of an integral lock block inside `body_upper`,
+  with M3 ear screws into heat-set inserts. The unpowered spring re-seats the pin.
+
+#### Load path
+
+- **Three-leg stance, locked.** Body weight goes to the shoulders and down the vertical legs to
+  the outer feet. The share on the centre foot goes up the carriage, through the LM12LUU
+  bearings into the shafts, and into the floor and top bosses of `body_lower`. The lock pins take
+  the tilting moment in shear at 50 mm radius into the leg plates. The actuator back-drive
+  shares that moment.
+- **Unlocked tilt.** The body centre of gravity stays ahead of the shoulder axis, so the foot is
+  always pushed onto the floor and the post stays in compression. It is never less than 17 N,
+  including the centre-of-gravity uncertainty box and floor friction.
+- **Two-foot stance.** The lifted centre leg hangs from the carriage. The pins hold the body at
+  0 deg, and the pendulum body needs only a small moment.
+
+#### Check results (`python scripts/check_stance.py`, calculated, not measured)
+
+Final run 2026-09-12: 126 poses (60 strokes each way plus contact and both endpoints), 1086
+mesh-intersection pairs, exit 0.
+
+| Class | Criterion | Result |
+| --- | --- | --- |
+| Clearance | two-foot centre wheels >= 20 mm above the floor at yaw -30, 0, 30; toe-stop swing clears the floor; lifted foot rests on the heel stop | PASS: 25.00 mm; toe stop 18.55 mm; foot CG 21.4 mm behind the hinge |
+| Support | margin >= 15 mm over a +/-8, +/-8, +/-40 mm body CG box and yaw +/-30 deg | PASS: two-foot 28.1 mm; three-leg 75.9 mm; loaded transition minimum 41.8 mm |
+| Force | calculated force <= 300 N / 3; holding <= 500 N / 3 | PASS: 38.3 N; holding 18.9 N |
+| Lock | receiver within 0.1 mm at both endpoints; engagement >= 3 mm; sensed minimum >= 3 mm; web >= 2 mm; post compression >= 5 N; factored release <= servo tip force | PASS: misalignment 0.000 mm; engagement 5.00 mm; sensed 3.10 mm; web 2.34 mm; post 8.9 N; release 26.1 N and 32.7 N against 39.1 N |
+| Interference | carriage, housing, centre foot and wheels, actuator, shafts, battery and both locks against the body rings, legs and outer feet, at every pose; <= 1 mm3 per pair | PASS: largest 0.150 mm3 |
+
+`python scripts/stability.py` for the same meshes: 13.20 kg. Two-foot CG (0, 10.5, 315.6) mm,
+support margin 34.5 mm. Three-leg CG (0, 44.2, 319.9) mm, support margin 89.2 mm, tip-back
+15.6 deg. The stability margins have no CG uncertainty box, so they are larger than the check's.
+
+#### Assumptions
+
+None of these is measured. Each is stated in `CRITERIA` in `scripts/check_stance.py`.
+
+- Printed fill 0.45 of solid; purchased parts as point masses; allowances as listed in `scripts/stability.py`.
+- Body-group centre-of-gravity uncertainty +/-8 mm (X, Y) and +/-40 mm (Z).
+- LM12LUU friction 0.05, ten times the catalogue value, times the bearing-moment lever.
+- Pitch-hinge friction moment 150 N.mm.
+- Floor force on the centre foot during the tilt is at most 3 % of its load. This requires the
+  firmware to drive the centre-foot motors at the kinematic ground speed. Coasting TT gearboxes
+  are not assumed.
+- Pin friction in the bushing 0.10 (greased). Release factor 1.5. Servo supply 6.0 V.
+- SS-01GL lever geometry beyond the catalogue OP, OT and MD is an envelope. MG995 horn and ear
+  geometry are envelopes; drill the horn for the M3 tip pin.
+- GN 412.2 receivers are held by an 11.0 mm thread-forming bore in PETG. Retention torque is not
+  tested.
+
+#### Not physically validated
+
+- The masses, centre of gravity, friction, floor force and actuator force are calculated.
+- Printed carriage, lock block, shaft bosses and receiver web strength, pin bending, bushing
+  retention and creep are untested. No printed strength rating is claimed.
+- Switch calibration, pin seating during the creep, and power loss during a transition need the
+  built robot.
+- The 30 deg caster stop and the 4.1 mm sole gap to the outer feet need a turning test.
 
 ## 4. Fits and tolerances
 
@@ -702,6 +817,11 @@ default, and allow spin only at full 6 V with a time limit.
   **The ring ribs are what make the shell work. Keep at least one ring rib within 30 mm of
   each shoulder boss.**
 ### 5.4 Stability, measured from the CAD
+
+**Revision D supersedes this section.** The legs are now vertical and the centre foot stands
+ahead of the outer feet. `docs/stability.json` reports both stances, and section 3.9 gives the
+checked margins: two-foot 28.1 mm, three-leg 75.9 mm, tip-back 15.6 deg. The revision C text
+below is kept for the record.
 
 The tipping numbers in `research/loads.md` section 7 assumed the centre foot stood 290 mm
 **ahead** of the outer-foot line. The built geometry puts it 39.2 mm **behind** them

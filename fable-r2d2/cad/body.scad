@@ -351,12 +351,8 @@ module bd_floor() {
                 bd_lower_outer();
                 translate([-200, -200, -eps]) cube([400, 400, floor_t + eps]);
             }
-            // 24 dia, not 22: at (+/-50, -13) a 22 boss is exactly tangent (13.01 vs 13.0) to
-            // the 270 / 90 deg battery-shelf support rib, which is a degenerate CSG contact.
-            // Boss top at z 13.0 so the 7.5 mm hex pocket (z 5.5..13.0) for the 6.8 mm M8
-            // nut is fully inside it and still open at the top for the nut to drop in (m7).
-            for (p = bd_leg_bolts) translate([p[0], p[1], floor_t - eps])
-                cylinder(d = 24, h = 7 + eps, $fn = 48);
+            // revision D: the bolted centre-leg flange bosses are gone; the carriage passes
+            // through the floor (stance.scad st_carriage_sweep, st_housing_sweep).
         }
         translate([0, 0, floor_t]) rotate([0, 0, 180]) label("body_lower", size = 12);
     }
@@ -365,13 +361,11 @@ module bd_floor() {
 // body_lower() because the skirt-bottom slab (z 0..floor_t - 2.5) is built by
 // difference(bd_lower_outer, bd_lower_cavity) and would otherwise plug every one of them.
 module bd_floor_cuts() {
-    for (p = bd_leg_bolts) translate([p[0], p[1], 0]) {
-        through_hole(center_leg_bolt_m, floor_t + 6);
-        translate([0, 0, floor_t - 0.5]) nut_pocket(center_leg_bolt_m, 7.5);
-    }
     bd_cable_cut(floor_t + 2 * eps);
-    // centre-leg wire channel exit (legs.scad lg_wire_chan), between the two bolt rows
-    translate([-bd_wire[0]/2, bd_wire_y - bd_wire[1]/2, -eps]) cube([bd_wire[0], bd_wire[1], floor_t + 2 * eps]);
+    // revision D centre-leg mechanism: carriage and housing sweeps and the actuator case
+    st_carriage_sweep();
+    st_housing_sweep();
+    st_act_case_env();
 }
 
 // Battery shelf: 4 mm plate at battery_shelf_z with 8 mm curbs round the SLA footprint,
@@ -395,10 +389,6 @@ module bd_battery_shelf() {
                 bd_cable_cut(bd_shelf_bot + 1);      // no rib may start in mid-air over the opening
             }
         }
-        // socket windows over the four flange nuts; they stop at the shelf top face so the
-        // battery curb is not notched (its rear wall bridges the two front windows).
-        for (p = bd_leg_bolts) translate([p[0], p[1], bd_shelf_bot - 1])
-            cylinder(d = 26, h = bd_shelf_top - bd_shelf_bot + 1.5, $fn = 48);
         for (mx = [-1, 1]) for (yy = [-5, 40])
             translate([mx * (bx + 9.5) - 1.5, battery_y + yy - battery_strap_w / 2, bd_shelf_bot - 1])
                 cube([3, battery_strap_w, 8]);
@@ -571,23 +561,27 @@ module bd_rear_hardware_pad() {
 
 // ================= body_lower =================
 module body_lower() {
-    union() {
-        difference() {
-            union() {
-                difference() { bd_lower_outer(); bd_lower_cavity(); }
-                intersection() {
-                    bd_lower_outer();
-                    union() { bd_lower_inner(); bd_speaker_bosses(); bd_rear_hardware_pad(); }
+    difference() {
+        union() {
+            difference() {
+                union() {
+                    difference() { bd_lower_outer(); bd_lower_cavity(); }
+                    intersection() {
+                        bd_lower_outer();
+                        union() { bd_lower_inner(); bd_speaker_bosses(); bd_rear_hardware_pad(); }
+                    }
+                    bd_skirt_ribs();
+                    bd_floor();
+                    bd_lower_lip();
                 }
-                bd_skirt_ribs();
-                bd_floor();
-                bd_lower_lip();
+                bd_lower_inner_cuts();
+                bd_floor_cuts();
+                bd_lower_skin_cuts();
             }
-            bd_lower_inner_cuts();
-            bd_floor_cuts();
-            bd_lower_skin_cuts();
+            bd_lower_proud();
+            st_shaft_bosses();          // revision D guide shafts (stance.scad)
         }
-        bd_lower_proud();
+        st_shaft_boss_cuts();
     }
 }
 
@@ -641,9 +635,7 @@ module bu_shoulder_cuts(side) {
     // the lazy-susan bottom race (r 114.3) at the two azimuths used, and is hidden by the dome.
     translate([side * (body_r - bd_sh_boss_t + bd_sh_nut_h / 2), 0, shoulder_z])
         cylinder(d = bd_sh_acc_d, h = bd_top - shoulder_z + 1, $fn = 64);
-    for (a = shoulder_index_angles)
-        translate([side * (body_r - 20), shoulder_index_r * sin(a), shoulder_z - shoulder_index_r * cos(a)])
-            rotate([0, side * 90, 0]) cylinder(d = shoulder_index_d, h = 21 + eps, $fn = 32);
+    // revision D: the index dowel holes are replaced by the sensed lock (stance.scad st_lock_cuts)
 }
 
 // Electronics deck, integral: annulus r 50..wall cut off by the harness chord at y = -114.9.
@@ -811,7 +803,8 @@ module bu_deck_furniture() {
     // butting into the side wall 7.8 mm away. The board is off the centreline because the deck
     // is an annulus r 50..155.9 chopped at y -114.9: on the -Y centreline only 64.9 mm of deck
     // is left, less than the 85 mm board. All four bosses land on the deck (r 55.1..129.2).
-    for (h = pi4_holes) bu_boss(-72 + h[1], -113 + h[0], 7.5, 6, 2.5, 5.2);      // Raspberry Pi 4
+    // revision D: board moved 14 mm to -X (x -86..-30) so it clears the actuator mount cheeks at |x| 20..28
+    for (h = pi4_holes) bu_boss(-86 + h[1], -113 + h[0], 7.5, 6, 2.5, 5.2);      // Raspberry Pi 4
     // M12: the KB2040 has no mounting holes - it gets a seat pad and two zip-tie slots.
     translate([-103.5, 21, bd_deck_top - eps]) cube([35, 18, 2]);                // KB2040 seat
     for (cx = [-45, -15, 15, 45]) {                                              // four DRV8833
@@ -918,7 +911,11 @@ module bd_upper_bf() {
                 bu_pads();
                 bu_grommets();
                 bu_deck_furniture();
+                for (sd = [1, -1]) st_lock_block(sd);     // revision D sensed shoulder lock
+                st_act_mount();                            // revision D actuator fixed eye
             }
+            for (sd = [1, -1]) st_lock_cuts(sd);
+            st_act_mount_cuts();
             bu_flange_cuts();
             // B1: the four M8 rods must actually pass through the ring. bu_ribs() builds the rod
             // columns solid and the top plate only carried an 18 x 4 nut counterbore, so there
