@@ -1,7 +1,7 @@
 1
 00:00:00,000 --> 00:00:08,000
-Nine STL files. Twelve printed pieces.
-R2-D2 | 317 mm body | three powered feet | six drive wheels per pair | Raspberry Pi 4 and KB2040 | 12 V 7 Ah battery
+Ten STL files. Thirteen printed pieces.
+R2-D2 revision D | 317 mm body | three powered feet | two-foot and three-leg stances | Raspberry Pi 4 and KB2040 | 12 V 7 Ah battery
 
 2
 00:00:08,000 --> 00:00:25,000
@@ -11,59 +11,79 @@ Load two Adafruit 3777 motors and four 3766 wheels into each foot through the so
 3
 00:00:25,000 --> 00:00:42,000
 02 | Outer legs, two prints each
-Slide the lower leg tongue into the foot slot, splice the upper leg over it, run two M8 rods the full length, then fit the ankle pivot and lock bolts.
+Slide the lower leg tongue into the foot slot, splice the upper leg over it, run two M8 rods the full length, then fit the ankle pivot and lock bolts. Each upper leg carries two brass lock receivers.
 
 4
 00:00:42,000 --> 00:00:55,000
-03 | Centre leg and caster
-Press two bearings onto the centre-foot stem, drop the centre leg over them, fit the M12 caster bolt and the sixty degree stop pin. The foot then swivels freely.
+03 | Centre-leg housing and caster
+Press two bearings onto the centre-foot stem, drop the centre-leg housing over them, fit the M12 caster bolt and the swivel stop pin. The foot then swivels freely.
 
 5
 00:00:55,000 --> 00:01:10,000
 04 | Lower ring, battery and power
-Lower the body floor onto the centre-leg flange bolts. Strap the 12 V 7 Ah battery to its shelf, then fit the speaker, the charge port and the main switch.
+Strap the 12 V 7 Ah battery to its shelf, then fit the speaker, the charge port and the main switch.
 
 6
-00:01:10,000 --> 00:01:23,000
-05 | Upper ring and shoulders
-Seat the upper ring. Set both shoulder index pins to the three-leg angle, then run the M12 shoulder bolts through the leg discs into the body bosses.
+00:01:10,000 --> 00:01:24,000
+05 | Stance guide, carriage and actuator
+Seat two 12 mm guide shafts in the lower ring. The printed carriage rides them on two LM12LUU bearings and pivots on the centre-leg housing. An Actuonix P16 actuator drives it along the guide.
 
 7
-00:01:23,000 --> 00:01:35,000
-06 | Integral electronics deck
-Mount the Raspberry Pi 4, the KB2040, four DRV8833 drivers, both regulators, the ADS1115 and the fuse blocks on the deck printed into the upper ring.
+00:01:24,000 --> 00:01:37,000
+06 | Upper ring, shoulders and sensed locks
+Seat the upper ring and bolt both shoulders with M12 bolts. Each shoulder gets a sensed lock: a spring plunger, an MG995 release servo and an SS-01GL switch.
 
 8
-00:01:35,000 --> 00:01:45,000
-07 | Join the two rings
-The locating lip aligns the rings. Fit eight M4 seam bolts through the internal flange, then four M8 rods on radius 138 to clamp the whole stack.
+00:01:37,000 --> 00:01:49,000
+07 | Integral electronics deck
+Mount the Raspberry Pi 4, the KB2040, four DRV8833 drivers, the DRV8871 actuator driver, the level shifter, both regulators, the ADS1115 and the fuse blocks on the deck printed into the upper ring.
 
 9
-00:01:45,000 --> 00:01:57,000
-08 | Head friction drive
-Bolt the drive base under the top plate. Fit the seventh motor and its wheel on the pivoting arm, then the spring, the M5 adjuster and the thumb nut.
+00:01:49,000 --> 00:01:59,000
+08 | Join the two rings
+The locating lip aligns the rings. Fit eight M4 seam bolts through the internal flange, then four M8 rods on radius 138 to clamp the whole stack.
 
 10
-00:01:57,000 --> 00:02:08,000
-09 | Dome displays and lights
-On the bench: the twelve-wire slip ring at the hub, the round TFT behind the radar eye, four logic matrices, two PSI jewels and three holoprojector LEDs.
+00:01:59,000 --> 00:02:11,000
+09 | Head friction drive
+Bolt the drive base under the top plate. Fit the seventh motor and its wheel on the pivoting arm, then the spring, the M5 adjuster and the thumb nut.
 
 11
-00:02:08,000 --> 00:02:21,000
-10 | Lazy susan and dome
-Screw the lazy susan to the top plate, lower the dome onto it, then tighten the thumb nut until the drive wheel presses the dome plate by 0.6 mm.
+00:02:11,000 --> 00:02:22,000
+10 | Dome displays and lights
+On the bench: the twelve-wire slip ring at the hub, the round TFT behind the radar eye, four logic matrices, two PSI jewels and three holoprojector LEDs.
 
 12
-00:02:21,000 --> 00:02:29,000
-11 | Power on
-Simulated: the logic displays, the holoprojectors and both PSI lights come up behind the dome cutouts, and the dome begins to rotate.
+00:02:22,000 --> 00:02:35,000
+11 | Lazy susan and dome
+Screw the lazy susan to the top plate, lower the dome onto it, then tighten the thumb nut until the drive wheel presses the dome plate by 0.6 mm.
 
 13
-00:02:29,000 --> 00:02:44,000
-12 | Simulated drive
-Forward 400 mm, a wide left arc with the centre foot castering to the path, stop, reverse 150 mm, stop, then nudge the dome left and right.
+00:02:35,000 --> 00:02:43,000
+12 | Power on
+Simulated: the logic displays, the holoprojectors and both PSI lights come up behind the dome cutouts, and the dome begins to rotate.
 
 14
-00:02:44,000 --> 00:02:50,000
-Assembly complete | Prototype design
-723 mm tall | 317 mm body | nine STL files | twelve printed pieces | physical fit, strength and driving tests are still required. See the assembly manual.
+00:02:43,000 --> 00:02:58,000
+13 | Simulated drive
+Three-leg stance, both locks seated: forward 400 mm, a wide left arc with the centre foot castering to the path, stop, reverse 150 mm, stop, then nudge the dome left and right.
+
+15
+00:02:58,000 --> 00:03:10,000
+14 | Stance change: three legs to two feet
+Hold-to-run from the control page. Both locks release, the actuator tilts the body upright while the firmware rolls the centre foot back with it, the locks re-seat, then the centre foot lifts clear. Operator drive and the dome are refused throughout.
+
+16
+00:03:10,000 --> 00:03:16,000
+15 | Two-foot stance
+Stationary: body upright, centre foot 25 mm clear of the floor, both locks seated in their 0 degree receivers. Ground drive is refused.
+
+17
+00:03:16,000 --> 00:03:28,000
+16 | Stance change: two feet to three legs
+The locked centre foot lowers to the floor, both locks release, the actuator tilts the body back while the firmware rolls the centre foot forward, and the locks seat in the three-leg receivers. Drive is allowed again.
+
+18
+00:03:28,000 --> 00:03:34,000
+Assembly complete | Revision D prototype design
+742 mm tall | 317 mm body | ten STL files | thirteen printed pieces | physical fit, strength, driving and powered stance-change tests are still required. See the assembly manual.
