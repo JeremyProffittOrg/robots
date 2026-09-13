@@ -150,7 +150,15 @@ def main():
     cache = {}
     rows = []
     for name in names:
-        row = slice_part(name, cache)
+        try:
+            row = slice_part(name, cache)
+        except subprocess.TimeoutExpired as error:
+            # A part that does not slice inside the per-part bound is a failed row, recorded and
+            # reported; the remaining parts are still sliced so every result is known.
+            stl = ROOT / "stl" / f"{name}.stl"
+            row = {"part": f"stl/{name}.stl", "sha256": hashlib.sha256(stl.read_bytes()).hexdigest(),
+                   "material": PARTS[name]["material"], "return_code": None,
+                   "error_string": f"slicer timed out after {error.timeout:.0f} s", "pass": False}
         rows.append(row)
         status = "PASS" if row["pass"] else "FAIL"
         print(f"{status} {name}: {row.get('predicted_mass_g', 0):.0f} g, {row.get('predicted_time_h', 0):.1f} h, {row.get('error_string')} {row.get('warning', '')}", flush=True)

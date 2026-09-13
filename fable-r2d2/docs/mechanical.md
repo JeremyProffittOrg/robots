@@ -1020,7 +1020,8 @@ Five leg-and-foot conflicts are resolved in the CAD, and each is now held closed
 | Leg rod cut length | `cad/legs.scad` now says "CUT TO 390 mm (from M8 x 400 stock)". `bom/hardware.csv` H09 still plans 425 mm cuts. | **390 mm.** The BOM cut plan needs correcting. |
 | Dome radii | `params.scad` `dome_hp3_r` 101, `dome_rld_z` 52, `dome_eye_z` 108. `cad/dome.scad` overrides to 69.1, 73.5 and 118. | The dome file. The params values are full-size or mis-transcribed. |
 | Slice report | `cad/h2d-slice-check.json` predates `cad/body.scad` and the resolved leg and foot geometry, and its dome row still fails on the script's `--arrange` step. | Re-run `python scripts/slice_check.py`. |
-| Tip-back | `docs/stability.json` gives 3.9 degrees; the acceptance criterion is 15 degrees. | Not a file conflict but an open design issue. See section 5.4. |
+| Tip-back | `docs/stability.json` gives 3.9 degrees; the acceptance criterion is 15 degrees. | Revision D closes this: 15.6 degrees in the three-leg stance (section 5.4). |
+| Revision D ring slicing | On 2026-09-12 `python scripts/slice_check.py` passed 8 of 10 parts. `body_upper` and `body_lower` did not slice inside the 300 s per-part bound with tree supports. With normal supports they failed with "Found G-code outside of the printable area". | Unverified for the H2D. Slice both rings with a longer bound (revision C used 3600 s), or supply a support setting that keeps supports inside the ring. |
 
 ---
 
