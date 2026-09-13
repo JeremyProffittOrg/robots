@@ -10,11 +10,23 @@ Line protocol (ASCII, newline terminated, 115200 8N1 over USB CDC data):
                     "L <r> <g> <b>"      all 17 pixels
                     "P <i> <r> <g> <b>"  one pixel, i = 0..16
                     "E <0|1>"            DRV8833 nSLEEP enable
-                    "S"                  stop (coast all, targets zeroed)
+                    "S"                  stop (coast all, targets zeroed, stance held)
                     "?"                  status request
+                    "T <0|2|3>"          stance request, hold-to-run: 2 two-foot,
+                                         3 three-foot, 0 none.  Sent every 50 ms
+                                         while the operator holds the control; a
+                                         request older than HEARTBEAT_MS is none.
+                    "C"                  clear a latched stance fault
     KB2040 -> Pi    "ok"
                     "st <enabled> <l> <r> <c> <h> <index>"
+                    "ss <state> <phase> <fault> <pos_0.1mm> <lock> <pack_mv>
+                        <drive_ok> <head_ok> <can_two> <can_three>
+                        <reason>|<two_foot_block>|<three_foot_block>"
                     "err <text>"
+
+``ss`` fields: ``pos_0.1mm`` and ``pack_mv`` are integers, -1 when invalid;
+``lock`` is E (seated), R (released), X (NO/NC invalid) or W (not settled); the
+four flags are 0/1; the trailing text holds three ``|`` separated strings.
 """
 
 MAX_PERMILLE = 1000
@@ -39,6 +51,15 @@ PWM_FREQUENCY = 20000
 """20 kHz, above audio and within the DRV8833 input bandwidth."""
 
 CHANNEL_NAMES = ("left", "right", "centre", "head")
+
+STANCE_REQUESTS = (0, 2, 3)
+"""Legal ``T`` values: none, two-foot, three-foot."""
+
+SERVO_FREQUENCY = 50
+"""Release servo PWM frequency.  Its slice must carry no 20 kHz output."""
+
+ADC_GPIOS = (26, 27, 28, 29)
+"""The only RP2040 GPIOs with an ADC input (KB2040 A0-A3)."""
 
 
 class CommandError(Exception):
@@ -138,6 +159,19 @@ def parse_command(line):
             raise CommandError("? takes no values")
         return ("?", [])
 
+    if kind == "T":
+        if len(args) != 1:
+            raise CommandError("T needs 1 value, got {0}".format(len(args)))
+        target = parse_int(args[0], "stance")
+        if target not in STANCE_REQUESTS:
+            raise CommandError("stance must be 0, 2 or 3, got {0}".format(target))
+        return ("T", [target])
+
+    if kind == "C":
+        if args:
+            raise CommandError("C takes no values")
+        return ("C", [])
+
     raise CommandError("unknown command {0}".format(kind))
 
 
@@ -224,6 +258,46 @@ def pwm_conflicts(gpios):
             seen[key] = gpio
     clashes.sort()
     return clashes
+
+
+def pwm_frequency_conflicts(outputs):
+    """Return sorted ``(gpio_a, gpio_b)`` pairs on one slice at different frequencies.
+
+    ``outputs`` is a list of ``(gpio, frequency_hz)``.  Both channels of an
+    RP2040 PWM slice share one counter, so the servo at 50 Hz cannot sit on a
+    slice whose other channel runs a motor at 20 kHz.
+    """
+    by_slice = {}
+    clashes = []
+    for gpio, frequency in outputs:
+        key = pwm_slice(gpio)
+        if key in by_slice and by_slice[key][1] != frequency:
+            clashes.append((by_slice[key][0], gpio))
+        elif key not in by_slice:
+            by_slice[key] = (gpio, frequency)
+    clashes.sort()
+    return clashes
+
+
+def format_stance(state, phase, fault, position_mm, lock, pack_mv, drive_ok, head_ok,
+                  can_two, can_three, reason, two_block, three_block):
+    """Stance status line, terminator included.  See the module docstring."""
+    texts = []
+    for text in (reason, two_block, three_block):
+        texts.append((text or "").replace("|", "/").replace("\n", " ").replace("\r", " "))
+    return "ss {0} {1} {2} {3} {4} {5} {6} {7} {8} {9} {10}\n".format(
+        state,
+        phase,
+        fault,
+        -1 if position_mm is None else int(round(position_mm * 10)),
+        lock,
+        -1 if pack_mv is None else int(round(pack_mv)),
+        1 if drive_ok else 0,
+        1 if head_ok else 0,
+        1 if can_two else 0,
+        1 if can_three else 0,
+        "|".join(texts),
+    )
 
 
 def format_ok():

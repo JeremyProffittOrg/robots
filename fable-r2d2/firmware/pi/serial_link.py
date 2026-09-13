@@ -18,6 +18,7 @@ import threading
 import time
 
 import mixing
+import stance_link
 
 LOGGER = logging.getLogger("r2d2.serial")
 
@@ -80,9 +81,13 @@ def find_port(preferred=None):
 class SerialLink:
     """Owns the serial port and the 20 Hz command stream."""
 
-    def __init__(self, port=None, baud_rate=BAUD_RATE):
+    def __init__(self, port=None, baud_rate=BAUD_RATE, clock=time.monotonic):
         self.requested_port = port
         self.baud_rate = baud_rate
+        self.clock = clock
+        self._stance_request = stance_link.REQUEST_NONE
+        self.last_stance = None
+        self.last_stance_at = 0.0
 
         self._lock = threading.Lock()
         self._stop_event = threading.Event()
@@ -144,11 +149,30 @@ class SerialLink:
             )
 
     def stop(self):
-        """Zero every channel immediately and queue an ``S`` line."""
+        """Zero every channel and the stance request immediately and queue an ``S`` line."""
         with self._lock:
             self._target = [0, 0, 0, 0]
             self._current = [0, 0, 0, 0]
+            self._stance_request = stance_link.REQUEST_NONE
             self._pending.append("S\n")
+
+    def set_stance_request(self, target):
+        """Set the stance request sent as ``T`` with every drive line (0, 2 or 3)."""
+        stance_link.format_request(target)  # validates
+        with self._lock:
+            self._stance_request = target
+
+    def clear_stance_fault(self):
+        """Queue a ``C`` line."""
+        with self._lock:
+            self._pending.append(stance_link.CLEAR_LINE)
+
+    def stance_status(self):
+        """Return ``(last ss status dict or None, age in seconds or None)``."""
+        with self._lock:
+            if self.last_stance is None:
+                return None, None
+            return dict(self.last_stance), self.clock() - self.last_stance_at
 
     def set_enabled(self, enabled):
         """Queue the DRV8833 enable line change."""
@@ -187,8 +211,9 @@ class SerialLink:
         """Return a dictionary describing the link, for the web page status line."""
         with self._lock:
             status = dict(self.last_status) if self.last_status else None
-            age = time.monotonic() - self.last_status_at if self.last_status_at else None
+            age = self.clock() - self.last_status_at if self.last_status_at else None
             return {
+                "stance_request": self._stance_request,
                 "connected": self.connected,
                 "port": self.port_name,
                 "enabled": self._enabled,
@@ -254,10 +279,15 @@ class SerialLink:
             if not line:
                 continue
             status = mixing.parse_status(line)
+            stance = stance_link.parse_stance_line(line) if status is None else None
             if status is not None:
                 with self._lock:
                     self.last_status = status
-                    self.last_status_at = time.monotonic()
+                    self.last_status_at = self.clock()
+            elif stance is not None:
+                with self._lock:
+                    self.last_stance = stance
+                    self.last_stance_at = self.clock()
             elif line.startswith("err"):
                 LOGGER.warning("KB2040: %s", line)
                 self.last_error = line
@@ -273,13 +303,15 @@ class SerialLink:
             self._serial.write(line.encode("ascii"))
 
     def _send_drive(self):
-        """Ramp towards the target and write one ``M`` line."""
+        """Ramp towards the target and write one ``M`` line and one ``T`` line."""
         with self._lock:
             self._current = mixing.ramp_channels(
                 self._current, self._target, mixing.RAMP_PER_COMMAND
             )
             values = list(self._current)
+            request = self._stance_request
         self._serial.write(mixing.format_drive(*values).encode("ascii"))
+        self._serial.write(stance_link.format_request(request).encode("ascii"))
         self.commands_sent += 1
 
     def _run(self):
@@ -311,6 +343,7 @@ class SerialLink:
         # time out with the last duty still applied.
         if self._serial is not None:
             try:
+                self._serial.write(b"T 0\n")
                 self._serial.write(b"S\n")
                 self._serial.write(b"E 0\n")
                 self._serial.flush()

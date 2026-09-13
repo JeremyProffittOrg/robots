@@ -30,6 +30,7 @@ from audio import SoundPlayer
 from battery import BatteryMonitor
 from displays import DisplayWorker
 from serial_link import SerialLink
+from stance_link import STANCE_LEASE_SECONDS, StanceControl
 
 try:
     from aiohttp import WSMsgType, web
@@ -60,6 +61,7 @@ class Robot:
         self.link = link
         self.player = player
         self.battery = battery
+        self.stance = StanceControl(link)
 
         self.speed_cap = mixing.SPEED_CAP_DEFAULT
         self.head_duty = mixing.HEAD_DUTY_DEFAULT
@@ -81,8 +83,17 @@ class Robot:
         """Record a joystick position and push the mixed channels down the link."""
         self.x = mixing.clamp(float(x), -1.0, 1.0)
         self.y = mixing.clamp(float(y), -1.0, 1.0)
+        if not self.stance.drive_permitted():
+            # Refused: during a stance change, on two feet, or in an unknown or
+            # fault state.  The KB2040 refuses it again on its own.
+            self.x = 0.0
+            self.y = 0.0
         self.last_client_input = time.monotonic()
         self.push_drive()
+
+    def set_stance(self, target):
+        """The page holds (2, 3) or releases (0) a stance control.  False if ignored."""
+        return self.stance.request(target)
 
     def set_speed_cap(self, value):
         """Change the global speed cap (0.20 to 1.00)."""
@@ -125,6 +136,7 @@ class Robot:
         self.head_direction = 0
         self.nudge_until = 0.0
         self.nudge_direction = 0
+        self.stance.stop()
         self.link.stop()
         LOGGER.warning("emergency stop")
 
@@ -149,11 +161,12 @@ class Robot:
     def push_drive(self):
         """Mix the current inputs and hand them to the serial link."""
         left, right, centre = mixing.drive_permille(self.x, self.y, self.speed_cap)
-        self.link.set_drive(left, right, centre, self.current_head())
+        self.link.set_drive(*self.stance.gate(left, right, centre, self.current_head()))
 
     def tick(self):
         """Called at the status rate: apply the client watchdog and refresh sensors."""
         now = time.monotonic()
+        self.stance.tick()
         moving = self.x or self.y or self.head_direction or self.nudge_direction
         if moving and now - self.last_client_input > CLIENT_TIMEOUT:
             LOGGER.warning("no input for %.1f s, stopping", now - self.last_client_input)
@@ -180,6 +193,7 @@ class Robot:
             "enabled": self.enabled,
             "joystick": {"x": round(self.x, 3), "y": round(self.y, 3)},
             "head_direction": self.head_direction,
+            "stance": self.stance.snapshot(),
         }
 
     def display_status(self):
@@ -223,6 +237,7 @@ async def websocket_handler(request):
         "speed_cap_min": mixing.SPEED_CAP_MIN,
         "speed_cap_max": mixing.SPEED_CAP_MAX,
         "command_hz": mixing.COMMAND_HZ,
+        "stance_lease_ms": int(STANCE_LEASE_SECONDS * 1000),
     }))
 
     try:
@@ -272,6 +287,19 @@ async def handle_message(robot, socket, raw):
             }))
     elif kind == "lights":
         robot.set_lights(message.get("r", 0), message.get("g", 0), message.get("b", 0))
+    elif kind == "stance":
+        try:
+            accepted = robot.set_stance(message.get("target", 0))
+        except (TypeError, ValueError):
+            LOGGER.warning("ignoring bad stance target %r", message.get("target"))
+            return
+        if not accepted:
+            await socket.send_str(json.dumps({
+                "type": "notice",
+                "text": "stance request ignored: release the stance control, then press again",
+            }))
+    elif kind == "clear_fault":
+        robot.stance.clear_fault()
     elif kind == "ping":
         robot.last_client_input = time.monotonic()
     else:

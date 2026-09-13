@@ -33,6 +33,21 @@
   var enableBox = document.getElementById("enable");
   var soundsBox = document.getElementById("sounds");
   var stopButton = document.getElementById("stop");
+  var driveNote = document.getElementById("drive-note");
+  var stanceState = document.getElementById("stance-state");
+  var stanceReason = document.getElementById("stance-reason");
+  var stancePose = document.getElementById("stance-pose");
+  var stanceBlocks = document.getElementById("stance-blocks");
+  var stanceFault = document.getElementById("stance-fault");
+  var clearFaultButton = document.getElementById("clear-fault");
+  var stanceButtons = Array.prototype.slice.call(document.querySelectorAll("[data-stance]"));
+  var headButtons = Array.prototype.slice.call(document.querySelectorAll("[data-head],[data-nudge]"));
+
+  /* Interlock view from the last status frame.  Nothing is allowed until the
+     server has reported a fresh stance status from the KB2040. */
+  var driveAllowed = false;
+  var headAllowed = false;
+  var stanceHeld = 0;
 
   /* ---------------------------------------------------------------- socket */
 
@@ -56,6 +71,8 @@
 
     socket.onclose = function () {
       connected = false;
+      stanceHeld = 0;
+      renderStance(null);
       setLink("link down", false);
       window.setTimeout(connect, reconnectDelay);
       reconnectDelay = Math.min(reconnectDelay * 2, 5000);
@@ -118,6 +135,7 @@
     }
 
     enableBox.checked = !!message.enabled;
+    renderStance(message.stance || null);
 
     var commanded = link.commanded || [0, 0, 0, 0];
     readout.textContent =
@@ -125,6 +143,104 @@
       "   L " + commanded[0] + " R " + commanded[1] + " C " + commanded[2] +
       " H " + commanded[3];
   }
+
+  /* ---------------------------------------------------------------- stance */
+
+  function stanceLabel(target) {
+    return target === 2 ? "Two feet" : "Three feet";
+  }
+
+  function releaseStance() {
+    if (stanceHeld !== 0) {
+      stanceHeld = 0;
+      send({ type: "stance", target: 0 });
+    }
+  }
+
+  /* Grey out every control the interlock forbids and say why.  A stance
+     button stays enabled only while it may start, or while it is the held
+     control of the change in progress. */
+  function renderStance(stance) {
+    var available = !!(stance && stance.available);
+    var moving = available && (stance.state === "RETRACTING" || stance.state === "DEPLOYING");
+    driveAllowed = available && !!stance.drive_allowed;
+    headAllowed = available && !!stance.head_allowed;
+
+    stanceState.textContent = available ? stance.label + (stance.phase && stance.phase !== "NONE" ? " · " + stance.phase : "") : "stance unknown";
+    stanceState.className = "pill " + (!available || stance.state === "FAULT" ? "pill-down" : (driveAllowed ? "pill-up" : ""));
+    stanceReason.textContent = stance ? stance.reason : "no connection to the robot";
+    if (available) {
+      stancePose.textContent =
+        "actuator " + (stance.position_mm === null ? "invalid" : stance.position_mm.toFixed(1) + " mm") +
+        "   lock " + stance.lock_label +
+        "   pack " + (stance.pack_volts === null ? "--" : stance.pack_volts.toFixed(2) + " V");
+    } else {
+      stancePose.textContent = "actuator --   lock --   pack --";
+    }
+
+    var blocks = [];
+    stanceButtons.forEach(function (button) {
+      var target = Number(button.getAttribute("data-stance"));
+      var can = available && (target === 2 ? stance.can_two_foot : stance.can_three_foot);
+      var why = available ? (target === 2 ? stance.two_foot_block : stance.three_foot_block) : "no stance status";
+      var ownChange = moving && stanceHeld === target;
+      button.disabled = !(can || ownChange);
+      if (button.disabled && stanceHeld === target) {
+        releaseStance();
+      }
+      if (button.disabled && why) {
+        blocks.push(stanceLabel(target) + ": " + why);
+      }
+    });
+    if (stance && stance.needs_release) {
+      blocks.push("release the stance control, then press again");
+    }
+    stanceBlocks.textContent = blocks.join("  ·  ");
+
+    stanceFault.textContent = available && stance.state === "FAULT" ? "Fault " + stance.fault + ": " + stance.reason : "";
+    clearFaultButton.disabled = !(available && stance.state === "FAULT");
+
+    canvas.classList.toggle("disabled", !driveAllowed);
+    driveNote.textContent = driveAllowed ? "" : "Driving is allowed only on three feet with the shoulder lock seated.";
+    if (!driveAllowed && stick.active) {
+      releaseStick();
+    }
+    headButtons.forEach(function (button) {
+      button.disabled = !headAllowed;
+      if (!headAllowed) {
+        button.classList.remove("pressed");
+      }
+    });
+  }
+
+  stanceButtons.forEach(function (button) {
+    var target = Number(button.getAttribute("data-stance"));
+    button.addEventListener("pointerdown", function (event) {
+      if (button.disabled) {
+        return;
+      }
+      event.preventDefault();
+      button.setPointerCapture(event.pointerId);
+      if (stick.active) {
+        releaseStick();
+      }
+      stanceHeld = target;
+      button.classList.add("pressed");
+      send({ type: "stance", target: target });
+    });
+    ["pointerup", "pointercancel", "lostpointercapture"].forEach(function (name) {
+      button.addEventListener(name, function () {
+        button.classList.remove("pressed");
+        if (stanceHeld === target) {
+          releaseStance();
+        }
+      });
+    });
+  });
+
+  clearFaultButton.addEventListener("click", function () {
+    send({ type: "clear_fault" });
+  });
 
   /* -------------------------------------------------------------- joystick */
 
@@ -198,6 +314,9 @@
 
   canvas.addEventListener("pointerdown", function (event) {
     event.preventDefault();
+    if (!driveAllowed || stanceHeld !== 0) {
+      return;
+    }
     stick.active = true;
     stick.pointerId = event.pointerId;
     canvas.setPointerCapture(event.pointerId);
@@ -226,11 +345,15 @@
 
   function transmit() {
     var now = Date.now();
-    var period = stick.active ? 1000 / DRIVE_HZ : 1000 / IDLE_HZ;
+    var period = stick.active || stanceHeld !== 0 ? 1000 / DRIVE_HZ : 1000 / IDLE_HZ;
     if (now - lastSent.at < period) {
       return;
     }
     lastSent.at = now;
+    if (stanceHeld !== 0) {
+      /* Hold-to-run: the server drops the request if this stops for 0.5 s. */
+      send({ type: "stance", target: stanceHeld });
+    }
     if (stick.active || lastSent.x !== stick.x || lastSent.y !== stick.y) {
       if (send({ type: "drive", x: stick.x, y: stick.y })) {
         lastSent.x = stick.x;
@@ -265,6 +388,8 @@
     stick.active = false;
     drawStick();
     enableBox.checked = false;
+    stanceHeld = 0;
+    send({ type: "stance", target: 0 });
     send({ type: "stop" });
     send({ type: "enable", value: false });
   });
@@ -332,15 +457,18 @@
      robot running until the server watchdog notices. */
   document.addEventListener("visibilitychange", function () {
     if (document.hidden) {
+      releaseStance();
       releaseStick();
       send({ type: "head", direction: 0 });
     }
   });
 
   window.addEventListener("pagehide", function () {
+    releaseStance();
     send({ type: "stop" });
   });
 
   drawStick();
+  renderStance(null);
   connect();
 })();

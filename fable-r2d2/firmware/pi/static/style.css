@@ -190,3 +190,16 @@ input[type="range"] {
 @media (min-width: 640px) {
   .stop { left: auto; right: 12px; width: 240px; }
 }
+
+/* Revision D stance controls and interlock greying. */
+.btn:disabled,
+.btn:disabled:active {
+  background-color: #94a3b8;
+  color: #0b0f19;
+  cursor: not-allowed;
+}
+.btn.stance { font-size: 17px; }
+#joystick.disabled { opacity: 0.35; touch-action: none; }
+.readout.fault { color: var(--bad); font-weight: 700; }
+.readout.fault:empty { display: none; }
+#clear-fault { width: 100%; margin-top: 8px; }

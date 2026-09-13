@@ -15,6 +15,22 @@
 </header>
 
 <main>
+  <section class="panel" id="stance-panel">
+    <div class="panel-head">
+      <h2>Stance</h2>
+      <span id="stance-state" class="pill">stance --</span>
+    </div>
+    <p id="stance-reason" class="readout">waiting for the controller</p>
+    <p id="stance-pose" class="readout">actuator -- &nbsp; lock -- &nbsp; pack --</p>
+    <div class="grid">
+      <button class="btn hold stance" type="button" data-stance="2" disabled>Hold: two feet</button>
+      <button class="btn hold stance" type="button" data-stance="3" disabled>Hold: three feet</button>
+    </div>
+    <p id="stance-blocks" class="readout"></p>
+    <p id="stance-fault" class="readout fault" role="alert"></p>
+    <button id="clear-fault" class="btn" type="button" disabled>Clear fault</button>
+  </section>
+
   <section class="panel">
     <div class="panel-head">
       <h2>Drive</h2>
@@ -25,6 +41,7 @@
     </div>
     <canvas id="joystick" width="320" height="320" aria-label="Touch joystick"></canvas>
     <p id="drive-readout" class="readout">x 0.00 &nbsp; y 0.00 &nbsp; L 0 R 0 C 0</p>
+    <p id="drive-note" class="readout fault"></p>
   </section>
 
   <section class="panel">
