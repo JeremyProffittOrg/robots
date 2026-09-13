@@ -1,6 +1,6 @@
 {
   "all_pass": true,
-  "revision": null,
+  "revision": "D",
   "revision_target": "D",
   "checks": [
     {
@@ -31,7 +31,7 @@
     {
       "check": "firmware",
       "pass": true,
-      "detail": "firmware/kb2040: Ran 120 tests in 0.735s, exit 0; firmware/pi: Ran 66 tests in 0.053s, exit 0; app.js syntax OK"
+      "detail": "firmware/kb2040: Ran 120 tests in 0.781s, exit 0; firmware/pi: Ran 66 tests in 0.055s, exit 0; app.js syntax OK"
     },
     {
       "check": "audio",
@@ -49,6 +49,11 @@
       "detail": "9 poses [81.29, 81.29, 81.29, 5.0, 5.0, 5.0, 49.043, 33.868, 19.434]; problems=[]"
     },
     {
+      "check": "manual",
+      "pass": true,
+      "detail": "pdf=present, pages=130, all_pass=True, problems=[]"
+    },
+    {
       "check": "video",
       "pass": true,
       "detail": "214 s, 5136 frames, hash match=True, problems=[]"
@@ -58,17 +63,5 @@
     "firmware/kb2040": 120,
     "firmware/pi": 66
   },
-  "physical_validation": false,
-  "partial_run": [
-    "images",
-    "cad",
-    "stance",
-    "bom",
-    "wiring",
-    "firmware",
-    "audio",
-    "drawings",
-    "mockup",
-    "video"
-  ]
+  "physical_validation": false
 }
