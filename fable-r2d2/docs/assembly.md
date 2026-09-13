@@ -286,10 +286,10 @@ stance, with body tilt and centre-foot lift against actuator stroke.*
    M8 x 35 hinge bolts with M8 washers (H36, H12), four M4 x 25 clamp screws with nuts (H39, H20),
    two M4 x 8 cup-point set screws (H43), one M4 x 45 rod-eye pin with an M4 nyloc (H42, H45), and
    the actuator ACT1 (`bom/electronics.csv`).
-2. **Cut the two guide shafts.** H40 says cut each 200 mm shaft to 160 mm. mechanical.md section
-   3.5 and the `st_shaft_t` span in `cad/params.scad` give 182 mm. **Measure from the bottom of the
-   blind boss to the top face of the open boss on your printed `body_lower` and cut to that.**
-   Deburr and chamfer both ends.
+2. **Cut the two guide shafts** to **182 mm** each from the 200 mm stock (`bom/hardware.csv` H40,
+   mechanical.md section 3.5): 147 mm of bearing-housing travel, 9 mm in the bottom boss, 24 mm in
+   the top boss and 2 mm of clearance. Check the length against your printed `body_lower` before
+   cutting. Deburr and chamfer both ends.
 3. **Fit the bearings to the carriage.** Push each LM12LUU into its seat until it sits on the
    bottom lip. Fit two M4 x 25 screws across each clamp slit, with the nut in its printed pocket.
    Snug them until the bearing cannot turn in the seat. Do not crush the housing.
