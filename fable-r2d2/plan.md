@@ -87,7 +87,7 @@ with revision D labels.
 
 ### stance-controls — Pi 4 + KB2040 interlocked stance change, wiring and electronics BOM
 
-- [~] stance-controls — owner: background agent afe574ec95dfd2461.
+- [x] stance-controls — owner: background agent afe574ec95dfd2461 (commits a9d6cd8, 0206b0d).
   - Owned files: `firmware/**`, `scripts/electronics.py`, `electronics/**`, `bom/electronics.csv`,
     `docs/electrical.md`, `docs/firmware.md`.
   - `scripts/verify.py`: small anchored changes in `check_wiring` and `check_firmware` only.
@@ -142,6 +142,23 @@ with revision D labels.
   - Launched stance-mechanism (a9a5298ea055bf0d4) and stance-controls (afe574ec95dfd2461).
   - Untracked `c-design.pdf`, `c-motion.mp4` and `.playwright-mcp/` in this folder are download
     checks, not package files. They are left uncommitted.
+- 2026-09-12: stance-controls finished (a9d6cd8, 0206b0d).
+  - The parent re-ran the tests: `python -m unittest discover -s firmware/kb2040` "Ran 113 tests" OK;
+    `python -m unittest discover -s firmware/pi` "Ran 66 tests" OK.
+  - The agent reported `scripts/electronics.py` PASS: 184 wires, 20 KB2040 signal pins match
+    `code.py`. It also reported that `check_wiring()` and `check_firmware()` pass.
+  - stance-mechanism uses two shoulder locks, so the KB2040 needs two lock switches and two release
+    servos. All 20 KB2040 pins are now used.
+    - Each foot's DRV8833 pair shares one pin pair.
+    - DRV8833 SLP is tied to 3V3; arming stays in firmware.
+  - 20 purchased pieces added, about $168.65.
+  - Open gaps:
+    - MG995 (Adafruit 1142) is out of stock, and the P16 is on back order.
+    - Pot endpoints, release pulses and SS-01GL reliability at 3.3 V / 1 mA need bench calibration.
+    - MG995 stall current of 1.5 A is an assumption.
+    - KB2040 memory is not verified on a real board.
+  - Launched the revision-d-integration prep agent: label, assert and count changes only, no heavy
+    regeneration until stance-mechanism passes.
 
 ## Locked decisions (user-confirmed; do not revisit)
 
