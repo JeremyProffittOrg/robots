@@ -8,7 +8,9 @@ ramp, the ground-drive and dome interlocks, and the stance state machine.
 Hardware object (duck typed; ``code.Hardware`` and ``test_stance.Plant``):
 
     set_enabled(flag)                  arm or disarm the ground and dome motors
-    apply_drive(enabled, channels)     four permille values: left, right, centre, head
+    apply_drive(enabled, channels)     four permille values: left, right, centre, head;
+                                       during a stance change the centre value is the
+                                       stance's centre-foot ground feed
     coast_all()                        release the ground and dome motors now
     fill(r, g, b) -> bool              every NeoPixel; False when unavailable
     set_pixel(i, r, g, b) -> bool      one NeoPixel; False when unavailable
@@ -57,6 +59,8 @@ class Supervisor:
         self.last_request_ms = None
         self.last_status_ms = now - STATUS_PERIOD_MS
         self.drive_idle = True
+        self.centre_feed = 0
+        self.outputs = [0, 0, 0, 0]
         self.hal.set_enabled(False)
 
     # -- output -------------------------------------------------------------
@@ -65,7 +69,7 @@ class Supervisor:
         self.write(text)
 
     def send_status(self, now):
-        current = self.drive.current
+        current = self.outputs
         self.send(protocol.format_status(self.enabled, current[LEFT], current[RIGHT],
                                          current[CENTRE], current[HEAD],
                                          self.hal.index_detected()))
@@ -170,11 +174,16 @@ class Supervisor:
     # -- control tick -------------------------------------------------------
 
     def _push_drive(self):
-        current = self.drive.current
-        if self.enabled:
-            self.hal.apply_drive(True, list(current))
+        """Apply the operator channels, with the stance's centre-foot feed during a change."""
+        outputs = list(self.drive.current)
+        if self.stance.transitioning():
+            outputs[CENTRE] = self.centre_feed
         else:
-            self.hal.apply_drive(False, [0, 0, 0, 0])
+            self.centre_feed = 0
+        if not self.enabled:
+            outputs = [0, 0, 0, 0]
+        self.outputs = outputs
+        self.hal.apply_drive(self.enabled, outputs)
 
     def _gate_drive(self):
         s = self.stance
@@ -210,11 +219,18 @@ class Supervisor:
             if not self.timed_out:
                 self.timed_out = True
                 self.drive.hard_stop()
+                self.centre_feed = 0
+                self.outputs = [0, 0, 0, 0]
                 self.hal.coast_all()
                 self.send(protocol.format_error("heartbeat timeout, motors coasted"))
         else:
             self._gate_drive()
             self.drive.tick()
+            wanted = self.stance.centre_permille
+            if wanted == 0:
+                self.centre_feed = 0  # the wheels stop at once when the actuator stops
+            else:
+                self.centre_feed = protocol.ramp_step(self.centre_feed, wanted, protocol.RAMP_STEP)
             self._push_drive()
 
         self.hal.drive_actuator(self.stance.actuator)

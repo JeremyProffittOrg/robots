@@ -254,7 +254,7 @@ not connect the battery until step 11.
    ankle bolts loose so the wires are not trapped. Splice 28 AWG to 22 AWG inside each
    foot. Run the actuator's five leads down the centre leg (red/black to U10, yellow
    through R7, orange to the KB2040 GND pad, purple to A0) and the SW2/SW3 leads and
-   servo extensions to the shoulders, with slack for the full 5-62 mm stroke.
+   servo extensions to the shoulders, with slack for the full 5-68 mm stroke (hard stop at 68.0 mm).
 9. **Dome harness.** Solder the slip ring's twelve stator leads to the body side per the
    table in section 6, then the twelve rotor leads to the dome devices. Do the dome
    soldering with the dome off the robot and the backpack address jumpers already
@@ -345,7 +345,7 @@ Values not on the sheet are in `electronics/calculations.json` under `stance_cha
 | SW2 left lock, Omron SS-01GL | COM -> GND pad; NO -> SCK; NC -> MISO; R6A/R6B 3.3 k to 3V3 | Seated = NO closed. 1 mA through the closed contact at 3.3 V. |
 | SW3 right lock, Omron SS-01GL | COM -> J14 black; NO -> J14 blue -> SDA (GP12); NC -> J14 yellow -> SCL (GP13); R6C/R6D 3.3 k to 3V3 | Through the STEMMA QT connector; the KB2040 has no other free pins. |
 | U11 Adafruit BSS138 level shifter (757) | LV <- 3V3; HV <- U5 5 V; GND -> GND pad; LV1 <- D0, HV1 -> J13A; LV2 <- D1, HV2 -> J13B | Gives the servos a 5 V signal. Channels 3 and 4 unused. |
-| SV1, SV2 TowerPro MG995 (Adafruit 1142) | signal <- J13A/J13B; V+ <- U7 6 V rail B; GND -> TB2 | 50 Hz on PWM slice 0. Engage 1500 us, release 1310 us left and 1690 us right (calibrate). No pulse 1 s after engaging. |
+| SV1, SV2 TowerPro MG995 (Adafruit 1142) | signal <- J13A/J13B; V+ <- U7 6 V rail B; GND -> TB2 | 50 Hz on PWM slice 0. Engage 1500 us, release 1321 us left and 1679 us right (16.3 deg, calibrate). No pulse 1 s after engaging. The release-force check needs the full 6.0 V rating: rail B must deliver 6.0 V at the servo plug. |
 | R9 / R10 KB2040 battery divider | 12 V bus -> R9 100 k -> A1 -> R10 15 k -> GND pad | 12.70 V reads 1.657 V at A1. The bottom leg returns at the KB2040 so the USB ground offset stays out of the reading. |
 | DRV8833 SLP (U1-U4) | SLP <- KB2040 3V3 pad | Tied high to free D1. Arming and stopping are done in firmware. |
 

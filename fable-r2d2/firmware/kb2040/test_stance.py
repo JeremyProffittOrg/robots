@@ -59,7 +59,9 @@ class Plant:
         self.seat_delay = 30
         self.pull_delay = 80
         self.pinned_ms = 0
-        self.foot_output_while_not_parked = False
+        self.foot_output_while_not_parked = False   # left or right wheels
+        self.centre_output_outside_rolling = False  # centre wheels outside TILT / LOCKING
+        self.feed_samples = []                      # (phase, wheel mm/s, kinematic mm/s)
 
     # -- hardware object used by the supervisor ----------------------------
 
@@ -195,6 +197,7 @@ class Rig:
         self.core.feed(line + "\n", self.t)
 
     def step(self):
+        before = self.plant.mm
         self.plant.physics(self.t, 10)
         self.t += 10
         if self.link and self.t >= self._next_line:
@@ -204,8 +207,16 @@ class Rig:
             self.core.feed(text, self.t)
             self._next_line = self.t + 50
         self.core.tick(self.t)
-        if self.s.state != stance.THREE_FOOT and any(self.plant.channels[:3]):
+        parked = self.s.state == stance.THREE_FOOT
+        if not parked and any(self.plant.channels[:2]):
             self.plant.foot_output_while_not_parked = True
+        rolling = self.s.transitioning() and self.s.phase in (stance.TILT, stance.LOCKING)
+        if not parked and not rolling and self.plant.channels[2]:
+            self.plant.centre_output_outside_rolling = True
+        if rolling:
+            kinematic = (foot_y(self.plant.mm) - foot_y(before)) * 100.0  # mm per 10 ms -> mm/s
+            wheel = self.plant.channels[2] * stance.FOOT_FULL_SPEED_MM_S / 1000.0
+            self.plant.feed_samples.append((self.s.phase, wheel, kinematic))
 
     def run(self, ms):
         for _ in range(int(ms) // 10):
@@ -238,6 +249,21 @@ class Rig:
             if text.startswith("ss "):
                 return text
         return None
+
+
+def foot_y(mm):
+    """Centre-foot world y by linear interpolation of the CAD table."""
+    table = stance.CENTRE_FOOT_TRAVEL
+    if mm <= table[0][0]:
+        return table[0][1]
+    for index in range(1, len(table)):
+        if mm <= table[index][0]:
+            s0, y0 = table[index - 1]
+            s1, y1 = table[index]
+            return y0 + (mm - s0) * (y1 - y0) / (s1 - s0)
+    s0, y0 = table[-2]
+    s1, y1 = table[-1]
+    return y1 + (mm - s1) * (y1 - y0) / (s1 - s0)
 
 
 KB2040_GPIO = {
@@ -313,6 +339,7 @@ class TestSensorConditioning(unittest.TestCase):
         self.assertEqual(L.problems(), [])
         self.assertIn("seek", " ".join(stance.Limits(seek_mm=5.0).problems()))
         self.assertIn("overlap", " ".join(stance.Limits(three_foot_mm=33.0).problems()))
+        self.assertIn("hard mechanical stop", " ".join(stance.Limits(hard_stop_mm=66.0).problems()))
 
     def test_unknown_limit_is_rejected(self):
         with self.assertRaises(AttributeError):
@@ -403,12 +430,12 @@ class TestSensorConditioning(unittest.TestCase):
         self.assertFalse(other.update(10, 16000))     # not a battery reading: at once
 
     def test_release_servo_goes_limp_after_engaging(self):
-        servo = stance.ReleaseServo(1310, 1500, 1000)
-        self.assertEqual(servo.update(0, True), 1310)
+        servo = stance.ReleaseServo(1321, 1500, 1000)
+        self.assertEqual(servo.update(0, True), 1321)
         self.assertEqual(servo.update(10, False), 1500)
         self.assertEqual(servo.update(1009, False), 1500)
         self.assertEqual(servo.update(1010, False), 0)
-        self.assertEqual(servo.update(2000, True), 1310)
+        self.assertEqual(servo.update(2000, True), 1321)
 
     def test_mirrored_release_pulses(self):
         self.assertEqual(stance.RELEASE_US[0] + stance.RELEASE_US[1], 2 * stance.ENGAGE_US[0])
@@ -453,7 +480,7 @@ class TestBoot(unittest.TestCase):
         rig.run(stance.ENGAGE_HOLD_MS)
         self.assertEqual(rig.plant.release_us, [0, 0])
         status = rig.last_status()
-        self.assertTrue(status.startswith("ss THREE_FOOT NONE NONE 625 EE 12600 1 1 1 0 "), status)
+        self.assertTrue(status.startswith("ss THREE_FOOT NONE NONE 653 EE 12600 1 1 1 0 "), status)
         self.assertEqual(rig.s.tilt_deg(), 18.0)
 
     def test_boot_on_two_feet(self):
@@ -540,6 +567,7 @@ class TestTransitions(unittest.TestCase):
         self.assertEqual(rig.plant.seated(), [2, 2])
         self.assertLessEqual(rig.plant.pinned_ms, 100)
         self.assertFalse(rig.plant.foot_output_while_not_parked)
+        self.assertFalse(rig.plant.centre_output_outside_rolling)
         self.assertFalse(rig.s.drive_allowed())
         self.assertTrue(rig.s.head_allowed())
         rig.run(2000)
@@ -576,6 +604,7 @@ class TestTransitions(unittest.TestCase):
         self.assertTrue(rig.s.drive_allowed())
         self.assertLessEqual(rig.plant.pinned_ms, 100)
         self.assertFalse(rig.plant.foot_output_while_not_parked)
+        self.assertFalse(rig.plant.centre_output_outside_rolling)
         self.assertEqual(rig.errors, [])
         rig.run(200)
         self.assertTrue(rig.last_status().startswith("ss THREE_FOOT NONE NONE "))
@@ -591,6 +620,75 @@ class TestTransitions(unittest.TestCase):
         rig.drive_line = "M 400 400 400 0"
         rig.run(200)
         self.assertEqual(rig.plant.channels[:3], [400, 400, 400])
+
+
+class TestCentreFootFeed(unittest.TestCase):
+    def test_ground_rate_follows_the_cad_table(self):
+        table = stance.CENTRE_FOOT_TRAVEL
+        self.assertEqual(stance.foot_ground_rate(31.0), 0.0)
+        self.assertEqual(stance.foot_ground_rate(None), 0.0)
+        self.assertAlmostEqual(stance.foot_ground_rate(31.7), 10.27, places=2)
+        self.assertAlmostEqual(stance.foot_ground_rate(64.0), 2.40, places=2)
+        self.assertAlmostEqual(stance.foot_ground_rate(66.0), 2.40, places=2)  # creep past the end
+        self.assertAlmostEqual(table[-1][1] - table[0][1], 124.9, places=1)
+        self.assertAlmostEqual(stance.FOOT_FULL_SPEED_MM_S, 659.7, places=1)
+
+    def test_feed_permille(self):
+        self.assertEqual(stance.centre_feed_permille(10.27, 4.8, 1), 75)
+        self.assertEqual(stance.centre_feed_permille(2.40, 3.4, -1), -12)
+        self.assertEqual(stance.centre_feed_permille(10.0, 0.0, 1), 0)
+        self.assertEqual(stance.centre_feed_permille(500.0, 100.0, 1), 1000)
+
+    def check_tracking(self, rig, sign):
+        steady = [sample for sample in rig.plant.feed_samples
+                  if sample[0] == stance.TILT and abs(sample[2]) > 1.0]
+        self.assertGreater(len(steady), 500)
+        steady = steady[40:]  # skip the speed window and the ramp at the start of TILT
+        for _phase, wheel, kinematic in steady:
+            self.assertEqual(wheel > 0, sign > 0)
+        wheel_travel = sum(sample[1] for sample in steady)
+        kinematic_travel = sum(sample[2] for sample in steady)
+        self.assertAlmostEqual(wheel_travel / kinematic_travel, 1.0, delta=0.05)
+        worst = max(abs(wheel - kinematic) for _phase, wheel, kinematic in steady)
+        self.assertLess(worst, 12.0)  # mm/s; wheel command resolution is 0.66 mm/s per permille
+
+    def test_centre_wheels_roll_back_while_retracting(self):
+        rig = Rig()
+        rig.request = stance.REQUEST_TWO_FOOT
+        self.assertTrue(rig.until_state(stance.TWO_FOOT, 60000))
+        self.check_tracking(rig, -1)
+        self.assertFalse(rig.plant.centre_output_outside_rolling)
+        self.assertEqual(rig.plant.channels, [0, 0, 0, 0])
+
+    def test_centre_wheels_roll_forward_while_deploying(self):
+        rig = Rig(TWO_FOOT_POS, 2)
+        rig.request = stance.REQUEST_THREE_FOOT
+        self.assertTrue(rig.until_state(stance.THREE_FOOT, 60000))
+        self.check_tracking(rig, 1)
+        self.assertFalse(rig.plant.centre_output_outside_rolling)
+        self.assertEqual(rig.plant.channels, [0, 0, 0, 0])
+
+    def test_status_reports_the_feed_and_a_stall_stops_it(self):
+        rig = Rig()
+        rig.request = stance.REQUEST_TWO_FOOT
+        self.assertTrue(rig.until_phase(stance.TILT, 2000))
+        rig.run(3000)
+        feed = rig.plant.channels[2]
+        self.assertLess(feed, 0)
+        status = [text for text in rig.lines if text.startswith("st ")][-1].split()
+        self.assertLess(int(status[4]), 0)
+        rig.plant.stalled = True
+        rig.run(L.progress_ms + 30)
+        self.assertEqual(rig.s.fault, stance.STALL)
+        self.assertEqual(rig.plant.channels, [0, 0, 0, 0])
+
+    def test_no_feed_while_the_foot_is_in_the_air(self):
+        rig = Rig(TWO_FOOT_POS, 2)
+        rig.request = stance.REQUEST_THREE_FOOT
+        self.assertTrue(rig.until_phase(stance.LOWER, 2000))
+        rig.run(3000)
+        self.assertEqual(rig.plant.actuator, 100)
+        self.assertEqual(rig.plant.channels, [0, 0, 0, 0])
 
 
 class TestCommandLoss(unittest.TestCase):
@@ -628,10 +726,12 @@ class TestCommandLoss(unittest.TestCase):
         rig.request = stance.REQUEST_TWO_FOOT
         self.assertTrue(rig.until_phase(stance.TILT, 2000))
         rig.run(2000)
+        self.assertLess(rig.plant.channels[2], 0)           # centre wheels rolling back with the tilt
         rig.link = False
         rig.run(protocol.HEARTBEAT_MS + 60)
         self.assertEqual(rig.s.state, stance.HELD)
         self.assertEqual(rig.plant.actuator, 0)
+        self.assertEqual(rig.plant.channels, [0, 0, 0, 0])
         self.assertIsNone(rig.s.tilt_deg())
 
     def test_pi_link_lost_while_unlocking(self):

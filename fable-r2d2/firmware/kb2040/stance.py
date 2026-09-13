@@ -8,6 +8,11 @@ Its stroke ``s`` (mm from fully closed) sets the stance:
     s = CONTACT_MM      centre foot touches the floor, body tilt still 0 deg
     s = THREE_FOOT_MM   three-foot stance: body tilt 18 deg, centre foot forward
 
+Between touchdown and three feet the centre foot rolls forward on the floor.
+The tilt force check assumes almost no floor drag, so the centre wheels are
+driven at the kinematic ground speed (CAD table below times the measured
+actuator speed) during TILT and LOCKING, and stop whenever the actuator stops.
+
 Two shoulder locks, one per outer leg, mirror images.  Each is a spring-return
 plunger pin in the body with two receivers in its leg: one at tilt 0 (seated for
 every s up to CONTACT_MM) and one at tilt 18 deg (seated at THREE_FOOT_MM).  A
@@ -49,9 +54,10 @@ ACTUATOR_REST_PER_RUN = 4           # 20 % duty: 4 ms rest per ms of travel
 
 TWO_FOOT_MM = 5.0                   # two-foot stance: wheels 25 mm above the floor
 CONTACT_MM = 31.6                   # centre-foot touchdown at tilt 0; tilt-0 receivers
-THREE_FOOT_MM = 62.3                # tilt 18 deg; tilt-18 receivers
+THREE_FOOT_MM = 65.1                # tilt 18.00 deg (CAD 65.07); tilt-18 receivers
 COMMAND_MIN_MM = 0.7                # never command outside 0.7 .. 99.3 mm
 COMMAND_MAX_MM = 99.3
+HARD_STOP_MM = 68.0                 # carriage on the bottom shaft boss
 TWO_FOOT_TILT_DEG = 0.0
 THREE_FOOT_TILT_DEG = 18.0
 
@@ -66,12 +72,12 @@ LOCK_WINDOW_MM = 1.5                # band round each receiver where either lock
 SEEK_MM = 1.2                       # TILT stops this far before the far receiver
 OVERSHOOT_MM = 1.0                  # LOCKING creeps this far past the nominal receiver
 OVERTRAVEL_MM = 1.5                 # beyond an endpoint by more than this is a fault
-RELEASE_DROP_DEPLOY_MM = 37.8       # deploy: pins clear of the tilt-0 bores at or above this
-RELEASE_DROP_RETRACT_MM = 44.3      # retract: pins clear of the tilt-18 bores at or below this
+RELEASE_DROP_DEPLOY_MM = 38.7       # deploy: pins clear of the tilt-0 bores at or above this
+RELEASE_DROP_RETRACT_MM = 45.9      # retract: pins clear of the tilt-18 bores at or below this
 PROGRESS_MM = 0.3                   # stall: less than this ...
 PROGRESS_MS = 1000                  # ... within this many ms while driven
 LIFT_TIMEOUT_MS = 16000             # LIFT / LOWER phase, 26.6 mm at 2.5 mm/s x 1.5
-TILT_TIMEOUT_MS = 20000             # TILT and LOCKING phase, 30.7 mm at 2.5 mm/s x 1.5 = 18.4 s
+TILT_TIMEOUT_MS = 21000             # TILT and LOCKING phase, 33.5 mm at 2.5 mm/s x 1.5 = 20.1 s
 LOCK_SETTLE_MS = 150                # pin drop time before the LOCKING creep starts
 LOCK_RELEASE_TIMEOUT_MS = 400       # 0.3 s pin pull plus the switch debounce
 LOCK_SEAT_TIMEOUT_MS = 3000         # after the creep ends, both pins must read seated
@@ -84,9 +90,25 @@ LOCK_LEGAL_MS = 50                  # debounce for a legal NO/NC pair
 LOCK_ILLEGAL_MS = 150               # both open or both closed must persist this long
 
 ENGAGE_US = (1500, 1500)            # left, right: horn parked 1 mm clear of the knob
-RELEASE_US = (1310, 1690)           # left, right: 17 deg toward the knob, mirrored
+RELEASE_US = (1321, 1679)           # left, right: 16.3 deg toward the knob at ~11 us/deg, mirrored
 ENGAGE_HOLD_MS = 1000               # engage pulse is held this long, then no pulse
 SERVO_PERIOD_US = 20000             # 50 Hz
+SERVO_SUPPLY_V = 6.0                # release-force check uses the MG995 10 kg-cm rating at 6 V
+
+# Centre-foot ground travel, from the CAD kinematics (scripts/stability.py
+# Stance.at_center_foot, caster yaw 0, geometry of 2026-09-12): (stroke mm,
+# foot world y mm).  124.9 mm of rolling over the 33.5 mm tilt stroke; dy/ds is
+# 10.3 just past touchdown and 2.4 at three feet.
+CENTRE_FOOT_TRAVEL = (
+    (31.604, -3.901), (31.854, -1.333), (32.104, 1.054), (32.604, 5.412), (33.104, 9.349),
+    (33.604, 12.970), (34.604, 19.507), (35.604, 25.357), (37.604, 35.661), (39.604, 44.692),
+    (42.604, 56.667), (45.604, 67.336), (49.604, 80.154), (53.604, 91.808), (57.604, 102.594),
+    (61.604, 112.703), (65.070, 121.014),
+)
+WHEEL_DIAMETER_MM = 63.0            # Adafruit 3766 wheel
+TT_NO_LOAD_RPM = 200.0              # Adafruit 3777 TT motor at 6 V
+CENTRE_FEED_GAIN = 1.0              # commissioning trim on the kinematic wheel command
+SPEED_WINDOW_MS = 250               # actuator speed is measured over this window
 
 # ===== END MECHANISM CONSTANTS =====
 
@@ -142,6 +164,10 @@ READY_TWO = "standing on two feet; both shoulder locks seated"
 READY_THREE = "on three feet; both shoulder locks seated; ready to drive"
 
 
+FOOT_FULL_SPEED_MM_S = 3.14159265 * WHEEL_DIAMETER_MM * TT_NO_LOAD_RPM / 60.0
+"""Centre-foot ground speed at 1000 permille with no load, mm/s."""
+
+
 class Limits:
     """The mechanism constants as one object, so tests can build variants."""
 
@@ -151,6 +177,7 @@ class Limits:
         self.three_foot_mm = THREE_FOOT_MM
         self.command_min_mm = COMMAND_MIN_MM
         self.command_max_mm = COMMAND_MAX_MM
+        self.hard_stop_mm = HARD_STOP_MM
         self.stroke_mm = ACTUATOR_STROKE_MM
         self.pot_zero_mv = POT_ZERO_MV
         self.pot_full_mv = POT_FULL_MV
@@ -206,6 +233,13 @@ class Limits:
              "two-foot overtravel limit must stay inside the command range")
         need(self.three_foot_mm + self.overtravel_mm <= self.command_max_mm,
              "three-foot overtravel limit must stay inside the command range")
+        need(self.three_foot_mm + self.overtravel_mm < self.hard_stop_mm,
+             "three-foot overtravel fault must trip before the hard mechanical stop")
+        need(self.three_foot_mm + self.overshoot_mm + tol < self.hard_stop_mm,
+             "the three-foot creep must end before the hard mechanical stop")
+        need(CENTRE_FOOT_TRAVEL[0][0] <= self.contact_mm + tol
+             and CENTRE_FOOT_TRAVEL[-1][0] >= self.three_foot_mm - window,
+             "the centre-foot travel table must cover touchdown to three feet")
         need(self.seek_mm + tol <= window, "seek point must sit inside the lock window")
         need(self.overshoot_mm + tol < window, "overshoot must stay inside the lock window")
         need(self.overshoot_mm + tol < self.overtravel_mm, "overshoot must stay short of overtravel")
@@ -251,6 +285,35 @@ def servo_duty(pulse_us, period_us=SERVO_PERIOD_US):
     if pulse_us <= 0:
         return 0
     return int(pulse_us * 65535 // period_us)
+
+
+def foot_ground_rate(mm, table=CENTRE_FOOT_TRAVEL):
+    """Centre-foot ground travel per mm of stroke (dy/ds) at ``mm``; 0 before touchdown."""
+    if mm is None or mm < table[0][0]:
+        return 0.0
+    index = len(table) - 1
+    for candidate in range(1, len(table)):
+        if mm <= table[candidate][0]:
+            index = candidate
+            break
+    s0, y0 = table[index - 1]
+    s1, y1 = table[index]
+    return (y1 - y0) / (s1 - s0)
+
+
+def centre_feed_permille(rate, speed_mm_s, direction, gain=CENTRE_FEED_GAIN,
+                         full_speed=FOOT_FULL_SPEED_MM_S):
+    """Centre-channel permille that rolls the foot at ``rate`` x ``speed_mm_s``.
+
+    ``direction`` is +1 while extending (the foot rolls forward) and -1 while
+    retracting.  Positive centre permille drives the robot forward.
+    """
+    value = int(round(direction * rate * speed_mm_s * 1000.0 * gain / full_speed))
+    if value > 1000:
+        return 1000
+    if value < -1000:
+        return -1000
+    return value
 
 
 class ContactPair:
@@ -450,7 +513,10 @@ class Stance:
         self.power = False
         self.heartbeat = False
         self.armed = False
+        self.speed_mm_s = 0.0
+        self.centre_permille = 0
         self.begun = False
+        self._track = []
         self._released = True
         self._seek_reached = False
         self._seek_reached_at = 0
@@ -534,7 +600,40 @@ class Stance:
     # -- commands ---------------------------------------------------------
 
     def tick(self, now, sample, request, drive_idle, request_fresh=True):
-        """Advance one tick.
+        """Advance one tick, then update :attr:`centre_permille`.
+
+        See :meth:`_advance` for the arguments.
+        """
+        self._advance(now, sample, request, drive_idle, request_fresh)
+        self._update_feed()
+
+    def _update_speed(self, now):
+        """Actuator speed from the pot over the last ``SPEED_WINDOW_MS``, mm/s."""
+        if self.position_mm is None:
+            self._track = []
+            self.speed_mm_s = 0.0
+            return
+        self._track.append((now, self.position_mm))
+        while len(self._track) > 2 and now - self._track[1][0] >= SPEED_WINDOW_MS:
+            self._track.pop(0)
+        first_t, first_mm = self._track[0]
+        span = now - first_t
+        self.speed_mm_s = abs(self.position_mm - first_mm) * 1000.0 / span if span > 0 else 0.0
+
+    def _update_feed(self):
+        """Centre wheels at the kinematic ground speed while the foot rolls; else 0."""
+        rolling = (self.transitioning() and (self.phase == TILT or self.phase == LOCKING)
+                   and self.actuator != 0 and self.position_mm is not None
+                   and self.position_mm > self.lim.contact_mm)
+        if not rolling:
+            self.centre_permille = 0
+            return
+        direction = 1 if self.actuator > 0 else -1
+        self.centre_permille = centre_feed_permille(
+            foot_ground_rate(self.position_mm), self.speed_mm_s, direction)
+
+    def _advance(self, now, sample, request, drive_idle, request_fresh):
+        """Advance the state machine one tick.
 
         ``request`` is the operator's held stance control (0 none, 2, 3).
         ``request_fresh`` is False when no request has arrived recently: the
@@ -549,6 +648,7 @@ class Stance:
         self.power = sample.power
         self.heartbeat = sample.heartbeat
         self.armed = sample.armed
+        self._update_speed(now)
         if not request_fresh:
             request = REQUEST_NONE
         elif request == REQUEST_NONE:
