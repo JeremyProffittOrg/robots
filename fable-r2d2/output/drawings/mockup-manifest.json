@@ -1,22 +1,112 @@
 {
+  "revision": "D",
   "file": "output/drawings/00_final_build_mockup.png",
   "pixels": [
-    2660,
-    3958
+    3950,
+    5216
   ],
-  "sha256": "53f68d8ec5b1f628146794bb4ecb3dc7bf09effa57e55c1db55d6afed3c7b35a",
-  "views": [
-    "Front",
-    "Three-quarter",
-    "Right side",
-    "Rear"
-  ],
-  "projection": {
-    "Front": "orthographic",
-    "Three-quarter": "orthographic",
-    "Right side": "orthographic",
-    "Rear": "orthographic"
+  "sha256": "dec5353ec854a765e8bd33b5876d7e34d0f967ad7de2d2955f349366eb8f22e6",
+  "stance_parameter": "stance_s",
+  "stance_endpoints_mm": {
+    "two_foot": 5.0,
+    "contact": 33.86751345948129,
+    "three_leg": 81.29
   },
-  "source": "cad/r2d2.scad part=assembly",
+  "poses": [
+    {
+      "row": "Three-leg operating stance",
+      "view": "Front",
+      "stroke_mm": 81.29,
+      "tilt_deg": 18.001,
+      "centre_foot_lift_mm": 0.0,
+      "locks_seated": true,
+      "caption": "The droid faces +Y. stance_s 81.3 mm, tilt 18.0 deg, centre foot 0 mm up, both shoulder locks seated"
+    },
+    {
+      "row": "Three-leg operating stance",
+      "view": "Three-quarter",
+      "stroke_mm": 81.29,
+      "tilt_deg": 18.001,
+      "centre_foot_lift_mm": 0.0,
+      "locks_seated": true,
+      "caption": "Centre foot ahead, body tilted back. stance_s 81.3 mm, tilt 18.0 deg, centre foot 0 mm up, both shoulder locks seated"
+    },
+    {
+      "row": "Three-leg operating stance",
+      "view": "Right side",
+      "stroke_mm": 81.29,
+      "tilt_deg": 18.001,
+      "centre_foot_lift_mm": 0.0,
+      "locks_seated": true,
+      "caption": "Drive allowed only here. stance_s 81.3 mm, tilt 18.0 deg, centre foot 0 mm up, both shoulder locks seated"
+    },
+    {
+      "row": "Two-foot stance: stationary, centre foot stowed",
+      "view": "Rear",
+      "stroke_mm": 5.0,
+      "tilt_deg": 0.0,
+      "centre_foot_lift_mm": 25.0,
+      "locks_seated": true,
+      "caption": "Charge port and main switch. stance_s 5.0 mm, tilt 0.0 deg, centre foot 25 mm up, both shoulder locks seated"
+    },
+    {
+      "row": "Two-foot stance: stationary, centre foot stowed",
+      "view": "Three-quarter",
+      "stroke_mm": 5.0,
+      "tilt_deg": 0.0,
+      "centre_foot_lift_mm": 25.0,
+      "locks_seated": true,
+      "caption": "Body upright. stance_s 5.0 mm, tilt 0.0 deg, centre foot 25 mm up, both shoulder locks seated"
+    },
+    {
+      "row": "Two-foot stance: stationary, centre foot stowed",
+      "view": "Right side",
+      "stroke_mm": 5.0,
+      "tilt_deg": 0.0,
+      "centre_foot_lift_mm": 25.0,
+      "locks_seated": true,
+      "caption": "Drive refused. stance_s 5.0 mm, tilt 0.0 deg, centre foot 25 mm up, both shoulder locks seated"
+    },
+    {
+      "row": "Stance change, three-leg to two-foot (deploy runs in reverse)",
+      "view": "Right side",
+      "stroke_mm": 49.043,
+      "tilt_deg": 9.0,
+      "centre_foot_lift_mm": 0.0,
+      "locks_seated": false,
+      "caption": "1 Unlocked, tilting on the floor. stance_s 49.0 mm, tilt 9.0 deg, centre foot 0 mm up, shoulder locks released"
+    },
+    {
+      "row": "Stance change, three-leg to two-foot (deploy runs in reverse)",
+      "view": "Right side",
+      "stroke_mm": 33.868,
+      "tilt_deg": 0.0,
+      "centre_foot_lift_mm": 0.0,
+      "locks_seated": true,
+      "caption": "2 Upright, locks re-seated. stance_s 33.9 mm, tilt 0.0 deg, centre foot 0 mm up, both shoulder locks seated"
+    },
+    {
+      "row": "Stance change, three-leg to two-foot (deploy runs in reverse)",
+      "view": "Right side",
+      "stroke_mm": 19.434,
+      "tilt_deg": 0.0,
+      "centre_foot_lift_mm": 12.5,
+      "locks_seated": true,
+      "caption": "3 Lifting the centre foot. stance_s 19.4 mm, tilt 0.0 deg, centre foot 12 mm up, both shoulder locks seated"
+    }
+  ],
+  "projection": "orthographic",
+  "source": "cad/r2d2.scad part=assembly -D stance_s",
+  "source_sha256": {
+    "cad/body.scad": "7cda1b00262982cbc6108ca4ddde77e4819cef058635fb3e76387245fc388335",
+    "cad/dome.scad": "4d3439260027749e1fa04026ad9af7a871b0c695df8ea28c78bbb5217b6824e5",
+    "cad/feet.scad": "b7d81743d96bb6ca730b6d9a2cdf6eb8abb12a9e02cc3ff831e489e897988a3a",
+    "cad/head_drive.scad": "8a03c3e59ab48ff44309094bca3f4296a09d9d8eddec8ebcea4327cc2c2ed3e4",
+    "cad/legs.scad": "5eb3bbaef2651ad9b9816778399573774d2fa1e829f881cc21eb1b1f918448aa",
+    "cad/lib.scad": "7d606c413eed50905bd7fa05ff16a5153d48505893eb54033719a8ae038b728b",
+    "cad/params.scad": "4a52b587b3a47f73c70c2dfd99468fd2e114d131edfb51b21f103e0f248c9d7f",
+    "cad/r2d2.scad": "4fce809a319e6ff4e82f3f93b69ed988649f5d48100ad2fdfb5f3bbf79b3557c",
+    "cad/stance.scad": "bae4dfc13339945cfd4b3f2d9943e61db38d5ae553cc45b4bb4e4bfcdfe86dc7"
+  },
   "physical_build": false
 }
