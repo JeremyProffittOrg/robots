@@ -1,6 +1,6 @@
 #pragma once
 // Revision D stance change: THREE_FOOT <-> TWO_FOOT with a sensed spring-return shoulder lock.
-// The GN 412 plunger seats in one bushing for each stance, so the lock is engaged at BOTH
+// The GN817 plunger seats in one bushing for each stance, so the lock is engaged at BOTH
 // endpoints and withdrawn only while the body tilts. Lock state always comes from the lock
 // sensor, never from post position. Pure C++11, no Arduino headers: host tests run this code.
 // Position is centre-post stroke in mm (cad/kinematics.scad s), 0 = fully retracted.
@@ -29,7 +29,6 @@ struct StanceLimits {
  float seekMm;                          // tilt stops this far before a bushing, then LOCKING creeps
  float overshootMm;                     // LOCKING creeps this far past the nominal bushing position
  float overtravelMm;                    // beyond an endpoint by this much is a fault
- float releaseDropRetractMm, releaseDropDeployMm; // tilt drops the release once the ring face is under the pin
  float progressMm; uint32_t progressMs; // stall detection
  uint32_t travelTimeoutMs, lockSettleMs, lockTimeoutMs, reverseDwellMs;
  uint32_t restPerRunMs;                 // cooldown ms per ms of travel (actuator duty cycle)
@@ -42,6 +41,7 @@ class StanceHal {
  virtual ~StanceHal() {}
  virtual bool readPositionMm(float &mm) = 0;        // false: no valid reading
  virtual bool readLockEngaged(bool &engaged) = 0;   // false: sensor state invalid
+ virtual bool readLockWithdrawn(bool &withdrawn) = 0; // independent full-withdrawal endpoint
  virtual bool travelLimitsClosed() = 0;             // both NC hardware travel limits closed
  virtual bool powerHealthy() = 0;                   // RUN power present and battery inside limits
  virtual bool heartbeatFresh(uint32_t now) = 0;     // an armed operator command is inside its lease
@@ -102,7 +102,7 @@ class Stance {
  int actuator = 0;
  bool release = false;
  // Last sample, published to the status API.
- bool positionValid = false, lockValid = false, lockEngaged = false, limitsClosed = false, power = false, heartbeat = false;
+ bool positionValid = false, lockValid = false, lockEngaged = false, lockWithdrawn = false, limitsClosed = false, power = false, heartbeat = false;
  float positionMm = NAN;
 
  const StanceLimits &limits() const { return lim; }
@@ -111,7 +111,6 @@ class Stance {
   return lim.sensorMinMm < lim.twoFootMm - lim.overtravelMm && lim.threeFootMm + lim.overtravelMm < lim.sensorMaxMm &&
    lim.seekMm + t <= lim.lockWindowMm && lim.overshootMm + t < lim.lockWindowMm && lim.overshootMm + t < lim.overtravelMm &&
    lim.lockWindowMm <= lim.holdToleranceMm &&
-   lim.contactMm + lim.lockWindowMm < lim.releaseDropDeployMm && lim.releaseDropRetractMm < lim.threeFootMm - lim.lockWindowMm &&
    lim.twoFootMm + lim.holdToleranceMm < lim.contactMm - lim.lockWindowMm &&
    lim.contactMm + lim.lockWindowMm < lim.threeFootMm - lim.lockWindowMm &&
    lim.progressMm > 0 && lim.progressMs > 0 && lim.travelTimeoutMs > lim.progressMs && lim.lockTimeoutMs > 0 &&
@@ -193,6 +192,10 @@ class Stance {
   bool engaged = false;
   lockValid = hal.readLockEngaged(engaged);
   lockEngaged = lockValid && engaged;
+  bool withdrawn = false;
+  lockValid = hal.readLockWithdrawn(withdrawn) && lockValid;
+  lockWithdrawn = lockValid && withdrawn;
+  if (lockEngaged && lockWithdrawn) lockValid = false;
   limitsClosed = hal.travelLimitsClosed();
   power = hal.powerHealthy();
   heartbeat = hal.heartbeatFresh(now);
@@ -286,7 +289,7 @@ class Stance {
   progressAt = now; progressPos = positionMm;
   seekReached = false;
   release = next == StancePhase::UNLOCKING || next == StancePhase::TILT;
-  if (next == StancePhase::TILT && ringFaceUnderPin()) release = false;
+
  }
 
  void begin(uint32_t now, StanceTarget wanted) {
@@ -309,6 +312,7 @@ class Stance {
    else if (lockEngaged) { complete(now, StanceState::THREE_FOOT); return; }
    else first = positionMm >= lim.threeFootMm - lim.seekMm ? StancePhase::LOCKING : StancePhase::TILT;
   }
+  if (first == StancePhase::TILT && !lockWithdrawn) first = StancePhase::UNLOCKING;
   enterPhase(now, first);
  }
 
@@ -349,10 +353,6 @@ class Stance {
   return false;
  }
 
- bool ringFaceUnderPin() const {
-  return state == StanceState::RETRACTING ? positionMm <= lim.releaseDropRetractMm : positionMm >= lim.releaseDropDeployMm;
- }
-
  bool stoppedDrift(uint32_t now, const char *text) {
   stopActuator(now);
   if (fabsf(positionMm - phasePos) > lim.stopToleranceMm + lim.progressMm) { fail(now, StanceFault::DRIFT, text); return true; }
@@ -364,14 +364,13 @@ class Stance {
   switch (phase) {
    case StancePhase::UNLOCKING:
     if (stoppedDrift(now, "centre post moved while the lock was releasing")) return;
-    if (!lockEngaged) enterPhase(now, StancePhase::TILT);
+    if (!lockEngaged && lockWithdrawn) enterPhase(now, StancePhase::TILT);
     else if (uint32_t(now - phaseStart) >= lim.lockTimeoutMs)
-     fail(now, StanceFault::LOCK_TIMEOUT, "lock release commanded but lock sensor still engaged");
+     fail(now, StanceFault::LOCK_TIMEOUT, "lock did not reach its independently sensed withdrawn endpoint");
     return;
    case StancePhase::TILT:
     if (lockEngaged) { fail(now, StanceFault::LOCK_DISAGREES, "lock sensor engaged mid-tilt, away from both receivers"); return; }
-    // Hold the pin out only until the ring face is under it; the spring then rides the face to the next receiver.
-    if (ringFaceUnderPin()) release = false;
+    if (!lockWithdrawn) { fail(now, StanceFault::LOCK_DISAGREES, "lock withdrawal lost during tilt"); return; }
     if (move(now, retracting ? lim.contactMm + lim.seekMm : lim.threeFootMm - lim.seekMm, 100)) enterPhase(now, StancePhase::LOCKING);
     return;
    case StancePhase::LOCKING:

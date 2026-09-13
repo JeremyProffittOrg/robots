@@ -43,7 +43,7 @@ def power_overview():
   'Replace R9 20k with 5.60k and R10 1k with 2.00k: pair trip 1.73 A, head 0.86 A.',
   'Romeo 5V_Servo is the 2 A logic buck; servos never draw from it.',
   'NC travel limits gate the 74AHCT125 enables; opening one disables that direction.',
-  'SS-01GL lock switch: NO and NC both read; exactly one closed is valid.',
+  'Two SS-01GL lock switches separately sense engaged and fully withdrawn; each reads NO and NC.',
   'P16 pot on 3.3 V through 2.2k; open wiper or reference faults the stance.',
   'Ground drive runs only on three feet with the lock sensed seated.']
  for i,line in enumerate(notes):label(135,560+i*38,line,18,'start')
@@ -112,11 +112,14 @@ def main():
  wire('POST_ADC','ACT purple / pin2','R_POT_FAIL 470k pin1','26','Open wiper reads 0 mV: feedback fault')
  wire('GND',GND,'R_POT_FAIL pin2')
  # Shoulder lock sensor: Omron SS-01GL, both contacts read.
- wire('GND',GND,'LS_LOCK SS-01GL COM','26','The GN 412 knob closes NO only with the pin fully seated')
- for contact,gpio,resistor in [('NO',18,'R_LOCK_NO'),('NC',5,'R_LOCK_NC')]:
-  wire('LOCK_'+contact,f'LS_LOCK {contact}',f'U1 GPIO{gpio}')
-  wire('LOCK_'+contact,f'LS_LOCK {contact}',f'{resistor} 3.3k pin1','26','About 1 mA wetting current')
-  wire('3V3','U1 3V3 header',f'{resistor} pin2')
+ for switch,net,contacts in [('LS_LOCK','LOCK',[('NO',18),('NC',5)]),
+                             ('LS_WITHDRAWN','WITHDRAWN',[('NO',43),('NC',44)])]:
+  wire('GND',GND,f'{switch} SS-01GL COM','26','Independent GN817 endpoint: engaged or full6mm withdrawal')
+  for contact,gpio in contacts:
+   resistor=f'R_{net}_{contact}'
+   wire(net+'_'+contact,f'{switch} {contact}',f'U1 GPIO{gpio}')
+   wire(net+'_'+contact,f'{switch} {contact}',f'{resistor} 3.3k pin1','26','About1mA closed-contact current')
+   wire('3V3','U1 3V3 header',f'{resistor} pin2')
  # RUN presence and battery voltage.
  wire('5V7_MOTOR','P1 OUT+','R_RUN_TOP 10k pin1')
  wire('RUN_SENSE','R_RUN_TOP 10k pin2','U1 GPIO39','26','5.5-6.0 V rail gives 2.75-3.00 V')

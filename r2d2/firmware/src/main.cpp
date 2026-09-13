@@ -34,10 +34,11 @@ int clearState=0; // 0 idle, 1 requested, 2 cleared, 3 refused
 
 class RomeoHal : public r2::StanceHal {
  public:
- bool positionOk=false, lockOk=false, lockEngaged=false, limits=false, power=false, fresh=false;
+ bool positionOk=false, lockOk=false, lockEngaged=false, lockWithdrawn=false, limits=false, power=false, fresh=false;
  float mm=0; int actuator=0; bool release=false;
  bool readPositionMm(float &out) override { out=mm; return positionOk; }
  bool readLockEngaged(bool &out) override { out=lockEngaged; return lockOk; }
+ bool readLockWithdrawn(bool &out) override { out=lockWithdrawn; return lockOk; }
  bool travelLimitsClosed() override { return limits; }
  bool powerHealthy() override { return power; }
  bool heartbeatFresh(uint32_t) override { return fresh; }
@@ -47,14 +48,20 @@ class RomeoHal : public r2::StanceHal {
 
 void stop(){portENTER_CRITICAL(&mutex);controller.stop();portEXIT_CRITICAL(&mutex);}
 
-// DRV8876 PH/EN: EN is PWM duty (0..255), PH is direction. Change PH only with EN low.
+// DRV8876 PH/EN: input is signed percent. EN=0 brakes both outputs low.
 int phaseLevel[4]={-1,-1,-1,-1};
+r2::PhEnDrive bridgeState[4];
 const int PH_PIN[4]={pins::LEFT_PH,pins::RIGHT_PH,pins::CENTER_PH,pins::HEAD_PH};
 void bridge(int channel,int value){
- if(value==0){ledcWrite(channel,0);return;}
- int level=value>0?HIGH:LOW;
- if(phaseLevel[channel]!=level){ledcWrite(channel,0);digitalWrite(PH_PIN[channel],level);phaseLevel[channel]=level;}
- int duty=abs(value);ledcWrite(channel,duty>255?255:duty);
+ auto output=bridgeState[channel].tick(value,millis());
+ if(!output.duty){ledcWrite(channel,0);return;}
+ int level=output.direction>0?HIGH:LOW;
+ if(phaseLevel[channel]!=level){
+  ledcWrite(channel,0);
+  delayMicroseconds(120); // More than two18kHz periods: let LEDC's zero duty latch.
+  digitalWrite(PH_PIN[channel],level);phaseLevel[channel]=level;
+ }
+ ledcWrite(channel,output.duty);
 }
 void servo(int channel,int us){ledcWrite(channel,(uint32_t)us*(1UL<<SERVO_BITS)/20000UL);}
 void actuatorOutput(int percent){
@@ -68,6 +75,7 @@ void motion(void*){
  esp_task_wdt_add(nullptr);
  r2::Ramp ramps[3],headRamp; r2::Stance stance(calibration::STANCE); RomeoHal hal;
  r2::ContactPair lock(calibration::LOCK_LEGAL_MS,calibration::LOCK_ILLEGAL_MS);
+ r2::ContactPair withdrawn(calibration::LOCK_LEGAL_MS,calibration::LOCK_ILLEGAL_MS);
  TickType_t wake=xTaskGetTickCount();
  bool battery=false,lowTiming=false,initialized=false,wasFault=false;uint32_t lowSince=0,lastSample=0,bootAt=millis();float filtered=0,angle=0;
  portENTER_CRITICAL(&mutex);ready=true;portEXIT_CRITICAL(&mutex);
@@ -82,7 +90,8 @@ void motion(void*){
   uint32_t sum=0;for(int i=0;i<8;i++)sum+=analogReadMilliVolts(pins::POST_POSITION);
   hal.positionOk=r2::potPosition(sum/8.0f,calibration::POT,hal.mm);
   lock.update(now,digitalRead(pins::LOCK_NO)==LOW,digitalRead(pins::LOCK_NC)==LOW);
-  hal.lockOk=lock.valid;hal.lockEngaged=lock.engaged;
+  withdrawn.update(now,digitalRead(pins::WITHDRAWN_NO)==LOW,digitalRead(pins::WITHDRAWN_NC)==LOW);
+  hal.lockOk=lock.valid&&withdrawn.valid;hal.lockEngaged=lock.engaged;hal.lockWithdrawn=withdrawn.engaged;
   hal.limits=digitalRead(pins::LIMIT_EXTEND_OPEN)==LOW&&digitalRead(pins::LIMIT_RETRACT_OPEN)==LOW;
   bool powered=digitalRead(pins::POWER)==HIGH;
   hal.power=powered&&battery;
@@ -92,7 +101,7 @@ void motion(void*){
   hal.fresh=controller.fresh(now);bool clear=clearState==1;portEXIT_CRITICAL(&mutex);
   r2::StanceTarget request=armed&&command.stance>=0?(r2::StanceTarget)command.stance:r2::StanceTarget::NONE;
   bool driveIdle=!command.speed&&!command.turn&&!command.head&&fabsf(angle)<.2f&&!ramps[0].value&&!ramps[1].value&&!ramps[2].value&&!headRamp.value;
-  bool inputsReady=lock.settled()||uint32_t(now-bootAt)>=1000;
+  bool inputsReady=(lock.settled()&&withdrawn.settled())||uint32_t(now-bootAt)>=1000;
   int cleared=0;
   if(inputsReady){
    if(clear)cleared=stance.clearFault(now)?2:3;
@@ -184,7 +193,7 @@ void setup(){
  ledcAttachPin(pins::STEER,ch::STEER);ledcAttachPin(pins::LOCK_SERVO,ch::LOCK);ledcWrite(ch::STEER,0);ledcWrite(ch::LOCK,0);
  ledcSetup(ch::EXTEND,18000,8);ledcSetup(ch::RETRACT,18000,8);
  ledcAttachPin(pins::POST_EXTEND,ch::EXTEND);ledcAttachPin(pins::POST_RETRACT,ch::RETRACT);actuatorOutput(0);
- for(int pin:{pins::LOCK_NO,pins::LOCK_NC,pins::LIMIT_EXTEND_OPEN,pins::LIMIT_RETRACT_OPEN,pins::POWER})pinMode(pin,INPUT);
+ for(int pin:{pins::LOCK_NO,pins::LOCK_NC,pins::WITHDRAWN_NO,pins::WITHDRAWN_NC,pins::LIMIT_EXTEND_OPEN,pins::LIMIT_RETRACT_OPEN,pins::POWER})pinMode(pin,INPUT);
  analogSetPinAttenuation(pins::PACK,ADC_11db);analogSetPinAttenuation(pins::POST_POSITION,ADC_11db);
  Serial.begin(115200);fsReady=LittleFS.begin(false);
  audioOut.SetPinout(pins::BCLK,pins::LRCLK,pins::AUDIO);audioOut.SetGain(.11f); // amplifier GAIN pin open: 9 dB

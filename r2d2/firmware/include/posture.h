@@ -30,10 +30,10 @@ inline float centerFootOffsetMm(float s) {
 }
 
 inline float steeringServoDegrees(float yawDegrees) {
- // Metal linkage: fixed guide point(-30,0), foot servo(-30,-60),12mm crank.
+ // Metal linkage: fixed guide point(-30,0), foot servo(-30,-60),16mm crank.
  const float a = yawDegrees * DEG;
  const float x = 30 - 30 * cosf(a), y = 60 + 30 * sinf(a), d = sqrtf(x * x + y * y);
- float cosine = (d * d + 144 - 3744) / (24 * d);
+ float cosine = (d * d + 256 - 3856) / (32 * d);
  cosine = fmaxf(-1, fminf(1, cosine));
  return (atan2f(y, x) + acosf(cosine)) * 57.29577951f - 180;
 }

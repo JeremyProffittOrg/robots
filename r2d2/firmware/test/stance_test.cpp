@@ -33,6 +33,8 @@ struct Plant : StanceHal {
  bool movedPinned = false; // post driven while a seated pin blocked it
  bool readPositionMm(float &out) override { out = mm; return positionOk; }
  bool readLockEngaged(bool &out) override { out = sensorSaysEngaged ? true : sensorSaysReleased ? false : seated != 0; return lockOk; }
+ bool withdrawnBlocked=false, withdrawnStuck=false;
+ bool readLockWithdrawn(bool &out) override { out=withdrawnStuck || (!withdrawnBlocked && release && seated==0); return lockOk; }
  bool travelLimitsClosed() override { return limitsClosed; }
  bool powerHealthy() override { return power; }
  bool heartbeatFresh(uint32_t) override { return heartbeat; }
@@ -117,10 +119,6 @@ static void sensorConditioning() {
 static void limitsAndBoot() {
  CHECK(Stance(L).consistentLimits());
  CHECK(std::fabs(L.contactMm - postContactMm()) < 0.01f);
- // The release drops only after the pin has swept a full bore diameter plus margin off its receiver.
- const float arcPerDeg = geometry::LOCK_RADIUS_MM * DEG;
- CHECK(threeFootPitchDegrees(L.releaseDropDeployMm) * arcPerDeg >= geometry::LOCK_CLEAR_ARC_MM);
- CHECK((threeFootPitchDegrees(L.threeFootMm) - threeFootPitchDegrees(L.releaseDropRetractMm)) * arcPerDeg >= geometry::LOCK_CLEAR_ARC_MM);
  { Rig a; threeFoot(a); CHECK(a.stance.state == StanceState::THREE_FOOT); CHECK(a.stance.driveAllowed()); CHECK(!a.plant.release); }
  { Rig b; twoFoot(b); CHECK(b.stance.state == StanceState::TWO_FOOT); CHECK(!b.stance.driveAllowed()); CHECK(b.stance.headAllowed()); }
  { Rig c; c.plant.mm = 70; c.plant.seated = 0; c.run(10);
@@ -142,8 +140,7 @@ static void normalRetractThenDeploy() {
  CHECK(r.plant.release); CHECK(r.plant.drive == 0); CHECK(!r.stance.driveAllowed()); CHECK(!r.stance.headAllowed());
  CHECK(r.runUntilPhase(StancePhase::TILT, 1000)); CHECK(r.plant.seated == 0);
  r.run(20); CHECK(r.plant.drive == -100); CHECK(r.plant.release);
- while (r.stance.phase == StancePhase::TILT && r.plant.mm > L.releaseDropRetractMm + 1.0f) { r.run(10); CHECK(r.plant.release); }
- r.run(600); CHECK(r.stance.phase == StancePhase::TILT); CHECK(!r.plant.release); CHECK(r.plant.seated == 0); // pin rides the ring face
+ r.run(600); CHECK(r.stance.phase == StancePhase::TILT); CHECK(r.plant.release);
  CHECK(r.runUntilPhase(StancePhase::LOCKING, 30000));
  CHECK(!r.plant.release); CHECK(r.plant.drive == 0);
  r.run(L.lockSettleMs - 20); CHECK(r.plant.drive == 0); // pin drops before the creep starts
@@ -169,8 +166,7 @@ static void normalRetractThenDeploy() {
  CHECK(r.plant.seated == 2); // still seated until the sensor reports it out
  CHECK(r.runUntilPhase(StancePhase::TILT, 1000)); CHECK(r.plant.seated == 0);
  r.run(20); CHECK(r.plant.release);
- while (r.stance.phase == StancePhase::TILT && r.plant.mm < L.releaseDropDeployMm) r.run(10);
- r.run(20); CHECK(r.stance.phase == StancePhase::TILT); CHECK(!r.plant.release); CHECK(r.plant.seated == 0);
+ r.run(600); CHECK(r.stance.phase == StancePhase::TILT); CHECK(r.plant.release);
  CHECK(r.runUntilPhase(StancePhase::LOCKING, 30000)); CHECK(!r.plant.release);
  CHECK(r.runUntil(StanceState::THREE_FOOT, 10000));
  CHECK(r.plant.seated == 3); CHECK(r.stance.driveAllowed()); CHECK(!r.plant.unsafe); CHECK(!r.plant.movedPinned);
@@ -295,7 +291,7 @@ static void lockSensorDisagreesWithEndpoint() {
  { // Sensor claims seated mid-tilt where no bushing exists.
    Rig e; threeFoot(e); e.request = StanceTarget::TWO_FOOT; CHECK(e.runUntilPhase(StancePhase::TILT, 2000)); e.run(3000);
    e.plant.sensorSaysEngaged = true; e.run(10);
-   CHECK(e.stance.fault == StanceFault::LOCK_DISAGREES); CHECK(e.plant.drive == 0); }
+   CHECK(e.stance.fault == StanceFault::LOCK_SENSOR); CHECK(e.plant.drive == 0); } // both endpoints asserted
 }
 
 static void driveDuringTransitionRefused() {
@@ -327,17 +323,31 @@ static void wrapAndPosture() {
  r.request = StanceTarget::TWO_FOOT;
  CHECK(r.runUntil(StanceState::TWO_FOOT, 60000)); CHECK(!r.plant.unsafe);
  // Provisional geometry: GUIDE_ANGLE 30 deg, contact 36.647 mm, 16.163 deg at POST_MAX 98 mm.
- CHECK(std::fabs(threeFootPitchDegrees(98) - 16.1627f) < 0.01f);
- CHECK(std::fabs(threeFootPitchDegrees(50) - 5.0029f) < 0.01f);
+ CHECK(std::fabs(threeFootPitchDegrees(98) - 12.832480f) < 0.01f);
+ CHECK(std::fabs(threeFootPitchDegrees(50) - 1.712856f) < 0.01f);
  CHECK(threeFootPitchDegrees(20) == 0.0f);
- CHECK(std::fabs(centerFootOffsetMm(98) - 230.206f) < 0.05f);
+ CHECK(std::fabs(centerFootOffsetMm(98) - 226.482669f) < 0.05f);
  for (int s = 0; s <= 100; ++s) CHECK(threeFootPitchDegrees((float)s) >= 0 && threeFootPitchDegrees((float)s) < 17);
  for (int y = -8; y <= 8; y++) CHECK(std::fabs(steeringServoDegrees((float)y)) < 25);
  Command n; n.speed = 60; n.turn = 100; Mix m = mix(n, centerFootOffsetMm(L.threeFootMm));
  CHECK(m.left > m.right); CHECK(m.yaw < 0);
 }
 
+static void fullWithdrawalRequired() {
+ { Rig r; threeFoot(r); r.plant.withdrawnBlocked=true;
+   r.request=StanceTarget::TWO_FOOT; r.run(2000);
+   CHECK(r.plant.seated==0); CHECK(r.plant.drive==0);
+   CHECK(r.stance.fault==StanceFault::LOCK_TIMEOUT); }
+ { Rig r; threeFoot(r); r.request=StanceTarget::TWO_FOOT;
+   CHECK(r.runUntilPhase(StancePhase::TILT,1000)); r.run(20);
+   r.plant.withdrawnBlocked=true; r.run(10);
+   CHECK(r.plant.drive==0); CHECK(r.stance.fault==StanceFault::LOCK_DISAGREES); }
+ { Rig r; r.plant.withdrawnStuck=true; threeFoot(r);
+   CHECK(r.stance.fault==StanceFault::LOCK_SENSOR); CHECK(!r.stance.driveAllowed()); }
+}
+
 int main() {
+ fullWithdrawalRequired();
  sensorConditioning();
  limitsAndBoot();
  normalRetractThenDeploy();

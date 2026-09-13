@@ -6,6 +6,25 @@
 #include <ctype.h>
 #include <math.h>
 namespace r2 {
+struct PhEnOutput { int direction; unsigned duty; };
+// Keep direction history through deadman stops. The board brakes when EN is low.
+class PhEnDrive {
+ public:
+ PhEnOutput output{0,0};
+ PhEnOutput tick(int percent,uint32_t now) {
+  int wanted=percent>0?1:percent<0?-1:0;
+  if(!wanted || (output.direction && wanted!=output.direction)) {
+   if(output.duty){output.duty=0;offSince=now;}
+   if(!wanted || uint32_t(now-offSince)<100)return output;
+  }
+  output.direction=wanted;
+  unsigned magnitude=unsigned(abs(percent));if(magnitude>100)magnitude=100;
+  output.duty=(magnitude*255U+50U)/100U;
+  return output;
+ }
+ private:
+ uint32_t offSince=0;
+};
 constexpr int LIMIT=90; // conservative commissioning duty ceiling, percent
 constexpr uint32_t DEADMAN=500; // command heartbeat lease, ms
 constexpr float SIDE_FOOT_X_MM=165.0f;

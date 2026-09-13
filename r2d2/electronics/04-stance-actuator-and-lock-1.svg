@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="928" viewBox="0 0 1100 928"><rect width="1100" height="928" fill="white"/>
+<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="966" viewBox="0 0 1100 966"><rect width="1100" height="966" fill="white"/>
 <text x="30" y="34" font-family="sans-serif" font-size="22" fill="#122439">R2-24 revision D circuit: stance-actuator-and-lock / 1</text>
 <text x="30" y="65" font-family="sans-serif" font-size="14" fill="#374151">Each horizontal line is one connection. Identical named nets join across sheets. See wiring.csv for notes.</text>
 <text x="30" y="100" font-family="monospace" font-size="14" fill="#142337">B1 PP30 -</text>
@@ -127,4 +127,10 @@
 <rect x="420" y="843" width="260" height="22" fill="white"/>
 <text x="550" y="860" text-anchor="middle" font-family="monospace" font-size="13" fill="#163d72">3V3 (26 AWG)</text>
 <text x="744" y="860" font-family="monospace" font-size="14" fill="#142337">R_LOCK_NC pin2</text>
+<text x="30" y="898" font-family="monospace" font-size="14" fill="#142337">B1 PP30 -</text>
+<path d="M 365 893 H 725" stroke="#163d72" stroke-width="2" fill="none"/>
+<circle cx="365" cy="893" r="3" fill="#163d72"/><circle cx="725" cy="893" r="3" fill="#163d72"/>
+<rect x="420" y="881" width="260" height="22" fill="white"/>
+<text x="550" y="898" text-anchor="middle" font-family="monospace" font-size="13" fill="#163d72">GND (26 AWG)</text>
+<text x="744" y="898" font-family="monospace" font-size="14" fill="#142337">LS_WITHDRAWN SS-01GL COM</text>
 </svg>

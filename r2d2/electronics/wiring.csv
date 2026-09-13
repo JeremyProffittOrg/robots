@@ -74,13 +74,20 @@ GND,B1 PP30 -,ACT orange / pin1,26,
 POST_ADC,ACT purple / pin2,U1 GPIO4,26,
 POST_ADC,ACT purple / pin2,R_POT_FAIL 470k pin1,26,Open wiper reads 0 mV: feedback fault
 GND,B1 PP30 -,R_POT_FAIL pin2,26,
-GND,B1 PP30 -,LS_LOCK SS-01GL COM,26,The GN 412 knob closes NO only with the pin fully seated
+GND,B1 PP30 -,LS_LOCK SS-01GL COM,26,Independent GN817 endpoint: engaged or full6mm withdrawal
 LOCK_NO,LS_LOCK NO,U1 GPIO18,26,
-LOCK_NO,LS_LOCK NO,R_LOCK_NO 3.3k pin1,26,About 1 mA wetting current
+LOCK_NO,LS_LOCK NO,R_LOCK_NO 3.3k pin1,26,About1mA closed-contact current
 3V3,U1 3V3 header,R_LOCK_NO pin2,26,
 LOCK_NC,LS_LOCK NC,U1 GPIO5,26,
-LOCK_NC,LS_LOCK NC,R_LOCK_NC 3.3k pin1,26,About 1 mA wetting current
+LOCK_NC,LS_LOCK NC,R_LOCK_NC 3.3k pin1,26,About1mA closed-contact current
 3V3,U1 3V3 header,R_LOCK_NC pin2,26,
+GND,B1 PP30 -,LS_WITHDRAWN SS-01GL COM,26,Independent GN817 endpoint: engaged or full6mm withdrawal
+WITHDRAWN_NO,LS_WITHDRAWN NO,U1 GPIO43,26,
+WITHDRAWN_NO,LS_WITHDRAWN NO,R_WITHDRAWN_NO 3.3k pin1,26,About1mA closed-contact current
+3V3,U1 3V3 header,R_WITHDRAWN_NO pin2,26,
+WITHDRAWN_NC,LS_WITHDRAWN NC,U1 GPIO44,26,
+WITHDRAWN_NC,LS_WITHDRAWN NC,R_WITHDRAWN_NC 3.3k pin1,26,About1mA closed-contact current
+3V3,U1 3V3 header,R_WITHDRAWN_NC pin2,26,
 5V7_MOTOR,P1 OUT+,R_RUN_TOP 10k pin1,26,
 RUN_SENSE,R_RUN_TOP 10k pin2,U1 GPIO39,26,5.5-6.0 V rail gives 2.75-3.00 V
 RUN_SENSE,R_RUN_TOP 10k pin2,R_RUN_BOTTOM 10k pin1,26,

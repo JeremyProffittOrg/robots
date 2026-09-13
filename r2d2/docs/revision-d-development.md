@@ -10,19 +10,26 @@ loose hardware cannot be hidden in a kit or allowance row.
 
 ## Current geometry
 
-The new chassis is a single printed solid, approximately272 x157.084 x254mm
+The new chassis is a single printed solid, approximately244 x179.496 x275mm
 in its bed orientation. It combines the base, upper deck, shoulder supports,
 four reinforced columns, center-post guide and actuator mount. Four228mm
 MISUMI HFS5-2020 rails insert through its underside. Printed keys and separate
 printed cross-pins retain the rails. The nominal socket is21.2mm square.
 These features are actual CAD, not blocks added only to a drawing.
 
-Printed foot-core and moving-post-adapter studies also exist. They are not
-yet integrated with all covers, the center steering joint, a positively
-locked two-foot stance, or a final shared shoulder axle. The old hub-based
-leg-core study and separate bolted frame outputs were retired after the
-physical-piece limit was confirmed. The full assembly view still uses the
-revision C stance; it must not be represented as the new mechanism.
+The front-post assembly now includes the printed foot cores, moving adapter,
+366mm shared shoulder axle, four6201 bearings, shaft collars, hub access
+openings and removable printed shoulder covers. Each side leg remains one
+main print. The CAD shows front deployment and a lifted center foot at stow.
+The GN817 direct-pull lock mount, steel receiver pocket, keeper and drilling
+jig are modelled. Its release carriage and endpoint sensors are not complete.
+
+The cross-session editing conflict is resolved. The user assigned this
+session final integration and restricted the other CLI to fable-r2d2.
+Reconciliation retains the fitted35degree guide and GN817 direct-pull lock.
+The committed controller/checker still contain30degree/GN412 assumptions;
+these must be replaced before a fabrication release. Use2/98mm operational
+stroke endpoints to retain room for the physical overtravel stops.
 
 Exterior changes add engraved access-panel edges, door hinges and latches,
 data-port fingers, shaped coin-return chutes, stepped octagonal ports,
@@ -32,12 +39,26 @@ These are integrated mesh features. Paint and weathering are separate.
 
 ## Evidence and limits
 
-`python scripts/export_cad.py --check-development` checks the actual six
+`python scripts/export_cad.py --check-development` checks the actual twelve
 development STL designs for closed, consistently wound, positive single
 solids, bed placement and dimensions below300mm on each axis. Its result
 is cad/development-check.json. This does not establish support removal,
 actual H2D slicing, mating clearances, assembly access, load strength,
 fatigue, creep or completed robot operation.
+
+`python scripts/check_printed_fit.py` passed the new shoulder-hub insertion,
+four former center-servo collision witnesses, integral head motor bed, four
+shell/frame screw axes, and a sampled shell assembly route. The lower body
+must enter from below at45degrees to its final orientation. Raise it0.3mm
+above its seated height, rotate to align the tabs, then lower it onto the
+mounts. Install the upper ring from above before external shoulder caps and
+collars. The15000-point screening is not a continuous collision proof.
+Input STL hashes are recorded in cad/printed-fit-check.json.
+
+Fresh OpenSCAD development assembly PNGs are in
+output/drawings/development/{front-deployed,front-stowed,frame-deployed}.png.
+They show actual meshes and schematic purchased-part envelopes; they are
+not the final sourced/verified drawing index or fabrication release.
 
 `python scripts/draw_robot.py --development` makes explicitly labelled
 MATLAB-style component PNGs from the actual current meshes. Their input
@@ -65,7 +86,9 @@ The candidate is itemized in bom/development-purchased.csv. Run
 `python scripts/verify.py --bom-only` for the physical-quantity audit.
 The check counts quantities, rejects invalid or duplicate rows, and fails
 if quantities remain unresolved or the sum exceeds199. Its current result
-is148 known pieces and9 unresolved categories. The default verification
+must be read from the current ledger; concurrent integration is changing
+the subtotal. A2026-09-12 read found142 known pieces and7 unresolved
+categories. This is still incomplete. The default verification
 command also stops at this gate. The checker cannot establish that every
 physical joint and wire is represented; that requires the assembly review.
 
@@ -74,7 +97,10 @@ drivers. Its stock shared current setting, paired-motor protection and
 separate logic/motor supplies need deliberate design changes and checks.
 The controller-brand question is resolved. The specified Adafruit3777
 motors and3766 wheels remain fixed. Do not request that approval again.
-No electronics migration or component purchase has occurred.
+The Romeo firmware migration is committed in3eba75e. Its mechanism
+constants and sensing still need reconciliation. No component purchase
+has occurred. See revision-d-control-review.md for the reviewed faults;
+that note is a snapshot of code which another session continues to edit.
 
 The remaining work is to close the counted purchase manifest, complete
 and check the mechanism and interfaces, adapt controls and wiring, run
