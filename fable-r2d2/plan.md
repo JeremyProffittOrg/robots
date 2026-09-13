@@ -72,9 +72,10 @@ with revision D labels.
 
 ### stance-mechanism — actuator, sensed lock and centre-leg retraction as real CAD, proven by a transition check
 
-- [~] stance-mechanism — owner: background agent a9a5298ea055bf0d4 (commits eb9270e, b56a868, cbfa78a).
-  Status: all DoD checks pass except the body_upper/body_lower H2D slice. Both timed out at the 300 s
-  bound. The ring slice bound is raised to 3600 s (the revision C value) and the re-run is in progress.
+- [x] stance-mechanism — owner: background agent a9a5298ea055bf0d4 (commits eb9270e, b56a868, cbfa78a, 90b8fe5).
+  Status: all DoD checks pass.
+  - `slice_check.py` 10/10 PASS, 10597.6 g, 335.3 h.
+  - The rings slice with tree supports under a 3600 s bound; `slice_timeout_s` is set per part in `parts.json`.
   - Owned files: `cad/**`, `stl/**`, `scripts/export_cad.py`, `slice_check.py`, `stability.py`,
     `parts.json`, `check_stance.py`, `tests/test_stance*.py`, `bom/hardware.csv`,
     `bom/printed-parts.csv`, `docs/mechanical.md`, `docs/stability.json`, `docs/stance-check.json`.
