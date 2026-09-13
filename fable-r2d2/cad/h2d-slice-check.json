@@ -1,5 +1,5 @@
 {
-  "checked_at_utc": "2026-09-12T22:45:18.118579+00:00",
+  "checked_at_utc": "2026-09-13T03:36:04.509473+00:00",
   "test_type": "Local Bambu Studio CLI slicing of package meshes; no printer connection or physical print",
   "profiles": {
     "machine": "Bambu Lab H2D 0.4 nozzle, trimmed to single-nozzle mode (325 x 320 x 320)",
@@ -18,7 +18,7 @@
     },
     "bed": "Textured PEI Plate"
   },
-  "all_pass": true,
+  "all_pass": false,
   "rows": [
     {
       "part": "stl/dome.stl",
@@ -30,47 +30,31 @@
       "error_string": "Success.",
       "gcode_present": true,
       "warning": "",
-      "predicted_mass_g": 1243.4154052734375,
-      "predicted_time_s": 127283.328125,
+      "predicted_mass_g": 1243.41552734375,
+      "predicted_time_s": 127283.2734375,
       "predicted_time_h": 35.36,
       "bbox_mm": null,
       "pass": true
     },
     {
       "part": "stl/body_upper.stl",
-      "sha256": "62b1b7f0b1bf260e75e2bd21f9f8301adb6778aa497aaf77d6ed2610cd0c8937",
+      "sha256": "26d1941bbf01e9e6f2691b81e01803864383d61284a36df4a8468b495ea5f739",
       "material": "PETG",
-      "filament_profile": "Bambu PETG HF @BBL H2D 0.4 nozzle",
-      "print_flip_x": false,
-      "return_code": 0,
-      "error_string": "Success.",
-      "gcode_present": true,
-      "warning": "",
-      "predicted_mass_g": 3115.0888671875,
-      "predicted_time_s": 387424.34375,
-      "predicted_time_h": 107.62,
-      "bbox_mm": null,
-      "pass": true
+      "return_code": null,
+      "error_string": "slicer timed out after 300 s",
+      "pass": false
     },
     {
       "part": "stl/body_lower.stl",
-      "sha256": "789998b7c9b477ee9a84835372aff6db3b58f2a5df663450d01aceddcb3a4628",
+      "sha256": "ffcea62e5922d44605262d060dc8fbb8294e3d8100b77579ec5e84bd892340db",
       "material": "PETG",
-      "filament_profile": "Bambu PETG HF @BBL H2D 0.4 nozzle",
-      "print_flip_x": false,
-      "return_code": 0,
-      "error_string": "Success.",
-      "gcode_present": true,
-      "warning": "",
-      "predicted_mass_g": 1939.38134765625,
-      "predicted_time_s": 213252.59375,
-      "predicted_time_h": 59.24,
-      "bbox_mm": null,
-      "pass": true
+      "return_code": null,
+      "error_string": "slicer timed out after 300 s",
+      "pass": false
     },
     {
       "part": "stl/leg_upper.stl",
-      "sha256": "b09b795d23000666d6e552bd0e043ce82b50cd40146168a84273331390297f80",
+      "sha256": "56c79fda972e013e171ed196e499931a21cae001acd3803806b7348bdc0881cc",
       "material": "PETG",
       "filament_profile": "Bambu PETG HF @BBL H2D 0.4 nozzle",
       "print_flip_x": false,
@@ -78,15 +62,15 @@
       "error_string": "Success.",
       "gcode_present": true,
       "warning": "",
-      "predicted_mass_g": 612.4307250976562,
-      "predicted_time_s": 72127.3046875,
-      "predicted_time_h": 20.04,
+      "predicted_mass_g": 610.9711303710938,
+      "predicted_time_s": 71608.8828125,
+      "predicted_time_h": 19.89,
       "bbox_mm": null,
       "pass": true
     },
     {
       "part": "stl/leg_lower.stl",
-      "sha256": "988e404c8b275d17f85e247d55a8aa0a41c8a8b0e6f180d0e81d1a1d2857e60b",
+      "sha256": "5848ad338e9ecfa094d06109e1fd51db06642554477e55842d61363f4178ca6a",
       "material": "PETG",
       "filament_profile": "Bambu PETG HF @BBL H2D 0.4 nozzle",
       "print_flip_x": false,
@@ -94,15 +78,15 @@
       "error_string": "Success.",
       "gcode_present": true,
       "warning": "",
-      "predicted_mass_g": 314.52197265625,
-      "predicted_time_s": 40309.58203125,
-      "predicted_time_h": 11.2,
+      "predicted_mass_g": 314.1558837890625,
+      "predicted_time_s": 40154.55859375,
+      "predicted_time_h": 11.15,
       "bbox_mm": null,
       "pass": true
     },
     {
       "part": "stl/foot_outer.stl",
-      "sha256": "172e3c3653a7c69e4f8834aecdf8aa0e287a5757755106eded939cda2e905f75",
+      "sha256": "86c1f2141e7838e5c5a4ae6fb2130ca93c38925c5d57dbd9af71f873ac4607eb",
       "material": "PETG",
       "filament_profile": "Bambu PETG HF @BBL H2D 0.4 nozzle",
       "print_flip_x": false,
@@ -110,15 +94,15 @@
       "error_string": "Success.",
       "gcode_present": true,
       "warning": "",
-      "predicted_mass_g": 680.8731689453125,
-      "predicted_time_s": 70537.9609375,
-      "predicted_time_h": 19.59,
+      "predicted_mass_g": 679.4251708984375,
+      "predicted_time_s": 70402.8125,
+      "predicted_time_h": 19.56,
       "bbox_mm": null,
       "pass": true
     },
     {
       "part": "stl/leg_center.stl",
-      "sha256": "79e737249a44aa86e3252f205450e504d30c49f696e280912931f9a19387501e",
+      "sha256": "3c936e59b6da7e04ebc9437f9f7ca1e358a01077b6fe5ee6a7e71eeca43d8678",
       "material": "PETG",
       "filament_profile": "Bambu PETG HF @BBL H2D 0.4 nozzle",
       "print_flip_x": false,
@@ -126,9 +110,25 @@
       "error_string": "Success.",
       "gcode_present": true,
       "warning": "",
-      "predicted_mass_g": 128.34814453125,
-      "predicted_time_s": 15312.0595703125,
-      "predicted_time_h": 4.25,
+      "predicted_mass_g": 124.31228637695312,
+      "predicted_time_s": 14915.7548828125,
+      "predicted_time_h": 4.14,
+      "bbox_mm": null,
+      "pass": true
+    },
+    {
+      "part": "stl/leg_carriage.stl",
+      "sha256": "d81fb0aa20cd1d9a0f362baef39c97509abdad9a9334bd2921c06ae3236e2db1",
+      "material": "PETG",
+      "filament_profile": "Bambu PETG HF @BBL H2D 0.4 nozzle",
+      "print_flip_x": false,
+      "return_code": 0,
+      "error_string": "Success.",
+      "gcode_present": true,
+      "warning": "",
+      "predicted_mass_g": 247.6832275390625,
+      "predicted_time_s": 28433.357421875,
+      "predicted_time_h": 7.9,
       "bbox_mm": null,
       "pass": true
     },
@@ -165,6 +165,6 @@
       "pass": true
     }
   ],
-  "total_predicted_mass_g": 10053.9,
-  "total_predicted_time_h": 320.6
+  "total_predicted_mass_g": 0,
+  "total_predicted_time_h": 0.0
 }
