@@ -23,6 +23,7 @@ PROFILES = Path("C:/Program Files/Bambu Studio/resources/profiles/BBL")
 EXE = Path("C:/Program Files/Bambu Studio/bambu-studio.exe")
 MANIFEST = json.loads((ROOT / "scripts/parts.json").read_text(encoding="utf-8"))
 PARTS = MANIFEST["parts"]
+DEFAULT_TIMEOUT_S = 300          # per-part slicer bound; scripts/parts.json slice_timeout_s overrides it (the body rings use 3600)
 FILAMENT = {"PETG": "Bambu PETG HF @BBL H2D 0.4 nozzle", "PLA": "Bambu PLA Basic @BBL H2D", "PETG-CF": "Bambu PETG-CF @BBL H2D 0.4 nozzle"}
 OVERRIDES = {
     "wall_loops": "5", "top_shell_layers": "6", "bottom_shell_layers": "6",
@@ -118,7 +119,9 @@ def slice_part(name, settings_cache):
         startup.dwFlags |= subprocess.STARTF_USESHOWWINDOW
         startup.wShowWindow = 0
         result = subprocess.run(args, cwd=tmp, env=env, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
-                                timeout=300, startupinfo=startup, creationflags=subprocess.CREATE_NO_WINDOW)
+                                timeout=info.get("slice_timeout_s", DEFAULT_TIMEOUT_S), startupinfo=startup,
+                                creationflags=subprocess.CREATE_NO_WINDOW)
+        log_tail = (result.stdout.decode(errors="replace") + result.stderr.decode(errors="replace")).splitlines()[-20:]
         report_path = tmp / "result.json"
         if not report_path.exists():
             raise RuntimeError(f"{name}: no result.json; rc={result.returncode}\n{result.stderr.decode(errors='replace')[-3000:]}")
@@ -137,6 +140,10 @@ def slice_part(name, settings_cache):
                         "predicted_time_h": round(plate["total_predication"] / 3600, 2),
                         "bbox_mm": (plate.get("objects") or [{}])[0].get("bbox")})
         row["pass"] = bool(row.get("return_code") == 0 and not row.get("warning") and row.get("gcode_present"))
+        row["timeout_s"] = info.get("slice_timeout_s", DEFAULT_TIMEOUT_S)
+        row["support_settings"] = {k: OVERRIDES[k] for k in ("enable_support", "support_type", "support_on_build_plate_only")}
+        if not row["pass"]:
+            row["log_tail"] = log_tail
         return row
 
 
@@ -156,9 +163,13 @@ def main():
             # A part that does not slice inside the per-part bound is a failed row, recorded and
             # reported; the remaining parts are still sliced so every result is known.
             stl = ROOT / "stl" / f"{name}.stl"
+            captured = b"".join(x for x in (error.stdout, error.stderr) if x)
             row = {"part": f"stl/{name}.stl", "sha256": hashlib.sha256(stl.read_bytes()).hexdigest(),
                    "material": PARTS[name]["material"], "return_code": None,
-                   "error_string": f"slicer timed out after {error.timeout:.0f} s", "pass": False}
+                   "error_string": f"slicer timed out after {error.timeout:.0f} s", "pass": False,
+                   "timeout_s": error.timeout,
+                   "support_settings": {k: OVERRIDES[k] for k in ("enable_support", "support_type", "support_on_build_plate_only")},
+                   "log_tail": captured.decode(errors="replace").splitlines()[-20:]}
         rows.append(row)
         status = "PASS" if row["pass"] else "FAIL"
         print(f"{status} {name}: {row.get('predicted_mass_g', 0):.0f} g, {row.get('predicted_time_h', 0):.1f} h, {row.get('error_string')} {row.get('warning', '')}", flush=True)

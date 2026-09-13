@@ -539,6 +539,16 @@ def interference_scan(model, strokes, yaws, fail, extrema):
     return rows
 
 
+def source_hashes(design_source):
+    """sha256 of every file this result depends on: every cad/*.scad, every STL in scripts/parts.json,
+    the design_source files and this script. scripts/verify.py compares them to today's files."""
+    import hashlib
+    parts = json.loads((ROOT / "scripts/parts.json").read_text(encoding="utf-8"))["parts"]
+    paths = sorted({p.relative_to(ROOT).as_posix() for p in (ROOT / "cad").glob("*.scad")}
+                   | {f"stl/{name}.stl" for name in parts} | set(design_source) | {"scripts/check_stance.py"})
+    return {path: hashlib.sha256((ROOT / path).read_bytes()).hexdigest() for path in paths}
+
+
 def _jsonable(value):
     if isinstance(value, dict):
         return {k: _jsonable(v) for k, v in value.items()}
@@ -562,10 +572,12 @@ def main():
     args = parser.parse_args()
     result = evaluate(poses_each_way=args.poses, interference=not args.no_interference)
     s = result["summary"]
+    design_source = ["cad/params.scad", "cad/stance.scad", "scripts/stability.py"]
     report = {"revision": "D", "configuration": "legs vertical; body pitches 0 <-> body_tilt about the shoulders; centre leg "
               "deployed forward-down on two 12 mm shafts by an Actuonix P16-100; sensed GN 412 lock on both shoulders",
               "passed": result["passed"], "physical_tested": False, "printed_strength_verified": False,
-              "design_source": ["cad/params.scad", "cad/stance.scad", "scripts/stability.py"],
+              "design_source": design_source,
+              "source_sha256": source_hashes(design_source),
               "criteria": result["criteria"], "summary": s, "lock_events": result["lock_events"],
               "failures": result["failures"], "samples": result["samples"], "rows": result["rows"],
               "interference": [r for r in result["interference"] if r["volume_mm3"] > 0.0] if result["interference"] else [],

@@ -20,7 +20,8 @@
       "mirror": false,
       "orientation": "Bottom (mating lip) down",
       "print_rotation_z": 0,
-      "notes": "Upper body ring with integral electronics deck, shoulder bosses, head ring and lazy-susan seat; no brim"
+      "notes": "Upper body ring with integral electronics deck, shoulder bosses, head ring and lazy-susan seat; no brim",
+      "slice_timeout_s": 3600
     },
     "body_lower": {
       "quantity": 1,
@@ -28,7 +29,8 @@
       "mirror": false,
       "orientation": "Skirt bottom down",
       "print_rotation_z": 0,
-      "notes": "Lower body ring, skirt, battery bay, centre-leg socket, electronics tray; no brim"
+      "notes": "Lower body ring, skirt, battery bay, centre-leg socket, electronics tray; no brim",
+      "slice_timeout_s": 3600
     },
     "leg_upper": {
       "quantity": 2,

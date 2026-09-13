@@ -28,7 +28,7 @@ Two rules follow from this and they drive the whole design.
 
 - **Maximum height rule.** Every part is made as tall as its geometry allows, up to 315 mm.
   A taller part is a part that does not need a joint.
-- **Minimal part rule.** The package is nine STL files and twelve printed pieces. The
+- **Minimal part rule.** The package is ten STL files and thirteen printed pieces (revision D added `leg_carriage`). The
   electronics tray was folded into `body_upper` as an integral deck for this reason. The body
   is two rings because 381.1 mm of body cannot be one 315 mm print. The outer leg is two
   prints because it is 480 mm long and no bed axis or diagonal reaches 480 mm.
@@ -119,7 +119,7 @@ during a transition.
 
 ---
 
-## 2. The nine STL files
+## 2. The ten STL files
 
 Ten files. Thirteen printed pieces. `leg_upper`, `leg_lower` and `foot_outer` are each printed
 twice, the second one mirrored in the slicer. The supplied file is the right-hand part.
@@ -143,7 +143,7 @@ carry the current sizes.
 | `head_drive.stl` | 1 | 116.5 x 72.3 x 39.9 | Base mating face down | PETG | Tree, under the arm |
 
 Every size above is measured from the mesh by `scripts/export_cad.py` and recorded in
-`cad/validation.json`, which now reports **nine of nine parts passing**: watertight, one
+`cad/validation.json`, which now reports **ten of ten parts passing**: watertight, one
 connected solid, consistent winding, inside the envelope.
 
 `body_upper` measures 264.0 mm tall, not the 246.0 mm of the ring skin, because the shoulder
@@ -207,7 +207,7 @@ and two 2.3 mm inset ledges. The 14 degree wedge face at the eye's bottom-left c
 brim: the first layer is a 57 to 158.5 mm annulus.
 
 **leg_upper** — No supports. The horseshoe, hub, booster cover, strut rods and channel all
-rise from the plate. The horizontal bores print round (M12 13 mm, dowels 6.2 mm, wire 9 mm).
+rise from the plate. The horizontal bores print round (M12 13 mm, GN 412.2 receiver thread bores 11.0 mm, wire 9 mm).
 The captive nut traps are 13.4 x 8.4 mm tunnels bridged at 23 mm. The finger slot is vertical.
 
 **leg_lower** — One support block. The ankle tongue plate lies 6.5 mm above the bed
@@ -351,7 +351,7 @@ on an M8 with a 16 mm washer, and 1 kN is 12 percent of the 8.2 kN proof load of
 4.6 rod. Use a 24 mm fender washer under each nut: 1 kN over 402 mm2 of washer face is
 2.5 MPa, which PETG holds without creeping.
 
-### 3.2 Shoulder — M12 bolt, bushings, index pins
+### 3.2 Shoulder — M12 bolt, bushings, sensed lock pins
 
 Each shoulder is a bolted steel pivot. It is not motorised.
 
@@ -598,7 +598,7 @@ transition and writes `docs/stance-check.json`.
 | Lock receivers | J.W. Winco GN 412.2-M12X1.5-B6.2 | 4 | bore 6.2 mm; M12 x 1.5 x 10 mm; hex 13 A/F x 3 mm; 0.022 lb; US$5.66 | [drawing](https://live-catalog.jwwinco.com/pdf/winco/us/412_2.pdf), H35 |
 | Lock sensor | Omron SS-01GL | 2 | SPDT gold contact; OF 0.49 N max; OT 1.2 mm min; MD 0.8 mm max; OP 8.8 +/-0.8 mm | [datasheet](https://omronfs.omron.com/en_US/ecb/products/pdf/en-ss.pdf); `bom/electronics.csv` |
 | Lock release | MG995-class servo, Adafruit 1142 | 2 | 8.5 kg-cm at 4.8 V, 10 kg-cm at 6 V; 0.20 s/60 deg at 4.8 V; 40.7 x 19.7 x 42.9 mm; 62.41 g; US$19.95 | [product](https://www.adafruit.com/product/1142); `bom/electronics.csv` |
-| Guide shafts | VXB 12 mm x 200 mm hardened shaft | 2 | cut to 160 mm | [product](https://vxb.com/products/12mm-shaft-hardened-rod-linear-motion-200mm-long), H40 |
+| Guide shafts | VXB 12 mm x 200 mm hardened shaft | 2 | cut to 182 mm: 147 mm of bearing-housing travel (t 17 to 164) plus 9 mm in the bottom boss, 24 mm in the top boss and 2 mm of clearance | [product](https://vxb.com/products/12mm-shaft-hardened-rod-linear-motion-200mm-long), H40 |
 | Guide bearings | LM12LUU, 12 x 21 x 57 mm | 2 | 657 N dynamic, 1200 N static | [product](https://vxb.com/products/two-pack-lm12luu-12mm-long-linear-ball-bearing-bus), H38 |
 
 The actuator runs well inside its rating; the check result is in the table below. The P16-100
@@ -736,7 +736,7 @@ Across flats includes 0.4 mm of clearance.
 | 6001 bearing seat | 28.0 + 0.2 = **28.2 mm** bore, 8.2 mm deep | `lg_bearing_fit` in `cad/legs.scad` |
 | Bearing bore relief | 24 mm through-hole below each seat | so the outer race seats on a ledge |
 | Shoulder bushing | 12 mm bore x 16 mm OD bronze, pressed into a 16 mm printed bore | `research/components-mechanical.md` |
-| Index dowel | 6.0 mm pin in a **6.2 mm** hole | `shoulder_index_d` |
+| Shoulder lock pin | GN 412 6.0 mm pin in the GN 412.2 **6.2 mm** hardened bore; bushing in an **11.0 mm** thread-forming bore | `st_pin_d`, `st_recv` |
 | Motor pocket | envelope **+0.4 mm** all round | `motor_pocket_clear` |
 | Head-drive motor pocket | envelope **+0.3 mm** | `hd_clear` |
 | Wheel cavity | **3 mm** clearance around each 63 x 29 mm wheel | `ft_wheel_clear` |
@@ -971,7 +971,7 @@ first, mask them, then paint. A brass insert is easier to mask than to clean.
 | Check | Accept |
 | --- | --- |
 | M12 shoulder bolts | No play at the leg when the robot is rocked; nyloc still tight |
-| Index dowels | Both pins fully home, no elongation of the 6.2 mm holes |
+| Shoulder locks | Both switches read seated at both endpoints; receivers tight in the leg, no play in the bores |
 | Ankle lock bolts | Tight, and in the stance hole you expect |
 | Centre caster | Turns freely by hand, +/-60 degrees, stop pin not worn |
 | Lazy susan | Dome turns by hand with no notch and no lift |
@@ -1021,7 +1021,7 @@ Five leg-and-foot conflicts are resolved in the CAD, and each is now held closed
 | Dome radii | `params.scad` `dome_hp3_r` 101, `dome_rld_z` 52, `dome_eye_z` 108. `cad/dome.scad` overrides to 69.1, 73.5 and 118. | The dome file. The params values are full-size or mis-transcribed. |
 | Slice report | `cad/h2d-slice-check.json` predates `cad/body.scad` and the resolved leg and foot geometry, and its dome row still fails on the script's `--arrange` step. | Re-run `python scripts/slice_check.py`. |
 | Tip-back | `docs/stability.json` gives 3.9 degrees; the acceptance criterion is 15 degrees. | Revision D closes this: 15.6 degrees in the three-leg stance (section 5.4). |
-| Revision D ring slicing | On 2026-09-12 `python scripts/slice_check.py` passed 8 of 10 parts. `body_upper` and `body_lower` did not slice inside the 300 s per-part bound with tree supports. With normal supports they failed with "Found G-code outside of the printable area". | Unverified for the H2D. Slice both rings with a longer bound (revision C used 3600 s), or supply a support setting that keeps supports inside the ring. |
+| Revision D ring slicing | Closed 2026-09-13. The two rings need more than 300 s to slice with tree supports; `scripts/parts.json` gives them `slice_timeout_s` 3600 (revision C used 3600 s), and every other part keeps 300 s. Normal supports are not used: they put G-code outside the printable area. | `python scripts/slice_check.py` passes 10 of 10 with tree supports: body_upper 3284 g / 113.8 h, body_lower 2077 g / 60.5 h, total 10,597.6 g / 335.3 h. |
 
 ---
 

@@ -1,5 +1,5 @@
 {
-  "checked_at_utc": "2026-09-13T03:36:04.509473+00:00",
+  "checked_at_utc": "2026-09-13T04:53:59.582026+00:00",
   "test_type": "Local Bambu Studio CLI slicing of package meshes; no printer connection or physical print",
   "profiles": {
     "machine": "Bambu Lab H2D 0.4 nozzle, trimmed to single-nozzle mode (325 x 320 x 320)",
@@ -18,7 +18,7 @@
     },
     "bed": "Textured PEI Plate"
   },
-  "all_pass": false,
+  "all_pass": true,
   "rows": [
     {
       "part": "stl/dome.stl",
@@ -31,26 +31,60 @@
       "gcode_present": true,
       "warning": "",
       "predicted_mass_g": 1243.41552734375,
-      "predicted_time_s": 127283.2734375,
+      "predicted_time_s": 127283.9453125,
       "predicted_time_h": 35.36,
       "bbox_mm": null,
-      "pass": true
+      "pass": true,
+      "timeout_s": 300,
+      "support_settings": {
+        "enable_support": "1",
+        "support_type": "tree(auto)",
+        "support_on_build_plate_only": "0"
+      }
     },
     {
       "part": "stl/body_upper.stl",
       "sha256": "26d1941bbf01e9e6f2691b81e01803864383d61284a36df4a8468b495ea5f739",
       "material": "PETG",
-      "return_code": null,
-      "error_string": "slicer timed out after 300 s",
-      "pass": false
+      "filament_profile": "Bambu PETG HF @BBL H2D 0.4 nozzle",
+      "print_flip_x": false,
+      "return_code": 0,
+      "error_string": "Success.",
+      "gcode_present": true,
+      "warning": "",
+      "predicted_mass_g": 3284.264892578125,
+      "predicted_time_s": 409547.78125,
+      "predicted_time_h": 113.76,
+      "bbox_mm": null,
+      "pass": true,
+      "timeout_s": 3600,
+      "support_settings": {
+        "enable_support": "1",
+        "support_type": "tree(auto)",
+        "support_on_build_plate_only": "0"
+      }
     },
     {
       "part": "stl/body_lower.stl",
       "sha256": "ffcea62e5922d44605262d060dc8fbb8294e3d8100b77579ec5e84bd892340db",
       "material": "PETG",
-      "return_code": null,
-      "error_string": "slicer timed out after 300 s",
-      "pass": false
+      "filament_profile": "Bambu PETG HF @BBL H2D 0.4 nozzle",
+      "print_flip_x": false,
+      "return_code": 0,
+      "error_string": "Success.",
+      "gcode_present": true,
+      "warning": "",
+      "predicted_mass_g": 2076.70654296875,
+      "predicted_time_s": 217677.25,
+      "predicted_time_h": 60.47,
+      "bbox_mm": null,
+      "pass": true,
+      "timeout_s": 3600,
+      "support_settings": {
+        "enable_support": "1",
+        "support_type": "tree(auto)",
+        "support_on_build_plate_only": "0"
+      }
     },
     {
       "part": "stl/leg_upper.stl",
@@ -66,7 +100,13 @@
       "predicted_time_s": 71608.8828125,
       "predicted_time_h": 19.89,
       "bbox_mm": null,
-      "pass": true
+      "pass": true,
+      "timeout_s": 300,
+      "support_settings": {
+        "enable_support": "1",
+        "support_type": "tree(auto)",
+        "support_on_build_plate_only": "0"
+      }
     },
     {
       "part": "stl/leg_lower.stl",
@@ -78,11 +118,17 @@
       "error_string": "Success.",
       "gcode_present": true,
       "warning": "",
-      "predicted_mass_g": 314.1558837890625,
-      "predicted_time_s": 40154.55859375,
-      "predicted_time_h": 11.15,
+      "predicted_mass_g": 314.1661682128906,
+      "predicted_time_s": 40159.09375,
+      "predicted_time_h": 11.16,
       "bbox_mm": null,
-      "pass": true
+      "pass": true,
+      "timeout_s": 300,
+      "support_settings": {
+        "enable_support": "1",
+        "support_type": "tree(auto)",
+        "support_on_build_plate_only": "0"
+      }
     },
     {
       "part": "stl/foot_outer.stl",
@@ -95,10 +141,16 @@
       "gcode_present": true,
       "warning": "",
       "predicted_mass_g": 679.4251708984375,
-      "predicted_time_s": 70402.8125,
+      "predicted_time_s": 70402.828125,
       "predicted_time_h": 19.56,
       "bbox_mm": null,
-      "pass": true
+      "pass": true,
+      "timeout_s": 300,
+      "support_settings": {
+        "enable_support": "1",
+        "support_type": "tree(auto)",
+        "support_on_build_plate_only": "0"
+      }
     },
     {
       "part": "stl/leg_center.stl",
@@ -110,11 +162,17 @@
       "error_string": "Success.",
       "gcode_present": true,
       "warning": "",
-      "predicted_mass_g": 124.31228637695312,
-      "predicted_time_s": 14915.7548828125,
+      "predicted_mass_g": 124.31240844726562,
+      "predicted_time_s": 14916.1806640625,
       "predicted_time_h": 4.14,
       "bbox_mm": null,
-      "pass": true
+      "pass": true,
+      "timeout_s": 300,
+      "support_settings": {
+        "enable_support": "1",
+        "support_type": "tree(auto)",
+        "support_on_build_plate_only": "0"
+      }
     },
     {
       "part": "stl/leg_carriage.stl",
@@ -126,11 +184,17 @@
       "error_string": "Success.",
       "gcode_present": true,
       "warning": "",
-      "predicted_mass_g": 247.6832275390625,
-      "predicted_time_s": 28433.357421875,
+      "predicted_mass_g": 247.79502868652344,
+      "predicted_time_s": 28452.390625,
       "predicted_time_h": 7.9,
       "bbox_mm": null,
-      "pass": true
+      "pass": true,
+      "timeout_s": 300,
+      "support_settings": {
+        "enable_support": "1",
+        "support_type": "tree(auto)",
+        "support_on_build_plate_only": "0"
+      }
     },
     {
       "part": "stl/foot_center.stl",
@@ -146,7 +210,13 @@
       "predicted_time_s": 34116.8828125,
       "predicted_time_h": 9.48,
       "bbox_mm": null,
-      "pass": true
+      "pass": true,
+      "timeout_s": 300,
+      "support_settings": {
+        "enable_support": "1",
+        "support_type": "tree(auto)",
+        "support_on_build_plate_only": "0"
+      }
     },
     {
       "part": "stl/head_drive.stl",
@@ -162,9 +232,15 @@
       "predicted_time_s": 10785.279296875,
       "predicted_time_h": 3.0,
       "bbox_mm": null,
-      "pass": true
+      "pass": true,
+      "timeout_s": 300,
+      "support_settings": {
+        "enable_support": "1",
+        "support_type": "tree(auto)",
+        "support_on_build_plate_only": "0"
+      }
     }
   ],
-  "total_predicted_mass_g": 0,
-  "total_predicted_time_h": 0.0
+  "total_predicted_mass_g": 10597.6,
+  "total_predicted_time_h": 335.3
 }
