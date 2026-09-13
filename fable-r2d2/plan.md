@@ -105,9 +105,8 @@ with revision D labels.
 
 ### revision-d-integration — regenerate the package with revision D labels
 
-- [~] revision-d-integration — depends on: stance-mechanism, stance-controls. The prep pass is done
-  (0d71a76, agent a0aab2170c72e82aa). Regeneration waits for the ring slices and for the
-  stance-check source hashes.
+- [x] revision-d-integration — depends on: stance-mechanism, stance-controls. Done in 0d71a76,
+  2553637, 1f75525, 2aca83b, a0d4dab, 9c47817, 049c688 (agent a0aab2170c72e82aa).
   - Update the labels and asserts in `scripts/build_bom.py`, `draw_robot.py`, `build_manual.py`,
     `render_video.py`, `render_mockup.py`, `assembly_layout.py` and `verify.py`.
   - `render_mockup.py` must show both stances and the transition.
@@ -219,6 +218,20 @@ with revision D labels.
     11. `build_manual.py`
     12. `verify.py`
     13. `deliver.py --dry-run`
+- 2026-09-13: revision-d-integration finished (049c688). `render_mockup.py` ran before `draw_robot.py`,
+  because the drawing manifest hashes the mock-up.
+  - Parent verified `docs/verification.json`: `all_pass True revision D`, 11 checks.
+    - images, cad (10/10 STLs, slices fresh), stance (126 poses, 21 hashes)
+    - bom $1,325.73, wiring 184 wires, firmware 120 + 66 tests, audio 12 clips
+    - drawings 28, mockup 9 poses, manual 130 pages, video 214 s / 5136 frames
+  - Parent checks: PyMuPDF shows 130 pages; ffprobe shows h264 1920x1080, aac, 214.000000 s.
+  - `deliver.py --dry-run`: "MIME size 23957122 bytes", PDF sha256 7299121a..., video sha256
+    8f56b466..., "SENDABLE: the package verifies as revision D".
+  - Parent inspected the mock-up and video frames 0193 and 0203. The agent inspected manual pages
+    51, 66, 93 and 94.
+  - Fix during the run: stage 4B shaft length corrected to 182 mm.
+  - Gaps: ACT1 (P16) on back order; MG995 and J13 out of stock; nothing physically validated.
+  - Launched the revision-d-delivery send subagent.
 
 ## Locked decisions (user-confirmed; do not revisit)
 
