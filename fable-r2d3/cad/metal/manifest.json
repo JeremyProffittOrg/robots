@@ -1,0 +1,80 @@
+{
+  "metal_carrier": {
+    "thickness_mm": 4,
+    "quantity": 4,
+    "material": "6061-T6",
+    "dxf_sha256": "f057d55e4e8190a1ea5cca547e74db6f0daab84fa5ec5d596ba0a264d9772a5c"
+  },
+  "metal_chassis": {
+    "thickness_mm": 4,
+    "quantity": 2,
+    "material": "6061-T6",
+    "dxf_sha256": "446730f83e2c56f455d514727c9317b31dc3b7c3313adae02a525320900ee2f0"
+  },
+  "metal_spine": {
+    "thickness_mm": 4,
+    "quantity": 2,
+    "material": "6061-T6",
+    "dxf_sha256": "d8206dc26dd3dc0022cac4d3ac90456c14b8b48eda69f664d430eb47961f369e"
+  },
+  "metal_base": {
+    "thickness_mm": 3,
+    "quantity": 1,
+    "material": "6061-T6",
+    "dxf_sha256": "00d4779b89bf82f9583ddca46c17a9fea25e2ffc85141f2359460ba76e9875f4"
+  },
+  "metal_headfloor": {
+    "thickness_mm": 2,
+    "quantity": 1,
+    "material": "6061-T6",
+    "dxf_sha256": "7c4f34b7d4c7b60f825e6ebbf6b2a1d698465d9b0c5d846aafc99ed760511b54"
+  },
+  "panel_front": {
+    "thickness_mm": 3,
+    "quantity": 1,
+    "material": "G10 insulating sheet",
+    "dxf_sha256": "7e33579c390b91114b652d2d24751f5c542a62b965d8f15bd64a2f85a5fbdf76"
+  },
+  "panel_rear": {
+    "thickness_mm": 3,
+    "quantity": 1,
+    "material": "G10 insulating sheet",
+    "dxf_sha256": "6653839f396f219126a5f09f2865b8567691705052708d6647c51696c156bdee"
+  },
+  "metal_yoke": {
+    "thickness_mm": 4,
+    "quantity": 1,
+    "material": "steel",
+    "dxf_sha256": "c8ce15bb3e81c0444c63b87d1e48008fbc98edab4627899989d712e572d1a0ae"
+  },
+  "metal_limit_rail": {
+    "thickness_mm": 3,
+    "quantity": 1,
+    "material": "6061-T6",
+    "dxf_sha256": "0fb74a564730cd560ea8caa17acd6d9b84ce0a00b6315dd5ac757de5a9e3f721"
+  },
+  "metal_ankle": {
+    "thickness_mm": 4,
+    "quantity": 2,
+    "material": "steel",
+    "dxf_sha256": "9ca29ddb4d72510652500a52c977b9d54c40ce75c38ca0324c521311994baa6f"
+  },
+  "metal_fork": {
+    "thickness_mm": 4,
+    "quantity": 2,
+    "material": "steel",
+    "dxf_sha256": "53e27fb2f632afa490be1582063800ecfb0e2ea44de055e86fa6e64dd69eaa3f"
+  },
+  "metal_sole": {
+    "thickness_mm": 4,
+    "quantity": 3,
+    "material": "steel",
+    "dxf_sha256": "11b908359cd19526d72085e8815bbce2f6e89db06be6434fafaa8437a97eb572"
+  },
+  "metal_bridge": {
+    "thickness_mm": 4,
+    "quantity": 3,
+    "material": "steel",
+    "dxf_sha256": "5a44583b34c09e710b311b13e9ab032b58da2bd3751175ebf29d347f02b49469"
+  }
+}

@@ -1,0 +1,17 @@
+id,name,path,duration_seconds,sha256
+1,Hello,firmware/data/audio/01.mp3,2.041,d5e0e757b9a85c45088f5a2606bc38c42a6d8d63109cbb9ef16b4db5eccb4493
+2,Curious,firmware/data/audio/02.mp3,2.161,60e632ddbe3761086a863289b580735a1be6c16fc344bcea11f6639f9449f7a9
+3,Happy,firmware/data/audio/03.mp3,1.958,5892cc1ed405a3830e8f3617167b3ec1c21b9b0d50b9775f51b70df9e1552367
+4,Concerned,firmware/data/audio/04.mp3,2.581,9623dc98d3c23007178c17027c5e072d19b8fc832d4b321c5c25eb3732dec3f8
+5,Agree,firmware/data/audio/05.mp3,3.329,e4b00281562788bae752a6169ab804b2cd92c51b8c3d3995abf0eb271b97fc3e
+6,Disagree,firmware/data/audio/06.mp3,1.652,7cb228be31b5ce24a40a798c04c650a04ba87d4acee1827a18f1913fc77f9f1e
+7,Excited,firmware/data/audio/07.mp3,2.274,a7c87cdee38dd942b4392bba57cfa592c980576fe85151fab672a2bd98a654c0
+8,Sleepy,firmware/data/audio/08.mp3,2.456,2e6a46985af071bcee4599384bc3265436c43d762275a2da97ebf01fc754e51c
+9,Thinking,firmware/data/audio/09.mp3,2.421,94887037f391c2280e6b8adeae971dbbd3bd9445fcbba1ec7d48d9efe1fb85fc
+10,Surprised,firmware/data/audio/10.mp3,2.563,ade6db3a5dcb5e1c86ed6092f799b89e47ccffcbcb6833c76fb9199b9e317364
+11,Searching,firmware/data/audio/11.mp3,1.46,3c24abe229711dbcd518e74870ad4bcab70890ba95d2a2b09a96b64c397c81bb
+12,Playful,firmware/data/audio/12.mp3,2.127,cfca23699e7d1bc3011bcab1fe3c0fcfe195734ad0a9b4559013040861a4a243
+13,Low energy,firmware/data/audio/13.mp3,2.54,fdf3f8d6cba4e4c8a6819a52c9a3b67dd0d132f1ea4a792d3af8f0e5e640c41d
+14,Ready,firmware/data/audio/14.mp3,2.918,a4a1276826841919d7c5137b7ed314801f9ef2fd3114402a0c4ea77e62a2d501
+15,Goodbye,firmware/data/audio/15.mp3,3.219,8c20732269abc5df46ea84f4272fdbbbc35262c78179998c44f24e97fce93c05
+16,Long story,firmware/data/audio/16.mp3,6.351,642137c7215c54a4dd11e88c3a1bebe2d629d0405e2452738c18e80c6a060e8e

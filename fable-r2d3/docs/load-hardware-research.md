@@ -1,0 +1,78 @@
+# Load-bearing leg hardware research
+
+Research history only. Follow the revision C BOM and fabrication worksheet for selected parts and dimensions.
+Checked 2026-09-12. Research only; no purchases. The robot envelope is 609.6 mm high. The side “arms” are the two outer support legs. Printed shells should cover a metal load path, not form the main shoulder or telescoping joint.
+
+## Selected actuator candidate
+
+Use Actuonix P16-100-256-12-P with external limit switches. The [manufacturer product page](https://www.actuonix.com/p16-100-256-12-p) lists 100 mm stroke, 300 N maximum lifted load, 147 mm closed eye spacing, 110 g mass, and $90; it currently says backorder. Extended eye spacing is therefore 247 mm. This is a purchasable catalog part, not verified ready-to-ship stock.
+
+The [P16 datasheet, pages 1–3](https://www.actuonix.com/assets/images/datasheets/ActuonixP16Datasheet.pdf) specifies 12 V, 1 A stall current, 500 N maximum static force, >500 N backdrive threshold for 256:1 gearing, 20% duty, and 15 N side load for 100 mm stroke. At 150 N it gives 3.4 mm/s; no-load speed is 4.8 mm/s. The P model supplies potentiometer feedback; the S model supplies end switches. Do not claim the P model has both. Page 3 is the dimensioned mount drawing. Included hardware uses #8-32; rod-end thread is M8×1.25. Small drawing dimensions were not independently extracted, so confirm them before manufacturing. Do not enlarge the actuator eyes to fit an arbitrary bolt.
+
+The [L16 datasheet](https://www.actuonix.com/assets/images/datasheets/ActuonixL16datasheet.pdf) rates the 150:1 version at 200 N lifted but only 102 N backdrive force. Its lower holding threshold makes it the weaker choice for this factored whole-body load.
+
+## Calculated loads and geometry constraints
+
+These are engineering screening calculations, not measured loads or assembly certification. Assumptions: 5 kg complete robot, gravitational acceleration 9.81 m/s², 3× dynamic factor, 25% allowance for friction and imperfect alignment. Keep the original 4.5 kg goal as a goal; weigh the finished machine. Stronger joints do not establish that the retained drive can move a heavier robot.
+
+- Whole-body gravity: 5×9.81 = 49.05 N; factored load = 147.15 N.
+- Direct axial telescope design demand including allowance: 147.15×1.25 = 183.94 N. The 300 N actuator has 1.63× margin above this already-factored demand.
+- At 45° actuator angle to required translation, demand = 183.94/cos(45°) = 260.12 N. This leaves little extra margin. Keep the center actuator nearly parallel to its guide. Actual center-foot reaction must come from the center of gravity and support spacing across the entire transition.
+- Illustrative shoulder case: whole-body horizontal center-of-gravity offset 60 mm gives 147.15×0.060 = 8.829 N·m total factored moment. One actuator carrying this entire moment needs a perpendicular lever arm of at least 8.829×1.25/300 = 36.8 mm. Specify at least 40 mm throughout motion; minimum demand is then 275.9 N. A 50 mm crank requires sin(linkage angle) ≥0.8 to retain that 40 mm arm. Avoid any near-straight linkage. Two actuators may share load, but unequal sharing must not be ignored.
+- At an illustrative 200 mm foot-support baseline, 80 mm height difference corresponds to atan(80/200) = 21.8°. This does not prove the CAD motion: moving feet, shoulder rotation, body geometry, and center of gravity must be solved together.
+
+Reserve the full 147–247 mm actuator eye range, bracket thickness, pivot sweep, wiring bend, and guide overlap in the 609.6 mm envelope. Software travel should stop before physical actuator ends. Do not treat 100 mm rod motion as 100 mm vertical body motion without a linkage calculation.
+
+## Metal joints and telescope proposal
+
+Starting dimensions below are proposed, not manufacturer-rated completed joints.
+
+Shoulder: two SKF 6001-2RSH sealed ball bearings per side, 12 mm bore ×28 mm outside diameter ×8 mm width. SKF gives basic dynamic capacity 5.4 kN and static capacity 2.36 kN per bearing in its [bearing catalog](https://cdn.skfmediahub.skf.com/api/public/0901d196802809de/pdf_preview_medium/0901d196802809de_pdf_preview_medium.pdf). These ratings apply to bearings, not printed housings or the whole robot.
+
+Use a steel pivot with 40 mm between bearing centers and a metal hub; reserve roughly 70 mm shaft length for the complete retained assembly. [MISUMI MSB12-70](https://sg.misumi-ec.com/vona2/detail/110300249140/?HissuCode=MSB12-70) is a catalog shoulder-bolt candidate. The [MISUMI drawing](https://uk.misumi-ec.com/pdf/fa/2014/P2_0215-0216_F34_EN.pdf) identifies MSB steel as class 10.9 and the 12 mm shoulder tolerance as -0.032/-0.075 mm. That clearance needs a fit review; it is not automatically a precision bearing fit. A precision-ground 12 mm shaft with properly retained inner races may be preferable. No assembly working-load rating is claimed for the shoulder bolt.
+
+Use machined metal bearing blocks, nominally 12 mm thick, bolted into chassis bulkheads, plus metal retainers. Clamp inner races against steel spacers without squeezing outer races. Keep bolt threads outside bearing seats and shear planes. Carry leg loads into an aluminum spine and through-bolted ankle clevis. Printed covers and brass heat-set inserts are not the structural connection. Fastener spacing, bearing fits, shaft retention, hub torque transfer, and chassis attachment remain release details.
+
+Conservative pivot screening: 147.15 N at 30 mm overhang gives 4.4145 N·m bending moment. A solid 12 mm shaft has nominal bending stress 32M/(πd³) = 26.0 MPa. Combined conservatively with 8.829 N·m torsion, nominal von Mises stress is 52.0 MPa. This excludes threads, grooves, stress concentrations, fatigue, and actuator reactions. A 40 mm bearing pair under that overhang has maximum reaction about 258 N before actuator load. Include the actual actuator force vector in final bearing and bracket analysis.
+
+Telescope: use [38.1 mm square ×4.7625 mm wall 6061-T6 outer tube, part 18016](https://www.onlinemetals.com/en/buy/aluminum/1-5-x-0-1875-aluminum-square-tube-6061-t6-extruded/pid/18016), and [25.4 mm square ×3.175 mm wall inner tube, part 18014](https://www.onlinemetals.com/en/buy/aluminum/1-x-0-125-aluminum-square-tube-6061-t6-extruded/pid/18014). The calculated outer bore is 28.575 mm; nominal pad space is 1.5875 mm on each face. Use replaceable acetal guide pads at two separated stations, adjusted to measured extrusion size and corner radii. Do not assume off-the-shelf tubes slide together accurately.
+
+Maintain ≥100 mm overlap at full extension, with an approximately 200 mm inner member for 100 mm travel. Mount the actuator beside the tube, pin-ended, to carry axial load while the guide carries lateral load and bending. Put through-bolt crush sleeves in tube connections. Proposed 25.4 mm inner tube section has area 282.26 mm² and second moment 23,711 mm⁴; axial stress at 300 N is 1.06 MPa. Bending at 147.15 N and 100 mm eccentricity adds 7.88 MPa. These nominal stresses omit local holes and pad/contact effects. Final metal brackets, end stops, and attachment proof tests govern readiness.
+
+## Adafruit control and power
+
+- One [DRV8871 breakout, product 3190](https://www.adafruit.com/product/3190), per P16: 6.5–45 V motor supply, two direction/PWM inputs, adjustable current limit. The board's default limit is about 2 A. Set and test an appropriate lower limit; 3.6 A maximum is not a motor operating target. This board is for the 12 V actuators, not the 3–6 V TT rail.
+- One [ADS1115, product 1085](https://www.adafruit.com/product/1085), reads up to four single-ended position channels over I²C. Operate its supply and actuator potentiometer reference at 3.3 V; never connect 12 V motor power to analog inputs. Its 16-bit conversion does not remove actuator mechanical backlash or feedback nonlinearity.
+- One [INA219, product 904](https://www.adafruit.com/product/904), per actuator branch measures supply current over I²C, within its 26 V/±3.2 A range. Supply current during PWM is not identical to instantaneous winding current. Use the driver hardware current limit as well.
+- Proposed controller behavior: close a position loop locally; stop on stale position, sensor fault, exceeded current/time, or limit activation. Independent normally-closed directional limit circuits must block further travel toward a limit while allowing withdrawal. Current detection alone is not an end switch. Circuit details and selected switch/diode ratings remain unverified.
+- Budget a fused regulated 12 V rail for the number of simultaneous actuators: three P16s can total 3 A at stall, before conversion losses and margin. Sequence posture changes where practical. Provide a separate regulated 3–6 V TT supply, common logic reference, hardware power stop, and protected wiring. No battery or converter model is selected by this note.
+
+## Retained six-motor/twelve-wheel constraint
+
+[Adafruit 3777](https://www.adafruit.com/product/3777) specifies 0.8 kgf·cm stall torque at 6 V and reports 1.5 A measured stall current for one sample. It is a plastic gearbox without position feedback. [Wheel 3766](https://www.adafruit.com/product/3766) is 63×29 mm, 38 g, and press-fit. Neither cited page supplies a robot working-mass rating or a continuous traction rating.
+
+Calculated ideal total stall force for six motors: 6×(0.8×0.0980665)/0.0315 = 14.94 N. Twelve wheels on six shafts still have six motors' torque. Continuous force must be lower and tested; do not advertise this stall figure as usable continuous traction. Six simultaneous sample stalls total 9 A at 6 V. All twelve wheels plus six motors already total about 640 g.
+
+The machine therefore needs a weighed load budget and floor tests for starts, braking, turning scrub, transitions, heat, and wheel/axle durability. Externally support loaded wheel axles where feasible; stock TT output shafts and press-fit wheel retention remain weak points. No claim of an “extremely robust” complete robot follows from the shoulder bearing ratings alone.
+
+Acceptance before manufacture/use: complete the actual force-versus-angle calculation, confirm all pivot clearances and support-polygon stability, obtain actuator mount drawing dimensions, specify limits and fasteners, and fixture-test each structural joint and complete loaded transition with power-loss hold checks. None of these physical tests has been performed by this research.
+
+## Follow-up: purchased housings, lighter guide, and 12 V regulation
+
+This follow-up replaces the preliminary custom bearing-block and 38.1 mm outer-guide recommendations above for the next CAD iteration.
+
+Use two [MISUMI BACA6001ZZ housings](https://jp.misumi-ec.com/vona2/detail/110300100130/?HissuCode=BACA6001ZZ) per shoulder. Each includes one 12 mm bore 6001 steel bearing, aluminum 2000-series housing, and retaining ring. The current Japanese product page lists a stock item and one-day dispatch; US delivery and final price remain unconfirmed. These supplied bearings are ZZ shielded, not the earlier SKF 2RSH part; do not silently transfer SKF's exact load ratings to an unidentified supplied bearing.
+
+The [manufacturer housing drawing](https://es.misumi-ec.com/pdf/fa/2014/P1_0931-0932_F14_EN.pdf), rendered and read locally, specifies the 6001 compact housing as 52 mm high ×36 mm wide ×13 mm axial thickness. Its two M5 tapped mounting holes are 42 mm apart, with 8 mm diameter counterbores 4.4 mm deep. Bearing seat is 28 H7 (+0/+0.021 mm); rear shaft clearance is 24 mm. Use two parallel metal chassis plates and the supplied housing assemblies to establish the bearing seats, with 40 mm bearing-center spacing. Align both using the actual ground shaft before tightening. Do not use a printed 28 mm hole as the bearing fit.
+
+For reference, the [MISUMI dual-bearing housing drawing](https://sg.misumi-ec.com/pdf/fa/2014/p1_941.pdf) also defines BAFCB6001DD-L: aluminum, two retained 6001 bearings, L configurable 25–60 mm. Its 52×36 mm flange has 8 mm thickness, two 4.5 mm through-holes on 42 mm centers, and 34 g7 pilot. At L=54 mm, calculated bearing-center spacing is 54−2×2.85−8=40.3 mm. Its present orderability was not independently confirmed, so use the current BACA single-housing pair as the procurement baseline.
+
+Shaft correction: select an accurately ground shaft, not the loose e9 shoulder bolt. The [MISUMI shaft family](https://vn.misumi-ec.com/vona2/detail/110302634310/?HissuCode=PSFJ12-411-A134-E134-G20-KC20-WFC10) offers SUJ2-equivalent hardened steel; SFU is the plain h5 option and PSFU is hard-chromed h5. Specify 12 mm h5 journals and positive axial retention through inner-race spacers. A complete part length and retention design still depends on the actual two-plate assembly. Catalog-defined housing fits are now established, but a complete rotating-shaft bearing fit and torque-transfer release still needs the selected bearing maker's recommendation and final shaft drawing; this note does not claim an assembled joint has been validated.
+
+Lighter telescope screening: 25.4×3.175 mm outer with 15.875×1.5875 mm inner leaves 1.5875 mm nominal pad space per face. Maintain 100 mm overlap. For the inner section, calculated area is 90.726 mm² and second moment 3,124.78 mm⁴. Axial stress at 300 N is 3.31 MPa. The same deliberately severe 147.15 N transverse force at 100 mm projection gives 37.38 MPa bending stress, or 40.69 MPa combined extreme-fiber stress. With an assumed aluminum elastic modulus of 69 GPa, ideal cantilever deflection is 0.227 mm. These values omit local holes, wall crushing, guide play, and actuator offsets. Nominal mass for 200 mm of each tube is about 201 g using density 2,700 kg/m³, excluding pads and hardware. The smaller section is a reasonable next design candidate; there is no need to retain the larger guide merely for axial capacity.
+
+The exact 15.875×1.5875 mm 6061 stock was not found in a small-quantity supplier. [Macc Models SKU001691](https://maccmodels.co.uk/shop/materials/aluminium-sections/aluminium-square-tube/5858116alibox/) sells a close 15.88×1.6 mm 6063-T6 square tube, by the foot. Its dimensions and alloy are explicitly listed. Treat it as a different purchased section and update pad clearances from measurements. Obtain material properties for the supplied temper before assigning a yield safety factor. Do not buy a brass tube returned by a similar dimensional search.
+
+Select [Pololu 4984, S13V25F12](https://www.pololu.com/product/4984): 12 V buck-boost, 2.8–22 V input, 2.5 A typical near nominal input, 22.9×22.9×9.7 mm, $18.95 listed. The [manufacturer current graph](https://a.pololu-files.com/picture/0J12094.600.png) was visually checked: its 12 V curve is roughly 2.6–3.0 A over 11.2–14.6 V input, at room temperature in still air. Thus 2 A is a reasonable design target, subject to an enclosed thermal test. Output tolerance is 4%; overcurrent and thermal protection are present. The [mount drawing](https://www.pololu.com/file/0J1959/step-up-step-down-voltage-regulator-s13v25fx-dimensions.pdf) defines two 2.18 mm mounting holes. Use M2 standoffs and verify hole positions from that drawing. This is a true buck-boost, so the requested battery range crosses 12 V correctly.
+
+One module must not supply all three 1 A actuator stalls. Limit simultaneous actuator branches to two and verify starting transients, or use separate regulators per branch with separate outputs. Never parallel regulator outputs without explicit manufacturer support. The module's 5.1 A protection threshold is not a continuous-current rating. The regulator does not replace battery protection or a power-stop circuit.

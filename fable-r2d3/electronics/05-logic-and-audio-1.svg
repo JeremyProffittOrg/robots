@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="282" viewBox="0 0 1100 282"><rect width="1100" height="282" fill="white"/>
+<text x="30" y="34" font-family="sans-serif" font-size="22" fill="#122439">R2-24 revision D circuit: logic-and-audio / 1</text>
+<text x="30" y="65" font-family="sans-serif" font-size="14" fill="#374151">Each horizontal line is one connection. Identical named nets join across sheets. See wiring.csv for notes.</text>
+<text x="30" y="100" font-family="monospace" font-size="14" fill="#142337">U1 GND header</text>
+<path d="M 365 95 H 725" stroke="#163d72" stroke-width="2" fill="none"/>
+<circle cx="365" cy="95" r="3" fill="#163d72"/><circle cx="725" cy="95" r="3" fill="#163d72"/>
+<rect x="420" y="83" width="260" height="22" fill="white"/>
+<text x="550" y="100" text-anchor="middle" font-family="monospace" font-size="13" fill="#163d72">GND (22 AWG)</text>
+<text x="744" y="100" font-family="monospace" font-size="14" fill="#142337">U8 GND</text>
+<text x="30" y="138" font-family="monospace" font-size="14" fill="#142337">U1 GPIO15</text>
+<path d="M 365 133 H 725" stroke="#163d72" stroke-width="2" fill="none"/>
+<circle cx="365" cy="133" r="3" fill="#163d72"/><circle cx="725" cy="133" r="3" fill="#163d72"/>
+<rect x="420" y="121" width="260" height="22" fill="white"/>
+<text x="550" y="138" text-anchor="middle" font-family="monospace" font-size="13" fill="#163d72">I2S_BCLK (26 AWG)</text>
+<text x="744" y="138" font-family="monospace" font-size="14" fill="#142337">U8 BCLK</text>
+<text x="30" y="176" font-family="monospace" font-size="14" fill="#142337">U1 GPIO16</text>
+<path d="M 365 171 H 725" stroke="#163d72" stroke-width="2" fill="none"/>
+<circle cx="365" cy="171" r="3" fill="#163d72"/><circle cx="725" cy="171" r="3" fill="#163d72"/>
+<rect x="420" y="159" width="260" height="22" fill="white"/>
+<text x="550" y="176" text-anchor="middle" font-family="monospace" font-size="13" fill="#163d72">I2S_LRC (26 AWG)</text>
+<text x="744" y="176" font-family="monospace" font-size="14" fill="#142337">U8 LRC</text>
+<text x="30" y="214" font-family="monospace" font-size="14" fill="#142337">U1 GPIO17</text>
+<path d="M 365 209 H 725" stroke="#163d72" stroke-width="2" fill="none"/>
+<circle cx="365" cy="209" r="3" fill="#163d72"/><circle cx="725" cy="209" r="3" fill="#163d72"/>
+<rect x="420" y="197" width="260" height="22" fill="white"/>
+<text x="550" y="214" text-anchor="middle" font-family="monospace" font-size="13" fill="#163d72">I2S_DIN (26 AWG)</text>
+<text x="744" y="214" font-family="monospace" font-size="14" fill="#142337">U8 DIN</text>
+</svg>

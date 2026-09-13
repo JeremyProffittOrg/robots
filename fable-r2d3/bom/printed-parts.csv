@@ -1,0 +1,11 @@
+part,quantity,material,x_mm,y_mm,z_mm,solid_mass_g,watertight,components,passed
+body_lower,1,PETG,259.76,267.25,142.7,259.44,True,1,True
+body_upper,1,PETG,259.38,262.25,184.6,319.05,True,1,True
+dome,1,PLA,259.55,282.24,167.8,522.77,True,1,True
+leg,2,PETG,267.48,267.48,51.0,197.92,True,1,True
+outer_foot,2,PETG,133.4,197.22,130.0,170.92,True,1,True
+rear_foot,1,PETG,110.8,197.22,109.0,155.71,True,1,True
+drive_cassette,3,PETG,22.6,151.0,9.7,18.95,True,1,True
+head_motor_mount,1,PETG,58.0,110.0,12.9,25.26,True,1,True
+bearing_tower,1,PETG,58.0,58.0,26.0,27.69,True,1,True
+bearing_cap,1,PETG,34.0,34.0,3.0,2.59,True,1,True

@@ -1,0 +1,42 @@
+component,estimated_g,basis
+metal_carrier,140.6,Current cut-profile area x stock thickness x assumed density; all installed copies
+metal_chassis,448.3,Current cut-profile area x stock thickness x assumed density; all installed copies
+metal_spine,192.6,Current cut-profile area x stock thickness x assumed density; all installed copies
+metal_base,246.1,Current cut-profile area x stock thickness x assumed density; all installed copies
+metal_headfloor,130.7,Current cut-profile area x stock thickness x assumed density; all installed copies
+panel_front,81.9,Current cut-profile area x stock thickness x assumed density; all installed copies
+panel_rear,63.2,Current cut-profile area x stock thickness x assumed density; all installed copies
+metal_yoke,224.6,Current cut-profile area x stock thickness x assumed density; all installed copies
+metal_limit_rail,47.8,Current cut-profile area x stock thickness x assumed density; all installed copies
+metal_ankle,116.7,Current cut-profile area x stock thickness x assumed density; all installed copies
+metal_fork,92.6,Current cut-profile area x stock thickness x assumed density; all installed copies
+metal_sole,236.0,Current cut-profile area x stock thickness x assumed density; all installed copies
+metal_bridge,298.0,Current cut-profile area x stock thickness x assumed density; all installed copies
+All installed prints,1714.8,G-code labelled model extrusion; excludes supports/brim; not measured mass
+Outer and inner guide tubes,343,Component envelope/stock estimate or stated allowance; weigh actual installed parts
+Two guide crossbars,308,Component envelope/stock estimate or stated allowance; weigh actual installed parts
+Moving adapter,162,Component envelope/stock estimate or stated allowance; weigh actual installed parts
+Eight corner blocks,104,Component envelope/stock estimate or stated allowance; weigh actual installed parts
+Six steel foot stanchions,83,Component envelope/stock estimate or stated allowance; weigh actual installed parts
+Rear servo platform and step,52,Component envelope/stock estimate or stated allowance; weigh actual installed parts
+Fixed actuator clevis,15,Component envelope/stock estimate or stated allowance; weigh actual installed parts
+Three moving yoke ears,32,Component envelope/stock estimate or stated allowance; weigh actual installed parts
+Limit-rail clamp block,4,Component envelope/stock estimate or stated allowance; weigh actual installed parts
+Two shoulder shafts,160,Component envelope/stock estimate or stated allowance; weigh actual installed parts
+Two aluminum split hubs,76,Component envelope/stock estimate or stated allowance; weigh actual installed parts
+Four aluminum bearing housings,178,Component envelope/stock estimate or stated allowance; weigh actual installed parts
+Four6001 bearings,128,Component envelope/stock estimate or stated allowance; weigh actual installed parts
+Two608 bearings,36,Component envelope/stock estimate or stated allowance; weigh actual installed parts
+Four steel shaft collars,68,Component envelope/stock estimate or stated allowance; weigh actual installed parts
+Aluminum carrier spacers,76,Component envelope/stock estimate or stated allowance; weigh actual installed parts
+Four electronics support rods,82,Component envelope/stock estimate or stated allowance; weigh actual installed parts
+SKFSA12E,78,Component envelope/stock estimate or stated allowance; weigh actual installed parts
+P16 actuator allowance,150,Component envelope/stock estimate or stated allowance; weigh actual installed parts
+Acetal guide pads,13,Component envelope/stock estimate or stated allowance; weigh actual installed parts
+Fasteners horn links shims and nylon standoffs,600,Component envelope/stock estimate or stated allowance; weigh actual installed parts
+Battery BLF-1206A,700,Component envelope/stock estimate or stated allowance; weigh actual installed parts
+Thirteen3766 wheels,494,Component envelope/stock estimate or stated allowance; weigh actual installed parts
+Seven3777 motors,214.2,Component envelope/stock estimate or stated allowance; weigh actual installed parts
+MG-995 servo,62.4,Component envelope/stock estimate or stated allowance; weigh actual installed parts
+Electronics fuse holders connectors and installed wiring,600,Component envelope/stock estimate or stated allowance; weigh actual installed parts
+Paint foam straps and ties,100,Component envelope/stock estimate or stated allowance; weigh actual installed parts

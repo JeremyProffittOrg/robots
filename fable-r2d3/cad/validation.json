@@ -1,0 +1,128 @@
+{
+  "parts": 10,
+  "pieces": 14,
+  "all_pass": true,
+  "solid_material_bound_g": 2107.0,
+  "rows": [
+    {
+      "part": "body_lower",
+      "quantity": 1,
+      "material": "PETG",
+      "x_mm": 259.76,
+      "y_mm": 267.25,
+      "z_mm": 142.7,
+      "solid_mass_g": 259.44,
+      "watertight": true,
+      "components": 1,
+      "passed": true
+    },
+    {
+      "part": "body_upper",
+      "quantity": 1,
+      "material": "PETG",
+      "x_mm": 259.38,
+      "y_mm": 262.25,
+      "z_mm": 184.6,
+      "solid_mass_g": 319.05,
+      "watertight": true,
+      "components": 1,
+      "passed": true
+    },
+    {
+      "part": "dome",
+      "quantity": 1,
+      "material": "PLA",
+      "x_mm": 259.55,
+      "y_mm": 282.24,
+      "z_mm": 167.8,
+      "solid_mass_g": 522.77,
+      "watertight": true,
+      "components": 1,
+      "passed": true
+    },
+    {
+      "part": "leg",
+      "quantity": 2,
+      "material": "PETG",
+      "x_mm": 267.48,
+      "y_mm": 267.48,
+      "z_mm": 51.0,
+      "solid_mass_g": 197.92,
+      "watertight": true,
+      "components": 1,
+      "passed": true
+    },
+    {
+      "part": "outer_foot",
+      "quantity": 2,
+      "material": "PETG",
+      "x_mm": 133.4,
+      "y_mm": 197.22,
+      "z_mm": 130.0,
+      "solid_mass_g": 170.92,
+      "watertight": true,
+      "components": 1,
+      "passed": true
+    },
+    {
+      "part": "rear_foot",
+      "quantity": 1,
+      "material": "PETG",
+      "x_mm": 110.8,
+      "y_mm": 197.22,
+      "z_mm": 109.0,
+      "solid_mass_g": 155.71,
+      "watertight": true,
+      "components": 1,
+      "passed": true
+    },
+    {
+      "part": "drive_cassette",
+      "quantity": 3,
+      "material": "PETG",
+      "x_mm": 22.6,
+      "y_mm": 151.0,
+      "z_mm": 9.7,
+      "solid_mass_g": 18.95,
+      "watertight": true,
+      "components": 1,
+      "passed": true
+    },
+    {
+      "part": "head_motor_mount",
+      "quantity": 1,
+      "material": "PETG",
+      "x_mm": 58.0,
+      "y_mm": 110.0,
+      "z_mm": 12.9,
+      "solid_mass_g": 25.26,
+      "watertight": true,
+      "components": 1,
+      "passed": true
+    },
+    {
+      "part": "bearing_tower",
+      "quantity": 1,
+      "material": "PETG",
+      "x_mm": 58.0,
+      "y_mm": 58.0,
+      "z_mm": 26.0,
+      "solid_mass_g": 27.69,
+      "watertight": true,
+      "components": 1,
+      "passed": true
+    },
+    {
+      "part": "bearing_cap",
+      "quantity": 1,
+      "material": "PETG",
+      "x_mm": 34.0,
+      "y_mm": 34.0,
+      "z_mm": 3.0,
+      "solid_mass_g": 2.59,
+      "watertight": true,
+      "components": 1,
+      "passed": true
+    }
+  ]
+}

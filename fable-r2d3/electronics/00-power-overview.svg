@@ -1,0 +1,55 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="900" viewBox="0 0 1400 900"><rect width="1400" height="900" fill="#ffffff"/>
+<text x="30" y="38" font-family="sans-serif" font-size="28" text-anchor="start" fill="#142337">R2-24 | revision D power distribution (DFRobot Romeo ESP32-S3 DFR0994)</text>
+<text x="30" y="70" font-family="sans-serif" font-size="17" text-anchor="start" fill="#142337">Architecture view. Follow wiring.csv and the connection sheets for exact pins and returns.</text>
+<path d="M190 150 H240 M340 150 H390 M490 150 H600 M700 150 H740 V470 M540 150 V250 H790" fill="none" stroke="#173e73" stroke-width="3"/>
+<rect x="20" y="105" width="170" height="90" rx="5" fill="#e5effb" stroke="#173e73" stroke-width="2"/>
+<text x="105.0" y="128" font-family="sans-serif" font-size="18" text-anchor="middle" fill="#142337">Protected B1</text>
+<text x="105.0" y="152" font-family="sans-serif" font-size="18" text-anchor="middle" fill="#142337">12 V / 6 Ah</text>
+<text x="105.0" y="176" font-family="sans-serif" font-size="18" text-anchor="middle" fill="#142337">LiFePO4</text>
+<rect x="240" y="115" width="100" height="70" rx="5" fill="#e5effb" stroke="#173e73" stroke-width="2"/>
+<text x="290.0" y="138" font-family="sans-serif" font-size="18" text-anchor="middle" fill="#142337">F1</text>
+<text x="290.0" y="162" font-family="sans-serif" font-size="18" text-anchor="middle" fill="#142337">7.5 A</text>
+<rect x="390" y="115" width="100" height="70" rx="5" fill="#e5effb" stroke="#173e73" stroke-width="2"/>
+<text x="440.0" y="138" font-family="sans-serif" font-size="18" text-anchor="middle" fill="#142337">S1</text>
+<text x="440.0" y="162" font-family="sans-serif" font-size="18" text-anchor="middle" fill="#142337">MAIN</text>
+<rect x="600" y="115" width="100" height="70" rx="5" fill="#e5effb" stroke="#173e73" stroke-width="2"/>
+<text x="650.0" y="138" font-family="sans-serif" font-size="18" text-anchor="middle" fill="#142337">S2</text>
+<text x="650.0" y="162" font-family="sans-serif" font-size="18" text-anchor="middle" fill="#142337">RUN</text>
+<path d="M1030 250 H1080" fill="none" stroke="#173e73" stroke-width="3"/>
+<rect x="790" y="220" width="240" height="60" rx="5" fill="#e5effb" stroke="#173e73" stroke-width="2"/>
+<text x="910.0" y="243" font-family="sans-serif" font-size="18" text-anchor="middle" fill="#142337">Romeo VIN (P23)</text>
+<text x="910.0" y="267" font-family="sans-serif" font-size="18" text-anchor="middle" fill="#142337">7-24 V, onboard 3 A fuse</text>
+<rect x="1080" y="220" width="300" height="60" rx="5" fill="#e5effb" stroke="#173e73" stroke-width="2"/>
+<text x="1230.0" y="243" font-family="sans-serif" font-size="18" text-anchor="middle" fill="#142337">ESP32-S3, 5 V/2 A logic rail</text>
+<text x="1230.0" y="267" font-family="sans-serif" font-size="18" text-anchor="middle" fill="#142337">MAX98357A audio, 74AHCT125</text>
+<path d="M740 360 H790" fill="none" stroke="#173e73" stroke-width="3"/>
+<circle cx="740" cy="360" r="4" fill="#173e73"/>
+<path d="M1030 360 H1080" fill="none" stroke="#173e73" stroke-width="3"/>
+<rect x="790" y="330" width="240" height="60" rx="5" fill="#e5effb" stroke="#173e73" stroke-width="2"/>
+<text x="910.0" y="353" font-family="sans-serif" font-size="18" text-anchor="middle" fill="#142337">F2 5 A + P1 ICStation 11060</text>
+<text x="910.0" y="377" font-family="sans-serif" font-size="18" text-anchor="middle" fill="#142337">5.70 V motor rail (RUN)</text>
+<rect x="1080" y="330" width="300" height="60" rx="5" fill="#e5effb" stroke="#173e73" stroke-width="2"/>
+<text x="1230.0" y="353" font-family="sans-serif" font-size="18" text-anchor="middle" fill="#142337">Romeo VM (P22): four DRV8876</text>
+<text x="1230.0" y="377" font-family="sans-serif" font-size="18" text-anchor="middle" fill="#142337">M1 left, M2 right, M3 centre, M4 head</text>
+<path d="M740 470 H790" fill="none" stroke="#173e73" stroke-width="3"/>
+<circle cx="740" cy="470" r="4" fill="#173e73"/>
+<path d="M1030 470 H1080" fill="none" stroke="#173e73" stroke-width="3"/>
+<rect x="790" y="440" width="240" height="60" rx="5" fill="#e5effb" stroke="#173e73" stroke-width="2"/>
+<text x="910.0" y="463" font-family="sans-serif" font-size="18" text-anchor="middle" fill="#142337">F3 2 A + P2 S13V25F12</text>
+<text x="910.0" y="487" font-family="sans-serif" font-size="18" text-anchor="middle" fill="#142337">12 V post rail (RUN)</text>
+<rect x="1080" y="440" width="300" height="60" rx="5" fill="#e5effb" stroke="#173e73" stroke-width="2"/>
+<text x="1230.0" y="463" font-family="sans-serif" font-size="18" text-anchor="middle" fill="#142337">D5 DRV8871, ILIM 71.5k</text>
+<text x="1230.0" y="487" font-family="sans-serif" font-size="18" text-anchor="middle" fill="#142337">Actuonix P16-100-256-12-P</text>
+<circle cx="540" cy="150" r="4" fill="#173e73"/>
+<text x="1380" y="420" font-family="sans-serif" font-size="15" text-anchor="end" fill="#142337">5.70 V rail also feeds SV1 steering and SV2 lock-release MG995 power</text>
+<text x="135" y="560" font-family="sans-serif" font-size="18" text-anchor="start" fill="#142337">Remove the Romeo JP6 VIN/VM link: VIN stays on MAIN, VM only on RUN.</text>
+<text x="135" y="598" font-family="sans-serif" font-size="18" text-anchor="start" fill="#142337">Fit the PMODE link: DRV8876 PH/EN mode (EN = PWM, PH = direction).</text>
+<text x="135" y="636" font-family="sans-serif" font-size="18" text-anchor="start" fill="#142337">Replace R9 20k with 5.60k and R10 1k with 2.00k: pair trip 1.73 A, head 0.86 A.</text>
+<text x="135" y="674" font-family="sans-serif" font-size="18" text-anchor="start" fill="#142337">Romeo 5V_Servo is the 2 A logic buck; servos never draw from it.</text>
+<text x="135" y="712" font-family="sans-serif" font-size="18" text-anchor="start" fill="#142337">NC travel limits gate the 74AHCT125 enables; opening one disables that direction.</text>
+<text x="135" y="750" font-family="sans-serif" font-size="18" text-anchor="start" fill="#142337">SS-01GL lock switch: NO and NC both read; exactly one closed is valid.</text>
+<text x="135" y="788" font-family="sans-serif" font-size="18" text-anchor="start" fill="#142337">P16 pot on 3.3 V through 2.2k; open wiper or reference faults the stance.</text>
+<text x="135" y="826" font-family="sans-serif" font-size="18" text-anchor="start" fill="#142337">Ground drive runs only on three feet with the lock sensed seated.</text>
+<path d="M105 195 V870 H1360" fill="none" stroke="#173e73" stroke-width="3"/>
+<text x="160" y="862" font-family="sans-serif" font-size="17" text-anchor="start" fill="#142337">GND: common battery, regulator, driver, controller and servo returns at one distribution point.</text>
+</svg>

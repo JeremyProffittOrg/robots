@@ -1,0 +1,48 @@
+reference,quantity,item,part,unit_usd,basis,url,notes
+M1-M7,7,TT motor,Adafruit 3777,2.95,listed,https://www.adafruit.com/product/3777,Six ground drive motors; one independent internal head friction motor
+W1-W13,13,63mm TT wheel,Adafruit 3766,1.50,listed,https://www.adafruit.com/product/3766,Twelve ground wheels; one internal head wheel; check stock and actual hub seating
+U1,1,HUZZAH32 original Feather,Adafruit 3405,19.95,listed,https://www.adafruit.com/product/3405,Original ESP32; not ESP32-S3 or V2
+D1-D4,4,Dual DRV8833 driver,Adafruit 3297,5.95,listed,https://www.adafruit.com/product/3297,Leave factory1A limits intact; six ground channels and one head channel
+P1-P5,5,5V3A UBEC,Adafruit 1385,9.95,listed,https://www.adafruit.com/product/1385,Separate left/right/rear/steering/head5V rails; never parallel outputs
+U6,1,5V1.2A logic converter,Adafruit 4739,6.95,listed,https://www.adafruit.com/product/4739,Logic and audio only
+SV1,1,MG-995 high-torque metal gear servo,Adafruit 1142,19.95,listed,https://www.adafruit.com/product/1142,5V rear yaw;25 spline;40.7x19.7x42.9mm;62.41g; listed out of stock2026-09-12
+U7,1,74AHCT125 DIP14,Adafruit 1787,1.50,allowance,https://www.adafruit.com/product/1787,5V servo signal buffer; use exact AHCT type
+U8,1,MAX98357A I2S amplifier,Adafruit 3006,5.95,listed,https://www.adafruit.com/product/3006,Bridge output; neither speaker terminal is ground
+SP1,1,3inch8ohm1W speaker,Adafruit 1313,1.95,listed,https://www.adafruit.com/product/1313,77.8mm square envelope; foam and cable tie mounting
+B1,1,Protected12V6AhLiFePO4 battery,Bioenno BLF-1206A,79.99,listed,https://www.bioennopower.com/products/12v-6ah-lifepo4-battery-pvc,72Wh;12A continuous;0.7kg;112x66x71mm
+CH1,1,Matched14.6V2A charger,Bioenno BPC-1502DC,21.99,allowance,https://www.bioennopower.com/products/lithium-12v-2a-amp-lifepo4-battery-charger,Remove battery for charging; use factory charge jack
+S1-S2,2,20A30VDC SPST panel switch,NKK S1A,12.00,allowance,https://www.nkkswitches.com/wp-content/themes/impress-blank/search/inc/part.php?part_no=S1A,MAIN and RUN;12.5mm panel holes; label OFF clearly
+FH1-FH8,8,ATO inline fuse holder16AWG,Littelfuse 0FHA0001ZXJ,4.00,allowance,https://info.littelfuse.com/ato-fha-series-landing-page,Insulated holder; no exposed blades
+F1,1,7.5A32V ATO fuse,ATO7.5A,1.00,allowance,,Main pack fuse
+F2-F5 F7-F8,6,2A32V ATO fuse,ATO2A,1.00,allowance,,Separate inputs of five UBECs and actuator converter
+F6,1,1A32V ATO fuse,ATO1A,1.00,allowance,,Logic input fuse
+PP30,1,Anderson mating plug set,PP30,6.00,allowance,https://www.andersonpower.com/us/en/resources/PowerpoleResourcesPage.html,Match factory discharge plug; do not cut pack lead
+PROTO,2,Half-size solderable board,Adafruit 1609,4.50,allowance,https://www.adafruit.com/product/1609,Buffer and low-current distribution; motors use heavy wire
+SOCKET,1,DIP14 socket,14pin0.3inch,0.75,allowance,,For U7
+R10K,14,10kohm1percent0.25W resistor,Metal film,0.10,allowance,,Six drive inputs;enable;fault;steer;head2;post2;power sense
+R15K,1,15kohm1percent0.25W resistor,Metal film,0.10,allowance,,Power sense bottom
+R100K,2,100kohm1percent0.25W resistor,Metal film,0.10,allowance,,Pack sense top and amplifier gain
+R22K,1,22kohm1percent0.25W resistor,Metal film,0.10,allowance,,Pack sense bottom
+R220,1,220ohm0.25W resistor,Metal film,0.10,allowance,,Steering servo series resistor
+C100N,11,100nF25V ceramic capacitor,X7R,0.15,allowance,,Seven motors;buffer bypass;two sense filters;actuator ADC filter
+CI1-CI4 CI6-CI7,6,220uF25V electrolytic,105C low ESR,0.75,allowance,,Five UBEC and actuator converter inputs
+CI5,1,100uF25V electrolytic,105C low ESR,0.50,allowance,,Logic converter input
+CO1-CO5,5,470uF10V electrolytic,105C low ESR,0.75,allowance,,Three ground drivers;logic;head rail
+CS,1,1000uF10V electrolytic,105C low ESR,1.00,allowance,,Servo rail
+WIRE18,4,18AWG silicone wire metre,Red black,1.50,allowance,,Main power distribution
+WIRE22,6,22AWG silicone wire metre,Assorted,1.00,allowance,,Motor and servo branches
+WIRE26,5,26AWG stranded wire metre,Assorted,0.60,allowance,,Signal wiring
+CONNECTORS,1,Connectors ferrules headers heatshrink and labels,Allowance,22.00,allowance,,Six removable motor plugs;two servo extensions;USB power link;10A terminal blocks
+USB,1,Micro USB data cable,USB-A to micro-B,5.00,allowance,,For original HUZZAH32 flashing
+ACT,1,100mm feedback linear actuator,Actuonix P16-100-256-12-P,149,allowance,https://www.actuonix.com/p16-100-256-12-p,12V;300N;20percent duty;no internal limits;selected stroke5.04..72mm;backorder
+P6,1,12V step-up/down regulator,Pololu S13V25F12 / 4984,24.95,allowance,https://www.pololu.com/product/4984,Actuator only;2A conservative branch design;22.9x22.9x9.7mm
+D5,1,DRV8871 actuator driver,Adafruit 3190,7.5,allowance,https://www.adafruit.com/product/3190,Replace factoryR1 30k with71.5k1percent;0.895A nominal limit;software0.75A/200ms
+U9,1,16bit analog converter,Adafruit ADS1115 / 1085,14.95,allowance,https://www.adafruit.com/product/1085,3.3V;0x48;AIN0 position;calibrate detached actuator ends
+U10,1,High-side current sensor,Adafruit INA219 / 904,9.95,allowance,https://www.adafruit.com/product/904,3.3V logic;0x40;0.1ohm shunt;12V actuator supply branch
+LS_EXT LS_RET,2,Gold-contact hinge-lever limit switch,Omron SS-01GL,3.5,allowance,https://omronfs.omron.com/en_US/ecb/products/pdf/en-ss.pdf,NC contacts in separate5V driver-input paths;4.7k pulldowns;no motor current through switches
+R_ILIM,1,71.5kohm1percent0.25W resistor,Metal film,0.1,allowance,,Replace D5 boardR1;never parallel with original
+R_LIMIT,2,4.7kohm1percent0.25W resistor,Metal film,0.1,allowance,,D5 IN1/IN2 toGND after NC limits
+R_POT,1,1kohm1percent0.25W resistor,Metal film,0.1,allowance,,Actuator ADC series filter
+R_POT_FAIL,1,470kohm1percent0.25W resistor,Metal film,0.1,allowance,,ADC pulldown for disconnected wiper
+CO6,1,470uF25V electrolytic,105C low ESR,0.9,allowance,,Actuator12V rail;observe polarity
+CAL_BUTTONS,1,Normally-open momentary buttons;20pack,Adafruit367,2.5,listed,https://www.adafruit.com/product/367,Two used only for detached actuator commissioning; remove before operation

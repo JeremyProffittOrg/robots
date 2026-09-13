@@ -1,0 +1,20 @@
+{
+  "limit": 199,
+  "known_pieces": 148,
+  "excess_known_pieces": 0,
+  "unresolved_rows": [
+    "G001",
+    "G002",
+    "G003",
+    "G004",
+    "G005",
+    "G006",
+    "G007",
+    "G008",
+    "G009"
+  ],
+  "invalid_rows": [],
+  "passed": false,
+  "scope": "Arithmetic and declared gaps only; CAD/wiring completeness needs separate review",
+  "source_sha256": "74b35515e148d7b85dfc839a9da4480d98afcad92eee30372e000246f92e5689"
+}

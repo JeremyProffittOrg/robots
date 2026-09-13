@@ -1,0 +1,88 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: R2-D2 revision C and D videos and PDFs in private S3, served through CloudFront
+Resources:
+  Artifacts:
+    Type: AWS::S3::Bucket
+    DeletionPolicy: Retain
+    UpdateReplacePolicy: Retain
+    Properties:
+      OwnershipControls:
+        Rules: [{ObjectOwnership: BucketOwnerEnforced}]
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        IgnorePublicAcls: true
+        BlockPublicPolicy: true
+        RestrictPublicBuckets: true
+      BucketEncryption:
+        ServerSideEncryptionConfiguration:
+          - ServerSideEncryptionByDefault: {SSEAlgorithm: AES256}
+  OriginAccess:
+    Type: AWS::CloudFront::OriginAccessControl
+    Properties:
+      OriginAccessControlConfig:
+        Name: robots-r2d2-deliverables
+        OriginAccessControlOriginType: s3
+        SigningBehavior: always
+        SigningProtocol: sigv4
+  Delivery:
+    Type: AWS::CloudFront::Distribution
+    Properties:
+      DistributionConfig:
+        Enabled: true
+        Comment: R2-D2 design deliverables
+        PriceClass: PriceClass_100
+        HttpVersion: http2
+        IPV6Enabled: true
+        Origins:
+          - Id: s3
+            DomainName: !GetAtt Artifacts.RegionalDomainName
+            OriginAccessControlId: !Ref OriginAccess
+            S3OriginConfig: {OriginAccessIdentity: ''}
+        DefaultCacheBehavior:
+          TargetOriginId: s3
+          ViewerProtocolPolicy: redirect-to-https
+          AllowedMethods: [GET, HEAD]
+          CachedMethods: [GET, HEAD]
+          Compress: false
+          MinTTL: 0
+          DefaultTTL: 300
+          MaxTTL: 300
+          ForwardedValues:
+            QueryString: false
+            Cookies: {Forward: none}
+        ViewerCertificate: {CloudFrontDefaultCertificate: true}
+  AccessPolicy:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket: !Ref Artifacts
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Sid: RequireTLS
+            Effect: Deny
+            Principal: '*'
+            Action: s3:*
+            Resource: [!GetAtt Artifacts.Arn, !Sub '${Artifacts.Arn}/*']
+            Condition:
+              Bool: {'aws:SecureTransport': 'false'}
+          - Sid: OnlyDistributionAndReleasedArtifacts
+            Effect: Allow
+            Principal: {Service: cloudfront.amazonaws.com}
+            Action: s3:GetObject
+            Resource:
+              - !Sub '${Artifacts.Arn}/r2d2/revision-c/motion.mp4'
+              - !Sub '${Artifacts.Arn}/r2d2/revision-c/design.pdf'
+              - !Sub '${Artifacts.Arn}/r2d2/revision-d/motion.mp4'
+              - !Sub '${Artifacts.Arn}/r2d2/revision-d/design.pdf'
+            Condition:
+              StringEquals:
+                AWS:SourceArn: !Sub 'arn:${AWS::Partition}:cloudfront::${AWS::AccountId}:distribution/${Delivery}'
+Outputs:
+  Bucket:
+    Value: !Ref Artifacts
+  Distribution:
+    Value: !Ref Delivery
+  BaseUrl:
+    Value: !Sub 'https://${Delivery.DomainName}/r2d2/revision-c'
+  DeliveryOrigin:
+    Value: !Sub 'https://${Delivery.DomainName}'

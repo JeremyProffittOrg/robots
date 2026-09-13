@@ -1,0 +1,61 @@
+id,item,quantity,count_status,basis
+P001,Adafruit3777 motor with factory leads,7,counted,Conservative research candidate; mounting design is not frozen
+P002,Adafruit3766 wheel,13,counted,Conservative research candidate; mounting design is not frozen
+P003,HFS5-2020 body rail228mm,4,counted,Conservative research candidate; mounting design is not frozen
+P004,HFS5-2020 leg rail180mm,2,counted,Conservative research candidate; mounting design is not frozen
+P005,"MISUMI HFS5-2020 centre post rail 290 mm, two 4.3 mm cross holes for printed retention pins",1,counted,Revision D mechanism: 290 mm keeps both printed guide lands engaged at 98 mm and the retracted top below the dome ring (check_kinematics.py); https://us.misumi-ec.com/pdf/fa/2019/2019_US_2686.pdf
+P006,Shaft,1,counted,Conservative research candidate; mounting design is not frozen
+P007,Shoulder bearings,4,counted,Conservative research candidate; mounting design is not frozen
+P008,Hubs,2,counted,Conservative research candidate; mounting design is not frozen
+P009,Hub screws,8,counted,Conservative research candidate; mounting design is not frozen
+P010,Head turntable,1,counted,Conservative research candidate; mounting design is not frozen
+P011,Head screws,8,counted,Conservative research candidate; mounting design is not frozen
+P012,Head nuts,8,counted,Conservative research candidate; mounting design is not frozen
+P013,Actuonix P16-100-256-12-P post actuator,1,counted,"Revision D mechanism: 100 mm stroke, 300 N lifted, >500 N back-drive, 1 A stall at 12 V, 110 g, listed $90 backordered 2026-09-12; https://www.actuonix.com/p16-100-256-12-p"
+P014,ExtR,1,counted,Conservative research candidate; mounting design is not frozen
+P015,Servos,2,counted,Conservative research candidate; mounting design is not frozen
+P016,Horns,2,counted,Conservative research candidate; mounting design is not frozen
+P017,Horn screws,2,counted,Conservative research candidate; mounting design is not frozen
+P018,Servo mount screws,8,counted,Conservative research candidate; mounting design is not frozen
+P019,Servo mount nuts,8,counted,Conservative research candidate; mounting design is not frozen
+P020,Limit switches,3,counted,Conservative research candidate; mounting design is not frozen
+P021,Limit screws,6,counted,Conservative research candidate; mounting design is not frozen
+P022,Limit nuts,6,counted,Conservative research candidate; mounting design is not frozen
+P023,SKF SA12E rod end,1,counted,Conservative research candidate; mounting design is not frozen
+P024,M12 jam nut,1,counted,Conservative research candidate; mounting design is not frozen
+P025,12mm center shoulder axle bolt,1,counted,Conservative research candidate; mounting design is not frozen
+P026,M10 center axle locknut,1,counted,Conservative research candidate; mounting design is not frozen
+P027,Center axle washer,1,counted,Conservative research candidate; mounting design is not frozen
+P028,Center axle shim,1,counted,Conservative research candidate; mounting design is not frozen
+P029,Actuator pins,2,counted,Conservative research candidate; mounting design is not frozen
+P030,Pin Rclips,4,counted,Conservative research candidate; mounting design is not frozen
+P031,"J.W. Winco GN 412-6-35-B-1 spring indexing plunger, shoulder stance lock",1,counted,"Revision D mechanism: 6 mm pin, 6 mm minimum extension, 5-15 N spring, 0.152 lb, listed US$11.77; https://live-catalog.jwwinco.com/pdf/winco/us/412.pdf"
+P032,"J.W. Winco GN 412.2-M12X1.5-B6.2 hardened receiver bushing, two-foot and three-foot stances",2,counted,"Revision D mechanism: one receiver per stance in the printed lock ring; hex head trapped by the leg core, no nut; listed US$5.66; https://live-catalog.jwwinco.com/pdf/winco/us/412_2.pdf"
+P033,"ISO 4762 M4x16 socket head screw, plunger flange to printed mount",2,counted,Revision D mechanism: heads sit in the GN 412 flange counterbores; 12 mm grip plus captured nut
+P034,"ISO 4032 M4 hex nut, plunger flange",2,counted,Revision D mechanism: captured in printed hex pockets behind the mount plate
+P039,Steer link,1,counted,Conservative research candidate; mounting design is not frozen
+P040,Steer joints,2,counted,Conservative research candidate; mounting design is not frozen
+P041,Steer joint screws,2,counted,Conservative research candidate; mounting design is not frozen
+P042,Steer joint nuts,2,counted,Conservative research candidate; mounting design is not frozen
+P043,DFRobot DFR0994 controller board,1,counted,Conservative research candidate; mounting design is not frozen
+P044,DFR0994 external antenna,1,counted,Conservative research candidate; mounting design is not frozen
+P045,DFR0994 supplied camera; unused accessory counted conservatively,1,counted,Conservative research candidate; mounting design is not frozen
+P046,Motor regulator,1,counted,Conservative research candidate; mounting design is not frozen
+P047,Post regulator,1,counted,Conservative research candidate; mounting design is not frozen
+P048,Amp,1,counted,Conservative research candidate; mounting design is not frozen
+P049,Speaker,1,counted,Conservative research candidate; mounting design is not frozen
+P050,Buffer board,1,counted,Conservative research candidate; mounting design is not frozen
+P051,Battery,1,counted,Conservative research candidate; mounting design is not frozen
+P052,Charger,1,counted,Conservative research candidate; mounting design is not frozen
+P053,Main and RUN switches,2,counted,Conservative research candidate; mounting design is not frozen
+P054,Main fuse holder,1,counted,Conservative research candidate; mounting design is not frozen
+P055,Main fuse,1,counted,Conservative research candidate; mounting design is not frozen
+P056,Branch holders,2,counted,Conservative research candidate; mounting design is not frozen
+P057,Branch fuses,2,counted,Conservative research candidate; mounting design is not frozen
+G001,Battery mating connector and discrete distribution connectors,,unresolved,Must be counted or replaced by a reviewed integrated printed feature; not assumed zero
+G002,Separate wire segments and factory harnesses or extensions,,unresolved,Must be counted or replaced by a reviewed integrated printed feature; not assumed zero
+G003,Motor-terminal and additional rail bulk capacitors,,unresolved,Must be counted or replaced by a reviewed integrated printed feature; not assumed zero
+G004,Resistor rework pieces for the selected controller,,unresolved,Must be counted or replaced by a reviewed integrated printed feature; not assumed zero
+G005,Shoulder bearing retainers and their mounting hardware,,unresolved,Must be counted or replaced by a reviewed integrated printed feature; not assumed zero
+G007,Foot and body cover attachment hardware,,unresolved,Must be counted or replaced by a reviewed integrated printed feature; not assumed zero
+G009,Battery restraints and board or speaker retention hardware,,unresolved,Must be counted or replaced by a reviewed integrated printed feature; not assumed zero

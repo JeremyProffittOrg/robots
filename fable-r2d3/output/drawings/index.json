@@ -1,0 +1,170 @@
+{
+  "style": "MATLAB-style Matplotlib engineering drawings",
+  "revision": "C",
+  "printed_components": 10,
+  "cad_sources": {
+    "cad\\exterior.scad": "6e2de698479a51c74317072460105b570dc327faa48a1528879cbc10925773db",
+    "cad\\kinematics.scad": "4f0394720eb9fab74ed8aa3f901b561347819a21c9d44dde2fe87e7c1a4a6d8f",
+    "cad\\loadframe.scad": "08c179f04982a31a25f7042d13f9e4ccaa6c5c6935ab642d9446c53b544f46fd",
+    "cad\\r2d2.scad": "23e0e18bd68845c2d0b0dbdde37c360fb81bacf40a1370f1472a7b855fe72c0d",
+    "scripts\\draw_robot.py": "d3b1309d7a8d69364d924e5c5269d64d4e091b33be35cf43a937d3f441b18473"
+  },
+  "sources": {
+    "body_lower": "83aa04f364cac652e308f6e9426331fe611b1d0ce2dc196d7290e3bfec2b59bd",
+    "body_upper": "de08c6d958eb720e6d6a9bd7deca6b3e9fb425e52fe4871095fabbb9ef34f973",
+    "dome": "f76cf7bebf2c59b6645f1ce60e818c48dc0d69ee0db4749ffb73cdc099514733",
+    "leg": "02d9be63ee4a397a20959e36021a0b640b7069553b1ddc3c2b54081ebb12ecc4",
+    "outer_foot": "5d3a66dc287b03338bc3644ff151d1115697e644d8f27719b264c11064936ccf",
+    "rear_foot": "3d00884ae78e1979a926e208d46b0071b98827f3753172a336f4bbb5db07c77f",
+    "drive_cassette": "e6b51cfe846a05457e7644d1f5c7657815e5f2738310e963e7d46173c5298f70",
+    "head_motor_mount": "58e0078cddf5493820ecbaf72280aefb2cee313a5db601caa6a93a6ee3f35882",
+    "bearing_tower": "0162a2202158262ae6f47cc362701d02c0e0a01cfdaee9a008b8117638f76724",
+    "bearing_cap": "70fc6c29998869afcbc00cee822ba82d0899e13b29d50baeab421d11de72e951"
+  },
+  "pngs": [
+    {
+      "file": "01-robot-isometric.png",
+      "pixels": [
+        2210,
+        1700
+      ],
+      "sha256": "dbf435a3802cc07abcaae93b19e4e19189898a394650721f21d2ba83e1bb344d"
+    },
+    {
+      "file": "02-robot-orthographic.png",
+      "pixels": [
+        3060,
+        1700
+      ],
+      "sha256": "1c78d1acc312ba64c5467b3b2ff99fc767d07fad8fa86b8b05f6861ecebb4ceb"
+    },
+    {
+      "file": "03-robot-exploded.png",
+      "pixels": [
+        2210,
+        1700
+      ],
+      "sha256": "6e38e5cbe63dccaf7c2b9a910236310ae2fcc236d71414793e4dd413fbd7359a"
+    },
+    {
+      "file": "04-mechanisms-exploded.png",
+      "pixels": [
+        2720,
+        1700
+      ],
+      "sha256": "e5ad140a8a7a7c65c2be5939aae26ed3515132dda80b6bd8171bf83c70afbebf"
+    },
+    {
+      "file": "05-printed-components.png",
+      "pixels": [
+        3400,
+        1870
+      ],
+      "sha256": "74d1327a36f4b7909f1bf6df2c8c9fdae0a7688a272e73ba5f99d3cb6387a745"
+    },
+    {
+      "file": "components/01-body_lower.png",
+      "pixels": [
+        2210,
+        1700
+      ],
+      "sha256": "44d88a4a01536897e52add5f9d0e4a51d853b1ed770c81e7a594736218bc9bbf"
+    },
+    {
+      "file": "components/02-body_upper.png",
+      "pixels": [
+        2210,
+        1700
+      ],
+      "sha256": "fc07ac00d049a8fd209d4764d7584f4b2cb3ec0aa65a95119ca23f07e5683b1a"
+    },
+    {
+      "file": "components/03-dome.png",
+      "pixels": [
+        2210,
+        1700
+      ],
+      "sha256": "960150f7249477e4b384ac3105d723e7b14d133a4e463c0afbcd7596b0686eea"
+    },
+    {
+      "file": "components/04-leg.png",
+      "pixels": [
+        2210,
+        1700
+      ],
+      "sha256": "716d1860091dbde66b518487c430b35604eda5da26e464ae7aa46183301daca1"
+    },
+    {
+      "file": "components/05-outer_foot.png",
+      "pixels": [
+        2210,
+        1700
+      ],
+      "sha256": "d80b3a5aa25582b9f0aa111c47f63e372e63ac4e878b11c9887eb537cf43647e"
+    },
+    {
+      "file": "components/06-rear_foot.png",
+      "pixels": [
+        2210,
+        1700
+      ],
+      "sha256": "fd3f97e40801699a6b0ab844267828c8ea7ba130c7755994d2a4560c377ac589"
+    },
+    {
+      "file": "components/07-drive_cassette.png",
+      "pixels": [
+        2210,
+        1700
+      ],
+      "sha256": "611c59dcac4996022686b98cd523253fa46b88b4861beca01bcc3f6c87c746b2"
+    },
+    {
+      "file": "components/08-head_motor_mount.png",
+      "pixels": [
+        2210,
+        1700
+      ],
+      "sha256": "c6a1296440169e707945ae85d3d1285730eae7d02a2cb922435dad457094971b"
+    },
+    {
+      "file": "components/09-bearing_tower.png",
+      "pixels": [
+        2210,
+        1700
+      ],
+      "sha256": "012cebac22cae0660ffaacfdcf39f57e0388ecd82d6b94ca78436beb055421f1"
+    },
+    {
+      "file": "components/10-bearing_cap.png",
+      "pixels": [
+        2210,
+        1700
+      ],
+      "sha256": "3cacce6afab2fbb4fc20f6628b573d7c7d2b4b7f51c1c8646e72c977b8aff14a"
+    },
+    {
+      "file": "06-metal-profiles.png",
+      "pixels": [
+        3230,
+        1870
+      ],
+      "sha256": "747a8810996d0ccbe5babe37cef7e3340ce8b0730a322f3afebe29dc1b1ab061"
+    },
+    {
+      "file": "07-metal-profiles.png",
+      "pixels": [
+        3230,
+        1870
+      ],
+      "sha256": "d6abaa143cea13400b92b4373a85349e589763eba2bc0923f5eedda6160c22bc"
+    },
+    {
+      "file": "08-posture-geometry.png",
+      "pixels": [
+        2720,
+        1530
+      ],
+      "sha256": "bc0a93ffa5f0c1458cf3f719e6434fd991f9a6c24720855011cfced2ed5db4f9"
+    }
+  ]
+}

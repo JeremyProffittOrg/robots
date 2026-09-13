@@ -1,0 +1,99 @@
+net,source,target,awg,note
+PACK+,B1 PP30 +,F1 7.5A input,18,Fuse within 100mm of pack plug
+FUSED+,F1 output,S1 MAIN input,18,
+MAIN+,S1 output,S2 RUN input,18,
+MAIN+,S1 output,U1 VIN+ / P23 pin1,20,"Romeo logic input 7-24 V, onboard FUSE1 3 A; remove the JP6 VIN/VM link"
+GND,B1 PP30 -,U1 VIN- / P23 pin2,20,
+RUN+,S2 output,F2 5A input,18,
+MOTOR_BUCK_IN,F2 output,P1 ICStation 11060 IN+,18,
+GND,B1 PP30 -,P1 IN-,18,
+5V7_MOTOR,P1 OUT+,U1 VM+ / P22 pin1,18,Set 5.70 V with a meter before connecting; accept 5.50-6.00 V at VM
+GND,P1 OUT-,U1 VM- / P22 pin2,18,
+RUN+,S2 output,F3 2A input,18,
+POST_BUCK_IN,F3 output,P2 S13V25F12 VIN,20,
+GND,B1 PP30 -,P2 GND,20,
+12V_POST,P2 VOUT,D5 DRV8871 VM,20,
+GND,B1 PP30 -,D5 GND,20,
+LEFT+,U1 M1 OUT1,M1 red,22,Two motors in parallel on one channel
+LEFT-,U1 M1 OUT2,M1 black,22,
+LEFT+,U1 M1 OUT1,M2 red,22,
+LEFT-,U1 M1 OUT2,M2 black,22,
+RIGHT+,U1 M2 OUT1,M3 red,22,Two motors in parallel on one channel
+RIGHT-,U1 M2 OUT2,M3 black,22,
+RIGHT+,U1 M2 OUT1,M4 red,22,
+RIGHT-,U1 M2 OUT2,M4 black,22,
+CENTER+,U1 M3 OUT1,M5 red,22,Two motors in parallel on one channel
+CENTER-,U1 M3 OUT2,M5 black,22,
+CENTER+,U1 M3 OUT1,M6 red,22,
+CENTER-,U1 M3 OUT2,M6 black,22,
+HEAD+,U1 M4 OUT1,M7 red,22,
+HEAD-,U1 M4 OUT2,M7 black,22,
+5V7_MOTOR,P1 OUT+,SV1 steering red,22,MG995 4.8-7.2 V
+GND,B1 PP30 -,SV1 brown,22,
+5V7_MOTOR,P1 OUT+,SV2 lock release red,22,MG995 4.8-7.2 V
+GND,B1 PP30 -,SV2 brown,22,
+5V_LOGIC,U1 5V header,U7 74AHCT125 pin14 / VCC,26,
+GND,U1 GND header,U7 pin7 / GND,26,
+5V_LOGIC,U7 74AHCT125 pin14 / VCC,CB 100nF pin1,26,Bypass capacitor at the IC pins
+GND,U7 pin7 / GND,CB pin2,26,
+POST_EXTEND,U1 GPIO38,U7 pin2 / 1A,26,
+POST_EXTEND,U1 GPIO38,R_PD_EXT 10k pin1,26,Holds the gate input low through reset
+GND,B1 PP30 -,R_PD_EXT pin2,26,
+POST_EXTEND_5V,U7 pin3 / 1Y,D5 IN1,26,
+POST_RETRACT,U1 GPIO42,U7 pin5 / 2A,26,
+POST_RETRACT,U1 GPIO42,R_PD_RET 10k pin1,26,Holds the gate input low through reset
+GND,B1 PP30 -,R_PD_RET pin2,26,
+POST_RETRACT_5V,U7 pin6 / 2Y,D5 IN2,26,
+STEER,U1 GPIO40,U7 pin9 / 3A,26,
+STEER,U1 GPIO40,R_PD_STEER 10k pin1,26,Holds the gate input low through reset
+GND,B1 PP30 -,R_PD_STEER pin2,26,
+STEER_5V,U7 pin8 / 3Y,SV1 signal,26,
+LOCK_SERVO,U1 GPIO41,U7 pin12 / 4A,26,
+LOCK_SERVO,U1 GPIO41,R_PD_LOCK 10k pin1,26,Holds the gate input low through reset
+GND,B1 PP30 -,R_PD_LOCK pin2,26,
+LOCK_SERVO_5V,U7 pin11 / 4Y,SV2 signal,26,
+GND,B1 PP30 -,U7 pin10 / 3OE,26,
+GND,B1 PP30 -,U7 pin13 / 4OE,26,
+LIMIT_EXTEND,U7 pin1 / 1OE,LS_EXT COM,26,Closed NC enables that direction; an open switch or wire disables it
+GND,B1 PP30 -,LS_EXT NC,26,
+LIMIT_EXTEND,U7 pin1 / 1OE,R_LIM_EXT 10k pin1,26,
+3V3,U1 3V3 header,R_LIM_EXT pin2,26,
+LIMIT_EXTEND,U7 pin1 / 1OE,U1 GPIO7,26,HIGH = limit open
+LIMIT_RETRACT,U7 pin4 / 2OE,LS_RET COM,26,Closed NC enables that direction; an open switch or wire disables it
+GND,B1 PP30 -,LS_RET NC,26,
+LIMIT_RETRACT,U7 pin4 / 2OE,R_LIM_RET 10k pin1,26,
+3V3,U1 3V3 header,R_LIM_RET pin2,26,
+LIMIT_RETRACT,U7 pin4 / 2OE,U1 GPIO8,26,HIGH = limit open
+POST_ILIM,D5 ILIM,R_ILIM 71.5k pin2,26,Remove the factory 30k first; 0.82-0.98 A limit
+GND,B1 PP30 -,R_ILIM pin1,26,
+POST_RED,D5 OUT1,ACT red / pin3,22,
+POST_BLACK,D5 OUT2,ACT black / pin4,22,
+3V3,U1 3V3 header,R_POT_TOP 2.2k pin1,26,
+POT_REF+,R_POT_TOP 2.2k pin2,ACT yellow / pin5,26,Keeps the full-stroke wiper below 3.0 V for pot tolerance +/-50%
+GND,B1 PP30 -,ACT orange / pin1,26,
+POST_ADC,ACT purple / pin2,U1 GPIO4,26,
+POST_ADC,ACT purple / pin2,R_POT_FAIL 470k pin1,26,Open wiper reads 0 mV: feedback fault
+GND,B1 PP30 -,R_POT_FAIL pin2,26,
+GND,B1 PP30 -,LS_LOCK SS-01GL COM,26,The GN 412 knob closes NO only with the pin fully seated
+LOCK_NO,LS_LOCK NO,U1 GPIO18,26,
+LOCK_NO,LS_LOCK NO,R_LOCK_NO 3.3k pin1,26,About 1 mA wetting current
+3V3,U1 3V3 header,R_LOCK_NO pin2,26,
+LOCK_NC,LS_LOCK NC,U1 GPIO5,26,
+LOCK_NC,LS_LOCK NC,R_LOCK_NC 3.3k pin1,26,About 1 mA wetting current
+3V3,U1 3V3 header,R_LOCK_NC pin2,26,
+5V7_MOTOR,P1 OUT+,R_RUN_TOP 10k pin1,26,
+RUN_SENSE,R_RUN_TOP 10k pin2,U1 GPIO39,26,5.5-6.0 V rail gives 2.75-3.00 V
+RUN_SENSE,R_RUN_TOP 10k pin2,R_RUN_BOTTOM 10k pin1,26,
+GND,B1 PP30 -,R_RUN_BOTTOM pin2,26,
+MAIN+,S1 output,R_PACK_TOP 100k pin1,26,
+PACK_ADC,R_PACK_TOP 100k pin2,U1 GPIO6,26,14.6 V pack gives 2.63 V
+PACK_ADC,R_PACK_TOP 100k pin2,R_PACK_BOTTOM 22k pin1,26,
+GND,B1 PP30 -,R_PACK_BOTTOM pin2,26,
+5V_LOGIC,U1 5V header,U8 MAX98357A VIN,22,
+GND,U1 GND header,U8 GND,22,
+I2S_BCLK,U1 GPIO15,U8 BCLK,26,
+I2S_LRC,U1 GPIO16,U8 LRC,26,
+I2S_DIN,U1 GPIO17,U8 DIN,26,
+SPK+,U8 speaker +,SP1 +,22,
+SPK-,U8 speaker -,SP1 -,22,Neither speaker wire connects to GND; GAIN pin open (9 dB)
+GND,B1 PP30 -,U1 GND header,20,Common ground point for logic-level returns
