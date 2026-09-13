@@ -1,31 +1,73 @@
 {
   "style": "MATLAB-style engineering drawings rendered with Matplotlib and a per-pixel depth buffer; white background, MATLAB colour order, millimetre axes",
-  "generated": "2026-09-12T21:59:58+00:00",
+  "generated": "2026-09-13T05:00:04+00:00",
   "units": "mm",
   "dpi": 170,
-  "printed_designs": 9,
-  "printed_pieces": 12,
+  "revision": "D",
+  "stance_parameter": "stance_s",
+  "stance_endpoints_mm": {
+    "two_foot": 5.0,
+    "contact": 33.86751345948129,
+    "three_leg": 81.29
+  },
+  "stance_heights_mm": {
+    "two_foot": 749.6,
+    "contact": 749.6,
+    "three_leg": 741.8
+  },
+  "printed_designs": 10,
+  "printed_pieces": 13,
   "purchased_parts": "nominal envelopes from cad/params.scad; not manufacturer CAD",
   "missing_stl": [],
   "sources": {
     "stl/dome.stl": "3e9f78192f089c09851ddda57372694860e48db1eaefa648d9b2ab6aff0857f5",
-    "stl/body_upper.stl": "62b1b7f0b1bf260e75e2bd21f9f8301adb6778aa497aaf77d6ed2610cd0c8937",
-    "stl/body_lower.stl": "789998b7c9b477ee9a84835372aff6db3b58f2a5df663450d01aceddcb3a4628",
-    "stl/leg_upper.stl": "b09b795d23000666d6e552bd0e043ce82b50cd40146168a84273331390297f80",
-    "stl/leg_lower.stl": "988e404c8b275d17f85e247d55a8aa0a41c8a8b0e6f180d0e81d1a1d2857e60b",
-    "stl/leg_center.stl": "79e737249a44aa86e3252f205450e504d30c49f696e280912931f9a19387501e",
-    "stl/foot_outer.stl": "172e3c3653a7c69e4f8834aecdf8aa0e287a5757755106eded939cda2e905f75",
+    "stl/body_upper.stl": "26d1941bbf01e9e6f2691b81e01803864383d61284a36df4a8468b495ea5f739",
+    "stl/body_lower.stl": "ffcea62e5922d44605262d060dc8fbb8294e3d8100b77579ec5e84bd892340db",
+    "stl/leg_upper.stl": "56c79fda972e013e171ed196e499931a21cae001acd3803806b7348bdc0881cc",
+    "stl/leg_lower.stl": "5848ad338e9ecfa094d06109e1fd51db06642554477e55842d61363f4178ca6a",
+    "stl/foot_outer.stl": "86c1f2141e7838e5c5a4ae6fb2130ca93c38925c5d57dbd9af71f873ac4607eb",
+    "stl/leg_center.stl": "3c936e59b6da7e04ebc9437f9f7ca1e358a01077b6fe5ee6a7e71eeca43d8678",
+    "stl/leg_carriage.stl": "d81fb0aa20cd1d9a0f362baef39c97509abdad9a9334bd2921c06ae3236e2db1",
+    "stl/foot_center.stl": "4dd301c211f0195377392eb0e92d7c63efa33dfbf8c05585e9e66387acac57d1",
+    "stl/head_drive.stl": "1753da501c331f486908725ab931ad5f5c65bc14655866734426b8bdf433bf8a"
+  },
+  "source_sha256": {
+    "cad/body.scad": "7cda1b00262982cbc6108ca4ddde77e4819cef058635fb3e76387245fc388335",
+    "cad/dome.scad": "4d3439260027749e1fa04026ad9af7a871b0c695df8ea28c78bbb5217b6824e5",
+    "cad/feet.scad": "b7d81743d96bb6ca730b6d9a2cdf6eb8abb12a9e02cc3ff831e489e897988a3a",
+    "cad/head_drive.scad": "8a03c3e59ab48ff44309094bca3f4296a09d9d8eddec8ebcea4327cc2c2ed3e4",
+    "cad/legs.scad": "5eb3bbaef2651ad9b9816778399573774d2fa1e829f881cc21eb1b1f918448aa",
+    "cad/lib.scad": "7d606c413eed50905bd7fa05ff16a5153d48505893eb54033719a8ae038b728b",
+    "cad/params.scad": "4a52b587b3a47f73c70c2dfd99468fd2e114d131edfb51b21f103e0f248c9d7f",
+    "cad/r2d2.scad": "4fce809a319e6ff4e82f3f93b69ed988649f5d48100ad2fdfb5f3bbf79b3557c",
+    "cad/stance.scad": "bae4dfc13339945cfd4b3f2d9943e61db38d5ae553cc45b4bb4e4bfcdfe86dc7",
+    "stl/dome.stl": "3e9f78192f089c09851ddda57372694860e48db1eaefa648d9b2ab6aff0857f5",
+    "stl/body_upper.stl": "26d1941bbf01e9e6f2691b81e01803864383d61284a36df4a8468b495ea5f739",
+    "stl/body_lower.stl": "ffcea62e5922d44605262d060dc8fbb8294e3d8100b77579ec5e84bd892340db",
+    "stl/leg_upper.stl": "56c79fda972e013e171ed196e499931a21cae001acd3803806b7348bdc0881cc",
+    "stl/leg_lower.stl": "5848ad338e9ecfa094d06109e1fd51db06642554477e55842d61363f4178ca6a",
+    "stl/foot_outer.stl": "86c1f2141e7838e5c5a4ae6fb2130ca93c38925c5d57dbd9af71f873ac4607eb",
+    "stl/leg_center.stl": "3c936e59b6da7e04ebc9437f9f7ca1e358a01077b6fe5ee6a7e71eeca43d8678",
+    "stl/leg_carriage.stl": "d81fb0aa20cd1d9a0f362baef39c97509abdad9a9334bd2921c06ae3236e2db1",
     "stl/foot_center.stl": "4dd301c211f0195377392eb0e92d7c63efa33dfbf8c05585e9e66387acac57d1",
     "stl/head_drive.stl": "1753da501c331f486908725ab931ad5f5c65bc14655866734426b8bdf433bf8a"
   },
   "pngs": [
+    {
+      "file": "output/drawings/00_final_build_mockup.png",
+      "pixels": [
+        3950,
+        5216
+      ],
+      "sha256": "dec5353ec854a765e8bd33b5876d7e34d0f967ad7de2d2955f349366eb8f22e6"
+    },
     {
       "file": "output/drawings/01_robot_assembled.png",
       "pixels": [
         2720,
         2210
       ],
-      "sha256": "477417785bf3d4caebead8e097397ab3fa3293ca8abad7b1f30e0f7a2e569dec"
+      "sha256": "e236668ffa2d362766d66cdefb572b0c92db5d7a6e13df9aea62e0a030d4c812"
     },
     {
       "file": "output/drawings/02_robot_exploded.png",
@@ -33,7 +75,7 @@
         2890,
         2210
       ],
-      "sha256": "679106237019ed28317f9c89944e36ff1f5357ce81bb6884d987a99b0b4aa5b3"
+      "sha256": "2d0f0a4825d4418318a8dd9a8791c3ae2237d49e82f748675ca74447a07210a8"
     },
     {
       "file": "output/drawings/03_robot_orthographic.png",
@@ -41,15 +83,15 @@
         3230,
         1785
       ],
-      "sha256": "7cba4416ecf7d9e5bd1717eaf305651629b78373de363f90446fea508dead52e"
+      "sha256": "39314719243842f36f06fa94d3d7b04d770a45f7820137a4a0ca12a4df5fb1b3"
     },
     {
       "file": "output/drawings/04_printed_components.png",
       "pixels": [
-        3230,
-        2210
+        4304,
+        2208
       ],
-      "sha256": "1b082d02450117322b8cebfa7bad45801cb3b0c1f54597c3c376ea61bd656699"
+      "sha256": "33a57c4704e4a7712237b29b8b49d8f344f8cc03a596f01733c8607f2e02b8bb"
     },
     {
       "file": "output/drawings/05_body_rings.png",
@@ -57,7 +99,7 @@
         2890,
         2210
       ],
-      "sha256": "47f979cbc2ebf7e284036955d4fbc97fb447ed8a26c30480e6ca0d34f85edd37"
+      "sha256": "857a123e3d08578b6da4e7d0cf7d17eeae17805d42de2968e25e372d5893eb34"
     },
     {
       "file": "output/drawings/06_dome.png",
@@ -65,7 +107,7 @@
         2890,
         2210
       ],
-      "sha256": "34096d895b8f1e7bec5921021ef6cddb14c2faad3c23228eb2bdbc05879215c4"
+      "sha256": "f6208feef8431e803d9d046db033404aed070e91d24982bc7ebcb28ecdad5939"
     },
     {
       "file": "output/drawings/07_legs.png",
@@ -73,7 +115,7 @@
         3060,
         2125
       ],
-      "sha256": "0b95a80763a8702249e0d002d589165425c6283ca3f0073ada7abe7273e43e5a"
+      "sha256": "1138e4c016bcd726e762da7433b882ce5960b5888d91d883ff2e3e3b5a655bd4"
     },
     {
       "file": "output/drawings/08_feet.png",
@@ -81,7 +123,7 @@
         2890,
         2125
       ],
-      "sha256": "6cbde29aadd8a469cc05eb7ab7613c85c4c859b1fd2e3d47d0ec1eac6efa0e55"
+      "sha256": "2345e3f1e352405820cc60f114fcdb39f01d728cb19eb6075027ca4b32d70522"
     },
     {
       "file": "output/drawings/09_head_drive.png",
@@ -89,7 +131,7 @@
         2720,
         1870
       ],
-      "sha256": "b21ede60400e24c81009ec41294d6dd7620e2b8d062e4fc0351ab1eb467d9f0a"
+      "sha256": "d586759d596a0bc10278dbd42c24a85139c9d03fb509b7952ea1de9e39eb2ff5"
     },
     {
       "file": "output/drawings/10_exploded_feet.png",
@@ -97,7 +139,7 @@
         3060,
         2040
       ],
-      "sha256": "7c266513372c46e918cfb62d3968cada710d5b7845c30be9d482735574fd1f89"
+      "sha256": "54e208d5dd95d12b39ea2f6d7d40399ca1bb1e5e57e48b24a09df9ae4fba7887"
     },
     {
       "file": "output/drawings/11_exploded_leg.png",
@@ -105,7 +147,7 @@
         2720,
         2210
       ],
-      "sha256": "70bf71b628b6fc4acc006b3282e25e6406b8181f809018255ae0ad0a3c33ac4b"
+      "sha256": "d360ae84301a4b8fee2073865e176f9e290edd907932640fbdba8daff0975216"
     },
     {
       "file": "output/drawings/12_exploded_center_leg.png",
@@ -113,7 +155,7 @@
         2720,
         2125
       ],
-      "sha256": "ae602b4397f7e58abec380dd2ae23f78eec099c8f7971450b3bf6b5d6252a0bd"
+      "sha256": "15522277138053dc6ddb7f07f66026e9e5b9ce17dbf28097004e67c5e1c15a8b"
     },
     {
       "file": "output/drawings/13_exploded_body.png",
@@ -121,7 +163,7 @@
         2805,
         2210
       ],
-      "sha256": "e307bcf78262d861927d1e71d42bf1f9b4c944ddefc9579c47a41af2766c3792"
+      "sha256": "81fd1f1a76a781d94369cec956455436b1c91f217106cc77e3e9d528da3240e0"
     },
     {
       "file": "output/drawings/14_exploded_head_drive.png",
@@ -129,7 +171,7 @@
         2805,
         2040
       ],
-      "sha256": "6eae41afaad15d5bc80c886cc64a283803446f53c7e22a07f77688538e6eaf8b"
+      "sha256": "0b4a736acb031f57f61d2a543254c6384d491002cc9f9fa3e7675b7c972427c1"
     },
     {
       "file": "output/drawings/15_exploded_dome.png",
@@ -137,7 +179,7 @@
         2890,
         2125
       ],
-      "sha256": "a9a2014a092292b3391d5275615e547123a953bac92447e45b4e9be679449b6e"
+      "sha256": "c9fce7a18ec32b2d70b4faa2bc119516c42395aff7621c917e4f127560551d92"
     },
     {
       "file": "output/drawings/16_exploded_robot.png",
@@ -145,7 +187,15 @@
         3060,
         2295
       ],
-      "sha256": "2d37a7e190e5b5eb1d8e9ca949eec61b9dace3674eac8942d16d673cc5dbcd23"
+      "sha256": "72a62a47e06f9128070b98601fd238701d30cfcc6eb0167e0a67a56c95f11e1b"
+    },
+    {
+      "file": "output/drawings/17_stance_change.png",
+      "pixels": [
+        3400,
+        2210
+      ],
+      "sha256": "a7eaa8d949a54a35f37f7e5261b71c1d29f44ffca04bcdc37d34528068d8a367"
     },
     {
       "file": "output/drawings/components/body_lower.png",
@@ -153,7 +203,7 @@
         2210,
         1700
       ],
-      "sha256": "361a7dbb7c1c62b8151ce866476c599075b2c054abb6cab0d1fc56f5a9dee557"
+      "sha256": "7eafd848cd00c1b0ffbc41347dabbfe3873d95f7d06c0bb52b0594f540fae11e"
     },
     {
       "file": "output/drawings/components/body_upper.png",
@@ -161,7 +211,7 @@
         2210,
         1700
       ],
-      "sha256": "ae84bc53cdda3a69aa0e9bd440803a8712dd53467e48d2d66f2fe89a68825bfe"
+      "sha256": "82c97a5c783260a37ec381eb109180f158fda2246b964f45659da7288eae70ab"
     },
     {
       "file": "output/drawings/components/dome.png",
@@ -169,7 +219,7 @@
         2210,
         1700
       ],
-      "sha256": "2a003ed41617db28d85568cd1aea17aba16dfb0399037d14d84bc6cd20f58d6e"
+      "sha256": "4b3dc7b10f9b5f656f79b4356afaef8c055e9a9cea5be8ef29f07683203041ca"
     },
     {
       "file": "output/drawings/components/foot_center.png",
@@ -177,7 +227,7 @@
         2210,
         1700
       ],
-      "sha256": "4403c7cf69eee669bad8a6ee9044437b1ea1f34206e372414da69e59ab737852"
+      "sha256": "eacf189ff26902e7d015b03d940a9f19d1567aa8500e790271640ad2fa922377"
     },
     {
       "file": "output/drawings/components/foot_outer.png",
@@ -185,7 +235,7 @@
         2210,
         1700
       ],
-      "sha256": "d7c338c7517fbd220cbbceddfcbc470085de001d2f43aa5af3bc8ecdc12b2888"
+      "sha256": "cbb48749593e1ecf76a2a7ed18cc9511adb56eae2929b1a5222d777b024f7881"
     },
     {
       "file": "output/drawings/components/head_drive.png",
@@ -193,7 +243,15 @@
         2210,
         1700
       ],
-      "sha256": "cbc440653c0f2bf4bee3a125b96f01401f9249a1415bf5bef14ad591453d8fda"
+      "sha256": "ca5ebbfef7a5ad9d9b2f486f2a41c94702078f3a839b8fc596a1eccdb2a97b03"
+    },
+    {
+      "file": "output/drawings/components/leg_carriage.png",
+      "pixels": [
+        2210,
+        1700
+      ],
+      "sha256": "d86f1bf0a05ce461beed7d0f366a84f4c3ae4d65dbe2ace8c5cced6f7f6fa681"
     },
     {
       "file": "output/drawings/components/leg_center.png",
@@ -201,7 +259,7 @@
         2210,
         1700
       ],
-      "sha256": "fbeecac4e4cedbccbb4f545b5a9b4c95414ca35ac1a80ef3401cfb93a5c7c5d5"
+      "sha256": "ae0389ccd4a05119fba61cee54dfefc554c862f83bdc8495d1e433928991b185"
     },
     {
       "file": "output/drawings/components/leg_lower.png",
@@ -209,7 +267,7 @@
         2210,
         1700
       ],
-      "sha256": "86e40bd617986cc9ee158ec05e6a02767281d58913aec62e2af16f57c27a0c61"
+      "sha256": "a608b11cbda205ba7154459f037cf8ae7f7fa9e67c3d028a0f1aec072d73c7d0"
     },
     {
       "file": "output/drawings/components/leg_upper.png",
@@ -217,7 +275,7 @@
         2210,
         1700
       ],
-      "sha256": "1cbf1c4f3f294596ec5444ec075caf3679ec6585cc479724e2aab039b34bc977"
+      "sha256": "3d3a60aee86bdde14247e06959ccf9bdd99f2366367d4a5f457d57dcb1314abc"
     }
   ]
 }
