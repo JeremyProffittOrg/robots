@@ -12,29 +12,39 @@
 
   <div style="border-left:4px solid #1d4ed8;background-color:#dbeafe;color:#0b0f19;padding:12px 16px;border-radius:0 6px 6px 0;margin-bottom:20px">
     <div style="font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#1e3a8a;background-color:#dbeafe">Outcome</div>
-    <div style="margin-top:4px;font-size:15px;color:#0b0f19;background-color:#dbeafe">dry run</div>
+    <div style="margin-top:4px;font-size:15px;color:#0b0f19;background-color:#dbeafe">fable-r2d2 revision D is packaged: 10 STL files (13 printed pieces), a two-foot and a three-leg stance changed by an interlocked actuator with sensed shoulder locks. The 130-page manual is attached and the 214 s video link is valid 7 days. docs/verification.json: 11 of 11 checks pass, revision D. Nothing has been printed, built or driven.</div>
   </div>
 
   <h2 style="font-size:13px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#1f2937;background-color:#ffffff;border-bottom:2px solid #9ca3af;padding-bottom:5px;margin:22px 0 10px">Landed</h2>
   <table style="width:100%;border-collapse:collapse;font-size:13px;background-color:#ffffff;color:#0b0f19">
-    <tr><td style="padding:4px 10px 4px 0;font-family:ui-monospace,SFMono-Regular,Consolas,monospace;color:#4b5563;background-color:#ffffff;white-space:nowrap;vertical-align:top">44bf7780bd28</td><td style="padding:4px 0;color:#0b0f19;background-color:#ffffff">doorbot: freeze revision A mechanism and add the analysis that has to pass</td></tr>
+    <tr><td style="padding:4px 10px 4px 0;font-family:ui-monospace,SFMono-Regular,Consolas,monospace;color:#4b5563;background-color:#ffffff;white-space:nowrap;vertical-align:top">b94f4d63bc0e</td><td style="padding:4px 0;color:#0b0f19;background-color:#ffffff">fable-r2d2: record revision D integration verified and delivery started</td></tr>
   </table>
 
   <h2 style="font-size:13px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#1f2937;background-color:#ffffff;border-bottom:2px solid #9ca3af;padding-bottom:5px;margin:22px 0 10px">Evidence</h2>
-  <pre style="background-color:#0f172a;color:#e2e8f0;padding:12px 14px;border-radius:6px;font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-size:12px;line-height:1.5;overflow-x:auto;margin:0">python scripts/verify.py
-PASS images / firmware / audio / bom / wiring
-</pre>
+  <pre style="background-color:#0f172a;color:#e2e8f0;padding:12px 14px;border-radius:6px;font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-size:12px;line-height:1.5;overflow-x:auto;margin:0">$ python scripts/verify.py
+PASS images: 59 listed files present, 54 distinct by hash (&gt;= 30 required)
+PASS cad: 10/10 STLs, validation all_pass=True, slice all_pass=True, stale slices=[], missing=[]
+PASS stance: docs/stance-check.json: passed=True, 126 sampled poses, 21 source hashes; problems=[]
+PASS bom: purchased subtotal $1,325.73; xlsx=present; problems=[]
+PASS wiring: 184 wires; KB2040 pins in wiring not in code.py: []
+PASS firmware: firmware/kb2040: Ran 120 tests in 0.781s, exit 0; firmware/pi: Ran 66 tests in 0.055s, exit 0; app.js syntax OK
+PASS audio: 12 clips, mismatches=[]
+PASS drawings: 28 files, mismatches=[], problems=[]
+PASS mockup: 9 poses [81.29, 81.29, 81.29, 5.0, 5.0, 5.0, 49.043, 33.868, 19.434]; problems=[]
+PASS manual: pdf=present, pages=130, all_pass=True, problems=[]
+PASS video: 214 s, 5136 frames, hash match=True, problems=[]
+ALL PASS: revision D</pre>
 
   <h2 style="font-size:13px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#1f2937;background-color:#ffffff;border-bottom:2px solid #9ca3af;padding-bottom:5px;margin:22px 0 10px">In flight</h2>
   <ul style="margin:0;padding-left:20px;color:#0b0f19;background-color:#ffffff">
-    <li style="margin-bottom:6px;color:#0b0f19;background-color:#ffffff">Nothing; the package is complete.</li>
+    <li style="margin-bottom:6px;color:#0b0f19;background-color:#ffffff">Nothing; the revision D package is complete.</li>
   </ul>
 
   
   </div>
 
   <h2 style="font-size:13px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#1f2937;background-color:#ffffff;border-bottom:2px solid #9ca3af;padding-bottom:5px;margin:22px 0 10px">Next</h2>
-  <p style="margin:0;color:#0b0f19;background-color:#ffffff">Physical build: print the fit coupons first, then the feet.<p style="margin:0 0 12px;color:#0b0f19;background-color:#ffffff">Video (S3, private, link valid 7 days): <a href="(dry run: no upload)" style="color:#1d4ed8;background-color:#ffffff">r2d2-assembly-and-operation.mp4</a> (53.0 MB, SHA-256 d57c776c0740bf5c...)</p><p style="margin:0 0 12px;color:#0b0f19;background-color:#ffffff">Assembly manual PDF: attached, and also on S3: <a href="(dry run: no upload)" style="color:#1d4ed8;background-color:#ffffff">r2d2-assembly-manual.pdf</a> (14.2 MB, SHA-256 a4436b34a3715a5e...)</p></p>
+  <p style="margin:0;color:#0b0f19;background-color:#ffffff">Physical build: print the fit coupons first, then the feet. Commission the stance change on the bench (docs/firmware.md section 11.4) before the first powered change.<p style="margin:0 0 12px;color:#0b0f19;background-color:#ffffff">Video (S3, private, link valid 7 days): <a href="https://robots-deliverables-759775734231.s3.amazonaws.com/fable-r2d2/revision-d/r2d2-assembly-and-operation.mp4?AWSAccessKeyId=AKIA3BZRJVHLQG5ACOEO&amp;Signature=Y2LoG09FjqvabAUA95FD6GmDLXI%3D&amp;Expires=1789880677" style="color:#1d4ed8;background-color:#ffffff">r2d2-assembly-and-operation.mp4</a> (73.2 MB, SHA-256 8f56b46690851248...)</p><p style="margin:0 0 12px;color:#0b0f19;background-color:#ffffff">Assembly manual PDF: attached, and also on S3: <a href="https://robots-deliverables-759775734231.s3.amazonaws.com/fable-r2d2/revision-d/r2d2-assembly-manual.pdf?AWSAccessKeyId=AKIA3BZRJVHLQG5ACOEO&amp;Signature=1BsgxEfrbGGzCRThIKRLWDs187w%3D&amp;Expires=1789880679" style="color:#1d4ed8;background-color:#ffffff">r2d2-assembly-manual.pdf</a> (17.7 MB, SHA-256 7299121a546b8be0...)</p></p>
 
-  <p style="margin:22px 0 0;padding-top:10px;border-top:2px solid #9ca3af;font-size:12px;color:#4b5563;background-color:#ffffff">JeremyProffittOrg/robots (fable-r2d2) · main @ 44bf7780bd28 · 2026-09-12 20:28 UTC</p>
+  <p style="margin:22px 0 0;padding-top:10px;border-top:2px solid #9ca3af;font-size:12px;color:#4b5563;background-color:#ffffff">JeremyProffittOrg/robots (fable-r2d2) · main @ b94f4d63bc0e · 2026-09-13 05:04 UTC</p>
 </div>
