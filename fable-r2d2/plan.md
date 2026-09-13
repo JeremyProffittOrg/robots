@@ -72,7 +72,9 @@ with revision D labels.
 
 ### stance-mechanism — actuator, sensed lock and centre-leg retraction as real CAD, proven by a transition check
 
-- [~] stance-mechanism — owner: background agent a9a5298ea055bf0d4.
+- [~] stance-mechanism — owner: background agent a9a5298ea055bf0d4 (commits eb9270e, b56a868, cbfa78a).
+  Status: all DoD checks pass except the body_upper/body_lower H2D slice. Both timed out at the 300 s
+  bound. The ring slice bound is raised to 3600 s (the revision C value) and the re-run is in progress.
   - Owned files: `cad/**`, `stl/**`, `scripts/export_cad.py`, `slice_check.py`, `stability.py`,
     `parts.json`, `check_stance.py`, `tests/test_stance*.py`, `bom/hardware.csv`,
     `bom/printed-parts.csv`, `docs/mechanical.md`, `docs/stability.json`, `docs/stance-check.json`.
@@ -159,6 +161,30 @@ with revision D labels.
     - KB2040 memory is not verified on a real board.
   - Launched the revision-d-integration prep agent: label, assert and count changes only, no heavy
     regeneration until stance-mechanism passes.
+- 2026-09-12: stance-mechanism reported (eb9270e, b56a868, cbfa78a).
+  - Design:
+    - The outer legs stay vertical, and the body pitches 0 to 18 deg about the shoulders.
+    - The centre leg runs on a 30 deg forward-down guide with two 12 mm shafts and LM12LUU bearings.
+    - P16 strokes: 5.0 mm two-foot (wheels 25 mm up), 33.9 mm touchdown, 81.29 mm three-leg, hard stop 86 mm.
+    - Two GN 412 plungers, four GN 412.2 receivers, two SS-01GL switches, two MG995 release servos.
+    - New printed part `leg_carriage`: 10 STLs, 13 pieces.
+    - hardware.csv: 33 -> 44 rows, +66 / -16 pieces.
+  - Margins:
+    - Two-foot support 28.1 mm; three-leg 75.9 mm, tip-back 15.6 deg.
+    - Actuator 38.3 N against a 100 N limit.
+    - Interference max 0.150 mm3.
+  - Parent re-ran: `python scripts/check_stance.py` "PASS: calculated stance-transition screen...".
+    `test_stance*.py` "Ran 7 tests" OK. cad/validation.json all_pass True, 10 parts.
+  - Gap: `slice_check.py` exit 1. `body_upper` and `body_lower` "slicer timed out after 300 s", and
+    normal supports put G-code outside the printable area.
+  - Decision (parent; the 300 s bound was not user-locked): ring slice bound raised to 3600 s,
+    matching revision C, with tree supports. At most one corrected attempt.
+  - Physical-only gaps:
+    - Centre-foot floor drag must be 8 % or less of its load; controls burst-drive the wheels to meet it.
+    - Lock seating and switch reliability at 3.3 V.
+    - Receiver thread retention.
+    - P16 and MG995 are out of stock.
+  - stance-controls made two follow-up commits (23ee773, 6902675) to bind the final 30 deg geometry.
 
 ## Locked decisions (user-confirmed; do not revisit)
 
